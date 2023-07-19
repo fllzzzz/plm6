@@ -284,6 +284,7 @@ export const deliveryTrackingPM = {
 export const expenseReportingPM = {
   get: ['expense_reporting:get'], // 列表
   add: ['expense_reporting:add'], // 新增
+  audit: ['expense_reporting:audit'], // 审核
   edit: ['expense_reporting:edit'], // 修改
   del: ['expense_reporting:del'], // 删除
   print: ['expense_reporting:print'] // 打印

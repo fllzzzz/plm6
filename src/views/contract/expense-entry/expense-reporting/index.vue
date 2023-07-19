@@ -103,18 +103,62 @@
         label="备注"
       />
       <el-table-column
+        v-if="columns.visible('approvalUserName')"
+        align="center"
+        key="approvalUserName"
+        prop="approvalUserName"
+        :show-overflow-tooltip="true"
+        label="审核人"
+      />
+      <el-table-column
+        v-if="columns.visible('approvalDate')"
+        align="center"
+        key="approvalDate"
+        prop="approvalDate"
+        :show-overflow-tooltip="true"
+        label="审核日期"
+        width="100"
+      />
+      <el-table-column
         v-if="columns.visible('createTime')"
         align="center"
         key="createTime"
         prop="createTime"
         :show-overflow-tooltip="true"
         label="创建时间"
-        width="140"
+        width="150"
       />
-      <el-table-column align="center" label="操作" width="120">
+      <el-table-column
+        v-if="columns.visible('approvalStatus')"
+        align="center"
+        fixed="right"
+        key="approvalStatus"
+        prop="approvalStatus"
+        :show-overflow-tooltip="true"
+        label="状态"
+        width="90"
+      >
+        <template #default="{ row }">
+          <el-tag :type="reviewStatusEnum.V[row.sourceRow?.approvalStatus].TAG" size="medium" effect="plain">{{
+            row.approvalStatus
+          }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="right" align="left" label="操作" width="168">
         <template v-slot="{ row }">
           <el-tag v-if="row.isAmortization" size="medium" type="success" effect="plain"> 已摊销 </el-tag>
-          <udOperation v-else :data="row" :permission="permission" />
+          <div v-else>
+            <common-button
+              v-if="row.sourceRow?.approvalStatus === reviewStatusEnum.UNREVIEWED.V"
+              v-permission="permission.audit"
+              size="mini"
+              type="warning"
+              icon="el-icon-s-check"
+              @click="openDetail(row)"
+            />
+            <common-button v-else size="mini" type="info" icon="el-icon-view" @click="openDetail(row)" />
+            <udOperation :data="row" :show-edit="row.sourceRow?.approvalStatus === reviewStatusEnum.UNREVIEWED.V" />
+          </div>
         </template>
       </el-table-column>
     </common-table>
@@ -122,6 +166,8 @@
     <pagination />
     <!-- 表单 -->
     <m-form />
+    <!-- 详情 -->
+    <m-detail v-model="detailVisible" :detail="rowDetail" @success="crud.toQuery" />
   </div>
 </template>
 <script setup>
@@ -132,11 +178,13 @@ import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import { expenseReportingPM as permission } from '@/page-permission/contract'
 import { costAscriptionEnum } from '@enum-ms/config'
+import { reviewStatusEnum } from '@/utils/enum/modules/common'
 
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header.vue'
 import mForm from './module/form.vue'
+import mDetail from './module/detail.vue'
 
 const optShow = {
   add: true,
@@ -147,13 +195,17 @@ const optShow = {
 const tableRef = ref()
 const expenseList = ref([])
 const cascaderTree = ref([])
+const detailVisible = ref(false)
+const rowDetail = ref()
 
 const columnsDataFormat = ref([
   ['reimburseAmount', 'to-thousand'],
   ['createTime', ['parse-time', '{y}-{m}-{d} {h}:{i}:{s}']],
   ['reimburseDate', ['parse-time', '{y}-{m}-{d}']],
+  ['approvalDate', ['parse-time', '{y}-{m}-{d}']],
   ['project', 'parse-project'],
-  ['costAscriptionEnum', ['parse-enum', costAscriptionEnum]]
+  ['costAscriptionEnum', ['parse-enum', costAscriptionEnum]],
+  ['approvalStatus', ['parse-enum', reviewStatusEnum]]
 ])
 
 provide('expenseList', expenseList)
@@ -182,7 +234,7 @@ async function initExpenseType() {
     const { content = [] } = await getExpenseType()
     expenseList.value = content
     const enumKV = costAscriptionEnum.V
-    expenseList.value.forEach(row => {
+    expenseList.value.forEach((row) => {
       const _row = {
         ...row
       }
@@ -205,5 +257,10 @@ async function initExpenseType() {
   } catch (e) {
     console.log('获取费用类别失败', e)
   }
+}
+
+function openDetail(row) {
+  detailVisible.value = true
+  rowDetail.value = row
 }
 </script>
