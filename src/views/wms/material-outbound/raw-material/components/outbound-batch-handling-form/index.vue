@@ -56,6 +56,9 @@
             <span v-parse-project="{ project: currentProject }" v-empty-text style="display: inline-block; min-width: 150px" />
           </el-form-item>
         </template>
+        <el-form-item label="出库目的地" prop="outboundAddress" label-width="95px">
+          <common-radio v-model="form.outboundAddress" :options="outboundDestinationTypeEnum.ENUM" type="enum" size="small" />
+        </el-form-item>
         <el-form-item label="领用人" prop="recipientId">
           <user-dept-cascader
             v-model="form.recipientId"
@@ -157,7 +160,7 @@ import { defineEmits, defineProps, watch, ref, computed, nextTick } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
-import { measureTypeEnum, projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
+import { measureTypeEnum, projectWarehouseTypeEnum, outboundDestinationTypeEnum } from '@/utils/enum/modules/wms'
 import { obj2arr } from '@/utils/convert/type'
 import { isBlank } from '@/utils/data-type'
 import { numFmtByUnitForList } from '@/utils/wms/convert-unit'
@@ -221,10 +224,13 @@ const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: 
 
 // 校验
 const rules = computed(() => {
-  if (props.basicClass & STEEL_ENUM) {
-    return steelRules
+  const _rules = {
+    outboundAddress: [{ required: true, message: '请选择出库目的地', trigger: 'change' }]
   }
-  return {}
+  if (props.basicClass & STEEL_ENUM) {
+    return Object.assign(_rules, steelRules)
+  }
+  return _rules
 })
 
 // 表单ref
@@ -249,7 +255,7 @@ const columnsDataFormat = ref([
   ['projectOperableMete', ['to-fixed-field', 'accountingPrecision']]
 ])
 // 显示
-const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: clearValidate })
+const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook })
 // 表格最大高度
 const { maxHeight } = useMaxHeight(
   {
@@ -355,11 +361,12 @@ function formInit() {
   form.value = { list: [] }
   formRef.value && formRef.value.resetFields()
   form.value.recipientId = user.value.id // 领用人id
+  form.value.outboundAddress = outboundDestinationTypeEnum.FACTORY.V // 出库目的地
 }
 
-// 关闭回调
-function clearValidate() {
+function showHook() {
   formRef.value && formRef.value.clearValidate()
+  form.value.outboundAddress = outboundDestinationTypeEnum.FACTORY.V // 出库目的地
 }
 
 // 设置最大数量
@@ -389,6 +396,7 @@ async function submit() {
       monomerId: form.value.monomerId,
       areaId: form.value.areaId,
       recipientId: form.value.recipientId,
+      outboundAddress: form.value.outboundAddress,
       list: []
     }
     cleanUpData(form.value.list)

@@ -7,7 +7,7 @@
     :show-close="true"
     :wrapper-closable="false"
     size="65%"
-    custom-class="delivery-detail"
+    custom-class="standard-part"
   >
     <template #titleAfter>
      <div>项目:<span>{{globalProject.serialNumber}}</span><span style="margin-left:5px;">{{globalProject.shortName}}</span></div>
@@ -58,7 +58,7 @@
           </el-table-column>
           <el-table-column prop="quantity" label="数量" align="center">
             <template v-slot="scope">
-              <common-input-number
+               <common-input-number
                 v-model="scope.row.quantity"
                 :min="0"
                 :max="999999999"
@@ -67,8 +67,38 @@
                 size="mini"
                 placeholder="数量"
               />
+             <!-- <common-input-number
+                v-model="scope.row.quantity"
+                :min="0"
+                :max="999999999"
+                :controls="false"
+                :step="1"
+                size="mini"
+                placeholder="数量"
+                @change="weightChange(scope.row)"
+              /> -->
             </template>
           </el-table-column>
+          <!-- <el-table-column label="单重(kg)" prop="weight" align="center">
+            <template v-slot="scope">
+              <el-input-number
+                v-model.number="scope.row.weight"
+                :min="0"
+                :max="999999999"
+                :step="1"
+                :precision="DP.COM_WT__KG"
+                :controls="false"
+                placeholder="单重"
+                style="width:100%;"
+                @change="weightChange(scope.row)"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="总重(kg)" prop="totalWeight">
+            <template v-slot="scope">
+              <span>{{toThousand(scope.row.totalWeight,DP.COM_WT__KG)}}</span>
+            </template>
+          </el-table-column> -->
           <el-table-column prop="remark" label="备注" align="center">
             <template v-slot="scope">
               <el-input
@@ -108,6 +138,8 @@ import { regForm } from '@compos/use-crud'
 import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 import useMaxHeight from '@compos/use-max-height'
 import useTableValidate from '@compos/form/use-table-validate'
+// import { DP } from '@/settings/config'
+// import { toThousand } from '@/utils/data-type/number'
 
 const globalProject = inject('globalProject')
 
@@ -122,7 +154,7 @@ const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
 const { maxHeight } = useMaxHeight(
   {
-    mainBox: '.delivery-detail',
+    mainBox: '.standard-part',
     extraBox: '.el-drawer__header',
     wrapperBox: '.el-drawer__body',
     paginate: false,
@@ -152,6 +184,10 @@ function addRow() {
     ...crud.query
   })
 }
+
+// function weightChange(row) {
+//   row.totalWeight = (row.quantity && row.weight) ? row.quantity * row.weight : 0
+// }
 
 CRUD.HOOK.beforeSubmit = (crud, form) => {
   if (crud.form.list.length <= 0) {

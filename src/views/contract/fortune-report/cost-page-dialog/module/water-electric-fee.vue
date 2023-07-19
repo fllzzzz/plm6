@@ -11,7 +11,7 @@
           class="filter-item"
         />
       </div>
-      <el-tag>合计（单位：元）：{{ toThousand(props.costTypeData?.amount) }}</el-tag>
+      <el-tag>合计（单位：元）：{{ toThousand(props.costTypeData?.amount,decimalPrecision.contract) }}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -31,7 +31,7 @@
       </el-table-column>
       <el-table-column prop="amount" key="amount" label="摊销总额（元）" align="center">
         <template v-slot="scope">
-          <span>{{ toThousand(scope.row.amount, 2) }}</span>
+          <span>{{ toThousand(scope.row.amount, decimalPrecision.contract) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="mete" key="mete" label="累计产量（吨）" align="center">
@@ -41,7 +41,7 @@
       </el-table-column>
       <el-table-column prop="avgPrice" key="avgPrice" label="平均单价（元/吨）" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.avgPrice?.toFixed(DP.YUAN) }}</span>
+          <span>{{ scope.row.avgPrice?.toFixed(decimalPrecision.contract) }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -53,8 +53,11 @@ import { getWaterElectricList } from '@/api/contract/fortune-report/detail-fee'
 import { ref, defineProps, watch } from 'vue'
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
 import useMaxHeight from '@compos/use-max-height'
+
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const props = defineProps({
   costTypeData: {
@@ -94,7 +97,7 @@ async function fetchWaterElectricFee() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['amount', DP.YUAN], 'mete'],
+    props: [['amount', decimalPrecision.value.contract], 'mete'],
     toThousandFields: ['amount', 'mete']
   })
 }

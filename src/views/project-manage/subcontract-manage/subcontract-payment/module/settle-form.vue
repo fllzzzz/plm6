@@ -70,15 +70,15 @@
               :step="1"
               :min="detailInfo?.sourceRow?.paymentAmount?detailInfo?.sourceRow?.paymentAmount:0"
               :max="999999999999"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.project"
               placeholder="最终结算额"
               controls-position="right"
               style="width: 220px"
             />
           </template>
           <template v-else>
-            <span v-if="showType==='audit'">{{ detailInfo.unCheckSettlementAmount?toThousand(detailInfo.unCheckSettlementAmount):'-' }}</span>
-            <span v-else>{{ detailInfo.settlementAmount?toThousand(detailInfo.settlementAmount):'-' }}</span>
+            <span v-if="showType==='audit'">{{ detailInfo.unCheckSettlementAmount?toThousand((detailInfo.unCheckSettlementAmount),decimalPrecision.project):'-' }}</span>
+            <span v-else>{{ detailInfo.settlementAmount?toThousand((detailInfo.settlementAmount),decimalPrecision.project):'-' }}</span>
           </template>
         </el-form-item>
         <el-form-item label="大写">
@@ -89,14 +89,14 @@
           </template>
         </el-form-item>
         <el-form-item label="应付金额">
-          <span v-if="showType==='audit'">{{ toThousand(detailInfo.unCheckSettlementAmount-detailInfo.paymentAmount) }}</span>
-          <span v-else-if="showType==='add' || showType==='edit'">{{ form.amount?toThousand(form.amount-detailInfo?.sourceRow?.paymentAmount):'' }}</span>
-          <span v-else>{{ toThousand(detailInfo.settlementAmount-detailInfo.paymentAmount) }}</span>
+          <span v-if="showType==='audit'">{{ toThousand((detailInfo.unCheckSettlementAmount-detailInfo.paymentAmount),decimalPrecision.project) }}</span>
+          <span v-else-if="showType==='add' || showType==='edit'">{{ form.amount?toThousand((form.amount-detailInfo?.sourceRow?.paymentAmount),decimalPrecision.project):'' }}</span>
+          <span v-else>{{ toThousand((detailInfo.settlementAmount-detailInfo.paymentAmount),decimalPrecision.project) }}</span>
         </el-form-item>
         <el-form-item label="应补发票">
-          <span v-if="showType==='audit'">{{ toThousand(detailInfo.unCheckSettlementAmount-detailInfo.invoiceAmount) }}</span>
-          <span v-else-if="showType==='add' || showType==='edit'">{{ form.amount?toThousand(form.amount-detailInfo?.sourceRow?.invoiceAmount):'' }}</span>
-          <span v-else>{{ toThousand(detailInfo.settlementAmount-detailInfo.invoiceAmount) }}</span>
+          <span v-if="showType==='audit'">{{ toThousand((detailInfo.unCheckSettlementAmount-detailInfo.invoiceAmount),decimalPrecision.project) }}</span>
+          <span v-else-if="showType==='add' || showType==='edit'">{{ form.amount?toThousand((form.amount-detailInfo?.sourceRow?.invoiceAmount),decimalPrecision.project):'' }}</span>
+          <span v-else>{{ toThousand((detailInfo.settlementAmount-detailInfo.invoiceAmount),decimalPrecision.project) }}</span>
         </el-form-item>
         <el-form-item label="附件">
           <template #label>
@@ -138,7 +138,6 @@ import { ref, defineProps, watch, defineEmits, nextTick, computed } from 'vue'
 
 import { isNotBlank } from '@data-type/index'
 import useVisible from '@compos/use-visible'
-import { DP } from '@/settings/config'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { auditTypeEnum } from '@enum-ms/contract'
 import { digitUppercase, toThousand } from '@data-type/number'
@@ -148,6 +147,9 @@ import { parseTime } from '@/utils/date'
 
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const submitLoading = ref(false)
 const emit = defineEmits(['success', 'update:modelValue'])

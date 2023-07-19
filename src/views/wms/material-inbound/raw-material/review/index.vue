@@ -55,15 +55,6 @@
         align="left"
       />
       <el-table-column
-        v-if="columns.visible('licensePlate')"
-        key="licensePlate"
-        :show-overflow-tooltip="true"
-        prop="licensePlate"
-        label="车牌号"
-        align="left"
-        width="100"
-      />
-      <el-table-column
         v-if="columns.visible('shipmentNumber')"
         key="shipmentNumber"
         prop="shipmentNumber"
@@ -95,6 +86,15 @@
         prop="supplier.name"
         label="供应商"
         min-width="200"
+      />
+      <el-table-column
+        v-if="columns.visible('licensePlate')"
+        key="licensePlate"
+        :show-overflow-tooltip="true"
+        prop="licensePlate"
+        label="车牌号"
+        align="left"
+        width="100"
       />
       <el-table-column
         v-if="columns.visible('attachments')"
@@ -274,7 +274,7 @@ const { CRUD, crud, columns } = useCRUD(
   {
     title: '入库记录',
     sort: ['id.desc'],
-    invisibleColumns: ['editorName', 'userUpdateTime', 'licensePlate', 'shipmentNumber'],
+    invisibleColumns: ['editorName', 'userUpdateTime', 'shipmentNumber'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi }

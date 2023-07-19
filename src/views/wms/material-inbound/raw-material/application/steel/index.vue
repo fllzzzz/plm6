@@ -93,13 +93,13 @@ import { steelInboundApplication } from '@/api/wms/material-inbound/raw-material
 import { edit as editInboundApplication } from '@/api/wms/material-inbound/raw-material/record'
 import { steelInboundApplicationPM as permission } from '@/page-permission/wms'
 
-import { toPrecision } from '@/utils/data-type'
 import { createUniqueString } from '@/utils/data-type/string'
 import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reactive } from 'vue'
-import { STEEL_ENUM, DP } from '@/settings/config'
+import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@/utils/enum/modules/finance'
 import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
+import { DP } from '@/settings/config'
 
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useForm from '@/composables/form/use-form'
@@ -111,7 +111,7 @@ import steelPlateTable from './module/steel-plate-table.vue'
 import sectionSteelTable from './module/section-steel-table.vue'
 import steelCoilTable from './module/steel-coil-table.vue'
 import { ElMessage, ElRadioGroup } from 'element-plus'
-import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
+import { isBlank, isNotBlank, toFixed, toPrecision } from '@/utils/data-type'
 import { steelInboundFormFormat } from '@/utils/wms/measurement-calc'
 
 const emit = defineEmits(['success'])
@@ -537,10 +537,14 @@ function automaticAssignWeight() {
   // 为0 则 过磅重量 = 理论重量(无需计算)
   const calc = (row) => {
     row.weighingTotalWeight = assignableWeight
-      ? toFixed((row.theoryTotalWeight / spAndSsTheoryTotalWeight) * assignableWeight + row.theoryTotalWeight, 2, { toNum: true })
+      ? toFixed((row.theoryTotalWeight / spAndSsTheoryTotalWeight) * assignableWeight + row.theoryTotalWeight, row?.accountingPrecision || 0, { toNum: true })
       : row.theoryTotalWeight
     assignableWeight -= row.weighingTotalWeight - row.theoryTotalWeight
     spAndSsTheoryTotalWeight -= row.theoryTotalWeight
+    // 计算金额
+    if (isNotBlank(row.unitPrice) && isNotBlank(row.weighingTotalWeight)) {
+      row.amount = toPrecision(row.weighingTotalWeight * row.unitPrice, DP.YUAN)
+    }
   }
   spList.forEach((v) => calc(v))
   ssList.forEach((v) => calc(v))
@@ -630,6 +634,9 @@ cu.props.import = (importList) => {
     if (!fillableAmount.value) {
       form[key][i].amount = undefined
       form[key][i].unitPrice = undefined
+    }
+    if (isNotBlank(form[key][i]?.amount)) {
+      form[key][i].amount = toPrecision(form[key][i].amount, DP.YUAN)
     }
     steelRefList[key].rowWatch(form[key][i])
   }

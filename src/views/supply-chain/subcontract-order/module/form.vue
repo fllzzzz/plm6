@@ -65,7 +65,7 @@
           :max="9999999999"
           :min="0"
           :step="100"
-          :precision="DP.YUAN"
+          :precision="decimalPrecision.supplyChain"
           controls-position="right"
           placeholder="合同额(元)"
           style="width:200px;"
@@ -113,12 +113,14 @@ import { ref } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { supplierTypeEnum } from '@enum-ms/supplier'
 import { invoiceTypeEnum } from '@enum-ms/finance'
-import { DP } from '@/settings/config'
 
 import supplierSelect from '@comp-base/supplier-select/index.vue'
 import projectSubcontractSelect from '@/components-system/project/project-subcontract-select.vue'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import subcontractType from '@/components-system/project/subcontract-type-select'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const formRef = ref()
 const defaultForm = {

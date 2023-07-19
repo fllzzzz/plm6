@@ -351,7 +351,6 @@
 import { defineProps, computed, defineExpose, ref, inject, watchEffect, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
-import { DP } from '@/settings/config'
 
 import { regExtra } from '@/composables/form/use-form'
 import useEditSectionSpec from '@compos/wms/use-edit-section-spec'
@@ -363,6 +362,7 @@ import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
+import { DP } from '@/settings/config'
 
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
 import inboundInfoTable from '@/views/wms/material-inbound/raw-material/components/inbound-info-table'

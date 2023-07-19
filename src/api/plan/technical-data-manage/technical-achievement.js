@@ -93,6 +93,29 @@ export function upload(data) {
 }
 
 /**
+ * 上传技术资料压缩包(只导入未匹配的文件)
+ * @export
+ * @param {number}  monomerId|required 单体id
+ * @param {number}  dataType|required 资料类型
+ * @param {number}  productType|required 生产类型
+ * @param {string} fileName|required 文件名
+ * @param {*} file|required 文件流
+ * @returns
+ */
+export function uploadChoose(data) {
+  return request({
+    module: 'plan',
+    url: `drawing/struct/upload/choose`,
+    method: 'post',
+    timeout: 6000000,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    data
+  })
+}
+
+/**
  * 覆盖技术资料（单个文件，必须是覆盖）
  * @export
  * @param {number}  monomerId|required 单体id
@@ -112,6 +135,18 @@ export function update(data) {
       'Content-Type': 'multipart/form-data'
     },
     data
+  })
+}
+
+/**
+ * 下载零件DXF压缩包
+ */
+export function dxfZipDownload(params) {
+  return request({
+    url: `/api/plan/drawing/download/dxfzip`,
+    method: 'get',
+    responseType: 'blob',
+    params
   })
 }
 

@@ -33,11 +33,12 @@ import { get } from '@/api/wms/report/raw-material/inventory'
 import { reportRawMaterialInventoryPM as permission } from '@/page-permission/wms'
 
 import { ref, computed } from 'vue'
-import { materialHasAmountColumns } from '@/utils/columns-format/wms'
+import { materialColumns } from '@/utils/columns-format/wms'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
+import { DP } from '@/settings/config'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -47,6 +48,9 @@ import materialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 // import AmountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -58,9 +62,22 @@ const optShow = {
 const tableRef = ref()
 
 // 表格列数据格式转换
-const columnsDataFormat = ref([
-  ...materialHasAmountColumns
-])
+// const columnsDataFormat = ref([
+//   ...materialHasAmountColumns
+// ])
+const columnsDataFormat = computed(() => {
+  return [
+    ...materialColumns,
+    // 金额相关
+    ['invoiceType', ['parse-enum', invoiceTypeEnum, { f: 'SL' }]],
+    ['taxRate', ['suffix', '%']],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
+    ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amount', ['to-thousand', DP.YUAN]],
+    ['amountExcludingVAT', ['to-thousand', DP.YUAN]],
+    ['inputVAT', ['to-thousand', DP.YUAN]]
+  ]
+})
 
 const { CRUD, crud, columns } = useCRUD(
   {

@@ -122,10 +122,10 @@ import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 // import { deepClone, isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 import { deepClone, isBlank, isNotBlank } from '@/utils/data-type'
-// import { getDP } from '@/utils/data-type/number'
+import { materialColumns } from '@/utils/columns-format/wms'
 import { DP } from '@/settings/config'
-import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
+import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 import { regExtra } from '@compos/use-crud'
 import useTableValidate from '@/composables/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
@@ -148,6 +148,9 @@ import logisticsForm from '@/views/wms/material-inbound/raw-material/components/
 import warehouseSetColumns from '@/views/wms/material-inbound/raw-material/components/warehouse-set-columns.vue'
 import titleAfterInfo from '@/views/wms/material-inbound/raw-material/components/title-after-info.vue'
 import checkPermission from '@/utils/system/check-permission'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['refresh', 'update:modelValue'])
 
@@ -166,7 +169,21 @@ const props = defineProps({
 
 const permission = inject('permission')
 // 表格列数据格式转换
-const columnsDataFormat = ref([...materialHasAmountColumns, ['remark', 'empty-text']])
+// const columnsDataFormat = ref([...materialHasAmountColumns, ['remark', 'empty-text']])
+const columnsDataFormat = computed(() => {
+  return [
+    ...materialColumns,
+    // 金额相关
+    ['invoiceType', ['parse-enum', invoiceTypeEnum, { f: 'SL' }]],
+    ['taxRate', ['suffix', '%']],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
+    ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amount', ['to-thousand', DP.YUAN]],
+    ['amountExcludingVAT', ['to-thousand', DP.YUAN]],
+    ['inputVAT', ['to-thousand', DP.YUAN]],
+    ['remark', 'empty-text']
+  ]
+})
 
 const reviewConvenientRef = ref() // 连续审核
 const drawerRef = ref() // 当前drawer

@@ -42,7 +42,7 @@
       <rrOperation />
       <crudOperation add-text="报销填报">
         <template #viewLeft>
-          <el-tag type="success" v-if="totalSum" size="medium">{{ `报销总额:${toThousand(totalSum)}元` }}</el-tag>
+          <el-tag type="success" v-if="totalSum" size="medium">{{ `报销总额:${toThousand(totalSum,decimalPrecision.contract)}元` }}</el-tag>
         </template>
       </crudOperation>
     </div>
@@ -52,16 +52,21 @@
 <script setup>
 import { ref } from 'vue'
 import { regHeader } from '@compos/use-crud'
-import rrOperation from '@crud/RR.operation'
-import crudOperation from '@crud/CRUD.operation'
+
 import { reimbursementTypeEnum, contractReimbursementDateEnum } from '@enum-ms/contract'
 import { reimbursementSum } from '@/api/contract/supplier-manage/reimbursement'
 import Expense from './expense'
 import { toThousand } from '@data-type/number'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+import rrOperation from '@crud/RR.operation'
+import crudOperation from '@crud/CRUD.operation'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const defaultQuery = {
   projectId: undefined,
-  dateType: contractReimbursementDateEnum.ENUM.UPDATE_DATE.V,
+  dateType: contractReimbursementDateEnum.UPDATE_DATE.V,
   createTime: [],
   startDate: undefined,
   endDate: undefined,

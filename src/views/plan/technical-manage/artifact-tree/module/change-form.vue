@@ -1,7 +1,15 @@
 <template>
   <common-dialog append-to-body :close-on-click-modal="false" :before-close="handleClose" v-model="visible" title="构件变更" width="650px">
     <template #titleRight>
-      <el-checkbox v-permission="permission.forceDel" class="filter-item force-del" v-model="forceDel" label="强制删除" size="mini" border style="border-color: #f56c6c" />
+      <el-checkbox
+        v-permission="permission.forceDel"
+        class="filter-item force-del"
+        v-model="forceDel"
+        label="强制删除"
+        size="mini"
+        border
+        style="border-color: #f56c6c"
+      />
       <common-button type="primary" size="mini" :loading="loading" @click="onSubmit">确认</common-button>
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="130px">
@@ -25,6 +33,30 @@
           :step="1"
           step-strictly
           placeholder=""
+          controls-position="right"
+          style="width: 200px"
+        />
+      </el-form-item>
+      <el-form-item label="单净重(kg)" prop="netWeight">
+        <el-input-number
+          v-model.number="form.netWeight"
+          :min="0"
+          :max="9999999999"
+          :step="1"
+          :precision="DP.COM_WT__KG"
+          placeholder="单净重"
+          controls-position="right"
+          style="width: 200px"
+        />
+      </el-form-item>
+      <el-form-item label="单毛重(kg)" prop="grossWeight">
+        <el-input-number
+          v-model.number="form.grossWeight"
+          :min="0"
+          :max="9999999999"
+          :step="1"
+          :precision="DP.COM_WT__KG"
+          placeholder="单毛重"
           controls-position="right"
           style="width: 200px"
         />
@@ -88,7 +120,7 @@
 import { ref, defineProps, defineEmits, nextTick, watch, inject } from 'vue'
 import { ElNotification } from 'element-plus'
 
-// import { DP } from '@/settings/config'
+import { DP } from '@/settings/config'
 import useVisible from '@compos/use-visible'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 
@@ -132,11 +164,12 @@ const validateNum = (rule, value, callback) => {
   if (!forceDel.value) {
     if (!value) {
       callback(new Error('变更后数量必须大于0'))
-    } else if (value === props.detailInfo.quantity) {
-      callback(new Error('数量未改动'))
     } else {
       callback()
     }
+    // else if (value === props.detailInfo.quantity) {
+    //   callback(new Error('数量未改动'))
+    // }
   } else {
     callback()
   }
@@ -158,6 +191,8 @@ function resetForm() {
   }
   loading.value = false
   form.value.quantity = props.detailInfo.quantity
+  form.value.netWeight = props.detailInfo.netWeight
+  form.value.grossWeight = props.detailInfo.grossWeight
   if (formRef.value) {
     nextTick(() => {
       formRef.value.clearValidate()

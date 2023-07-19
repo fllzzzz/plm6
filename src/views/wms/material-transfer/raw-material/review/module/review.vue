@@ -100,10 +100,10 @@ import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { deepClone } from '@/utils/data-type'
-import { DP } from '@/settings/config'
 import { partyAMatTransferEnum, transferTypeEnum } from '@/utils/enum/modules/wms'
 import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
-import { materialHasAmountColumns } from '@/utils/columns-format/wms'
+import { materialColumns } from '@/utils/columns-format/wms'
+import { DP } from '@/settings/config'
 
 import { regExtra } from '@/composables/use-crud'
 import useTableValidate from '../composables/use-table-validate'
@@ -121,6 +121,9 @@ import invoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
 import unfreezeInfo from '@/views/wms/material-freeze/raw-material/components/unfreeze-info.vue'
 import commonTitleInfo from './common-title-info.vue'
 import setPartyAInfo from './set-party-a-info.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 // import useWmsConfig from '@/composables/store/use-wms-config'
 
 // 物料加权配置
@@ -158,7 +161,21 @@ const currentInboundId = ref() // 当前id
 const showAmount = ref(false) // 显示金额，只有“买入甲供材料才需要填写金额”
 
 // 表格列数据格式转换
-const columnsDataFormat = ref([...materialHasAmountColumns])
+// const columnsDataFormat = ref([...materialHasAmountColumns])
+const columnsDataFormat = computed(() => {
+  return [
+    ...materialColumns,
+    // 金额相关
+    ['invoiceType', ['parse-enum', invoiceTypeEnum, { f: 'SL' }]],
+    ['taxRate', ['suffix', '%']],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
+    ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amount', ['to-thousand', DP.YUAN]],
+    ['amountExcludingVAT', ['to-thousand', DP.YUAN]],
+    ['inputVAT', ['to-thousand', DP.YUAN]]
+  ]
+})
+
 // 表单禁止操作
 const formDisabled = computed(() => passedLoading.value || returnedLoading.value)
 // 标题

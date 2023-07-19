@@ -57,6 +57,44 @@
           <span v-else>{{ row.quantity }}</span>
         </template>
       </el-table-column>
+      <!-- <el-table-column v-if="columns.visible('quantity')" :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" min-width="120px">
+        <template #default="{ row }">
+          <common-input-number
+            v-if="row.isModify"
+            v-model="row.quantity"
+            :min="0"
+            :max="999999999"
+            :controls="false"
+            :step="1"
+            size="mini"
+            placeholder="数量"
+            @change="weightChange(scope.row)"
+          />
+          <span v-else>{{ row.quantity }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="单重(kg)" prop="weight">
+        <template v-slot="scope">
+          <el-input-number
+            v-if="row.isModify"
+            v-model.number="scope.row.weight"
+            :min="0"
+            :max="999999999"
+            :step="1"
+            :precision="DP.COM_WT__KG"
+            :controls="false"
+            placeholder="单重"
+            style="width:100%;"
+            @change="weightChange(scope.row)"
+          />
+          <span v-else>{{toThousand(scope.row.weight,DP.COM_WT__KG)}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="总重(kg)" prop="totalWeight">
+        <template v-slot="scope">
+          <span>{{toThousand(scope.row.totalWeight,DP.COM_WT__KG)}}</span>
+        </template>
+      </el-table-column> -->
       <el-table-column v-if="columns.visible('useProperty')" :show-overflow-tooltip="true" prop="useProperty" label="使用范围" align="center" min-width="120px">
       <template #default="{ row }">
         <common-select
@@ -125,19 +163,22 @@
 <script setup>
 import crudApi from '@/api/plan/technical-manage/standard-part'
 import { provide, ref } from 'vue'
+import { ElMessage } from 'element-plus'
 
+// import { DP } from '@/settings/config'
+// import { toThousand } from '@/utils/data-type/number'
 import { isNotBlank } from '@data-type/index'
 import { validate } from '@compos/form/use-table-validate'
 import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
+import { planStandardPartListPM as permission } from '@/page-permission/plan'
+
+import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mForm from './module/form'
-import { ElMessage } from 'element-plus'
-import { planStandardPartListPM as permission } from '@/page-permission/plan'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 
@@ -170,6 +211,10 @@ const { maxHeight } = useMaxHeight({
   paginate: true,
   extraHeight: 40
 })
+
+// function weightChange(row) {
+//   row.totalWeight = (row.quantity && row.weight) ? row.quantity * row.weight : 0
+// }
 
 function currentChange(val) {
   currentMonomer.value = val

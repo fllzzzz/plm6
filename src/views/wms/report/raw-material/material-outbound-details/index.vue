@@ -120,9 +120,11 @@ import { getDetails as get } from '@/api/wms/report/raw-material/outbound'
 import { reportRawMaterialOutboundDetailsPM as permission } from '@/page-permission/wms'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
-import { materialHasAmountColumns } from '@/utils/columns-format/wms'
+import { materialColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
 
+import { DP } from '@/settings/config'
+import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import useWmsConfig from '@/composables/store/use-wms-config'
@@ -137,6 +139,9 @@ import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/
 import AmountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -149,12 +154,29 @@ const expandRowKeys = ref([])
 const tableRef = ref()
 
 // 表格列数据格式转换
-const columnsDataFormat = ref([
-  ...materialHasAmountColumns,
-  ['outboundReceipt.outboundTime', 'parse-time'],
-  ['outboundReceipt.reviewTime', 'parse-time'],
-  ['outboundReceipt.createTime', 'parse-time']
-])
+const columnsDataFormat = computed(() => {
+  return [
+    ...materialColumns,
+    // 金额相关
+    ['invoiceType', ['parse-enum', invoiceTypeEnum, { f: 'SL' }]],
+    ['taxRate', ['suffix', '%']],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
+    ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amount', ['to-thousand', DP.YUAN]],
+    ['amountExcludingVAT', ['to-thousand', DP.YUAN]],
+    ['inputVAT', ['to-thousand', DP.YUAN]],
+    ['outboundReceipt.outboundTime', 'parse-time'],
+    ['outboundReceipt.reviewTime', 'parse-time'],
+    ['outboundReceipt.createTime', 'parse-time']
+  ]
+})
+
+// const columnsDataFormat = ref([
+//   ...materialHasAmountColumns,
+//   ['outboundReceipt.outboundTime', 'parse-time'],
+//   ['outboundReceipt.reviewTime', 'parse-time'],
+//   ['outboundReceipt.createTime', 'parse-time']
+// ])
 
 // 报表配置
 const { reportCfg } = useWmsConfig()

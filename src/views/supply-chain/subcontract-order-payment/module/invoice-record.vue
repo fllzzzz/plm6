@@ -68,11 +68,13 @@ import { supplierPayTypeEnum } from '@enum-ms/contract'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { digitUppercase, getDP, toThousand } from '@/utils/data-type/number'
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
 
 import useVisible from '@/composables/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -121,12 +123,14 @@ watch(
 const list = ref([])
 const drawerRef = ref()
 const tableLoading = ref(false)
-const dataFormat = ref([
-  ['invoiceType', ['parse-enum', invoiceTypeEnum]],
-  ['receiveInvoiceDate', ['parse-time', '{y}-{m}-{d}']],
-  ['invoiceAmount', ['to-thousand-ck', 'YUAN']],
-  ['taxRate', ['to-fixed', 2]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['invoiceType', ['parse-enum', invoiceTypeEnum]],
+    ['receiveInvoiceDate', ['parse-time', '{y}-{m}-{d}']],
+    ['invoiceAmount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['taxRate', ['to-fixed', 2]]
+  ]
+})
 
 const { maxHeight } = useMaxHeight(
   {
@@ -144,7 +148,7 @@ const { maxHeight } = useMaxHeight(
 // 合计
 function getSummaries(param) {
   const summary = tableSummary(param, {
-    props: [['invoiceAmount', DP.YUAN]]
+    props: [['invoiceAmount', decimalPrecision.value.supplyChain]]
   })
   const num = summary[2]
   if (num) {

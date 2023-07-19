@@ -75,7 +75,7 @@
                 :min="0"
                 :max="99999999999"
                 :step="1000"
-                :precision="DP.YUAN"
+                :precision="decimalPrecision.project"
                 placeholder="请输入签证额"
                 :controls="false"
                 style="width: 100%;text-align: left;"
@@ -128,7 +128,6 @@
 import { getProjectInfo } from '@/api/contract/sales-manage/visa-manage'
 import { ref, computed } from 'vue'
 
-import { DP } from '@/settings/config'
 import { projectNameFormatter } from '@/utils/project'
 import { businessTypeEnum } from '@enum-ms/contract'
 
@@ -136,6 +135,9 @@ import { regForm } from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import projectVisaSelect from '@comp-base/project-visa-select.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 // 是否是编辑状态
 const isEdit = computed(() => {

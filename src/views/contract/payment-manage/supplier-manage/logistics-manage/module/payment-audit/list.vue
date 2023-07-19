@@ -2,7 +2,7 @@
   <div>
     <!--表格渲染-->
     <div>
-      <el-tag type="success" size="medium" v-if="currentRow.freight">{{'运输额:'+toThousand(currentRow.freight)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.freight">{{'运输额:'+toThousand(currentRow.freight,decimalPrecision.contract)}}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -34,7 +34,7 @@
       </el-table-column> -->
       <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="center">
         <template v-slot="scope">
-          <div>{{ scope.row.applyAmount && scope.row.applyAmount>0? toThousand(scope.row.applyAmount): scope.row.applyAmount }}</div>
+          <div>{{ isNotBlank(scope.row.applyAmount) ? toThousand(scope.row.applyAmount,decimalPrecision.contract): '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column key="auditStatus" prop="auditStatus" label="状态" align="center">
@@ -75,16 +75,21 @@
 <script setup>
 import crudApi from '@/api/supply-chain/logistics-payment-manage/logistics-payment'
 import { ref, defineProps, watch, defineEmits } from 'vue'
+
+import { isNotBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
 import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
-import detail from './detail'
 import { contractSupplierLogisticsPM } from '@/page-permission/contract'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
+import pagination from '@crud/Pagination'
+import detail from './detail'
+
+const { decimalPrecision } = useDecimalPrecision()
 const permission = contractSupplierLogisticsPM.payment
 
 const optShow = {

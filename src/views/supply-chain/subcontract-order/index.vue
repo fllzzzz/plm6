@@ -44,7 +44,7 @@
 
 <script setup>
 import crudApi from '@/api/supply-chain/subcontract-manage/subcontract-order'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { subcontractOrderPM as permission } from '@/page-permission/supply-chain'
 import checkPermission from '@/utils/system/check-permission'
@@ -56,6 +56,9 @@ import mHeader from './module/header'
 import mForm from './module/form'
 import mDetail from './module/detail'
 import udOperation from '@crud/UD.operation.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: true,
@@ -66,11 +69,13 @@ const optShow = {
 
 const tableRef = ref()
 const headerRef = ref()
-const dataFormat = ref([
-  ['signDate', ['parse-time', '{y}-{m}-{d}']],
-  ['project', 'parse-project'],
-  ['amount', ['to-thousand-ck', 'YUAN']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['signDate', ['parse-time', '{y}-{m}-{d}']],
+    ['project', 'parse-project'],
+    ['amount', ['to-thousand', decimalPrecision.value.supplyChain]]
+  ]
+})
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '分包订单',

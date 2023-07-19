@@ -16,11 +16,11 @@
       </el-tag>
       <el-tag type="success" effect="plain" size="medium">
         <span>累计合同额：</span>
-        <span v-thousand="info.totalContractAmount" v-empty-text />
+        <span v-thousand="{val:info.totalContractAmount || 0, dp:decimalPrecision.contract}" v-empty-text />
       </el-tag>
       <el-tag type="success" effect="plain" size="medium">
         <span>累计结算额：</span>
-        <span v-thousand="info.totalSettlementAmount" v-empty-text />
+        <span v-thousand="{val:info.totalSettlementAmount || 0, dp:decimalPrecision.contract}" v-empty-text />
       </el-tag>
     </template>
     <template #titleRight>
@@ -57,10 +57,13 @@
 
 <script setup>
 import { detail } from '@/api/contract/sales-manage/transaction-record'
-import { defineProps, defineEmits, ref, watch, inject } from 'vue'
+import { defineProps, defineEmits, ref, watch, inject, computed } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible'])
@@ -104,12 +107,14 @@ watch(
 
 const tableLoading = ref(false)
 const list = ref([])
-const dataFormat = ref([
-  ['project', ['parse-project']],
-  ['signingDate', ['parse-time', '{y}-{m}-{d}']],
-  ['contractAmount', ['to-thousand-ck', 'YUAN']],
-  ['settlementAmount', ['to-thousand-ck', 'YUAN']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['project', ['parse-project']],
+    ['signingDate', ['parse-time', '{y}-{m}-{d}']],
+    ['contractAmount', ['to-thousand', decimalPrecision.value.contract]],
+    ['settlementAmount', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 const permission = inject('permission')
 
 async function fetchList() {

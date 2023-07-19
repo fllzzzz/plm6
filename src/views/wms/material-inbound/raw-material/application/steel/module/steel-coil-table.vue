@@ -221,7 +221,6 @@
 import { defineProps, computed, defineExpose, ref, inject, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
-import { DP } from '@/settings/config'
 
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -231,6 +230,7 @@ import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSteelCoilLength } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
+import { DP } from '@/settings/config'
 
 import inboundInfoTable from '@/views/wms/material-inbound/raw-material/components/inbound-info-table'
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
