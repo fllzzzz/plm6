@@ -23,6 +23,7 @@
     <el-table-column v-if="columns.visible('paymentUnit')" key="paymentUnit" prop="paymentUnit" :show-overflow-tooltip="true" label="付款单位" align="center" min-width="140" />
     <el-table-column v-if="columns.visible('receivingUnit')" key="receivingUnit" prop="receivingUnit" :show-overflow-tooltip="true" label="收款单位" align="center" min-width="140" />
     <el-table-column v-if="columns.visible('actuallyPaymentAmount')" key="actuallyPaymentAmount" prop="actuallyPaymentAmount" label="实付金额" align="right" min-width="100" />
+    <el-table-column v-if="columns.visible('deductionAmount')" key="deductionAmount" prop="deductionAmount" label="累计让利金额" align="right" min-width="100" />
     <el-table-column key="attachments" prop="attachments" label="附件" align="center" :show-overflow-tooltip="true" min-width="160">
       <template #header>
         <el-tooltip effect="light" :content="`双击可预览附件`" placement="top">
@@ -128,8 +129,8 @@ CRUD.HOOK.beforeRefresh = () => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['actuallyPaymentAmount', decimalPrecision.value.contract]],
-    toThousandFields: ['actuallyPaymentAmount']
+    props: [['actuallyPaymentAmount', decimalPrecision.value.contract], ['deductionAmount', decimalPrecision.value.contract]],
+    toThousandFields: ['actuallyPaymentAmount', 'deductionAmount']
   })
 }
 </script>

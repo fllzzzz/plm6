@@ -14,12 +14,70 @@
       <el-tag>运费总额：{{detailInfo.freight}}</el-tag>
     </template>
     <template #content>
+      <div class="head-container">
+        <el-date-picker
+          v-model="query.date"
+          type="daterange"
+          range-separator=":"
+          size="small"
+          value-format="x"
+          class="filter-item date-item"
+          start-placeholder="开始时间"
+          end-placeholder="结束时间"
+          style="width: 240px"
+          @change="handleDateChange"
+        />
+        <el-input
+          v-model="query.licensePlate"
+          placeholder="车牌号搜索"
+          class="filter-item"
+          style="width: 200px"
+          size="small"
+          clearable
+        />
+        <el-input
+          v-model="query.purchaseSn"
+          placeholder="采购单"
+          class="filter-item"
+          style="width: 200px"
+          size="small"
+          clearable
+        />
+        <el-input
+          v-model="query.purchaseUserName"
+          placeholder="采购员搜索"
+          class="filter-item"
+          style="width: 200px"
+          size="small"
+          clearable
+        />
+        <el-input
+          v-model="query.inboundSn"
+          placeholder="入库单"
+          class="filter-item"
+          style="width: 200px"
+          size="small"
+          clearable
+        />
+        <el-input
+          v-model="query.supplierName"
+          placeholder="供应商"
+          class="filter-item"
+          style="width: 200px"
+          size="small"
+          clearable
+        />
+        <common-button class="filter-item" size="small" type="success" icon="el-icon-search" @click.stop="fetchList">搜索</common-button>
+        <common-button class="filter-item" size="small" type="warning" icon="el-icon-refresh" @click.stop="resetSubmit">重置</common-button>
+      </div>
       <common-table :data="list" v-loading="tableLoading" show-summary :summary-method="getSummaries" :data-format="dataFormat" :max-height="maxHeight">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="inboundTime" label="入库日期" width="90" align="center" show-overflow-tooltip />
         <el-table-column prop="licensePlate" label="车牌号" align="center" show-overflow-tooltip />
         <el-table-column prop="loadingWeight" label="装载重量（吨）" align="center" show-overflow-tooltip />
         <el-table-column prop="freight" label="运输费" align="center" show-overflow-tooltip />
+        <el-table-column prop="purchaseSn" label="采购订单号" align="center" show-overflow-tooltip />
+        <el-table-column prop="purchaseUserName" label="采购员" align="center" show-overflow-tooltip />
         <el-table-column prop="inboundSn" label="关联入库单" align="center" show-overflow-tooltip>
           <template #default="{ row }">
             <span class="clickable" @click="openRecord(row)"> {{ row.inboundSn }}</span>
@@ -141,6 +199,25 @@ function getSummaries(param) {
     summary[2] = toThousand(num, dp)
   }
   return summary
+}
+
+// 时间变动
+function handleDateChange(val) {
+  if (query.value.date && query.value.date.length > 1) {
+    query.value.startDate = val[0]
+    query.value.endDate = val[1]
+  } else {
+    query.value.startDate = undefined
+    query.value.endDate = undefined
+  }
+  fetchList()
+}
+
+// 重置搜索
+function resetSubmit() {
+  query.value = {}
+  query.value.date = []
+  fetchList()
 }
 
 // 获取物流记录

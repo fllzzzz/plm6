@@ -39,12 +39,13 @@
           <div>{{row.paymentBank}}{{row.paymentBankAccount?'【'+row.paymentBankAccount+'】':''}}</div>
         </template>
       </el-table-column>
-      <el-table-column key="receivingUnit" prop="receivingUnit" label="收款单位" align="center" min-width="140" show-overflow-tooltip />
+      <el-table-column key="actualReceivingUnit" prop="actualReceivingUnit" label="实际收款单位" align="center" min-width="140" show-overflow-tooltip />
       <!-- <el-table-column key="receivingBank" prop="receivingBank" label="收款银行" align="center" min-width="140" show-overflow-tooltip>
         <template #default="{ row }">
           <div>{{row.receivingBank}}{{row.receiveBankAccount?'【'+row.receiveBankAccount+'】':''}}</div>
         </template>
       </el-table-column> -->
+      <el-table-column key="deductionAmount" prop="deductionAmount" label="让利金额" align="right" min-width="80" />
       <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center"  show-overflow-tooltip />
       <el-table-column key="auditTime" prop="auditTime" label="审核日期" align="center"  show-overflow-tooltip />
       <el-table-column key="auditStatus" prop="auditStatus" label="审核状态" align="center">
@@ -67,7 +68,7 @@
       >
         <template v-slot="scope">
           <common-button v-if="checkPermission(permission.detail)" icon="el-icon-view" type="info" size="mini" @click="openDetail(scope.row, 'detail')"/>
-          <udOperation :data="scope.row" :show-edit="scope.row.auditStatus!==auditTypeEnum.PASS.V?true:false" :show-del="scope.row.auditStatus!==auditTypeEnum.PASS.V?true:false" :permission="permission"/>
+          <udOperation :data="scope.row" :show-del="scope.row.auditStatus!==auditTypeEnum.PASS.V?true:false" :permission="permission"/>
         </template>
       </el-table-column>
     </common-table>
@@ -125,7 +126,8 @@ const props = defineProps({
 const dataFormat = ref([
   ['paymentDate', ['parse-time', '{y}-{m}-{d}']],
   ['auditTime', ['parse-time', '{y}-{m}-{d}']],
-  ['applyAmount', 'to-thousand']
+  ['applyAmount', 'to-thousand'],
+  ['deductionAmount', 'to-thousand']
 ])
 
 const tableRef = ref()

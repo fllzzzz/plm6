@@ -39,6 +39,32 @@
           style="width: 240px"
           @change="handleDateChange"
         />
+        <el-input
+          v-model.trim="query.paymentUnit"
+          type="text"
+          style="width: 220px"
+          class="filter-item"
+          maxlength="50"
+          placeholder="付款单位"
+        />
+        <el-input
+          v-model.trim="query.paymentBank"
+          type="text"
+          style="width: 220px"
+          class="filter-item"
+          maxlength="50"
+          placeholder="付款银行"
+        />
+        <el-input
+          v-model.trim="query.actualReceivingUnit"
+          type="text"
+          style="width: 220px"
+          class="filter-item"
+          maxlength="50"
+          placeholder="实际收款单位"
+        />
+        <common-button class="filter-item" size="small" type="success" icon="el-icon-search" @click.stop="fetchList">搜索</common-button>
+        <common-button class="filter-item" size="small" type="warning" icon="el-icon-refresh" @click.stop="resetSubmit">重置</common-button>
       </div>
       <common-table :data="list" v-loading="tableLoading" show-summary :summary-method="getSummaries" :data-format="dataFormat" :max-height="maxHeight">
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
@@ -70,6 +96,7 @@
           <div>{{row.receivingBank}}{{row.receiveBankAccount?'【'+row.receiveBankAccount+'】':''}}</div>
         </template>
       </el-table-column> -->
+      <el-table-column key="actualReceivingUnit" prop="actualReceivingUnit" label="实际收款单位" align="center" min-width="140" show-overflow-tooltip />
       <el-table-column key="applyUserName" prop="applyUserName" label="办理人" align="center" width="100px" />
       <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center" width="100px" />
       <!-- <el-table-column key="remark" prop="remark" label="备注" align="center" min-width="120" show-overflow-tooltip /> -->
@@ -215,6 +242,13 @@ function handleDateChange(val) {
     query.value.startDate = undefined
     query.value.endDate = undefined
   }
+  fetchList()
+}
+
+// 重置搜索
+function resetSubmit() {
+  query.value = {}
+  query.value.date = []
   fetchList()
 }
 

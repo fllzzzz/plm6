@@ -63,6 +63,11 @@
           <span>{{ row.paymentRate }}%</span>
         </template>
       </el-table-column>
+      <el-table-column prop="invoiceAble" label="应收发票" align="right" show-overflow-tooltip min-width="120">
+        <template v-slot="scope">
+          <span :style="`color:${(scope.row.sourceRow.totalPrice-scope.row.sourceRow.invoiceAmount)<0?'red':''}`">{{toThousand(scope.row.sourceRow.totalPrice-scope.row.sourceRow.invoiceAmount)}}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="invoiceAmount" key="invoiceAmount" label="累计已收票" align="right" min-width="120" show-overflow-tooltip>
         <template v-if="checkPermission(permission.detail)" #header>
           <el-tooltip
@@ -83,6 +88,11 @@
       <el-table-column prop="invoiceRate" label="收票比例" align="center" show-overflow-tooltip min-width="80">
         <template #default="{ row }">
           <span>{{ row.invoiceRate }}%</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="payable" label="应付运费" align="right" show-overflow-tooltip min-width="120">
+        <template v-slot="scope">
+          <span :style="`color:${(scope.row.sourceRow.invoiceAmount-scope.row.sourceRow.paymentAmount)<0?'red':''}`">{{toThousand(scope.row.sourceRow.invoiceAmount-scope.row.sourceRow.paymentAmount)}}</span>
         </template>
       </el-table-column>
       <!--付款和收票-->
@@ -119,6 +129,9 @@
       v-model="applicationVisible"
       :close-on-click-modal="false"
     >
+      <template #titleAfter>
+        <span>物流公司：{{detailInfo.supplierName}}</span>
+      </template>
       <template #content>
         <paymentApplication :visibleValue="applicationVisible" :detail-info="detailInfo" @success="crud.toQuery"/>
       </template>
@@ -126,12 +139,15 @@
     <common-drawer
       ref="invoiceRef"
       :show-close="true"
-      size="95%"
+      size="100%"
       title="收票申请登记"
       append-to-body
       v-model="invoiceVisible"
       :close-on-click-modal="false"
     >
+      <template #titleAfter>
+        <span>物流公司：{{detailInfo.supplierName}}</span>
+      </template>
       <template #content>
         <invoice :visibleValue="invoiceVisible" :detail-info="detailInfo" @success="crud.toQuery"/>
       </template>
@@ -147,6 +163,7 @@ import { ref, provide, computed, nextTick } from 'vue'
 
 import { contractSupplierProductLogisticsPM as permission } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
+import { toThousand } from '@data-type/number'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

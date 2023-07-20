@@ -37,11 +37,12 @@ export function del(data) {
   })
 }
 
-export function audit(id, auditStatus) {
+export function audit(data) {
   return request({
     module: 'contract',
-    url: `contract/subLedger/invoice/audit/${id}/${auditStatus}`,
-    method: 'put'
+    url: `contract/subLedger/invoice/audit`,
+    method: 'put',
+    data
   })
 }
 export default { get, add, edit, del }

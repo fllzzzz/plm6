@@ -89,6 +89,23 @@
                 style="width:280px;"
               />
             </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="开票日期" prop="createInvoiceDate">
+              <el-date-picker
+                v-model="form.createInvoiceDate"
+                type="date"
+                size="small"
+                value-format="x"
+                placeholder="选择日期"
+                :disabledDate="(date) => {return date.getTime() > new Date().getTime()}"
+                style="width:280px;"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
              <el-form-item label="备注" prop="remark">
               <el-input
                 v-model="form.remark"
@@ -98,6 +115,19 @@
                 show-word-limit
                 :autosize="{ minRows: 2, maxRows: 4 }"
                 placeholder="请输入备注"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+             <el-form-item label="发票内容" prop="invoiceContent">
+              <el-input
+                v-model="form.invoiceContent"
+                type="textarea"
+                style="width: 280px"
+                maxlength="200"
+                show-word-limit
+                :autosize="{ minRows: 2, maxRows: 4 }"
+                placeholder="请输入发票内容"
               />
             </el-form-item>
           </el-col>
@@ -157,7 +187,9 @@ const defaultForm = {
   receiveInvoiceDate: undefined,
   remark: undefined,
   supplierId: undefined,
-  taxRate: undefined
+  taxRate: undefined,
+  createInvoiceDate: undefined,
+  invoiceContent: undefined
 }
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)

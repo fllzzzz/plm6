@@ -39,7 +39,7 @@
           <div>{{row.paymentBank}}{{row.paymentBankAccount?'【'+row.paymentBankAccount+'】':''}}</div>
         </template>
       </el-table-column>
-      <el-table-column key="receivingUnit" prop="receivingUnit" label="收款单位" align="center" min-width="140" show-overflow-tooltip />
+      <el-table-column key="actualReceivingUnit" prop="actualReceivingUnit" label="实际收款单位" align="center" min-width="140" show-overflow-tooltip />
       <!-- <el-table-column key="receivingBank" prop="receivingBank" label="收款银行" align="center" min-width="140" show-overflow-tooltip>
         <template #default="{ row }">
           <div>{{row.receivingBank}}{{row.receiveBankAccount?'【'+row.receiveBankAccount+'】':''}}</div>

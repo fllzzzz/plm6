@@ -23,6 +23,31 @@
         @change="crud.toQuery"
         style="float:left;"
       />
+      <el-input
+        v-model.trim="query.branchCompanyName"
+        type="text"
+        style="width: 220px"
+        class="filter-item"
+        maxlength="50"
+        placeholder="购买方"
+      />
+      <el-input
+        v-model.trim="query.supplierName"
+        type="text"
+        style="width: 220px"
+        class="filter-item"
+        maxlength="50"
+        placeholder="销售方"
+      />
+      <el-input
+        v-model.trim="query.actualInvoiceUnit"
+        type="text"
+        style="width: 220px"
+        class="filter-item"
+        maxlength="50"
+        placeholder="实际销售方"
+      />
+      <rrOperation />
     </div>
     <common-button type="primary" style="float:right;" @click="crud.toAdd" v-permission="crud.permission.add">+添加</common-button>
   </div>
@@ -32,11 +57,16 @@
 import { regHeader } from '@compos/use-crud'
 import { auditTypeEnum } from '@enum-ms/contract'
 
+import rrOperation from '@crud/RR.operation'
+
 const defaultQuery = {
   date: [],
   startDate: undefined,
   endDate: undefined,
-  auditStatus: auditTypeEnum.AUDITING.V
+  auditStatus: auditTypeEnum.AUDITING.V,
+  branchCompanyName: undefined,
+  supplierName: undefined,
+  actualInvoiceUnit: undefined
 }
 const { crud, query } = regHeader(defaultQuery)
 

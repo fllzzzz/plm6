@@ -91,14 +91,25 @@
             placeholder="销售负责人"
           />
         </el-form-item>
+        <el-form-item label="所属部门" prop="relationDeptId">
+          <dept-cascader
+            v-model="form.relationDeptId"
+            filterable
+            :collapse-tags="false"
+            clearable
+            class="input-underline"
+            style="width: 200px"
+            placeholder="所属部门"
+          />
+        </el-form-item>
       </div>
       <el-divider><span class="title">合同金额</span></el-divider>
       <div class="form-row">
-        <el-form-item label="合同金额(元)" prop="contractAmount">
+        <el-form-item label="签约额(元)" prop="signAmount">
           <div style="width:280px">
             <el-input-number
               v-show-thousand
-              v-model="form.contractAmount"
+              v-model="form.signAmount"
               :step="1"
               :min="0"
               :max="999999999999"
@@ -107,25 +118,35 @@
               controls-position="right"
               class="input-underline"
               style="width: 220px"
-              placeholder="合同金额(元)"
+              placeholder="签约金额(元)"
             />
-            <div style="color:#82848a">{{form.contractAmount?digitUppercase(form.contractAmount):''}}</div>
+            <div style="color:#82848a">{{form.signAmount?digitUppercase(form.signAmount):''}}</div>
           </div>
         </el-form-item>
+        <el-form-item label="合同金额(元)" prop="contractAmount">
+          <div style="width:280px">
+            <span>{{form.signAmount?toThousand(form.signAmount):'-'}}</span>
+            <div style="color:#82848a">{{form.signAmount?digitUppercase(form.signAmount):''}}</div>
+          </div>
+        </el-form-item>
+      </div>
+      <div class="form-row">
         <el-form-item label="预付款(元)" prop="prepayments">
-          <el-input-number
-            v-show-thousand
-            v-model="form.prepayments"
-            :step="1"
-            :min="0"
-            :max="form.contractAmount?form.contractAmount:999999999999"
-            :precision="decimalPrecision.contract"
-            :controls="false"
-            controls-position="right"
-            class="input-underline"
-            style="width: 220px"
-            placeholder="预付款(元)"
-          />
+          <div style="width:280px">
+            <el-input-number
+              v-show-thousand
+              v-model="form.prepayments"
+              :step="1"
+              :min="0"
+              :max="form.signAmount?form.signAmount:999999999999"
+              :precision="decimalPrecision.contract"
+              :controls="false"
+              controls-position="right"
+              class="input-underline"
+              style="width: 220px"
+              placeholder="预付款(元)"
+            />
+            </div>
         </el-form-item>
         <el-form-item label="管理费(元)" prop="managementFeeRate">
           <el-input v-model="managementFee" class="input-underline" :readonly="true" style="width: 110px" placeholder="先输入费率" />
@@ -202,17 +223,19 @@
 <script setup>
 import { ref, defineProps, watch, computed, defineExpose, nextTick } from 'vue'
 import { dateDifference } from '@/utils/date'
-import regionCascader from '@comp-base/region-cascader'
-import userDeptCascader from '@comp-base/user-dept-cascader.vue'
-import useDict from '@compos/store/use-dict'
+
 import { orderSourceTypeEnum } from '@enum-ms/contract'
 import { fileClassifyEnum } from '@enum-ms/file'
-import uploadList from '@comp/file-upload/UploadList.vue'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { DP } from '@/settings/config'
-import { digitUppercase } from '@/utils/data-type/number'
+import { toThousand, digitUppercase } from '@/utils/data-type/number'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
+import regionCascader from '@comp-base/region-cascader'
+import userDeptCascader from '@comp-base/user-dept-cascader.vue'
+import deptCascader from '@comp-base/dept-cascader.vue'
+import useDict from '@compos/store/use-dict'
+import uploadList from '@comp/file-upload/UploadList.vue'
 const { decimalPrecision } = useDecimalPrecision()
 
 const formRef = ref()
@@ -243,14 +266,16 @@ const defaultForm = {
   attachmentFiles: [], // 附件
   attachments: [],
   orderSourceType: undefined,
-  signerId: undefined // 销售签约人
+  signerId: undefined, // 销售签约人
+  relationDeptId: undefined, // 所属部门
+  signAmount: undefined // 签约额
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 
 const validateMoney = (rule, value, callback) => {
   if (!value) {
-    callback(new Error('合同金额必须大于0'))
+    callback(new Error('签约额必须大于0'))
   } else {
     callback()
   }
@@ -271,7 +296,7 @@ const rules = {
     { min: 1, max: 12, message: '长度在 1 到 12 个字符', trigger: 'blur' }
   ],
   orderSourceType: [{ required: true, message: '请选择订单来源', trigger: 'change' }],
-  contractAmount: [{ required: true, validator: validateMoney, trigger: 'blur' }],
+  signAmount: [{ required: true, validator: validateMoney, trigger: 'blur' }],
   address: [{ max: 220, message: '长度不超过 220 个字符', trigger: 'blur' }],
   signingAddress: [{ max: 220, message: '长度不超过 220 个字符', trigger: 'blur' }]
 }
@@ -292,8 +317,8 @@ watch(
 )
 
 const managementFee = computed(() => {
-  if (form.value.managementFeeRate && form.value.contractAmount) {
-    return ((form.value.managementFeeRate * form.value.contractAmount) / 100).toFixed(decimalPrecision.value.contract)
+  if (form.value.managementFeeRate && form.value.signAmount) {
+    return ((form.value.managementFeeRate * form.value.signAmount) / 100).toFixed(decimalPrecision.value.contract)
   }
   return undefined
 })
