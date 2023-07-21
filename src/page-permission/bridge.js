@@ -414,7 +414,7 @@ export const bridgeProjectOverviewPM = {
 
 // 项目制造/结构看板
 export const bridgeArtifactProductionDashboardPM = {
-  get: ['bridge_box_production_dashboard:get'] // 结构看板列表
+  get: ['mes_bridge_box_production_dashboard:get'] // 结构看板列表
 }
 
 // 项目制造/零件齐套

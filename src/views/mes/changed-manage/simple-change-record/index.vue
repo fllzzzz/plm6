@@ -74,7 +74,39 @@
         v-if="columns.visible('newQuantity')"
         prop="newQuantity"
         :show-overflow-tooltip="true"
-        label="变更后清单数量"
+        label="变更后清单数量(kg)"
+        width="110"
+        align="center"
+      />
+      <el-table-column
+        v-if="columns.visible('oldNetWeight')"
+        prop="oldNetWeight"
+        :show-overflow-tooltip="true"
+        label="原单净重(kg)"
+        width="100"
+        align="center"
+      />
+      <el-table-column
+        v-if="columns.visible('newNetWeight')"
+        prop="newNetWeight"
+        :show-overflow-tooltip="true"
+        label="变更后单净重"
+        width="110"
+        align="center"
+      />
+      <el-table-column
+        v-if="columns.visible('oldGrossWeight')"
+        prop="oldGrossWeight"
+        :show-overflow-tooltip="true"
+        label="原单毛重(kg)"
+        width="100"
+        align="center"
+      />
+      <el-table-column
+        v-if="columns.visible('newGrossWeight')"
+        prop="newGrossWeight"
+        :show-overflow-tooltip="true"
+        label="变更后单毛重(kg)"
         width="110"
         align="center"
       />
