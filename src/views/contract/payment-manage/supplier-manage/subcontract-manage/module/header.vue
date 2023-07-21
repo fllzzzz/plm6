@@ -15,7 +15,7 @@
       />
       <el-input
         v-model="query.supplierName"
-        placeholder="物流公司"
+        placeholder="分包公司"
         class="filter-item"
         style="width: 200px;"
         size="small"
@@ -25,16 +25,16 @@
       <rrOperation />
     </div>
     <crudOperation>
-      <!-- <template #optRight>
+      <template #optRight>
         <print-table
-          v-permission="crud.permission.print"
-          api-key="logisticsPaymentLedger"
+          v-permission="crud.permission.get"
+          api-key="subcontractPaymentLedger"
           :params="{ ...query }"
           size="mini"
           type="warning"
           class="filter-item"
         />
-      </template> -->
+      </template>
     </crudOperation>
   </div>
 </template>

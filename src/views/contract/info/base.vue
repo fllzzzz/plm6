@@ -149,27 +149,53 @@
             </div>
           </el-form-item>
           <el-form-item label="销售负责人" prop="signerId">
-            <user-dept-cascader
+            <div class="input-underline" style="width:300px">
+              <user-dept-cascader
+                v-if="isModify"
+                v-model="form.signerId"
+                filterable
+                :collapse-tags="false"
+                clearable
+                class="input-underline"
+                style="width: 200px"
+                placeholder="销售负责人"
+              />
+              <span v-else>{{ detail.signerName || '-' }}</span>
+            </div>
+          </el-form-item>
+          <el-form-item label="所属部门" prop="relationDeptId">
+            <dept-cascader
               v-if="isModify"
-              v-model="form.signerId"
+              v-model="form.relationDeptId"
               filterable
               :collapse-tags="false"
               clearable
               class="input-underline"
               style="width: 200px"
-              placeholder="销售负责人"
+              placeholder="所属部门"
             />
-            <span v-else>{{ detail.signerName || '-' }}</span>
+            <span v-else>{{ detail.relationDeptName || '-' }}</span>
           </el-form-item>
         </div>
         <el-divider><span class="title">合同金额</span></el-divider>
         <div class="form-row">
-          <el-form-item label="合同金额(元)" prop="contractAmount">
-            <div class="input-underline">
-              <span>{{ detail.contractAmount? toThousand(detail.contractAmount,decimalPrecision.contract): '-' }}</span>
-              <div style="color:#82848a">{{ detail.contractAmount? digitUppercase(detail.contractAmount):'' }}</div>
+          <el-form-item label="签约额(元)" prop="signAmount">
+           <div class="input-underline">
+              <span>{{ detail.signAmount? toThousand(detail.signAmount,decimalPrecision.contract): '-' }}</span>
+              <div style="color:#82848a">{{ detail.signAmount? digitUppercase(detail.signAmount):'' }}</div>
             </div>
           </el-form-item>
+          <el-form-item label="合同金额(元)" prop="contractAmount">
+            <div class="input-underline">
+              <div @click="changeVisible=true">
+                <span style="margin-right:2px;">{{ detail.contractAmount? toThousand(detail.contractAmount,decimalPrecision.contract): '-' }}</span>
+                <svg-icon icon-class="document" style="color:#409eff;margin-left:5px;cursor:pointer;"  />
+              </div>
+              <div style="color:#82848a;">{{ detail.contractAmount? digitUppercase(detail.contractAmount):'' }}</div>
+            </div>
+          </el-form-item>
+        </div>
+        <div class="form-row">
           <el-form-item label="预付款(元)" prop="prepayments">
             <div class="input-underline">
               <el-input-number
@@ -301,6 +327,7 @@
         />
       </div>
     </el-form>
+    <moneyChangeDetail v-model="changeVisible" :detailInfo="detail"/>
   </div>
 </template>
 
@@ -320,12 +347,15 @@ import { digitUppercase, toThousand } from '@/utils/data-type/number'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import regionCascader from '@comp-base/region-cascader'
+import deptCascader from '@comp-base/dept-cascader.vue'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import uploadList from '@comp/file-upload/UploadList.vue'
+import moneyChangeDetail from './components/money-change-detail'
 
 const { decimalPrecision } = useDecimalPrecision()
 
 const formRef = ref()
+const changeVisible = ref(false)
 const dict = useDict(['margin_type', 'currency_type'])
 const defaultForm = {
   id: undefined,
@@ -352,7 +382,8 @@ const defaultForm = {
   attachmentFiles: [], // 附件
   attachments: [],
   orderSourceType: undefined,
-  signerId: undefined // 销售负责人
+  signerId: undefined, // 销售负责人
+  relationDeptId: undefined
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))

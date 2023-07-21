@@ -49,17 +49,17 @@
         <div>{{ scope.row.signingDate? parseTime(scope.row.signingDate,'{y}-{m}-{d}'):'-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('contractAmount')" key="contractAmount" prop="contractAmount" label="合同额" align="center">
+    <el-table-column v-if="columns.visible('contractAmount')" key="contractAmount" prop="contractAmount" label="合同额" align="center"  min-width="80px">
       <template v-slot="scope">
         <div @click="openContractMoney(scope.row.id)" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.contractAmount)? toThousand(scope.row.contractAmount,decimalPrecision.contract): '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('settlementAmount')" key="settlementAmount" prop="settlementAmount" label="结算额" align="right">
+    <el-table-column v-if="columns.visible('settlementAmount')" key="settlementAmount" prop="settlementAmount" label="结算额" align="right"  min-width="80px">
       <template v-slot="scope">
         <div>{{ scope.row.settlementAmount? toThousand(scope.row.settlementAmount,decimalPrecision.contract): '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('exportTaxRebate')" key="exportTaxRebate" prop="exportTaxRebate" label="出口退税" align="right">
+    <el-table-column v-if="columns.visible('exportTaxRebate')" key="exportTaxRebate" prop="exportTaxRebate" label="出口退税" align="right"  min-width="80px">
       <template v-slot="scope">
         <div @click="openTax(scope.row)" style="cursor:pointer;">
           <span v-if="scope.row.unCheckExportTaxRebateCount > 0 && checkPermission(permission.exportTaxRebate.audit)">
@@ -71,7 +71,7 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('collectionAmount')" key="collectionAmount" prop="collectionAmount" label="累计收款" align="right">
+    <el-table-column v-if="columns.visible('collectionAmount')" key="collectionAmount" prop="collectionAmount" label="累计收款" align="right"  min-width="80px">
       <template v-slot="scope">
         <div @click="openTab(scope.row,'collection')" style="cursor:pointer;">
           <span v-if="scope.row.unCheckCollectionCount>0 && checkPermission(permission.collection.audit)">
@@ -88,7 +88,7 @@
         <div>{{ scope.row.collectionRate? (scope.row.collectionRate*100).toFixed(2)+'%': '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="累计开票" align="right">
+    <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="累计开票" align="right"  min-width="80px">
       <template v-slot="scope">
         <div @click="openTab(scope.row,'invoice')" style="cursor:pointer;">
           <span v-if="scope.row.unCheckInvoiceCount>0 && checkPermission(permission.invoice.audit)">
@@ -105,12 +105,17 @@
         <div>{{ scope.row.invoiceRate? (scope.row.invoiceRate*100).toFixed(2)+'%': '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('deliverInstallAmount')" key="deliverInstallAmount" prop="deliverInstallAmount" label="累计发货额" align="center">
+    <el-table-column v-if="columns.visible('extraInvoice')" key="extraInvoice" prop="extraInvoice" label="超额开票" align="right" min-width="80px">
+      <template v-slot="scope">
+        <div :style="`color:${scope.row.extraInvoice<0?'red':''}`">{{ toThousand(scope.row.extraInvoice,decimalPrecision.contract) || '-' }}</div>
+      </template>
+    </el-table-column>
+    <el-table-column v-if="columns.visible('deliverInstallAmount')" key="deliverInstallAmount" prop="deliverInstallAmount" label="累计发货额" align="center"  min-width="80px">
       <template v-slot="scope">
         <div @click="openOccurAmount(scope.row.id)" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.deliverInstallAmount)? toThousand(scope.row.deliverInstallAmount,decimalPrecision.contract): '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('availableBalance')" key="availableBalance" prop="availableBalance" label="可用余额" align="right">
+    <el-table-column v-if="columns.visible('availableBalance')" key="availableBalance" prop="availableBalance" label="可用余额" align="right"  min-width="80px">
       <template v-slot="scope">
         <div>{{ scope.row.availableBalance? toThousand(scope.row.availableBalance,decimalPrecision.contract): '-' }}</div>
       </template>
@@ -176,7 +181,7 @@ const tabVisible = ref(false)
 const currentProjectId = ref()
 const currentRow = ref({})
 const activeName = ref('collection')
-const { crud, columns } = useCRUD(
+const { CRUD, crud, columns } = useCRUD(
   {
     title: '项目台账',
     sort: [],
@@ -226,6 +231,12 @@ function openTab(row, name) {
   currentProjectId.value = row.id
   currentRow.value = row
   tabVisible.value = true
+}
+
+CRUD.HOOK.handleRefresh = (crud, data) => {
+  data.data.content.map(v => {
+    v.extraInvoice = v.collectionAmount - v.invoiceAmount
+  })
 }
 </script>
 

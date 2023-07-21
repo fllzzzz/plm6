@@ -33,6 +33,9 @@ const contractEnclosureShipmentTracking = contract.shipmentTracking
 const contractAuxiliaryMaterialShipmentTracking = contract.shipmentTracking
 
 const logisticsPaymentLedger = contract.logisticsLedger
+const productLogisticsPaymentLedger = contract.productLogisticsPaymentLedger
+const materialLogisticsRecord = contract.materialLogisticsRecord
+const subcontractPaymentLedger = contract.subcontractPaymentLedger
 const supplierPayableSummary = contract.payableSummary
 const supplierPaymentLedger = contract.supplierPayableLedger
 const supplierInvoiceLedger = contract.supplierInvoiceLedger
@@ -88,6 +91,7 @@ const subcontractInvoiceRecord = supply.subcontractInvoiceRecord
 const subcontractPaymentRecord = supply.subcontractPaymentRecord
 
 const scmRequisitionsDetail = supply.requisitionsDetail // 申购详情
+const logisticsOrderSummary = supply.logisticsOrderSummary // 物流订单汇总
 
 // mes
 const mesSchedulingDetail = mes.schedulingDetail
@@ -365,8 +369,12 @@ export default {
   logisticsInvoiceRecord, // 原材料物流收票记录
   subcontractInvoiceRecord, // 分包订单收票记录
   subcontractPaymentRecord, // 分包订单付款记录
+  productLogisticsPaymentLedger, // 制成品物流台账
+  materialLogisticsRecord, // 原材料物流记录详情
+  subcontractPaymentLedger, // 分包订单付款台账
 
   scmRequisitionsDetail, // 申购详情
+  logisticsOrderSummary, // 物流订单汇总
 
   // mes
   mesSchedulingDetail, // 工单详情

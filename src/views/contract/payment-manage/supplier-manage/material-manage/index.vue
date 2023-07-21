@@ -53,6 +53,11 @@
           <div type="warning" class="clickable" @click.stop="openRecord(row, 'payment')">{{ row.paymentAmount }}</div>
         </template>
       </el-table-column>
+      <el-table-column prop="payable" label="应付账款" align="right" show-overflow-tooltip min-width="120">
+        <template v-slot="scope">
+          <span :style="`color:${(scope.row.sourceRow.inboundAmount-scope.row.sourceRow.paymentAmount)<0?'red':''}`">{{toThousand(scope.row.sourceRow.inboundAmount-scope.row.sourceRow.paymentAmount)}}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="paymentRate" label="付款比例" align="center" show-overflow-tooltip min-width="80">
         <template #default="{ row }">
           <span>{{ row.paymentRate }}%</span>
@@ -73,6 +78,11 @@
         </template>
         <template #default="{ row }">
           <div type="warning" class="clickable" @click.stop="openRecord(row, 'invoice')">{{ row.invoiceAmount }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="invoiceAble" label="应收发票" align="right" show-overflow-tooltip min-width="120">
+        <template v-slot="scope">
+          <span :style="`color:${(scope.row.sourceRow.inboundAmount-scope.row.sourceRow.invoiceAmount)<0?'red':''}`">{{toThousand(scope.row.sourceRow.inboundAmount-scope.row.sourceRow.invoiceAmount)}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="invoiceRate" label="收票比例" align="center" show-overflow-tooltip min-width="80">
@@ -114,6 +124,9 @@
       v-model="applicationVisible"
       :close-on-click-modal="false"
     >
+      <template #titleAfter>
+        <span>供应商：{{detailInfo.supplierName}}</span>
+      </template>
       <template #content>
         <paymentApplication :visibleValue="applicationVisible" :detail-info="detailInfo" @success="crud.toQuery"/>
       </template>
@@ -121,12 +134,15 @@
     <common-drawer
       ref="invoiceRef"
       :show-close="true"
-      size="95%"
+      size="98%"
       title="收票申请登记"
       append-to-body
       v-model="invoiceVisible"
       :close-on-click-modal="false"
     >
+      <template #titleAfter>
+        <span>供应商：{{detailInfo.supplierName}}</span>
+      </template>
       <template #content>
         <invoice :visibleValue="invoiceVisible" :detail-info="detailInfo" @success="crud.toQuery"/>
       </template>
@@ -138,6 +154,7 @@
 import crudApi from '@/api/contract/supplier-manage/jd-material-manage'
 import { ref, provide, computed, nextTick } from 'vue'
 
+import { toThousand } from '@data-type/number'
 import { parseTime } from '@/utils/date'
 import { contractSupplierMaterialPM as permission } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'

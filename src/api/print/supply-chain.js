@@ -156,6 +156,18 @@ export function requisitionsDetail({ id }) {
   })
 }
 
+/**
+ * 物流订单汇总
+ */
+export function logisticsOrderSummary(params) {
+  return request({
+    module: 'scm',
+    url: `logistics-order/print`,
+    method: 'get',
+    params
+  })
+}
+
 export default {
   invoiceDetail, // 收票记录
   paymentRecord, // 付款记录
@@ -170,5 +182,6 @@ export default {
   logisticsPaymentRecord, // 原材料物流付款记录
   subcontractInvoiceRecord,
   subcontractPaymentRecord,
-  requisitionsDetail // 申购详情
+  requisitionsDetail, // 申购详情
+  logisticsOrderSummary // 物流记录详情
 }

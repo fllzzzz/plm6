@@ -74,15 +74,26 @@
               <span>{{ detail.singerName || '-' }}</span>
             </div>
           </el-form-item>
+          <el-form-item label="所属部门" prop="relationDeptId">
+            <span>{{ detail.relationDeptName || '-' }}</span>
+          </el-form-item>
         </div>
         <el-divider><span class="title">合同金额</span></el-divider>
         <div class="form-row">
+           <el-form-item label="签约额(元)" prop="signAmount">
+           <div class="input-underline">
+              <span>{{ detail.signAmount? toThousand(detail.signAmount,decimalPrecision.contract): '-' }}</span>
+              <div style="color:#82848a">{{ detail.signAmount? digitUppercase(detail.signAmount):'' }}</div>
+            </div>
+          </el-form-item>
           <el-form-item label="合同金额(元)" prop="contractAmount">
             <div class="input-underline">
               <span>{{ detail.contractAmount? toThousand(detail.contractAmount,decimalPrecision.contract): '-' }}</span>
               <div style="color:#82848a">{{ detail.contractAmount? digitUppercase(detail.contractAmount):'' }}</div>
             </div>
           </el-form-item>
+        </div>
+        <div class="form-row">
           <el-form-item label="预付款(元)" prop="prepayments">
             <div class="input-underline">
               <span>{{ detail.prepayments? toThousand(detail.prepayments,decimalPrecision.contract): '' }}</span>

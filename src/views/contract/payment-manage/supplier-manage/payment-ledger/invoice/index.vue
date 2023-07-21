@@ -51,8 +51,11 @@
         </template>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceType')" key="invoiceType" prop="invoiceType" label="发票类型" align="center" width="106" />
-    <el-table-column v-if="columns.visible('taxRate')" key="taxRate" prop="taxRate" label="税率" align="center" width="60" />
+    <el-table-column v-if="columns.visible('invoiceType')" key="invoiceType" prop="invoiceType" label="发票类型" :show-overflow-tooltip="true" align="center" width="106" />
+    <el-table-column v-if="columns.visible('taxRate')" key="taxRate" prop="taxRate" label="税率" align="center" :show-overflow-tooltip="true"  width="60" />
+    <el-table-column v-if="columns.visible('amountExcludingVat')" key="amountExcludingVat" prop="amountExcludingVat" label="不含税金额" :show-overflow-tooltip="true" align="center" />
+    <el-table-column v-if="columns.visible('applyUserName')" key="applyUserName" prop="applyUserName" label="办理人" :show-overflow-tooltip="true" align="center" />
+    <el-table-column v-if="columns.visible('invoiceContent')" key="invoiceContent" prop="invoiceContent" label="发票内容" :show-overflow-tooltip="true" align="center" />
   </common-table>
   <!--分页组件-->
   <pagination />
@@ -116,7 +119,8 @@ const dataFormat = computed(() => {
     ['receiveInvoiceDate', ['parse-time', '{y}-{m}-{d}']],
     ['propertyType', ['parse-enum', supplierPayTypeEnum]],
     ['invoiceType', ['parse-enum', invoiceTypeEnum]],
-    ['taxRate', ['suffix', '%']]
+    ['taxRate', ['suffix', '%']],
+    ['amountExcludingVat', ['to-thousand', decimalPrecision.value.contract]]
   ]
 })
 
@@ -139,8 +143,8 @@ CRUD.HOOK.beforeRefresh = () => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['invoiceAmount', decimalPrecision.value.contract]],
-    toThousandFields: ['invoiceAmount']
+    props: [['invoiceAmount', decimalPrecision.value.contract], ['amountExcludingVat', decimalPrecision.value.contract]],
+    toThousandFields: ['invoiceAmount', 'amountExcludingVat']
   })
 }
 </script>

@@ -6,7 +6,7 @@
     :visible="crud.status.cu > 0"
     title="付款申请"
     :wrapper-closable="false"
-    size="60%"
+    size="80%"
   >
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">提交审核</common-button>
@@ -20,8 +20,8 @@
           </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="累计入库额">
-              <span v-thousand="detailInfo.inboundAmount" />
+            <el-form-item label="累计运输费">
+              <span v-thousand="detailInfo.freight" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -33,6 +33,7 @@
                 clearable
                 placeholder="可搜索"
                 show-hide
+                :basicClass="supplierClassEnum.LOGISTICS.V"
                 style="width: 280px"
               />
             </el-form-item>
@@ -98,7 +99,7 @@
                 v-model="form.applyAmount"
                 :step="10000"
                 :min="-9999999999"
-                :max="detailInfo?.sourceRow?.settlementAmount?detailInfo?.sourceRow?.settlementAmount-detailInfo?.sourceRow?.paymentAmount:9999999999"
+                :max="detailInfo?.sourceRow?.settlementAmount?detailInfo?.sourceRow?.settlementAmount-detailInfo?.sourceRow?.paymentAmount:999999999999"
                 :precision="DP.YUAN"
                 placeholder="本次付款"
                 controls-position="right"
@@ -124,6 +125,7 @@
           <el-col :span="12">
             <el-form-item label="大写">
               <span style="color:#82848a">{{form.applyAmount?digitUppercase(form.applyAmount):''}}</span>
+              <span v-if="form.applyAmount<detailInfo.freight" style="color:red;">*让利金额{{detailInfo.freight-form.applyAmount}}元</span>
             </el-form-item>
         </el-col>
         </el-row>
@@ -140,16 +142,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="付款方式" prop="paymentMethod">
-              <common-select
-                v-model="form.paymentMethod"
-                :options="paymentOtherModeEnum.ENUM"
-                type="enum"
-                size="small"
-                placeholder="付款方式"
-                style="width:280px;"
-                @change="paymentModeChange"
-              />
+            <el-form-item label="付款行" prop="paymentBank">
+              <el-select v-model="form.paymentBank" placeholder="付款行" :size="'small'" style="width: 280px" @change="bankChange">
+                <el-option v-for="item in bankList" :key="item.account" :label="item.depositBank" :value="item.depositBank" />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -167,11 +163,9 @@
               />
             </el-form-item>
           </el-col>
-           <el-col :span="12">
-            <el-form-item label="付款行" prop="paymentBank">
-              <el-select v-model="form.paymentBank" placeholder="付款行" :size="'small'" style="width: 280px" @change="bankChange" clearable :disabled="form.paymentMethod===paymentOtherModeEnum.CASH.V">
-                <el-option v-for="item in bankList" :key="item.account" :label="item.depositBank" :value="item.depositBank" />
-              </el-select>
+          <el-col :span="12">
+            <el-form-item label="账号">
+              <span>{{form.paymentBankAccount}}</span>
             </el-form-item>
           </el-col>
         </el-row>
@@ -197,35 +191,111 @@
               <upload-btn ref="uploadRef" v-model:files="form.files" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.jpg,.png,.pdf,.jpeg'"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="账号">
-              <span>{{form.paymentBankAccount}}</span>
-            </el-form-item>
-          </el-col>
         </el-row>
       </el-form>
+      <el-divider><span class="title">物流信息</span></el-divider>
+      <div class="head-container">
+        <el-date-picker
+          v-model="query.date"
+          type="daterange"
+          range-separator=":"
+          size="small"
+          value-format="x"
+          class="filter-item date-item"
+          start-placeholder="开始时间"
+          end-placeholder="结束时间"
+          style="width: 240px"
+          @change="handleDateChange"
+        />
+        <el-input
+          v-model="query.purchaseSn"
+          placeholder="采购编号"
+          class="filter-item"
+          style="width: 200px"
+          size="small"
+          clearable
+        />
+        <el-input
+          v-model="query.branchCompanyName"
+          placeholder="签订主体"
+          class="filter-item"
+          style="width: 200px"
+          size="small"
+          clearable
+        />
+        <el-input
+          v-model="query.purchaseUserName"
+          placeholder="采购员"
+          class="filter-item"
+          style="width: 200px"
+          size="small"
+          clearable
+        />
+        <el-input
+          v-model="query.licensePlate"
+          placeholder="车牌号"
+          class="filter-item"
+          style="width: 200px"
+          size="small"
+          clearable
+        />
+        <el-input
+          v-model="query.inboundSn"
+          placeholder="入库单号"
+          class="filter-item"
+          style="width: 200px"
+          size="small"
+          clearable
+        />
+        <common-button class="filter-item" size="small" type="success" icon="el-icon-search" @click.stop="fetchList">搜索</common-button>
+        <common-button class="filter-item" size="small" type="warning" icon="el-icon-refresh" @click.stop="resetSubmit">重置</common-button>
+      </div>
+      <common-table
+        ref="detailRef"
+        border
+        :data="list"
+        :max-height="maxHeight"
+        style="width: 100%;margin-bottom:10px;"
+        class="table-form"
+        v-loading="tableLoading"
+      >
+        <el-table-column key="projectName" prop="projectName" label="采购合同编号" align="center" />
+        <el-table-column key="projectName" prop="projectName" label="合同签订主体" align="center" />
+        <el-table-column key="projectName" prop="projectName" label="采购员" align="center" />
+        <el-table-column prop="inboundSn" label="入库单号" align="center" show-overflow-tooltip>
+          <template #default="{ row }">
+            <span class="clickable" @click="openRecord(row)"> {{ row.inboundSn }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column key="freight" prop="freight" label="运输费" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="paymentAmount" prop="paymentAmount" label="车牌号" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="paymentAmount" prop="paymentAmount" label="入库人" align="center" :show-overflow-tooltip="true" />
+      </common-table>
       <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
+      <inbound-record v-model="recordVisible" :detailInfo="currentRow" />
     </template>
   </common-drawer>
 </template>
 
 <script setup>
-import { ref, defineProps } from 'vue'
+import { ref, defineProps, nextTick } from 'vue'
+import { logisticsIsPaymentList } from '@/api/contract/supplier-manage/jd-logistics-payment'
 
 import moment from 'moment'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { digitUppercase } from '@data-type/number'
 import { parseTime } from '@/utils/date'
 import { DP } from '@/settings/config'
-import { isNotBlank } from '@/utils/data-type'
-import { paymentOtherModeEnum } from '@enum-ms/finance'
-
+import { supplierClassEnum } from '@enum-ms/supplier'
 import { regForm } from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
+import { isNotBlank } from '@/utils/data-type'
+
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 import branchCompanySelect from '@comp-base/branch-company-select.vue'
 import supplierSelect from '@comp-base/supplier-select/index.vue'
+import inboundRecord from '../inbound-record'
 
 const formRef = ref()
 const dict = useDict(['payment_reason'])
@@ -251,14 +321,18 @@ const defaultForm = {
   receivingUnitId: undefined,
   remark: undefined,
   receiveBank: undefined,
-  receiveBankAccount: undefined,
-  paymentMethod: undefined
+  receiveBankAccount: undefined
 }
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 const pdfShow = ref(false)
 const currentId = ref()
 const bankList = ref([])
+const recordVisible = ref(false)
+const currentRow = ref({})
+const query = ref({})
+const list = ref([])
+const tableLoading = ref(false)
 
 const validateMoney = (rule, value, callback) => {
   if (!isNotBlank(value)) {
@@ -271,13 +345,45 @@ const rules = {
   paymentDate: [{ required: true, message: '请选择申请日期', trigger: 'change' }],
   paymentReasonId: [{ required: true, message: '请选择付款事由', trigger: 'change' }],
   applyAmount: [{ required: true, validator: validateMoney, trigger: 'blur' }],
-  paymentUnitId: [{ required: true, message: '请选择付款单位', trigger: 'change' }],
-  paymentMethod: [{ required: true, message: '请选择付款方式', trigger: 'change' }]
+  paymentUnitId: [{ required: true, message: '请选择付款单位', trigger: 'change' }]
   // paymentBank: [{ required: true, message: '请选择付款银行', trigger: 'change' }]
+}
+
+CRUD.HOOK.beforeToAdd = () => {
+  fetchList()
 }
 
 CRUD.HOOK.afterToAdd = () => {
   crud.form.actualReceivingUnitId = crud.form.actualReceivingUnitId || props.detailInfo.supplierId
+}
+
+async function fetchList() {
+  let _list = []
+  tableLoading.value = true
+  const params = form.id ? { ...query.value, supplierId: crud.query.supplierId, supplierPaymentId: form.id } : { ...query.value, supplierId: crud.query.supplierId }
+  try {
+    const { content = [] } = await logisticsIsPaymentList(params)
+    _list = content
+  } catch (error) {
+    console.log('获取物流是否付款记录失败', error)
+  } finally {
+    list.value = _list
+    tableLoading.value = false
+  }
+}
+
+function resetSubmit() {
+  query.value = {}
+  query.value.date = []
+  fetchList()
+}
+
+// 打开入库记录
+function openRecord(row) {
+  currentRow.value = row.sourceRow
+  nextTick(() => {
+    recordVisible.value = true
+  })
 }
 
 // 预览附件
@@ -288,13 +394,6 @@ function attachmentView(item) {
 
 function companyChange(val) {
   bankList.value = val.bankAccountList || []
-}
-
-function paymentModeChange(val) {
-  if (val === paymentOtherModeEnum.CASH.V) {
-    crud.form.paymentBankAccount = undefined
-    crud.form.paymentBank = undefined
-  }
 }
 
 function bankChange(val) {

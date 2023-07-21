@@ -65,8 +65,40 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="开票日期" prop="createInvoiceDate">
+              <el-date-picker
+                v-if="showType==='audit'"
+                v-model="createInvoiceDate"
+                type="date"
+                size="small"
+                value-format="x"
+                placeholder="选择日期"
+                :disabledDate="(date) => {return date.getTime() > new Date().getTime()}"
+                style="width:280px;"
+              />
+              <span v-else>{{parseTime(currentRow.createInvoiceDate,'{y}-{m}-{d}')}}</span>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
              <el-form-item label="备注" prop="remark">
               <span>{{currentRow.remark}}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="发票内容" prop="invoiceContent">
+              <el-input
+                v-if="showType==='audit'"
+                v-model="invoiceContent"
+                type="textarea"
+                style="width: 280px"
+                maxlength="200"
+                show-word-limit
+                :autosize="{ minRows: 2, maxRows: 4 }"
+                placeholder="请输入发票内容"
+              />
+              <span v-else>{{currentRow.invoiceContent}}</span>
             </el-form-item>
           </el-col>
         </el-row>
@@ -115,7 +147,7 @@
 
 <script setup>
 import { audit } from '@/api/contract/supplier-manage/jd-product-logistics-invoice'
-import { ref, defineProps, defineEmits } from 'vue'
+import { ref, defineProps, defineEmits, watch } from 'vue'
 import { ElMessageBox, ElNotification } from 'element-plus'
 
 import { invoiceTypeEnum } from '@enum-ms/finance'
@@ -146,6 +178,19 @@ const props = defineProps({
 
 const pdfShow = ref(false)
 const currentId = ref()
+const createInvoiceDate = ref()
+const invoiceContent = ref()
+
+watch(
+  () => props.currentRow,
+  (val) => {
+    if (val) {
+      createInvoiceDate.value = props.currentRow.createInvoiceDate
+      invoiceContent.value = props.currentRow.invoiceContent
+    }
+  },
+  { deep: true, immediate: true }
+)
 
 // 预览附件
 function attachmentView(item) {
@@ -161,7 +206,7 @@ async function passConfirm(val) {
       cancelButtonText: '否',
       type: 'warning'
     })
-    await audit(props.currentRow.id, val)
+    await audit({ id: props.currentRow.id, auditStatus: val, createInvoiceDate: createInvoiceDate.value, invoiceContent: invoiceContent.value })
     ElNotification({ title: title + '成功', type: 'success' })
     handleClose()
     emit('success')

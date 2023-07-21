@@ -46,7 +46,8 @@ const bridge = {
 
 const supply = {
   purchase_reconciliation: '采购对账报表',
-  logistics_reconciliation: '物流对账报表'
+  logistics_reconciliation: '物流对账报表',
+  logistics_order: '物流订单'
 }
 
 const project = {
@@ -90,9 +91,12 @@ const tableType = {
   exportTaxRebateList: { L: '出口退税清单', M: 'contract_report', T: mt.contract.L + ' / ' + contract.contract_report },
   arrearsList: { L: '欠款清单', M: 'contract_report', T: mt.contract.L + ' / ' + contract.contract_report },
 
-  logisticsPaymentLedger: { L: '物流台账', M: 'supplier_payment', T: mt.contract.L + ' / ' + contract.supplier_payment },
   supplierInvoiceLedger: { L: '供应商收票台账', M: 'supplier_payment', T: mt.contract.L + ' / ' + contract.supplier_payment },
   supplierPaymentLedger: { L: '供应商付款台账', M: 'supplier_payment', T: mt.contract.L + ' / ' + contract.supplier_payment },
+  logisticsPaymentLedger: { L: '原材料物流台账', M: 'supplier_payment', T: mt.contract.L + ' / ' + contract.supplier_payment },
+  productLogisticsPaymentLedger: { L: '制成品物流台账', M: 'supplier_payment', T: mt.contract.L + ' / ' + contract.supplier_payment },
+  materialLogisticsRecord: { L: '原材料物流记录详情', M: 'supplier_payment', T: mt.contract.L + ' / ' + contract.supplier_payment },
+  subcontractPaymentLedger: { L: '分包订单付款台账', M: 'supplier_payment', T: mt.contract.L + ' / ' + contract.supplier_payment },
   supplierPayableSummary: { L: '应付汇总', M: 'supplier_payment', T: mt.contract.L + ' / ' + contract.supplier_payment },
 
   contractStructurePrice: { L: '结构计价表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
@@ -158,6 +162,8 @@ const tableType = {
   logisticsPaymentRecord: { L: '原材料物流付款记录', M: 'purchase_reconciliation', T: mt.supply.L + ' / ' + supply.purchase_reconciliation },
   subcontractInvoiceRecord: { L: '分包订单收票记录', M: 'purchase_reconciliation', T: mt.supply.L + ' / ' + supply.purchase_reconciliation },
   subcontractPaymentRecord: { L: '分包订单付款记录', M: 'purchase_reconciliation', T: mt.supply.L + ' / ' + supply.purchase_reconciliation },
+  logisticsOrderSummary: { L: '物流订单汇总', M: 'logistics_order', T: mt.supply.L + ' / ' + supply.logistics_order },
+
   // wms
   wmsRmInboundReceipt: { L: '入库单', M: 'wms_rm_receipt', T: mt.wms.L + ' / ' + wms.wms_rm_receipt },
   wmsRmOutboundReceipt: { L: '出库（领料）单', M: 'wms_rm_receipt', T: mt.wms.L + ' / ' + wms.wms_rm_receipt },

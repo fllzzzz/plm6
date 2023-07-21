@@ -70,6 +70,7 @@
         <el-table-column prop="inboundTime" label="入库时间" align="center" width="90" show-overflow-tooltip />
         <el-table-column prop="applicantName" label="入库人" align="center" show-overflow-tooltip width="90" />
         <el-table-column prop="reviewerName" label="审核人" align="center" show-overflow-tooltip width="90" />
+        <el-table-column prop="inboundSerialNumber" label="采购单号" align="center" min-width="110" show-overflow-tooltip />
       </common-table>
       <!--分页组件-->
       <el-pagination

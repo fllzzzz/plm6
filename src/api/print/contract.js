@@ -71,12 +71,48 @@ export function arrearsList(params) {
 }
 
 /**
- * 供应商付款/物流台账
+ * 供应商付款/原材料物流台账
  */
 export function logisticsLedger(params) {
   return request({
     module: 'contract',
-    url: 'supply-chain/logistics-payment/detail/print',
+    url: 'contract/logisticsLedger/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 供应商付款/制成品物流台账
+ */
+export function productLogisticsPaymentLedger(params) {
+  return request({
+    module: 'contract',
+    url: 'contract/cargoListLedger/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 供应商付款/分包订单付款台账
+ */
+export function subcontractPaymentLedger(params) {
+  return request({
+    module: 'contract',
+    url: 'contract/subLedger/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 供应商付款/原材料物流记录详情
+ */
+export function materialLogisticsRecord(params) {
+  return request({
+    module: 'contract',
+    url: 'contract/logisticsLedger/listLogistics/print',
     method: 'get',
     params
   })
@@ -548,5 +584,8 @@ export default {
   managementFee, // 管理费
   waterElectricFee, // 水电费
   depreciationFee, // 折旧费
-  fortuneReportList // 业财报表
+  fortuneReportList, // 业财报表
+  productLogisticsPaymentLedger, // 制成品物流台账
+  materialLogisticsRecord, // 原材料物流记录详情
+  subcontractPaymentLedger // 分包订单付款台账
 }

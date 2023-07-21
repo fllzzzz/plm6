@@ -33,13 +33,14 @@
          <div>{{ dict?.label?.['payment_reason']?.[row.paymentReasonId] }}</div>
         </template>
       </el-table-column>
+      <el-table-column key="paymentMethod" prop="paymentMethod" label="付款方式" align="center" width="100"  show-overflow-tooltip />
       <el-table-column key="paymentUnit" prop="paymentUnit" label="付款单位" align="center" min-width="140" show-overflow-tooltip />
       <el-table-column key="paymentBank" prop="paymentBank" show-overflow-tooltip label="付款银行" align="center" min-width="130">
         <template #default="{ row }">
           <div>{{row.paymentBank}}{{row.paymentBankAccount?'【'+row.paymentBankAccount+'】':''}}</div>
         </template>
       </el-table-column>
-      <el-table-column key="receivingUnit" prop="receivingUnit" label="收款单位" align="center" min-width="140" show-overflow-tooltip />
+      <el-table-column key="actualReceivingUnit" prop="actualReceivingUnit" label="实际收款单位" align="center" min-width="140" show-overflow-tooltip />
       <!-- <el-table-column key="receivingBank" prop="receivingBank" label="收款银行" align="center" min-width="140" show-overflow-tooltip>
         <template #default="{ row }">
           <div>{{row.receivingBank}}{{row.receiveBankAccount?'【'+row.receiveBankAccount+'】':''}}</div>
@@ -88,6 +89,7 @@ import { toThousand } from '@data-type/number'
 import { contractSupplierSubcontractPM } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
 import useDict from '@compos/store/use-dict'
+import { paymentOtherModeEnum } from '@enum-ms/finance'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -125,7 +127,8 @@ const props = defineProps({
 const dataFormat = ref([
   ['paymentDate', ['parse-time', '{y}-{m}-{d}']],
   ['auditTime', ['parse-time', '{y}-{m}-{d}']],
-  ['applyAmount', 'to-thousand']
+  ['applyAmount', 'to-thousand'],
+  ['paymentMethod', ['parse-enum', paymentOtherModeEnum]]
 ])
 
 const tableRef = ref()
@@ -204,7 +207,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
 
 function openDetail(row, type) {
   showType.value = type
-  currentRow.value = row
+  currentRow.value = row.sourceRow
   detailVisible.value = true
 }
 </script>

@@ -68,11 +68,21 @@ const paymentFineModeEnum = {
 }
 constantize(paymentFineModeEnum)
 
+// 付款方式（增加现金）
+const paymentOtherModeEnum = {
+  PUBLIC_TRANSFER: { L: '对公转账', K: 'PUBLIC_TRANSFER', V: paymentModeEnum.PUBLIC_TRANSFER.V },
+  ACCEPTANCE_DRAFT: { L: '承兑汇票', K: 'ACCEPTANCE_DRAFT', V: 1 << 3 },
+  PRIVATE_TRANSFER: { L: '对私转账', K: 'PRIVATE_TRANSFER', V: paymentModeEnum.PRIVATE_TRANSFER.V },
+  CASH: { L: '现金', K: 'CASH', V: 1 << 5 }
+}
+constantize(paymentOtherModeEnum)
+
 export default {
   boolWeightedAverageEnum, // 是否加权平均
   invoiceTypeEnum, // 票据类型
   paymentModeEnum, // 付款方式
   paymentFineModeEnum, // 付款（精细）方式
+  paymentOtherModeEnum,
   arrearsStatusEnum, // 欠款状态
   newArrearsStatusEnum,
   weightMeasurementModeEnum, // 工程结算方式
@@ -85,6 +95,7 @@ export {
   invoiceTypeEnum, // 票据类型
   paymentModeEnum, // 付款方式
   paymentFineModeEnum, // 付款（精细）方式
+  paymentOtherModeEnum,
   arrearsStatusEnum, // 欠款状态
   newArrearsStatusEnum,
   weightMeasurementModeEnum, // 工程结算方式

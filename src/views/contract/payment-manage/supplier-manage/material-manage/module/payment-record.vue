@@ -40,6 +40,32 @@
           style="width: 240px"
           @change="handleDateChange"
         />
+        <el-input
+          v-model.trim="query.paymentUnit"
+          type="text"
+          style="width: 220px"
+          class="filter-item"
+          maxlength="50"
+          placeholder="付款单位"
+        />
+        <el-input
+          v-model.trim="query.paymentBank"
+          type="text"
+          style="width: 220px"
+          class="filter-item"
+          maxlength="50"
+          placeholder="付款银行"
+        />
+        <el-input
+          v-model.trim="query.actualReceivingUnit"
+          type="text"
+          style="width: 220px"
+          class="filter-item"
+          maxlength="50"
+          placeholder="实际收款单位"
+        />
+        <common-button class="filter-item" size="small" type="success" icon="el-icon-search" @click.stop="fetchList">搜索</common-button>
+        <common-button class="filter-item" size="small" type="warning" icon="el-icon-refresh" @click.stop="resetSubmit">重置</common-button>
       </div>
       <common-table :data="list" v-loading="tableLoading" show-summary :summary-method="getSummaries" :data-format="dataFormat" :max-height="maxHeight">
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
@@ -59,13 +85,14 @@
          <div>{{ dict?.label?.['payment_reason']?.[row.paymentReasonId] }}</div>
         </template>
       </el-table-column>
+      <el-table-column key="paymentMethod" prop="paymentMethod" label="付款方式" align="center" width="100" />
       <el-table-column key="paymentUnit" prop="paymentUnit" label="付款单位" align="center" min-width="140" show-overflow-tooltip />
       <el-table-column key="paymentBank" prop="paymentBank" show-overflow-tooltip label="付款银行" align="center" min-width="130">
         <template #default="{ row }">
           <div>{{row.paymentBank}}{{row.paymentBankAccount?'【'+row.paymentBankAccount+'】':''}}</div>
         </template>
       </el-table-column>
-      <el-table-column key="receivingUnit" prop="receivingUnit" label="收款单位" align="center" min-width="140" show-overflow-tooltip />
+      <el-table-column key="actualReceivingUnit" prop="actualReceivingUnit" label="实际收款单位" align="center" min-width="140" show-overflow-tooltip />
       <!-- <el-table-column key="receivingBank" prop="receivingBank" label="收款银行" align="center" min-width="140" show-overflow-tooltip>
         <template #default="{ row }">
           <div>{{row.receivingBank}}{{row.receiveBankAccount?'【'+row.receiveBankAccount+'】':''}}</div>
@@ -101,6 +128,7 @@ import { defineEmits, defineProps, ref, computed, watch } from 'vue'
 import { auditTypeEnum } from '@enum-ms/contract'
 import { digitUppercase, getDP, toThousand } from '@/utils/data-type/number'
 import { tableSummary } from '@/utils/el-extra'
+import { paymentOtherModeEnum } from '@enum-ms/finance'
 
 import useVisible from '@/composables/use-visible'
 import usePagination from '@compos/use-pagination'
@@ -168,7 +196,8 @@ const dict = useDict(['payment_reason'])
 const dataFormat = ref([
   ['applyAmount', 'to-thousand'],
   // ['actuallyPaymentAmount', 'to-thousand'],
-  ['paymentDate', ['parse-time', '{y}-{m}-{d}']]
+  ['paymentDate', ['parse-time', '{y}-{m}-{d}']],
+  ['paymentMethod', ['parse-enum', paymentOtherModeEnum]]
 ])
 
 const { maxHeight } = useMaxHeight(
@@ -214,6 +243,13 @@ function handleDateChange(val) {
     query.value.startDate = undefined
     query.value.endDate = undefined
   }
+  fetchList()
+}
+
+// 重置搜索
+function resetSubmit() {
+  query.value = {}
+  query.value.date = []
   fetchList()
 }
 

@@ -22,6 +22,11 @@
         <span>{{ scope.row.businessType?businessTypeEnum.VL[scope.row.businessType]:'-'}}</span>
       </template>
     </el-table-column>
+    <el-table-column v-if="columns.visible('relationDept.name')" key="relationDept.name" prop="relationDept.name" :show-overflow-tooltip="true" label="所属部门" align="center">
+      <template v-slot="scope">
+        <span>{{ scope.row.relationDept?.name || '-' }}</span>
+      </template>
+    </el-table-column>
     <el-table-column v-if="columns.visible('project')" key="project.serialNumber" prop="project" :show-overflow-tooltip="true" label="所属项目" min-width="150">
       <template v-slot="scope">
         <span>{{ projectNameFormatter(scope.row.project) }}</span>
@@ -49,7 +54,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('collectionReason')" key="collectionReason" prop="collectionReason" label="收款事由" align="center">
       <template v-slot="scope">
-        <div>{{ scope.row.collectionReason }}</div>
+        <div>{{ scope.row.collectionReason && dict && dict.label && dict.label['payment_reason']? dict.label['payment_reason'][ scope.row.collectionReason]: '' }}</div>
       </template>
     </el-table-column>
   </common-table>
@@ -70,11 +75,13 @@ import { toThousand } from '@data-type/number'
 import { projectNameFormatter } from '@/utils/project'
 import { collectionLedgerPM } from '@/page-permission/contract'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
+import useDict from '@compos/store/use-dict'
 
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 
 const { decimalPrecision } = useDecimalPrecision()
+const dict = useDict(['payment_reason'])
 
 const permission = collectionLedgerPM.collection
 

@@ -222,6 +222,34 @@ async function handleFortuneReport({ header, table = [], footer, qrCode }) {
   }
 }
 
+// 处理 重量
+function handleLoadingWeight({ header, table = [], footer, qrCode }) {
+  const _table = table.map(row => {
+    row.loadingWeight = toFixed(row.loadingWeight / 1000, 2)
+    return row
+  })
+  return {
+    header,
+    table: _table,
+    qrCode,
+    footer
+  }
+}
+
+// 处理 制成品重量
+function handleActualWeight({ header, table = [], footer, qrCode }) {
+  const _table = table.map(row => {
+    row.actualWeight = toFixed(row.actualWeight / 1000, 2)
+    return row
+  })
+  return {
+    header,
+    table: _table,
+    qrCode,
+    footer
+  }
+}
+
 export default {
   handleRate,
   handleAreaUnit,
@@ -233,5 +261,7 @@ export default {
   handleExpenseRate,
   handleDepreciationRate,
   handleUnitPrice,
-  handleFortuneReport
+  handleFortuneReport,
+  handleLoadingWeight,
+  handleActualWeight
 }

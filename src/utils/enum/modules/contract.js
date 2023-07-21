@@ -118,9 +118,9 @@ constantize(engineerSettlementTypeEnumN)
 
 // 审核类型
 const auditTypeEnum = {
-  AUDITING: { L: '审核中', K: 'AUDITING', V: 1 << 0 },
-  PASS: { L: '通过', K: 'PASS', V: 1 << 1 },
-  REJECT: { L: '驳回', K: 'REJECT', V: 1 << 2 }
+  AUDITING: { L: '审核中', K: 'AUDITING', V: 1 << 0, T: '' },
+  PASS: { L: '通过', K: 'PASS', V: 1 << 1, T: 'success' },
+  REJECT: { L: '驳回', K: 'REJECT', V: 1 << 2, T: 'danger' }
 }
 constantize(auditTypeEnum)
 

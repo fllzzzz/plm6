@@ -38,6 +38,32 @@
           style="width: 240px"
           @change="handleDateChange"
         />
+      <el-input
+          v-model.trim="query.branchCompanyName"
+          type="text"
+          style="width: 220px"
+          class="filter-item"
+          maxlength="50"
+          placeholder="购买方"
+        />
+        <el-input
+          v-model.trim="query.supplierName"
+          type="text"
+          style="width: 220px"
+          class="filter-item"
+          maxlength="50"
+          placeholder="销售方"
+        />
+        <el-input
+          v-model.trim="query.actualInvoiceUnit"
+          type="text"
+          style="width: 220px"
+          class="filter-item"
+          maxlength="50"
+          placeholder="实际销售方"
+        />
+        <common-button class="filter-item" size="small" type="success" icon="el-icon-search" @click.stop="fetchList">搜索</common-button>
+        <common-button class="filter-item" size="small" type="warning" icon="el-icon-refresh" @click.stop="resetSubmit">重置</common-button>
       </div>
       <common-table :data="list" v-loading="tableLoading" show-summary :summary-method="getSummaries" :data-format="dataFormat" :max-height="maxHeight">
         <el-table-column label="序号" type="index" align="center" width="60" />
@@ -76,6 +102,7 @@
         <el-table-column prop="invoiceSerialNumber" label="发票编号" align="center" min-width="100" show-overflow-tooltip />
         <el-table-column prop="branchCompanyName" label="购买方" align="center" min-width="140" show-overflow-tooltip />
         <el-table-column prop="supplierName" label="销售方" align="center" min-width="140" show-overflow-tooltip />
+        <el-table-column prop="actualInvoiceUnit" label="实际销售方" align="center" min-width="140" show-overflow-tooltip />
         <el-table-column prop="applyUserName" label="办理人" align="center" min-width="100" show-overflow-tooltip />
         <el-table-column prop="auditUserName" label="审核人" align="center" min-width="100" show-overflow-tooltip />
       </common-table>
@@ -215,6 +242,13 @@ function handleDateChange(val) {
     query.value.startDate = undefined
     query.value.endDate = undefined
   }
+  fetchList()
+}
+
+// 重置搜索
+function resetSubmit() {
+  query.value = {}
+  query.value.date = []
   fetchList()
 }
 

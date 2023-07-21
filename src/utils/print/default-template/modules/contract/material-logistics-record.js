@@ -1,12 +1,12 @@
-import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, amountUnitEnum } from '@/utils/print/enum'
+import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, amountUnitEnum, weightUnitEnum, DEF_UNIT } from '@/utils/print/enum'
 
-// 供应商收票台账
-const supplierInvoiceLedger = {
+// 原材料物流记录详情
+const materialLogisticsRecord = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'supplierInvoiceLedger', // 表格类型 KEY
-  name: '供应商收票台账（平台）', // 表格名称
+  type: 'materialLogisticsRecord', // 表格类型 KEY
+  name: '原材料物流记录详情（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -60,7 +60,7 @@ const supplierInvoiceLedger = {
   title: {
     show: true,
     allPage: false,
-    title: '供应商收票台账',
+    title: '原材料物流记录详情',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -122,13 +122,13 @@ const supplierInvoiceLedger = {
     * @param {array} fields // 字段
     */
   footer: {
-    show: false,
+    show: true,
     allPage: false,
     align: alignEnum.LEFT.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 15,
+    height: 0,
     width: 190,
     emptyVal: '',
     /**
@@ -152,7 +152,8 @@ const supplierInvoiceLedger = {
      * @param {enum} type 数据类型
      * @param {*} format 格式转换
      */
-    fields: []
+    fields: [
+    ]
   },
   table: {
     /**
@@ -168,7 +169,7 @@ const supplierInvoiceLedger = {
      * @param {string} bold 是否加粗 'unset' || 'bold'
      * @param {number} lineHeight 行高
      */
-    td: { size: 9, bold: 'unset', lineHeight: 13, paddingTB: 2 },
+    td: { size: 9, bold: 'unset', lineHeight: 13, paddingTB: 1 },
     emptyVal: '/', // string 空值显示
     /**
      * 表格序号
@@ -183,7 +184,7 @@ const supplierInvoiceLedger = {
      * @param {boolean} show 是否显示
      * @param {string} title 合计名称
      */
-    summary: { show: true, title: '合计' },
+    summary: { show: false, title: '合计' },
     /**
      * 表格列
      * @param {boolean} show 是否显示
@@ -198,21 +199,18 @@ const supplierInvoiceLedger = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'receiveInvoiceDate', title: '收票日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
-      { show: true, key: 'propertyType', title: '订单类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'supplierPayTypeEnum', key: 'L' }},
-      { show: true, key: 'supplierName', title: '销售单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.COMPANY_NAME.K },
-      { show: true, key: 'branchCompanyName', title: '购方单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.COMPANY_NAME.K },
-      { show: true, key: 'invoiceAmount', title: '发票金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
-      { show: true, key: 'invoiceSerialNumber', title: '发票编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.INVOICE_NO.K },
-      { show: true, key: 'invoiceType', title: '发票类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'invoiceTypeEnum', key: 'SL' }},
-      { show: true, key: 'taxRate', title: '税率', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.RATE.K, format: { precision: 2 }},
-      { show: true, key: 'amountExcludingVat', title: '不含税金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
-      { show: true, key: 'applyUserName', title: '办理人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.USER_NAME.K },
-      { show: true, key: 'invoiceContent', title: '发票内容', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.OTHER.K }
+      { show: true, key: 'inboundTime', title: '入库日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
+      { show: true, key: 'licensePlate', title: '车牌号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.LICENSE_PLATE.K },
+      { show: true, key: 'loadingWeight', title: '装载重量（吨）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, unit: weightUnitEnum.KG.V }},
+      { show: true, key: 'freight', title: '运输费', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: true, key: 'purchaseSn', title: '采购订单号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.GUID.K },
+      { show: true, key: 'purchaseUserName', title: '采购员', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.USER_NAME.K },
+      { show: true, key: 'inboundSn', title: '关联入库单', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.GUID.K },
+      { show: true, key: 'supplierName', title: '关联供应商', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.COMPANY_NAME.K }
     ]
   }
 }
 
 export default {
-  supplierInvoiceLedger // 供应商收票台账
+  materialLogisticsRecord // 物流台账
 }

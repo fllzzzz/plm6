@@ -141,10 +141,16 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="付款行" prop="paymentBank">
-              <el-select v-model="form.paymentBank" placeholder="付款行" :size="'small'" style="width: 280px" @change="bankChange">
-                <el-option v-for="item in bankList" :key="item.account" :label="item.depositBank" :value="item.depositBank" />
-              </el-select>
+            <el-form-item label="付款方式" prop="paymentMethod">
+              <common-select
+                v-model="form.paymentMethod"
+                :options="paymentOtherModeEnum.ENUM"
+                type="enum"
+                size="small"
+                placeholder="付款方式"
+                style="width:280px;"
+                @change="paymentModeChange"
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -163,8 +169,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="账号">
-              <span>{{form.paymentBankAccount}}</span>
+            <el-form-item label="付款行" prop="paymentBank">
+              <el-select v-model="form.paymentBank" placeholder="付款行" :size="'small'" style="width: 280px" @change="bankChange" clearable :disabled="form.paymentMethod===paymentOtherModeEnum.CASH.V">
+                <el-option v-for="item in bankList" :key="item.account" :label="item.depositBank" :value="item.depositBank" />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -190,6 +198,11 @@
               <upload-btn ref="uploadRef" v-model:files="form.files" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.jpg,.png,.pdf,.jpeg'"/>
             </el-form-item>
           </el-col>
+           <el-col :span="12">
+            <el-form-item label="账号">
+              <span>{{form.paymentBankAccount}}</span>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
       <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
@@ -209,6 +222,7 @@ import { supplierTypeEnum } from '@/utils/enum/modules/supplier'
 import { regForm } from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
 import { isNotBlank } from '@/utils/data-type'
+import { paymentOtherModeEnum } from '@enum-ms/finance'
 
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
@@ -256,7 +270,8 @@ const rules = {
   paymentDate: [{ required: true, message: '请选择申请日期', trigger: 'change' }],
   paymentReasonId: [{ required: true, message: '请选择付款事由', trigger: 'change' }],
   applyAmount: [{ required: true, validator: validateMoney, trigger: 'blur' }],
-  paymentUnitId: [{ required: true, message: '请选择付款单位', trigger: 'change' }]
+  paymentUnitId: [{ required: true, message: '请选择付款单位', trigger: 'change' }],
+  paymentMethod: [{ required: true, message: '请选择付款方式', trigger: 'change' }]
   // paymentBank: [{ required: true, message: '请选择付款银行', trigger: 'change' }]
 }
 
@@ -272,6 +287,13 @@ function attachmentView(item) {
 
 function companyChange(val) {
   bankList.value = val.bankAccountList || []
+}
+
+function paymentModeChange(val) {
+  if (val === paymentOtherModeEnum.CASH.V) {
+    crud.form.paymentBankAccount = undefined
+    crud.form.paymentBank = undefined
+  }
 }
 
 function bankChange(val) {
