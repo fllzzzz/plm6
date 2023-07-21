@@ -82,7 +82,6 @@
         align="right"
         key="contractAmount"
         prop="contractAmount"
-        HEAD
         show-overflow-tooltip
         label="合同金额"
         min-width="100"
@@ -94,7 +93,6 @@
         prop="settlementAmount"
         show-overflow-tooltip
         label="结算额"
-        HEAD
         min-width="100"
       />
       <el-table-column
