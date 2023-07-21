@@ -153,7 +153,6 @@ import { toThousand } from '@data-type/number'
 import { isNotBlank } from '@data-type/index'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
-import useDecimalPrecision from '@compos/store/use-decimal-precision'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'

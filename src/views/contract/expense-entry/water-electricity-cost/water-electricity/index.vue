@@ -65,7 +65,6 @@ import moment from 'moment'
 import checkPermission from '@/utils/system/check-permission'
 import { tableSummary } from '@/utils/el-extra'
 import { toThousand } from '@/utils/data-type/number'
-import { DP } from '@/settings/config'
 
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header.vue'
