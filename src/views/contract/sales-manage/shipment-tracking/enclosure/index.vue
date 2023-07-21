@@ -3,14 +3,17 @@
     <!--工具栏-->
     <mHeader ref="headerRef" class="enclosure-container" />
     <!--表格渲染-->
-    <common-table
-      ref="tableRef"
-      v-loading="crud.loading"
-      :data="crud.data"
-      :data-format="dataFormat"
-      :max-height="maxHeight"
-    >
-      <el-table-column label="序号" type="index" align="center" width="60" />
+    <common-table ref="tableRef" v-loading="crud.loading" :data="crud.data" :data-format="dataFormat" :max-height="maxHeight">
+      <el-table-column fixed="left" label="序号" type="index" align="center" width="60" />
+      <el-table-column
+        v-if="columns.visible('project') && !crud.query.projectId"
+        key="project"
+        prop="project"
+        show-overflow-tooltip
+        label="项目"
+        align="center"
+        min-width="140"
+      />
       <el-table-column
         v-if="columns.visible('area.name')"
         key="area.name"
@@ -18,7 +21,7 @@
         show-overflow-tooltip
         label="批次"
         align="center"
-        min-width="140"
+        min-width="120"
       />
       <el-table-column
         v-if="columns.visible('name')"
@@ -27,7 +30,7 @@
         show-overflow-tooltip
         label="名称"
         align="center"
-        min-width="140"
+        min-width="110"
       />
       <el-table-column
         v-if="columns.visible('serialNumber')"
@@ -36,7 +39,7 @@
         show-overflow-tooltip
         label="编号"
         align="center"
-        min-width="130"
+        min-width="106"
       />
       <el-table-column
         v-if="columns.visible('plate')"
@@ -45,7 +48,7 @@
         show-overflow-tooltip
         label="板型"
         align="center"
-        min-width="120"
+        min-width="100"
       />
       <el-table-column
         v-if="columns.visible('length')"
@@ -54,7 +57,7 @@
         show-overflow-tooltip
         label="单长(mm)"
         align="right"
-        min-width="120"
+        min-width="100"
       />
       <el-table-column
         v-if="columns.visible('surfaceArea')"
@@ -63,7 +66,7 @@
         show-overflow-tooltip
         label="单面积(mm²)"
         align="right"
-        min-width="120"
+        min-width="100"
       />
       <el-table-column
         v-if="columns.visible('totalQuantity')"
@@ -81,7 +84,7 @@
         show-overflow-tooltip
         label="总长度(m)"
         align="right"
-        min-width="120"
+        min-width="100"
       />
       <el-table-column
         v-if="columns.visible('totalArea')"
@@ -90,32 +93,18 @@
         show-overflow-tooltip
         label="总面积(m²)"
         align="right"
-        min-width="120"
+        min-width="100"
       />
       <el-table-column
         v-if="columns.visible('pricingManner')"
         key="pricingManner"
         prop="pricingManner"
         align="center"
-        min-width="120"
+        width="80"
         label="计价方式"
       />
-      <el-table-column
-        v-if="columns.visible('unitPrice')"
-        key="unitPrice"
-        prop="unitPrice"
-        align="right"
-        min-width="120"
-        label="综合单价"
-      />
-      <el-table-column
-        v-if="columns.visible('totalPrice')"
-        key="totalPrice"
-        prop="totalPrice"
-        align="right"
-        min-width="120"
-        label="金额"
-      />
+      <el-table-column v-if="columns.visible('unitPrice')" key="unitPrice" prop="unitPrice" align="right" min-width="90" label="综合单价" />
+      <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="right" min-width="90" label="金额" />
       <el-table-column
         v-if="columns.visible('createTime')"
         key="createTime"
@@ -123,6 +112,60 @@
         align="center"
         label="发运日期"
         width="100"
+      />
+      <el-table-column
+        v-if="columns.visible('auditUserName')"
+        key="auditUserName"
+        prop="auditUserName"
+        show-overflow-tooltip
+        label="发运人"
+        align="center"
+        width="90"
+      />
+      <el-table-column
+        v-if="columns.visible('actualUserName')"
+        key="actualUserName"
+        prop="actualUserName"
+        show-overflow-tooltip
+        label="过磅人"
+        align="center"
+        width="90"
+      />
+      <el-table-column
+        v-if="columns.visible('supplierName')"
+        key="supplierName"
+        prop="supplierName"
+        show-overflow-tooltip
+        label="物流公司"
+        align="center"
+        min-width="120"
+      />
+      <el-table-column
+        v-if="columns.visible('cargoSerialNumber')"
+        key="cargoSerialNumber"
+        prop="cargoSerialNumber"
+        show-overflow-tooltip
+        label="车次"
+        align="center"
+        width="110"
+      />
+      <el-table-column
+        v-if="columns.visible('licensePlate')"
+        key="licensePlate"
+        prop="licensePlate"
+        show-overflow-tooltip
+        label="车牌"
+        align="center"
+        width="100"
+      />
+      <el-table-column
+        v-if="columns.visible('workshopNames')"
+        key="workshopNames"
+        prop="workshopNames"
+        show-overflow-tooltip
+        label="生产部门"
+        align="center"
+        min-width="120"
       />
     </common-table>
     <!--分页组件-->
@@ -159,6 +202,7 @@ const tableRef = ref()
 const headerRef = ref()
 const dataFormat = computed(() => {
   return [
+    ['project', 'parse-project'],
     ['createTime', ['parse-time', '{y}-{m}-{d}']],
     ['totalLength', ['to-thousand', DP.MES_ENCLOSURE_L__M]],
     ['totalArea', ['to-thousand', DP.MES_ENCLOSURE_L__M]],
@@ -175,8 +219,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     crudApi: { get },
     optShow: { ...optShow },
-    invisibleColumns: [],
-    requiredQuery: ['projectId']
+    invisibleColumns: ['actualUserName', 'supplierName', 'cargoSerialNumber', 'workshopNames']
   },
   tableRef
 )
