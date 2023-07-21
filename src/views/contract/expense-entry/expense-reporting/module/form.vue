@@ -1,23 +1,11 @@
 <template>
-  <common-dialog
-    append-to-body
-    :close-on-click-modal="false"
-    :before-close="crud.cancelCU"
-    :visible="crud.status.cu > 0"
-    :title="crud.status.title"
-    :show-close="false"
-    width="490px"
-    top="10vh"
-  >
+  <common-drawer append-to-body :before-close="crud.cancelCU" :visible="crud.status.cu > 0" :title="crud.status.title" size="30%">
     <template #titleRight>
-      <span style="float: right">
-        <common-button :loading="crud.status.cu === CRUD.STATUS.PROCESSING" size="mini" type="primary" @click="crud.submitCU">
-          提 交
-        </common-button>
-        <common-button size="mini" @click="crud.cancelCU">关 闭</common-button>
-      </span>
+      <common-button :loading="crud.status.cu === CRUD.STATUS.PROCESSING" size="mini" type="primary" @click="crud.submitCU">
+        提 交
+      </common-button>
     </template>
-    <div class="form">
+    <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="130px" class="demo-form">
         <el-form-item label="报销日期" prop="reimburseDate">
           <el-date-picker
@@ -28,7 +16,7 @@
             placeholder="选择报销日期"
             format="YYYY-MM-DD"
             value-format="x"
-            style="width: 270px"
+            style="width: 100%"
             :disabled-date="disabledDate"
           />
         </el-form-item>
@@ -38,7 +26,7 @@
             clearable
             :disabled="!form.expenseTypeId || form.costAscriptionEnum === costAscriptionEnum.INDIRECT_COSTS.V"
             class="filter-item"
-            style="width: 270px"
+            style="width: 100%"
             placeholder="请先选择费用类别"
           />
         </el-form-item>
@@ -50,12 +38,12 @@
             size="small"
             clearable
             class="filter-item"
-            style="width: 270px"
+            style="width: 100%"
             defaultValue
           />
         </el-form-item>
         <el-form-item label="收款单位" prop="payee">
-          <el-input v-model="form.payee" placeholder="输入收款单位" style="width: 270px" maxlength="50" clearable />
+          <el-input v-model="form.payee" placeholder="输入收款单位" style="width: 100%" maxlength="50" clearable />
         </el-form-item>
         <el-form-item label="费用类别" prop="expenseTypeId">
           <common-select
@@ -66,7 +54,7 @@
             :data-structure="{ key: 'id', label: 'name', value: 'id' }"
             class="filter-item"
             clearable
-            style="width: 270px"
+            style="width: 100%"
             placeholder="选择费用类别"
             @change="handleChange"
           />
@@ -80,7 +68,7 @@
             size="small"
             clearable
             class="filter-item"
-            style="width: 270px"
+            style="width: 100%"
             placeholder="选择报销科目"
           />
         </el-form-item>
@@ -91,7 +79,7 @@
           <el-input-number
             v-show-thousand
             v-model="form.reimburseAmount"
-            style="width: 270px"
+            style="width: 100%"
             placeholder="输入报销费用"
             controls-position="right"
             :precision="DP.YUAN"
@@ -105,14 +93,14 @@
             type="textarea"
             :autosize="{ minRows: 2, maxRows: 8 }"
             placeholder="输入备注"
-            style="width: 270px"
+            style="width: 100%"
             :maxlength="300"
             show-word-limit
           />
         </el-form-item>
       </el-form>
-    </div>
-  </common-dialog>
+    </template>
+  </common-drawer>
 </template>
 
 <script setup>

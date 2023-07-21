@@ -65,6 +65,7 @@ import moment from 'moment'
 import checkPermission from '@/utils/system/check-permission'
 import { tableSummary } from '@/utils/el-extra'
 import { toThousand } from '@/utils/data-type/number'
+import { DP } from '@/settings/config'
 
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header.vue'
@@ -97,13 +98,13 @@ function getSummaries(param) {
     props: ['usedMete', 'totalAmount']
   })
   if (data[1] && data[2]) {
-    data[3] = toThousand(data[2] / data[1])
+    data[3] = toThousand(data[2] / data[1], DP.YUAN)
   }
   if (data[1]) {
     data[1] = toThousand(data[1])
   }
   if (data[2]) {
-    data[2] = toThousand(data[2])
+    data[2] = toThousand(data[2], DP.YUAN)
   }
   return data
 }

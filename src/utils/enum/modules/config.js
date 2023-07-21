@@ -33,6 +33,7 @@ const taxRateEnum = {
   GAS: { L: '气体', K: 'GAS', V: 1 << 4 },
   STRUC_MANUFACTURED: { L: '成品构件', K: 'STRUC_MANUFACTURED', V: 1 << 5 },
   ENCL_MANUFACTURED: { L: '成品围护', K: 'ENCL_MANUFACTURED', V: 1 << 6 },
+  OTHER: { L: '其它', K: 'OTHER', V: 1 << 7 },
   LOGISTICS: { L: '物流', K: 'LOGISTICS', V: 1 << 10 },
   CONTRACT: { L: '合同', K: 'CONTRACT', V: 1 << 11 }
   // PROFESSIONAL_SUBCONTRACTING: { L: '专业分包', K: 'PROFESSIONAL_SUBCONTRACTING', V: 1 << 15 },

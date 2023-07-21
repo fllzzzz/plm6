@@ -139,12 +139,7 @@
         min-width="100"
       >
         <template #default="{ row }">
-          <span
-            v-if="checkPermission(permission.detail)"
-            style="color: #ff5600"
-            class="pointer"
-            @click="openDetail('export', row)"
-          >
+          <span v-if="checkPermission(permission.detail)" style="color: #ff5600" class="pointer" @click="openDetail('export', row)">
             {{ row.exportTaxRebate }}
           </span>
           <span v-else>{{ row.exportTaxRebate }}</span>

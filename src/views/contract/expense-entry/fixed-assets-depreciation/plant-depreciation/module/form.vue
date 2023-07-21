@@ -110,6 +110,7 @@ import { ref, computed } from 'vue'
 
 import { depreciationTypeEnum } from '@enum-ms/contract'
 import { isBlank, toFixed } from '@/utils/data-type'
+
 import { regForm } from '@compos/use-crud'
 import moment from 'moment'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'

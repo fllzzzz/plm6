@@ -48,6 +48,15 @@ export function edit(data) {
   })
 }
 
+export function audit(data) {
+  return request({
+    module: 'contract',
+    url: 'contract/expense-reimburse/approval',
+    method: 'put',
+    data
+  })
+}
+
 export function del(ids) {
   return request({
     module: 'contract',
