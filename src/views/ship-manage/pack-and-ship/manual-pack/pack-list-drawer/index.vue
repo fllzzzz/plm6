@@ -383,7 +383,7 @@ async function handlePack({ bagId, isNew, selectBagId }) {
       projectId: projectId.value
     }
     // 所有类型打包
-    if (props.typeVal === packEnum.BOX.V) {
+    if (props.typeVal !== packEnum.BOX.V) {
       for (const item in packTypeEnum.ENUM) {
         const _list = listObj[item]
         for (let i = 0; i < _list?.length; i++) {
