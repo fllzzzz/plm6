@@ -75,7 +75,7 @@
         clearable
         style="width: 200px"
         size="small"
-        placeholder="申请人/编辑人/审核人"
+        placeholder="入库申请人/编辑人/审核人"
         class="filter-item"
         @keyup.enter="crud.toQuery"
       />
@@ -112,6 +112,24 @@
         style="width: 200px"
         size="small"
         placeholder="物流单号"
+        class="filter-item"
+        @keyup.enter="crud.toQuery"
+      />
+      <el-input
+        v-model.trim="query.origin"
+        clearable
+        style="width: 200px"
+        size="small"
+        placeholder="始发地"
+        class="filter-item"
+        @keyup.enter="crud.toQuery"
+      />
+      <el-input
+        v-model.trim="query.destination"
+        clearable
+        style="width: 200px"
+        size="small"
+        placeholder="目的地"
         class="filter-item"
         @keyup.enter="crud.toQuery"
       />
@@ -163,7 +181,7 @@ const defaultQuery = {
   licensePlate: undefined, // 车牌号
   serialNumber: undefined, // 入库单号
   supplierId: undefined, // 供应商id
-  operatorName: undefined // 申请人/编辑人/审核人
+  operatorName: undefined // 入库申请人/编辑人/审核人
 }
 
 const permission = inject('permission')

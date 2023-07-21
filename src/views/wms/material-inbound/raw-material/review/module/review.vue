@@ -135,6 +135,14 @@
           <warehouse-set-columns v-if="fillableWarehouse" :form="form" />
           <warehouse-info-columns v-else />
         </common-table>
+        <div class="destination-box" style="margin-top: 5px; display: flex">
+          <el-form-item label="始发地">
+            <el-input v-model="form.origin" show-word-limit placeholder="始发地" style="width: 300px" />
+          </el-form-item>
+          <el-form-item label="目的地" style="margin-left: 15px">
+            <el-input v-model="form.destination" show-word-limit placeholder="目的地" style="width: 300px" />
+          </el-form-item>
+        </div>
         <el-input
           class="approval-comments"
           v-model="form.approvalComments"
@@ -327,7 +335,7 @@ const { crud } = regExtra()
 const { maxHeight } = useMaxHeight(
   {
     mainBox: '.raw-mat-inbound-application-review-form',
-    extraBox: ['.el-drawer__header', '.approval-comments', '.logistics-form-content', '.inspection-return-info'],
+    extraBox: ['.el-drawer__header', '.approval-comments', '.destination-box', '.logistics-form-content', '.inspection-return-info'],
     wrapperBox: ['.el-drawer__body'],
     clientHRepMainH: true,
     minHeight: 300,
@@ -594,6 +602,12 @@ function getSummaries(param) {
     ::v-deep(td .cell) {
       min-height: 28px;
       line-height: 28px;
+    }
+  }
+
+  .destination-box {
+    ::v-deep(.el-form-item) {
+      margin-bottom: 0;
     }
   }
 }

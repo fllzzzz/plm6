@@ -17,7 +17,7 @@
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
         <template #default="{ row }">
-          <expand-secondary-info v-if="!basicClass" :basic-class="row.basicClass" :row="row" />
+          <expand-secondary-info v-if="!basicClass" show-remark :basic-class="row.basicClass" :row="row" />
         </template>
       </el-expand-table-column>
       <!-- 基础信息 -->

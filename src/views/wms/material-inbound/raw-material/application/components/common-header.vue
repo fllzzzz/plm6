@@ -8,7 +8,7 @@
             :options="orderSupplyTypeEnum.ENUM"
             default
             type="enumSL"
-            :style="!edit?'margin-left:10px':''"
+            :style="!edit ? 'margin-left:10px' : ''"
             style="vertical-align: middle"
           >
             <template #suffix>
@@ -33,7 +33,7 @@
             prop="licensePlate"
             label-width="70px"
           >
-            <el-input class="input-underline" v-model.trim="form.licensePlate" placeholder="车牌号" style="width: 125px" />
+            <el-input class="input-underline" v-model.trim="form.licensePlate" :disabled="isTrainNumber" placeholder="车牌号" style="width: 125px" />
           </el-form-item>
           <el-form-item
             v-if="orderInfo.logisticsTransportType === logisticsTransportTypeEnum.POST.V"
@@ -112,7 +112,7 @@ import { STEEL_ENUM } from '@/settings/config'
 import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@enum-ms/finance'
-import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
+import { logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 import { patternLicensePlate } from '@/utils/validate/pattern'
 
 import useUserProjects from '@compos/store/use-user-projects'
@@ -178,7 +178,7 @@ const validateLoadingWeight = (rule, value, callback) => {
 // 基础校验规则
 const baseRules = {
   purchaseId: [{ required: true, message: '请选择订单', trigger: 'change' }],
-  licensePlate: [{ pattern: patternLicensePlate, message: '请填写正确的车牌号', trigger: 'blur' }],
+  // licensePlate: [{ pattern: patternLicensePlate, message: '请填写正确的车牌号', trigger: 'blur' }],
   loadingWeight: [{ validator: validateLoadingWeight, trigger: 'blur' }]
 }
 
@@ -190,21 +190,33 @@ const overWeightRules = {
   ]
 }
 
-// 自提车牌校验规则
-const licensePlateRules = {
-  licensePlate: [
-    { required: true, message: '请填写车牌号', trigger: 'blur' },
-    { pattern: patternLicensePlate, message: '请填写正确的车牌号', trigger: 'blur' }
-  ]
+const baseLicensePlateRules = {
+  licensePlate: [{ pattern: patternLicensePlate, message: '请填写正确的车牌号', trigger: 'blur' }]
 }
+
+// 自提车牌校验规则
+// const licensePlateRules = {
+//   licensePlate: [
+//     { required: true, message: '请填写车牌号', trigger: 'blur' },
+//     { pattern: patternLicensePlate, message: '请填写正确的车牌号', trigger: 'blur' }
+//   ]
+// }
+
+// 是否是车次号【车次号是入库时若为需方承担，并且未主动填写车牌号，提交入库后，系统自动生成的一个车次号，放入licensePlate】
+const isTrainNumber = computed(() => {
+  return form.licensePlate && props.edit && !patternLicensePlate.test(form.licensePlate)
+})
 
 const rules = computed(() => {
   const rules = Object.assign({}, baseRules)
-  if (orderInfo.value.logisticsTransportType === logisticsTransportTypeEnum.FREIGHT.V) {
-    // 自提填写车牌号
-    if (orderInfo.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V) {
-      Object.assign(rules, licensePlateRules)
-    }
+  // if (orderInfo.value.logisticsTransportType === logisticsTransportTypeEnum.FREIGHT.V) {
+  //   // 自提填写车牌号
+  //   if (orderInfo.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V) {
+  //     Object.assign(rules, licensePlateRules)
+  //   }
+  // }
+  if (!isTrainNumber.value) {
+    Object.assign(rules, baseLicensePlateRules)
   }
   // 磅计过磅重量必填，混合计选填，理计不填（TODO:待定）
   if (props.basicClass & STEEL_ENUM && orderInfo.value.weightMeasurementMode === weightMeasurementModeEnum.OVERWEIGHT.V) {

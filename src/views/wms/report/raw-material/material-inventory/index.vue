@@ -22,6 +22,15 @@
       <amount-info-columns :columns="columns" :basic-class="basicClass" show-unit-price-e :showInput-v-a-t="false" />
       <!-- 仓库信息 -->
       <warehouse-info-columns :columns="columns" show-project show-monomer show-area />
+      <el-table-column
+        v-if="columns.visible('remark')"
+        key="remark"
+        :show-overflow-tooltip="true"
+        prop="remark"
+        label="备注"
+        align="center"
+        width="140"
+      />
     </common-table>
     <!--分页组件-->
     <pagination />

@@ -11,6 +11,8 @@
   >
     <template #titleAfter>
       <title-after-info :order="order" :detail="detail" />
+      <el-tag v-if="detail.origin" effect="plain" type="warning">{{ `始发地：${detail.origin}` }}</el-tag>
+      <el-tag v-if="detail.destination" effect="plain" type="warning">{{ `目的地：${detail.destination}` }}</el-tag>
     </template>
     <template #titleRight>
       <purchase-detail-button :purchase-id="order.id" size="mini" />
