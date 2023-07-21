@@ -97,6 +97,24 @@
         width="100"
       />
       <el-table-column
+        v-if="columns.visible('origin')"
+        key="origin"
+        :show-overflow-tooltip="true"
+        prop="origin"
+        label="始发地"
+        align="left"
+        width="100"
+      />
+      <el-table-column
+        v-if="columns.visible('destination')"
+        key="destination"
+        :show-overflow-tooltip="true"
+        prop="destination"
+        label="目的地"
+        align="left"
+        width="100"
+      />
+      <el-table-column
         v-if="columns.visible('attachments')"
         key="attachments"
         prop="attachments"
@@ -119,11 +137,20 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="columns.visible('purchaserName')"
+        key="purchaserName"
+        :show-overflow-tooltip="true"
+        prop="purchaserName"
+        min-width="100"
+        label="采购人"
+        align="left"
+      />
+      <el-table-column
         v-if="columns.visible('applicantName')"
         key="applicantName"
         :show-overflow-tooltip="true"
         prop="applicantName"
-        label="申请人"
+        label="入库申请人"
         align="center"
         min-width="100"
       />
@@ -274,7 +301,7 @@ const { CRUD, crud, columns } = useCRUD(
   {
     title: '入库记录',
     sort: ['id.desc'],
-    invisibleColumns: ['editorName', 'userUpdateTime', 'shipmentNumber'],
+    invisibleColumns: ['editorName', 'userUpdateTime', 'shipmentNumber', 'attachments', 'qualityTestingUserName', 'qualityTestingTime'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi }

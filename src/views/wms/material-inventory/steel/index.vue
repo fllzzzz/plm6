@@ -43,7 +43,7 @@
       <!-- 单位及其数量 -->
       <material-unit-operate-quantity-columns :columns="columns" :basic-class="basicClass" equal-disabled />
       <!-- 次要信息 -->
-      <material-secondary-info-columns :columns="columns" :basic-class="basicClass" />
+      <material-secondary-info-columns :columns="columns" :basic-class="basicClass" show-remark/>
       <!-- 仓库信息 -->
       <warehouse-info-columns :columns="columns" :show-project="showProjectInfo" :show-monomer="showProjectInfo" :show-area="showProjectInfo" />
       <!--编辑与删除-->

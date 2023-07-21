@@ -271,7 +271,7 @@ const { crud, columns, CRUD } = useCRUD(
   {
     title: '入库记录',
     sort: ['id.desc'],
-    invisibleColumns: ['editorName', 'userUpdateTime', 'licensePlate', 'shipmentNumber'],
+    invisibleColumns: ['editorName', 'userUpdateTime', 'licensePlate', 'shipmentNumber', 'attachments', 'qualityTestingUserName', 'qualityTestingTime'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi }

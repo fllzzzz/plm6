@@ -25,6 +25,7 @@
             check-strictly
             show-all-levels
             clearable
+            multiple
             size="small"
             class="filter-item"
             style="width: 300px"

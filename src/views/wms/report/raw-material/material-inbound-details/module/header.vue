@@ -1,7 +1,13 @@
 <template>
   <div class="head-container">
     <div v-if="crud.searchToggle">
-      <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery" :show-material-is-whole="false">
+      <mat-header-query
+        :basic-class="query.basicClass"
+        :query="query"
+        :to-query="crud.toQuery"
+        :show-material-is-whole="false"
+        material-cascader-multiple
+      >
         <template #afterProjectWarehouseType>
           <common-radio-button
             v-model="query.basicClass"
