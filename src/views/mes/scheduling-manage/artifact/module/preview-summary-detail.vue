@@ -47,8 +47,8 @@
           ref="tagTabsRef"
           v-model="queryVO.structureClassId"
           class="filter-item"
-          :hit="false"
-          :unselectable="true"
+          :hit="selectionMode === selectionModeEnum.EDIT.V ? true : false"
+          :unselectable="selectionMode === selectionModeEnum.EDIT.V ? false : true"
           :style="'width:calc(100% - 150px)'"
           style="display: inline-block"
           :data="artifactTypeList"
@@ -337,14 +337,14 @@ watch(
   },
   { deep: true }
 )
-// watch(
-//   [() => queryVO.value.structureClassId],
-//   (val) => {
-//     fetchGroup()
-//     fetch()
-//   },
-//   { deep: true }
-// )
+watch(
+  [() => queryVO.value.structureClassId],
+  (val) => {
+    fetchGroup()
+    fetch()
+  },
+  { deep: true }
+)
 watch(
   [() => queryVO.value.groupsId],
   (val) => {
@@ -413,13 +413,14 @@ function artifactTypeInit() {
     (artifactTypeList.value?.length > 0 || queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V)
   ) {
     // queryVO.value.structureClassId = artifactTypeList.value[0].structureClassId
-    // queryVO.value.structureClassId = artifactTypeList.value?.length ? artifactTypeList.value[0]?.structureClassId : undefined
+    queryVO.value.structureClassId = selectionMode.value === selectionModeEnum.EDIT.V ? artifactTypeList.value[0]?.structureClassId : undefined
   }
   fetch()
 }
 
 function handleModeChange() {
   recordTableRef.value?.clearSelection()
+  queryVO.value.structureClassId = selectionMode.value === selectionModeEnum.EDIT.V ? artifactTypeList.value[0]?.structureClassId : undefined
 }
 
 function showHook() {
@@ -439,7 +440,7 @@ function closeHook() {
 function resetQuery() {
   queryVO.value.serialNumber = undefined
   queryVO.value.groupsId = groupData.value[0]?.groups?.id
-  // queryVO.value.structureClassId = artifactTypeList.value[0]?.structureClassId
+  queryVO.value.structureClassId = selectionMode.value === selectionModeEnum.EDIT.V ? artifactTypeList.value[0]?.structureClassId : undefined
   fetch()
 }
 
@@ -456,7 +457,7 @@ async function fetch() {
   try {
     tableLoading.value = true
     summaryInfo.value = (await recordSummary({ ...props.otherQuery, ...queryVO.value })) || {}
-    const content = await record({ ...props.otherQuery, ...queryVO.value }) || []
+    const content = (await record({ ...props.otherQuery, ...queryVO.value })) || []
     // const { content = [], totalElements } = await record({ ...props.otherQuery, ...queryVO.value, ...queryPage })
     // setTotalPage(totalElements)
     const _list = content

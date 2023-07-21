@@ -81,7 +81,7 @@
         @keyup.enter="crud.toQuery"
       />
       <!-- <el-input
-        v-model.trim="query.serialNumber"
+        v-model.trim="query.shipmentNumber"
         clearable
         style="width: 200px"
         size="small"
@@ -99,7 +99,7 @@
         @keyup.enter="crud.toQuery"
       />
       <el-input
-        v-model.trim="query.shipmentNumber"
+        v-model.trim="query.serialNumber"
         clearable
         style="width: 200px"
         size="small"
@@ -141,7 +141,7 @@ const defaultQuery = {
   licensePlate: undefined, // 车牌号
   purchaseSN: undefined, // 采购合同编号
   inboundSN: undefined, // 入库单号
-  // serialNumber: undefined, // 物流单号（系统）
+  serialNumber: undefined, // 物流单号（系统）
   supplierId: undefined, // 供应商id
   operatorName: undefined // 创建人
 }
