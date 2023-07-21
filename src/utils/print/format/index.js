@@ -13,9 +13,12 @@ const myProject = contract.durationCalculation
 const projectList = contract.durationCalculation
 const contractLedger = contract.handleRate
 const supplierPayableSummary = contract.handleSupplierPaymentRate
-const logisticsPaymentLedger = contract.handleSupplierPaymentRate
+// const logisticsPaymentLedger = contract.handleSupplierPaymentRate
 const supplierPaymentLedger = contract.handleSupplierPaymentOrder
 const saleOrderTracking = contract.handleRate
+const materialLogisticsRecord = contract.handleLoadingWeight
+const logisticsPaymentLedger = contract.handleLoadingWeight
+const productLogisticsPaymentLedger = contract.handleActualWeight
 
 const waterRecord = contract.handleTimeHorizon
 const electricRecord = contract.handleTimeHorizon
@@ -97,6 +100,8 @@ export default {
   fortuneReportList,
   waterRecord,
   expenseReimburseSummary,
+  materialLogisticsRecord,
+  productLogisticsPaymentLedger,
 
   mesAssembleNestingOrder,
 

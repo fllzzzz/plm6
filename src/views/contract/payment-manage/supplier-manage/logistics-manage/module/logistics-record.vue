@@ -13,6 +13,23 @@
       <el-tag type="warning" effect="plain" size="medium">物流公司：{{detailInfo.supplierName}}</el-tag>
       <el-tag>运费总额：{{detailInfo.freight}}</el-tag>
     </template>
+    <template #titleRight>
+      <div class="print-wrap">
+        <print-table
+          api-key="materialLogisticsRecord"
+          :params="{ ...params}"
+          size="mini"
+          type="warning"
+        />
+        <!-- <print-table
+          v-permission="props.permission?.print"
+          api-key="materialLogisticsRecord"
+          :params="{ ...params}"
+          size="mini"
+          type="warning"
+        /> -->
+      </div>
+    </template>
     <template #content>
       <div class="head-container">
         <el-date-picker

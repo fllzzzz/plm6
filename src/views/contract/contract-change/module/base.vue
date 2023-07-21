@@ -83,7 +83,7 @@
            <el-form-item label="签约额(元)" prop="signAmount">
            <div class="input-underline">
               <span>{{ detail.signAmount? toThousand(detail.signAmount,decimalPrecision.contract): '-' }}</span>
-              <div style="color:#82848a">{{ detail.signAmount? digitUppercase(detail.contractAmount):'' }}</div>
+              <div style="color:#82848a">{{ detail.signAmount? digitUppercase(detail.signAmount):'' }}</div>
             </div>
           </el-form-item>
           <el-form-item label="合同金额(元)" prop="contractAmount">

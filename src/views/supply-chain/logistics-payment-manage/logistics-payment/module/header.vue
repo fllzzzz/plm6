@@ -1,31 +1,39 @@
 <template>
   <div class="head-container">
+    <div v-if="crud.searchToggle">
+      <el-date-picker
+        v-model="query.date"
+        type="daterange"
+        range-separator=":"
+        size="small"
+        value-format="x"
+        class="filter-item date-item"
+        start-placeholder="开始时间"
+        end-placeholder="结束时间"
+        style="width: 240px"
+        @change="handleDateChange"
+      />
+      <el-input
+        v-model="query.supplierName"
+        placeholder="物流公司"
+        class="filter-item"
+        style="width: 200px;"
+        size="small"
+        clearable
+        @keyup.enter="crud.toQuery"
+      />
+      <rrOperation />
+    </div>
     <crudOperation>
-      <template #optLeft>
-        <div v-show="crud.searchToggle">
-          <el-date-picker
-            v-model="query.date"
-            type="daterange"
-            range-separator=":"
-            size="small"
-            value-format="x"
-            class="filter-item date-item"
-            start-placeholder="开始时间"
-            end-placeholder="结束时间"
-            style="width: 240px"
-            @change="handleDateChange"
-          />
-          <el-input
-            v-model="query.supplierName"
-            placeholder="物流公司"
-            class="filter-item"
-            style="width: 200px;"
-            size="small"
-            clearable
-            @keyup.enter="crud.toQuery"
-          />
-          <rrOperation/>
-        </div>
+      <template #optRight>
+        <print-table
+          v-permission="crud.permission.get"
+          api-key="logisticsPaymentLedger"
+          :params="{ ...query }"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
       </template>
     </crudOperation>
   </div>

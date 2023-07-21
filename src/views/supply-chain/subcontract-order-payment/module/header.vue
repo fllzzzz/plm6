@@ -42,20 +42,18 @@
       />
       <rrOperation />
     </div>
-    <crudOperation />
-    <!-- <common-drawer
-      ref="drawerRef"
-      :show-close="true"
-      size="80%"
-      title="提交记录"
-      append-to-body
-      v-model="applicationVisible"
-      :close-on-click-modal="false"
-    >
-      <template #content>
-        <paymentApplication :visibleValue="applicationVisible"/>
+    <crudOperation>
+      <template #optRight>
+        <print-table
+          v-permission="crud.permission.print"
+          api-key="subcontractPaymentLedger"
+          :params="{ ...query }"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
       </template>
-    </common-drawer> -->
+    </crudOperation>
   </div>
 </template>
 

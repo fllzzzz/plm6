@@ -55,6 +55,15 @@
         class="filter-item"
         @keyup.enter="crud.toQuery"
       />
+      <el-input
+        v-model.trim="query.purchaseUserName"
+        clearable
+        style="width: 200px"
+        size="small"
+        placeholder="按采购员搜索"
+        class="filter-item"
+        @keyup.enter="crud.toQuery"
+      />
       <br />
       <warehouse-project-cascader
         v-model:projectId="query.projectId"
@@ -111,7 +120,16 @@
     </div>
     <crudOperation>
       <!-- TODO:打印 -->
-      <template #optLeft></template>
+      <template #optLeft>
+         <print-table
+          v-permission="crud.permission.get"
+          api-key="logisticsOrderSummary"
+          :params="{ ...query }"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
+      </template>
     </crudOperation>
   </div>
 </template>

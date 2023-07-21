@@ -85,6 +85,7 @@
          <div>{{ dict?.label?.['payment_reason']?.[row.paymentReasonId] }}</div>
         </template>
       </el-table-column>
+      <el-table-column key="paymentMethod" prop="paymentMethod" label="付款方式" align="center" width="100" />
       <el-table-column key="paymentUnit" prop="paymentUnit" label="付款单位" align="center" min-width="140" show-overflow-tooltip />
       <el-table-column key="paymentBank" prop="paymentBank" show-overflow-tooltip label="付款银行" align="center" min-width="130">
         <template #default="{ row }">
@@ -127,6 +128,7 @@ import { defineEmits, defineProps, ref, computed, watch } from 'vue'
 import { auditTypeEnum } from '@enum-ms/contract'
 import { digitUppercase, getDP, toThousand } from '@/utils/data-type/number'
 import { tableSummary } from '@/utils/el-extra'
+import { paymentOtherModeEnum } from '@enum-ms/finance'
 
 import useVisible from '@/composables/use-visible'
 import usePagination from '@compos/use-pagination'
@@ -194,7 +196,8 @@ const dict = useDict(['payment_reason'])
 const dataFormat = ref([
   ['applyAmount', 'to-thousand'],
   // ['actuallyPaymentAmount', 'to-thousand'],
-  ['paymentDate', ['parse-time', '{y}-{m}-{d}']]
+  ['paymentDate', ['parse-time', '{y}-{m}-{d}']],
+  ['paymentMethod', ['parse-enum', paymentOtherModeEnum]]
 ])
 
 const { maxHeight } = useMaxHeight(

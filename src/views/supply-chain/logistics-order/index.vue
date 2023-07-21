@@ -144,6 +144,20 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="columns.visible('applicantName')"
+        key="applicantName"
+        :show-overflow-tooltip="true"
+        prop="applicantName"
+        label="操作员"
+      />
+      <el-table-column
+        v-if="columns.visible('purchaseUserName')"
+        key="purchaseUserName"
+        :show-overflow-tooltip="true"
+        prop="purchaseUserName"
+        label="采购员"
+      />
+      <el-table-column
         v-if="columns.visible('inboundSN')"
         key="inboundSN"
         :show-overflow-tooltip="true"

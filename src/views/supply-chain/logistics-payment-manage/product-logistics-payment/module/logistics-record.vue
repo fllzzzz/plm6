@@ -16,12 +16,18 @@
     <template #titleRight>
       <div class="print-wrap">
         <print-table
-          v-permission="props.permission?.print"
           api-key="productLogisticsRecord"
           :params="{ ...params }"
           size="mini"
           type="warning"
         />
+        <!-- <print-table
+          v-permission="props.permission?.print"
+          api-key="productLogisticsRecord"
+          :params="{ ...params }"
+          size="mini"
+          type="warning"
+        /> -->
       </div>
     </template>
     <template #content>
@@ -30,7 +36,7 @@
         <el-table-column prop="serialNumber" label="运输单号" align="center" width="100" show-overflow-tooltip />
         <el-table-column prop="auditTime" label="运输日期" align="center" width="100" show-overflow-tooltip />
         <el-table-column prop="userName" label="装车人" align="center" min-width="140" show-overflow-tooltip />
-        <el-table-column prop="auditUserName" label="过磅复核人" align="center" min-width="140" show-overflow-tooltip />
+        <el-table-column prop="actualUserName" label="过磅复核人" align="center" min-width="140" show-overflow-tooltip />
         <el-table-column prop="actualWeight" label="过磅重量（吨）" align="center" min-width="100" show-overflow-tooltip />
         <el-table-column prop="carModel" label="车型" align="center" min-width="100" show-overflow-tooltip />
         <el-table-column prop="priceType" label="计价方式" align="center" min-width="100" show-overflow-tooltip />

@@ -68,7 +68,7 @@
       </div>
       <common-table :data="list" v-loading="tableLoading" show-summary :summary-method="getSummaries" :data-format="dataFormat" :max-height="maxHeight">
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
-      <el-table-column key="paymentDate" prop="paymentDate" label="付款日期" align="center" width="90" />
+      <el-table-column key="paymentDate" prop="paymentDate" label="付款日期" align="center" width="90" show-overflow-tooltip />
       <el-table-column key="actuallyPaymentAmount" prop="actuallyPaymentAmount" label="支付金额" align="right" min-width="80">
         <template #default="{ row }">
           <template v-if="row.attachments && row.attachments.length>0">
@@ -79,7 +79,8 @@
           <template v-else>{{toThousand(row.actuallyPaymentAmount)}}</template>
         </template>
       </el-table-column>
-      <el-table-column key="paymentReasonId" prop="paymentReasonId" label="付款事由" align="center" width="100">
+      <el-table-column key="paymentMethod" prop="paymentMethod" label="付款方式" align="center" width="100" show-overflow-tooltip />
+      <el-table-column key="paymentReasonId" prop="paymentReasonId" label="付款事由" align="center" width="100" show-overflow-tooltip>
           <template #default="{ row }">
          <div>{{ dict?.label?.['payment_reason']?.[row.paymentReasonId] }}</div>
         </template>
@@ -97,8 +98,8 @@
         </template>
       </el-table-column> -->
       <el-table-column key="actualReceivingUnit" prop="actualReceivingUnit" label="实际收款单位" align="center" min-width="140" show-overflow-tooltip />
-      <el-table-column key="applyUserName" prop="applyUserName" label="办理人" align="center" width="100px" />
-      <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center" width="100px" />
+      <el-table-column key="applyUserName" prop="applyUserName" label="办理人" align="center" width="100px" show-overflow-tooltip />
+      <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center" width="100px" show-overflow-tooltip />
       <!-- <el-table-column key="remark" prop="remark" label="备注" align="center" min-width="120" show-overflow-tooltip /> -->
       <el-table-column key="auditStatus" prop="auditStatus" label="审核状态" align="center" width="80">
           <template #default="{ row }">
@@ -128,6 +129,7 @@ import { defineEmits, defineProps, ref, computed, watch } from 'vue'
 import { auditTypeEnum } from '@enum-ms/contract'
 import { digitUppercase, getDP, toThousand } from '@/utils/data-type/number'
 import { tableSummary } from '@/utils/el-extra'
+import { paymentOtherModeEnum } from '@enum-ms/finance'
 
 import useVisible from '@/composables/use-visible'
 import usePagination from '@compos/use-pagination'
@@ -196,7 +198,8 @@ const dict = useDict(['payment_reason'])
 const dataFormat = ref([
   ['applyAmount', 'to-thousand'],
   // ['actuallyPaymentAmount', 'to-thousand'],
-  ['paymentDate', ['parse-time', '{y}-{m}-{d}']]
+  ['paymentDate', ['parse-time', '{y}-{m}-{d}']],
+  ['paymentMethod', ['parse-enum', paymentOtherModeEnum]]
 ])
 
 const { maxHeight } = useMaxHeight(

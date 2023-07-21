@@ -32,7 +32,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="累计运输费">
-                <span>{{toThousand(totalFreight)}}</span>
+                <span>{{toThousand(detailInfo.totalPrice)}}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -97,20 +97,30 @@
           <el-row>
             <el-col :span="8">
               <el-form-item label="付款单位" prop="paymentUnitId">
-                <span>{{currentRow.paymentUnit}}</span>
+                <span>{{currentRow.paymentUnit || '-'}}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="支付方式" prop="paymentMethod">
+                <common-select
+                  v-if="showType==='audit'"
+                  v-model="paymentMethod"
+                  :options="paymentOtherModeEnum.ENUM"
+                  type="enum"
+                  size="small"
+                  placeholder="付款方式"
+                  style="width:200px;"
+                  @change="paymentModeChange"
+                />
+                <span v-else>{{currentRow.paymentMethod?paymentOtherModeEnum.VL[currentRow.paymentMethod]:'-'}}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="付款行" prop="paymentBank">
-                <el-select v-if="showType==='audit' && currentRow.auditStatus===auditTypeEnum.AUDITING.V" v-model="paymentBank" placeholder="付款行" :size="'small'" style="width: 220px" @change="bankChange">
+                <el-select v-if="showType==='audit' && currentRow.auditStatus===auditTypeEnum.AUDITING.V" v-model="paymentBank" placeholder="付款行" :size="'small'" style="width: 220px" @change="bankChange" clearable :disabled="paymentMethod===paymentOtherModeEnum.CASH.V">
                   <el-option v-for="item in bankList" :key="item.account" :label="item.depositBank" :value="item.depositBank" />
                 </el-select>
-                <span v-else>{{currentRow.paymentBank}}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="账号">
-                <span>{{paymentBankAccount}}</span>
+                <span v-else>{{currentRow.paymentBank || '-'}}</span>
               </el-form-item>
             </el-col>
           </el-row>
@@ -125,13 +135,18 @@
                 <span>{{currentRow.auditUserName}}{{currentRow.auditTime?parseTime(currentRow.auditTime,'{y}-{m}-{d}'):''}}</span>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
-              <el-form-item label="备注" prop="remark">
-                <span>{{currentRow.remark || '-'}}</span>
+             <el-col :span="8">
+              <el-form-item label="账号">
+                <span>{{paymentBankAccount || '-'}}</span>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
+             <el-col :span="8">
+              <el-form-item label="备注" prop="remark">
+                <span>{{currentRow.remark || '-'}}</span>
+              </el-form-item>
+            </el-col>
             <el-col :span="8">
               <el-form-item label="付款凭证">
                 <template #label>
@@ -196,6 +211,7 @@ import { bankData } from '@/api/contract/collection-and-invoice/collection'
 import { ref, defineProps, defineEmits, watch, computed } from 'vue'
 import { ElMessageBox, ElNotification } from 'element-plus'
 
+import { paymentOtherModeEnum } from '@enum-ms/finance'
 import { convertUnits } from '@/utils/convert/unit'
 import { DP } from '@/settings/config'
 import { logisticsPriceTypeEnum } from '@enum-ms/mes'
@@ -238,6 +254,7 @@ const currentId = ref()
 const paymentBank = ref()
 const paymentBankAccount = ref()
 const bankList = ref([])
+const paymentMethod = ref()
 
 const detailRef = ref()
 const list = ref([])
@@ -255,6 +272,7 @@ watch(
     if (val) {
       paymentBank.value = props.currentRow.paymentBank
       paymentBankAccount.value = props.currentRow.paymentBankAccount
+      paymentMethod.value = props.currentRow.paymentMethod
       fetchBank()
       fetchList()
     }
@@ -316,6 +334,13 @@ async function fetchBank() {
   }
 }
 
+function paymentModeChange(val) {
+  if (val === paymentOtherModeEnum.CASH.V) {
+    paymentBankAccount.value = undefined
+    paymentBank.value = undefined
+  }
+}
+
 function closeDialog() {
   paymentBank.value = props.currentRow.paymentBank
   paymentBankAccount.value = props.currentRow.paymentBankAccount
@@ -341,7 +366,7 @@ async function passConfirm(val) {
       cancelButtonText: '否',
       type: 'warning'
     })
-    await audit({ id: props.currentRow.id, auditStatus: val, paymentBank: paymentBank.value, paymentBankAccount: paymentBankAccount.value })
+    await audit({ id: props.currentRow.id, auditStatus: val, paymentBank: paymentBank.value, paymentBankAccount: paymentBankAccount.value, paymentMethod: paymentMethod.value })
     ElNotification({ title: title + '成功', type: 'success' })
     handleClose()
     emit('success')

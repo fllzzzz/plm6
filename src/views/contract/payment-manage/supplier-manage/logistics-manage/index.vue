@@ -80,7 +80,7 @@
       </el-table-column>
       <el-table-column prop="payable" label="应付运费" align="right" show-overflow-tooltip min-width="120">
         <template v-slot="scope">
-          <span :style="`color:${(scope.row.sourceRow.invoiceAmount-scope.row.sourceRow.paymentAmount)<0?'red':''}`">{{toThousand(scope.row.sourceRow.invoiceAmount-scope.row.sourceRow.paymentAmount)}}</span>
+          <span :style="`color:${(scope.row.sourceRow.freight-scope.row.sourceRow.paymentAmount)<0?'red':''}`">{{toThousand(scope.row.sourceRow.freight-scope.row.sourceRow.paymentAmount)}}</span>
         </template>
       </el-table-column>
       <!--付款和收票-->

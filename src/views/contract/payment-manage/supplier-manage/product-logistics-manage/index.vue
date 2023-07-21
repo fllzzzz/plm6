@@ -13,7 +13,7 @@
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column v-if="columns.visible('project')" key="project" prop="project" :show-overflow-tooltip="true" label="项目" align="center" min-width="180" />
-      <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" :show-overflow-tooltip="true" label="物流公司" align="center" min-width="180">
+      <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" :show-overflow-tooltip="true" label="物流公司" align="center" min-width="150">
         <template v-slot="scope">
           <span>{{ scope.row.supplierName }}</span>
         </template>
@@ -35,7 +35,7 @@
           <div class="clickable" @click.stop="openLogisticsRecord(row)">{{ row.trainNumber }}</div>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('actualWeight')" key="actualWeight" prop="actualWeight" :show-overflow-tooltip="true" label="累计发运量(吨)" align="center" min-width="180">
+      <el-table-column v-if="columns.visible('actualWeight')" key="actualWeight" prop="actualWeight" :show-overflow-tooltip="true" label="累计发运量(吨)" min-width="120" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.actualWeight }}</span>
         </template>
@@ -58,7 +58,7 @@
           <div type="warning" class="clickable" @click.stop="openRecord(row, 'payment')">{{ row.paymentAmount }}</div>
         </template>
       </el-table-column>
-      <el-table-column prop="paymentRate" label="付款比例" align="center" show-overflow-tooltip min-width="80">
+      <el-table-column prop="paymentRate" label="付款比例" align="center" show-overflow-tooltip>
         <template #default="{ row }">
           <span>{{ row.paymentRate }}%</span>
         </template>
@@ -85,14 +85,14 @@
           <div type="warning" class="clickable" @click.stop="openRecord(row, 'invoice')">{{ row.invoiceAmount }}</div>
         </template>
       </el-table-column>
-      <el-table-column prop="invoiceRate" label="收票比例" align="center" show-overflow-tooltip min-width="80">
+      <el-table-column prop="invoiceRate" label="收票比例" align="center" show-overflow-tooltip>
         <template #default="{ row }">
           <span>{{ row.invoiceRate }}%</span>
         </template>
       </el-table-column>
       <el-table-column prop="payable" label="应付运费" align="right" show-overflow-tooltip min-width="120">
         <template v-slot="scope">
-          <span :style="`color:${(scope.row.sourceRow.invoiceAmount-scope.row.sourceRow.paymentAmount)<0?'red':''}`">{{toThousand(scope.row.sourceRow.invoiceAmount-scope.row.sourceRow.paymentAmount)}}</span>
+          <span :style="`color:${(scope.row.sourceRow.totalPrice-scope.row.sourceRow.paymentAmount)<0?'red':''}`">{{toThousand(scope.row.sourceRow.totalPrice-scope.row.sourceRow.paymentAmount)}}</span>
         </template>
       </el-table-column>
       <!--付款和收票-->
