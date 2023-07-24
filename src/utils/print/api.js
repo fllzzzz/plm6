@@ -28,6 +28,7 @@ const transactionRecord = contract.transactionRecord
 const contractStructureProduct = contract.structurePrice
 const contractEnclosureProduct = contract.structurePrice
 const contractAuxiliaryMaterialProduct = contract.structurePrice
+const contractBoxShipmentTracking = contract.bridgeShipmentTracking
 const contractStructureShipmentTracking = contract.shipmentTracking
 const contractEnclosureShipmentTracking = contract.shipmentTracking
 const contractAuxiliaryMaterialShipmentTracking = contract.shipmentTracking
@@ -319,6 +320,7 @@ export default {
   contractStructureProduct, // 结构制品
   contractEnclosureProduct, // 围护制品
   contractAuxiliaryMaterialProduct, // 配套制品
+  contractBoxShipmentTracking, // 分段发运跟踪
   contractStructureShipmentTracking, // 结构发运跟踪
   contractEnclosureShipmentTracking, // 围护发运跟踪
   contractAuxiliaryMaterialShipmentTracking, // 配套件发运跟踪
