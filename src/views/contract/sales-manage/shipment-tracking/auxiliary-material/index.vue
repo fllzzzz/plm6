@@ -3,14 +3,17 @@
     <!--工具栏-->
     <mHeader ref="headerRef" class="auxiliary-material-container" />
     <!--表格渲染-->
-    <common-table
-      ref="tableRef"
-      v-loading="crud.loading"
-      :data="crud.data"
-      :data-format="dataFormat"
-      :max-height="maxHeight"
-    >
-      <el-table-column label="序号" type="index" align="center" width="60" />
+    <common-table ref="tableRef" v-loading="crud.loading" :data="crud.data" :data-format="dataFormat" :max-height="maxHeight">
+      <el-table-column fixed="left" label="序号" type="index" align="center" width="60" />
+      <el-table-column
+        v-if="columns.visible('project') && !crud.query.projectId"
+        key="project"
+        prop="project"
+        show-overflow-tooltip
+        label="项目"
+        align="center"
+        min-width="150"
+      />
       <el-table-column
         v-if="columns.visible('monomer.name')"
         key="monomer.name"
@@ -18,7 +21,7 @@
         show-overflow-tooltip
         label="单体"
         align="center"
-        min-width="160"
+        min-width="130"
       />
       <el-table-column
         v-if="columns.visible('area.name')"
@@ -27,7 +30,7 @@
         show-overflow-tooltip
         label="区域"
         align="center"
-        min-width="160"
+        min-width="130"
       />
       <el-table-column
         v-if="columns.visible('name')"
@@ -73,14 +76,7 @@
         min-width="120"
         label="综合单价"
       />
-      <el-table-column
-        v-if="columns.visible('totalPrice')"
-        key="totalPrice"
-        prop="totalPrice"
-        align="right"
-        min-width="120"
-        label="金额"
-      />
+      <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="right" min-width="120" label="金额" />
       <el-table-column
         v-if="columns.visible('createTime')"
         key="createTime"
@@ -88,6 +84,60 @@
         align="center"
         label="发运日期"
         width="100"
+      />
+      <el-table-column
+        v-if="columns.visible('auditUserName')"
+        key="auditUserName"
+        prop="auditUserName"
+        show-overflow-tooltip
+        label="发运人"
+        align="center"
+        width="90"
+      />
+      <el-table-column
+        v-if="columns.visible('actualUserName')"
+        key="actualUserName"
+        prop="actualUserName"
+        show-overflow-tooltip
+        label="过磅人"
+        align="center"
+        width="90"
+      />
+      <el-table-column
+        v-if="columns.visible('supplierName')"
+        key="supplierName"
+        prop="supplierName"
+        show-overflow-tooltip
+        label="物流公司"
+        align="center"
+        min-width="120"
+      />
+      <el-table-column
+        v-if="columns.visible('cargoSerialNumber')"
+        key="cargoSerialNumber"
+        prop="cargoSerialNumber"
+        show-overflow-tooltip
+        label="车次"
+        align="center"
+        width="110"
+      />
+      <el-table-column
+        v-if="columns.visible('licensePlate')"
+        key="licensePlate"
+        prop="licensePlate"
+        show-overflow-tooltip
+        label="车牌"
+        align="center"
+        width="100"
+      />
+      <el-table-column
+        v-if="columns.visible('workshopNames')"
+        key="workshopNames"
+        prop="workshopNames"
+        show-overflow-tooltip
+        label="生产部门"
+        align="center"
+        min-width="120"
       />
     </common-table>
     <!--分页组件-->
@@ -122,6 +172,7 @@ const tableRef = ref()
 const headerRef = ref()
 const dataFormat = computed(() => {
   return [
+    ['project', 'parse-project'],
     ['createTime', ['parse-time', '{y}-{m}-{d}']],
     ['unitPrice', ['to-thousand', decimalPrecision.value.contract]],
     ['totalPrice', ['to-thousand', decimalPrecision.value.contract]]
@@ -135,8 +186,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     crudApi: { get },
     optShow: { ...optShow },
-    invisibleColumns: [],
-    requiredQuery: ['projectId']
+    invisibleColumns: ['actualUserName', 'supplierName', 'cargoSerialNumber', 'workshopNames']
   },
   tableRef
 )
