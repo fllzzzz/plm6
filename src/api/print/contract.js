@@ -265,6 +265,18 @@ export function shipmentTracking(params) {
 }
 
 /**
+ * 桥梁发运跟踪
+ */
+export function bridgeShipmentTracking(params) {
+  return request({
+    module: 'contract',
+    url: 'business/ship/bridge/detail/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
  * 入库记录
  */
 export function warehouseRecord(params) {
@@ -521,6 +533,7 @@ export default {
   transactionRecord, // 客户交易记录
   saleOrderTracking, // 订单跟踪列表
   shipmentTracking, // 发运跟踪
+  bridgeShipmentTracking, // 分段发运跟踪
   warehouseRecord, // 入库记录
   waterElectricityRecord, // 水电费清单
   plantDepreciationRecord, // 厂房折旧

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--工具栏-->
-    <mHeader ref="headerRef" class="enclosure-container" />
+    <mHeader ref="headerRef" class="box-container" />
     <!--表格渲染-->
     <common-table ref="tableRef" v-loading="crud.loading" :data="crud.data" :data-format="dataFormat" :max-height="maxHeight">
       <el-table-column fixed="left" label="序号" type="index" align="center" width="60" />
@@ -12,16 +12,25 @@
         show-overflow-tooltip
         label="项目"
         align="center"
-        min-width="140"
+        min-width="150"
+      />
+      <el-table-column
+        v-if="columns.visible('monomer.name')"
+        key="monomer.name"
+        prop="monomer.name"
+        show-overflow-tooltip
+        label="单体"
+        align="center"
+        min-width="130"
       />
       <el-table-column
         v-if="columns.visible('area.name')"
         key="area.name"
         prop="area.name"
         show-overflow-tooltip
-        label="批次"
+        label="区域"
         align="center"
-        min-width="120"
+        min-width="130"
       />
       <el-table-column
         v-if="columns.visible('name')"
@@ -30,7 +39,7 @@
         show-overflow-tooltip
         label="名称"
         align="center"
-        min-width="110"
+        min-width="130"
       />
       <el-table-column
         v-if="columns.visible('serialNumber')"
@@ -39,72 +48,46 @@
         show-overflow-tooltip
         label="编号"
         align="center"
-        min-width="106"
+        min-width="120"
       />
       <el-table-column
-        v-if="columns.visible('plate')"
-        key="plate"
-        prop="plate"
+        v-if="columns.visible('specification')"
+        key="specification"
+        prop="specification"
         show-overflow-tooltip
-        label="板型"
+        label="规格"
         align="center"
-        min-width="100"
+        min-width="140"
       />
       <el-table-column
-        v-if="columns.visible('length')"
-        key="length"
-        prop="length"
+        v-if="columns.visible('material')"
+        key="material"
+        prop="material"
         show-overflow-tooltip
-        label="单长(mm)"
-        align="right"
-        min-width="100"
-      />
-      <el-table-column
-        v-if="columns.visible('surfaceArea')"
-        key="surfaceArea"
-        prop="surfaceArea"
-        show-overflow-tooltip
-        label="单面积(mm²)"
-        align="right"
-        min-width="100"
+        label="材质"
+        align="center"
+        min-width="110"
       />
       <el-table-column
         v-if="columns.visible('totalQuantity')"
         key="totalQuantity"
         prop="totalQuantity"
-        label="数量(张)"
+        label="数量"
         align="center"
         min-width="70"
         show-overflow-tooltip
       />
       <el-table-column
-        v-if="columns.visible('totalLength')"
-        key="totalLength"
-        prop="totalLength"
+        v-if="columns.visible('weight')"
+        key="weight"
+        prop="weight"
         show-overflow-tooltip
-        label="总长度(m)"
-        align="right"
-        min-width="100"
-      />
-      <el-table-column
-        v-if="columns.visible('totalArea')"
-        key="totalArea"
-        prop="totalArea"
-        show-overflow-tooltip
-        label="总面积(m²)"
-        align="right"
-        min-width="100"
-      />
-      <el-table-column
-        v-if="columns.visible('pricingManner')"
-        key="pricingManner"
-        prop="pricingManner"
+        label="总量(kg)"
         align="center"
-        width="80"
-        label="计价方式"
+        min-width="110"
       />
-      <el-table-column v-if="columns.visible('unitPrice')" key="unitPrice" prop="unitPrice" align="right" min-width="90" label="综合单价" />
-      <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="right" min-width="90" label="金额" />
+      <el-table-column v-if="columns.visible('unitPrice')" key="unitPrice" prop="unitPrice" align="right" min-width="100" label="单价" />
+      <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="right" min-width="100" label="金额" />
       <el-table-column
         v-if="columns.visible('createTime')"
         key="createTime"
@@ -174,12 +157,10 @@
 </template>
 
 <script setup>
-import { enclosureList as get } from '@/api/contract/sales-manage/shipment-tracking'
-import { ref, defineEmits, computed } from 'vue'
+import { bridgeList as get } from '@/api/contract/sales-manage/shipment-tracking'
+import { ref, defineEmits } from 'vue'
 
 import { shipmentTrackingPM as permission } from '@/page-permission/contract'
-import { enclosurePricingMannerEnum } from '@enum-ms/enclosure'
-import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -200,21 +181,16 @@ const optShow = {
 
 const tableRef = ref()
 const headerRef = ref()
-const dataFormat = computed(() => {
-  return [
-    ['project', 'parse-project'],
-    ['createTime', ['parse-time', '{y}-{m}-{d}']],
-    ['totalLength', ['to-thousand', DP.MES_ENCLOSURE_L__M]],
-    ['totalArea', ['to-thousand', DP.MES_ENCLOSURE_L__M]],
-    ['unitPrice', ['to-thousand', decimalPrecision.value.contract]],
-    ['totalPrice', ['to-thousand', decimalPrecision.value.contract]],
-    ['pricingManner', ['parse-enum', enclosurePricingMannerEnum]]
-  ]
-})
+const dataFormat = ref([
+  ['project', 'parse-project'],
+  ['createTime', ['parse-time', '{y}-{m}-{d}']],
+  ['unitPrice', ['to-thousand', decimalPrecision.value.contract]],
+  ['totalPrice', ['to-thousand', decimalPrecision.value.contract]]
+])
 
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '围护制品',
+    title: '箱体制品',
     sort: [],
     permission: { ...permission },
     crudApi: { get },
@@ -225,7 +201,7 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({
-  extraBox: ['.common-container', '.enclosure-container'],
+  extraBox: ['.common-container', '.box-container'],
   minHeight: 300,
   paginate: true
 })
