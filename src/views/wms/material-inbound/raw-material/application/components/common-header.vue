@@ -73,6 +73,7 @@
                 v-model="form.loadingWeight"
                 class="input-underline"
                 style="width: 135px"
+                mode="input"
                 :min="0"
                 :max="999999999"
                 :controls="false"

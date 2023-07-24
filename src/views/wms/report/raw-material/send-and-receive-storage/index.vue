@@ -3,7 +3,7 @@
     <!--工具栏-->
     <m-header ref="headerRef" @show-detail="showDetail"/>
     <!--表格渲染-->
-      <common-table
+     <common-table
       :key="`return_to_party_a_${crud.query.basicClass}`"
       ref="tableRef"
       v-loading="crud.loading"

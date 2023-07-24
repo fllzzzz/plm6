@@ -94,13 +94,13 @@ import { steelInboundApplication } from '@/api/wms/material-inbound/raw-material
 import { edit as editInboundApplication } from '@/api/wms/material-inbound/raw-material/record'
 import { steelInboundApplicationPM as permission } from '@/page-permission/wms'
 
-import { toPrecision } from '@/utils/data-type'
 import { createUniqueString } from '@/utils/data-type/string'
 import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reactive } from 'vue'
 import { STEEL_ENUM, DP } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@/utils/enum/modules/finance'
 import { orderSupplyTypeEnum, inboundFillWayEnum } from '@/utils/enum/modules/wms'
+import { toPrecision } from '@/utils/data-type'
 
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useForm from '@/composables/form/use-form'
