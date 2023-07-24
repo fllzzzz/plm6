@@ -37,6 +37,12 @@
         style="width:200px"
         class="filter-item"
       />
+      <el-input
+        v-model.trim="query.relationDeptName"
+        placeholder="所属部门"
+        style="width:200px"
+        class="filter-item"
+      />
       <rrOperation/>
     </div>
     <crudOperation>
@@ -66,7 +72,9 @@ const defaultQuery = {
   endDate: undefined,
   projectId: undefined,
   name: undefined,
-  auditStatus: { value: auditTypeEnum.PASS.V, resetAble: false }
+  auditStatus: { value: auditTypeEnum.PASS.V, resetAble: false },
+  relationDeptName: undefined,
+  contractSignBodyName: undefined
 }
 
 const { crud, query } = regHeader(defaultQuery)

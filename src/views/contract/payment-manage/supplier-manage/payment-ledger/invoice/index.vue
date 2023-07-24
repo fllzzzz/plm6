@@ -28,6 +28,7 @@
     <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" :show-overflow-tooltip="true" label="销售单位" align="center" min-width="140" />
     <el-table-column v-if="columns.visible('branchCompanyName')" key="branchCompanyName" prop="branchCompanyName" :show-overflow-tooltip="true" label="购方单位" align="center" min-width="140" />
     <el-table-column v-if="columns.visible('receiveInvoiceDate')" key="receiveInvoiceDate" prop="receiveInvoiceDate" label="收票日期" align="center" width="100" />
+    <el-table-column v-if="columns.visible('createInvoiceDate')" key="createInvoiceDate" prop="createInvoiceDate" label="开票日期" align="center" width="100" show-overflow-tooltip />
     <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="发票金额" align="right" min-width="100" />
     <el-table-column v-if="columns.visible('invoiceSerialNumber')" key="invoiceSerialNumber" prop="invoiceSerialNumber" :show-overflow-tooltip="true" label="发票号码" align="center" min-width="120">
       <template v-slot="scope">
@@ -54,6 +55,7 @@
     <el-table-column v-if="columns.visible('invoiceType')" key="invoiceType" prop="invoiceType" label="发票类型" :show-overflow-tooltip="true" align="center" width="106" />
     <el-table-column v-if="columns.visible('taxRate')" key="taxRate" prop="taxRate" label="税率" align="center" :show-overflow-tooltip="true"  width="60" />
     <el-table-column v-if="columns.visible('amountExcludingVat')" key="amountExcludingVat" prop="amountExcludingVat" label="不含税金额" :show-overflow-tooltip="true" align="center" />
+    <el-table-column v-if="columns.visible('tax')" key="tax" prop="tax" label="税额" :show-overflow-tooltip="true" align="center" />
     <el-table-column v-if="columns.visible('applyUserName')" key="applyUserName" prop="applyUserName" label="办理人" :show-overflow-tooltip="true" align="center" />
     <el-table-column v-if="columns.visible('invoiceContent')" key="invoiceContent" prop="invoiceContent" label="发票内容" :show-overflow-tooltip="true" align="center" />
   </common-table>
@@ -117,6 +119,7 @@ const dataFormat = computed(() => {
   return [
     ['invoiceAmount', ['to-thousand', decimalPrecision.value.contract]],
     ['receiveInvoiceDate', ['parse-time', '{y}-{m}-{d}']],
+    ['createInvoiceDate', ['parse-time', '{y}-{m}-{d}']],
     ['propertyType', ['parse-enum', supplierPayTypeEnum]],
     ['invoiceType', ['parse-enum', invoiceTypeEnum]],
     ['taxRate', ['suffix', '%']],
