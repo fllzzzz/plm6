@@ -9,7 +9,6 @@
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       :stripe="false"
-      :data-format="dataFormat"
       show-summary
       :summary-method="getSummaries"
       style="width: 100%"
@@ -22,7 +21,11 @@
         :show-overflow-tooltip="true"
         label="项目"
         align="left"
-      />
+      >
+        <template #default="{ row }">
+          <span>{{ row.project?.contractNo || '' }}-{{ row.project?.shortName || '' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         key="list"
         prop="list"
@@ -183,10 +186,6 @@ const { maxHeight } = useMaxHeight({
   paginate: true,
   extraHeight: 40
 })
-
-const dataFormat = ref([
-  ['project', 'parse-project']
-])
 
 function openDetail(row, show) {
   showType.value = show
