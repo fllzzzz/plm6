@@ -11,6 +11,7 @@
       :data-format="dataFormat"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
+      :show-empty-symbol="false"
       style="width: 100%"
       @row-dblclick="handleDblRowClick"
     >
@@ -25,6 +26,18 @@
       >
         <template #default="{ row: { sourceRow: row } }">
           <span>{{ problemTypeEnum.VL[row.type] }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('serialNumber')"
+        :show-overflow-tooltip="true"
+        prop="serialNumber"
+        label="构件编号"
+        align="center"
+        width="100px"
+      >
+        <template #default="{ row }">
+          <span>{{ row.serialNumber || '/' }}</span>
         </template>
       </el-table-column>
       <el-table-column

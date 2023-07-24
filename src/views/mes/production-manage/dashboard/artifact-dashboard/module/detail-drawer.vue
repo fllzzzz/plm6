@@ -35,7 +35,7 @@
               <template v-if="item.teamTraceList?.length">
                 <el-collapse v-for="team in item?.teamTraceList" :key="team.name">
                   <el-collapse-item
-                    :title="`${detailRow?.processSummaryDetailsList[processId]?.name} / ${team.userName}`"
+                    :title="`${detailRow?.processSummaryDetailsList[processId]?.productLineName}>${detailRow?.processSummaryDetailsList[processId]?.groupName}>${detailRow?.processSummaryDetailsList[processId]?.name} / ${team.userName}`"
                     :name="`${team.userId}`"
                   >
                     <div style="display: flex">

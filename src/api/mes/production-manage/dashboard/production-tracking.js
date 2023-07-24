@@ -40,5 +40,32 @@ export function artifactAssembleList(params) {
   })
 }
 
+/**
+ *
+ * 生产线筛选列表
+ */
+export function getLines(params) {
+  return request({
+    module: 'mes',
+    url: 'task/process/assemble/process/track/prodLineList',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ *
+ * 下载生产跟踪excel表格
+ */
+export function downloadFn(params) {
+  return request({
+    module: 'mes',
+    url: 'task/process/assemble/process/track/print',
+    method: 'get',
+    responseType: 'blob',
+    params
+  })
+}
+
 export default { get }
 

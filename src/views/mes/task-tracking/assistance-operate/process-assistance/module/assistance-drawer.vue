@@ -5,17 +5,17 @@
     v-model="drawerVisible"
     direction="rtl"
     :before-close="handleClose"
-    size="90%"
+    size="100%"
   >
     <template #titleAfter>
-      <el-tag effect="plain" v-if="crud.query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V">
+      <el-tag effect="plain" v-if="props.info?.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V">
         原生产组：{{ info.workshop?.name }}>{{ info.productionLine?.name }}>{{ info.groups?.name }}
       </el-tag>
     </template>
-    <template #titleRight>
-      <common-button v-permission="permission.del" size="mini" type="danger" @click="toBatchDelete">批量删除【协同班组】</common-button>
-      <common-button v-permission="permission.save" size="mini" type="primary" @click="previewIt">预览并保存</common-button>
-    </template>
+    <!-- <template #titleRight>
+      <common-button size="mini" type="danger" @click="toBatchDelete">批量删除【协同班组】</common-button>
+      <common-button size="mini" type="primary" @click="previewIt">预览并保存</common-button>
+    </template> -->
     <template #content>
       <div class="head-container">
         <el-input
@@ -45,15 +45,15 @@
         :data="tableData"
         v-loading="tableLoading"
         :max-height="maxHeight"
-        :cell-class-name="wrongCellMask"
         :data-format="dataFormat"
+        :show-empty-symbol="false"
         @selection-change="handleSelectChange"
         style="width: 100%"
       >
-        <el-table-column type="selection" width="55" align="center" :selectable="selectable" />
+        <!-- <el-table-column type="selection" width="55" align="center" :selectable="selectable" /> -->
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column
-          v-if="crud.query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+          v-if="props.info?.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
           prop="areaName"
           :show-overflow-tooltip="true"
           label="区域"
@@ -61,7 +61,7 @@
           align="center"
         />
         <el-table-column
-          v-if="crud.query.taskTypeEnum === taskTypeENUM.MACHINE_PART.V"
+          v-if="props.info?.taskTypeEnum === taskTypeENUM.MACHINE_PART.V"
           prop="cutNumber"
           :show-overflow-tooltip="true"
           label="切割指令号"
@@ -69,7 +69,7 @@
           align="center"
         />
         <el-table-column
-          v-if="crud.query.taskTypeEnum === taskTypeENUM.ASSEMBLE.V"
+          v-if="props.info?.taskTypeEnum === taskTypeENUM.MACHINE_PART.V"
           prop="attributeType"
           :show-overflow-tooltip="true"
           label="属性"
@@ -81,7 +81,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="crud.query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+          v-if="props.info?.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
           prop="serialNumber"
           :show-overflow-tooltip="true"
           label="编号"
@@ -90,7 +90,7 @@
         />
         <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="100px" align="center" />
         <el-table-column
-          v-if="crud.query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+          v-if="props.info?.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
           prop="length"
           :show-overflow-tooltip="true"
           label="长度(mm)"
@@ -127,16 +127,14 @@
             <span>{{ row.totalCompleteMete?.grossWeight || 0 }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="crud.query.taskTypeEnum === taskTypeENUM.MACHINE_PART.V"
+        <!-- <el-table-column
           align="center"
           prop="askCompleteTime"
           :show-overflow-tooltip="true"
           label="计划完成日期"
           width="120px"
-        />
-        <el-table-column
-          v-if="crud.query.taskTypeEnum === taskTypeENUM.MACHINE_PART.V"
+        /> -->
+        <!-- <el-table-column
           prop="group.name"
           :show-overflow-tooltip="true"
           label="原生产组"
@@ -145,8 +143,18 @@
           <template #default="{ row }">
             <span>{{ row.workshop?.name }}>{{ row.productionLine?.name }}>{{ row.groups?.name }}</span>
           </template>
+        </el-table-column> -->
+        <el-table-column align="center" prop="totalAssistQuantity" :show-overflow-tooltip="true" label="已协同数量">
+          <template #default="{ row }">
+            <span>{{ row.totalAssistQuantity || 0 }}</span>
+          </template>
         </el-table-column>
-        <el-table-column :show-overflow-tooltip="true" prop="groupsId" label="协同生产组" min-width="150px" align="center">
+        <el-table-column align="center" prop="totalCanAssistMete.quantity" :show-overflow-tooltip="true" label="可协同数量">
+          <template #default="{ row }">
+            <span>{{ row.totalCanAssistMete?.quantity }}</span>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column :show-overflow-tooltip="true" prop="groupsId" label="协同生产组" min-width="150px" align="center">
           <template #default="{ row: { sourceRow: row }, $index }">
             <el-cascader
               v-model="row.groupsId"
@@ -161,28 +169,44 @@
               @change="handleGroupsChange($event, row, $index)"
             />
           </template>
+        </el-table-column> -->
+        <el-table-column align="center" :show-overflow-tooltip="true" label="操作">
+          <template #default="{ row }">
+            <common-button size="mini" type="success" @click.stop="deal(row)">办理</common-button>
+          </template>
         </el-table-column>
       </common-table>
       <assistance-preview v-model:visible="previewVisible" :info="info" :list="submitList" @success="handleSuccess" />
+      <assistance-detail-form
+        v-model:visible="detailVisible"
+        :detail-data="detailData"
+        :detail-list="detailList"
+        :classIdGroupsObj="classIdGroupsObj"
+        @success="detailSuccess"
+      />
     </template>
   </common-drawer>
 </template>
 
 <script setup>
-import { detail, del } from '@/api/mes/task-tracking/assistance-operate/process-assistance'
-import { defineProps, defineEmits, ref, inject } from 'vue'
-import { ElMessage, ElNotification, ElMessageBox } from 'element-plus'
+import { detail } from '@/api/mes/task-tracking/assistance-operate/process-assistance'
+import { defineProps, defineEmits, ref } from 'vue'
+// import { ElMessage, ElNotification, ElMessageBox } from 'element-plus'
 
 import { taskTypeENUM } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
-import useTableValidate from '@compos/form/use-table-validate'
+// import useTableValidate from '@compos/form/use-table-validate'
 import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-scheduling-groups'
 
 import assistancePreview from './assistance-preview'
+import assistanceDetailForm from './assistance-detail-form'
 
 const drawerRef = ref()
+const detailVisible = ref(false)
+const detailData = ref({})
+const detailList = ref([])
 const emit = defineEmits(['update:visible', 'success'])
 const props = defineProps({
   visible: {
@@ -210,8 +234,7 @@ const { maxHeight } = useMaxHeight(
 
 const dataFormat = ref([['askCompleteTime', ['parse-time', '{y}-{m}-{d}']]])
 
-const crud = inject('crud')
-const permission = inject('permission')
+// const permission = inject('permission')
 const query = ref({})
 const tableData = ref([])
 const tableLoading = ref(false)
@@ -219,16 +242,7 @@ const classIdGroupsObj = ref({})
 const selections = ref([])
 const submitList = ref([])
 const previewVisible = ref(false)
-
-const tableRules = {
-  groupsId: [{ required: true, message: '请选择生产组', trigger: 'change' }]
-}
-const ditto = new Map([['groupsId', '同上']])
-const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })
-
-function selectable(row, rowIndex) {
-  return !row.isComplete
-}
+const pIds = ref([])
 
 function resetQuery() {
   query.value = {}
@@ -239,13 +253,8 @@ function handleSelectChange(val) {
   selections.value = val
 }
 
-function handleGroupsChange(val, row, index) {
-  if (index !== 0 && !val) {
-    row.groupsId = '同上'
-  }
-}
-
 async function fetch() {
+  pIds.value = [props.info?.groups?.id]
   try {
     tableLoading.value = true
     tableData.value = []
@@ -264,29 +273,49 @@ async function fetch() {
       v.attributeType = v.taskTypeEnum === taskTypeENUM.ASSEMBLE.V ? '部件' : '套料'
       v.areaName = v.area?.name
       v.configId = v.config?.id
-      v.groupsId = v.groups?.id
       v.isComplete = Boolean(
         v.totalCompleteMete?.quantity && v.totalTaskMete?.quantity && v.totalCompleteMete?.quantity === v.totalTaskMete?.quantity
       )
-      if (!classIdGroupsObj.value[v.configId]) {
-        let res = {}
-        if (crud.query.taskTypeEnum === taskTypeENUM.MACHINE_PART.V) {
-          res = await manualFetchGroupsTree({
-            productType: props.info?.taskTypeEnum,
-            disabledIds: (v?.groups?.id && [v?.groups?.id]) || []
-          })
-        } else {
-          res = await manualFetchGroupsTree({
-            productType: props.info?.taskTypeEnum,
-            structureClassId: v.configId,
-            disabledIds: (props.info?.groups?.id && [props.info?.groups?.id]) || [],
-            _factoryIds: (v.factoryId && [v.factoryId]) || []
-          })
+      if (v?.mesBuildingAssistDetailDTOS?.length > 0) {
+        v?.mesBuildingAssistDetailDTOS.forEach(async (p) => {
+          p.groupsId = p?.groups?.id
+          pIds.value.push(p.groupsId)
+          if (!classIdGroupsObj.value[v?.configId]) {
+            let res = {}
+            if (props.info?.taskTypeEnum === taskTypeENUM.MACHINE_PART.V) {
+              res = await manualFetchGroupsTree({
+                productType: props.info?.taskTypeEnum,
+                disabledIds: pIds.value || []
+              })
+            } else {
+              res = await manualFetchGroupsTree({
+                productType: props.info?.taskTypeEnum,
+                structureClassId: v.configId,
+                disabledIds: pIds.value || [],
+                _factoryIds: (v.factoryId && [v.factoryId]) || []
+              })
+            }
+            classIdGroupsObj.value[v.configId] = res
+          }
+        })
+      } else {
+        if (!classIdGroupsObj.value[v?.configId]) {
+          let res = {}
+          if (props.info?.taskTypeEnum === taskTypeENUM.MACHINE_PART.V) {
+            res = await manualFetchGroupsTree({
+              productType: props.info?.taskTypeEnum,
+              disabledIds: pIds.value || []
+            })
+          } else {
+            res = await manualFetchGroupsTree({
+              productType: props.info?.taskTypeEnum,
+              structureClassId: v.configId,
+              disabledIds: pIds.value || [],
+              _factoryIds: (v.factoryId && [v.factoryId]) || []
+            })
+          }
+          classIdGroupsObj.value[v.configId] = res
         }
-        classIdGroupsObj.value[v.configId] = res
-      }
-      if (i > 0 && !v.groupsId) {
-        v.groupsId = '同上'
       }
       tableData.value.push(v)
     }
@@ -297,53 +326,20 @@ async function fetch() {
   }
 }
 
-function previewIt() {
-  if (!selections.value?.length) {
-    ElMessage.warning('请至少选择一条数据')
-    return
-  }
-  const _list = selections.value.map((v) => v)
-  const { validResult, dealList } = tableValidate(_list)
-  if (validResult) {
-    cleanUpData(dealList) // 同上赋值
-    submitList.value = dealList.map((v, i) => {
-      return {
-        ...v,
-        assistance: {
-          ...classIdGroupsObj.value[v.configId].obj[v.groupsId]
-        }
-      }
-    })
-  } else {
-    return validResult
-  }
-
-  previewVisible.value = true
-}
-
-function toBatchDelete() {
-  if (!selections.value?.length) {
-    ElMessage.warning('请至少选择一条数据')
-    return
-  }
-  ElMessageBox.confirm(`是否确认删除所选择的班组协同？`, '提示', {
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(async () => {
-    try {
-      const ids = selections.value.map((v) => v.id)
-      await del({ ids })
-      ElNotification({ title: '班组删除成功', type: 'success' })
-      fetch()
-    } catch (error) {
-      console.log('班组删除失败', error)
-    }
-  })
+function detailSuccess() {
+  fetch()
+  emit('success')
 }
 
 function handleSuccess() {
   fetch()
+}
+
+function deal(row) {
+  detailData.value = {}
+  detailVisible.value = true
+  detailData.value = row
+  detailList.value = row?.mesBuildingAssistDetailDTOS || []
 }
 </script>
 
