@@ -177,7 +177,7 @@
         ref="detailRef"
         border
         :data="list"
-        :max-height="maxHeight"
+        :max-height="420"
         style="width: 100%;margin-bottom:10px;"
         class="table-form"
         v-loading="tableLoading"
@@ -212,7 +212,6 @@ import { bankData } from '@/api/contract/collection-and-invoice/collection'
 import { ref, defineProps, defineEmits, watch, nextTick, computed } from 'vue'
 import { ElMessageBox, ElNotification } from 'element-plus'
 
-import useMaxHeight from '@compos/use-max-height'
 import { isBlank, isNotBlank } from '@/utils/data-type'
 import { toThousand, digitUppercase } from '@data-type/number'
 import { parseTime } from '@/utils/date'
@@ -284,16 +283,6 @@ watch(
     }
   },
   { deep: true, immediate: true }
-)
-
-const { maxHeight } = useMaxHeight(
-  {
-    extraBox: ['.el-drawer__header', '.detail-header'],
-    wrapperBox: ['.el-drawer__body', '.table-form'],
-    navbar: false,
-    extraHeight: 90
-  },
-  () => drawerRef.value.loaded
 )
 
 async function fetchList() {

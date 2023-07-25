@@ -178,7 +178,7 @@
         ref="detailRef"
         border
         :data="list"
-        :max-height="maxHeight"
+        :max-height="420"
         style="width: 100%;margin-bottom:10px;"
         class="table-form"
         v-loading="tableLoading"
@@ -219,7 +219,6 @@ import { isBlank, isNotBlank } from '@/utils/data-type'
 import { toThousand, digitUppercase } from '@data-type/number'
 import { parseTime } from '@/utils/date'
 import useVisible from '@compos/use-visible'
-import useMaxHeight from '@compos/use-max-height'
 import useDict from '@compos/store/use-dict'
 import { auditTypeEnum } from '@enum-ms/contract'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
@@ -286,16 +285,6 @@ const totalFreight = computed(() => {
     return prev + (curr || 0)
   }, 0) || 0
 })
-
-const { maxHeight } = useMaxHeight(
-  {
-    extraBox: ['.el-drawer__header', '.detail-header'],
-    wrapperBox: ['.el-drawer__body', '.table-form'],
-    navbar: false,
-    extraHeight: 90
-  },
-  () => drawerRef.value.loaded
-)
 
 async function fetchList() {
   const _list = []
