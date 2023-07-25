@@ -33,6 +33,24 @@
         placeholder="可选择/输入科目、编号搜索"
         @change="crud.toQuery"
       />
+      <project-cascader
+        v-model="query.projectId"
+        placeholder="所属项目"
+        clearable
+        @change="crud.toQuery"
+        class="filter-item"
+        style="width: 300px"
+      />
+      <warehouse-select
+        v-model="query.warehouseId"
+        :basic-class="query.basicClass"
+        :show-all="true"
+        clearable
+        placeholder="存储位置"
+        class="filter-item"
+        style="width: 200px"
+        @change="crud.toQuery"
+      />
       <rrOperation />
     </div>
     <crudOperation>
@@ -70,6 +88,7 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import MaterialCascader from '@comp-cls/material-cascader/index.vue'
 import ExportButton from '@comp-common/export-button/index.vue'
+import WarehouseSelect from '@/components-system/wms/warehouse-select.vue'
 
 const defaultQuery = {
   basicClass: undefined, // 采购类型
