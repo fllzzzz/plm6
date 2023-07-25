@@ -265,7 +265,7 @@
         ref="detailRef"
         border
         :data="list"
-        :max-height="maxHeight"
+        :max-height="420"
         style="width: 100%;margin-bottom:10px;"
         class="table-form"
         v-loading="tableLoading"
@@ -309,7 +309,6 @@ import { supplierClassEnum } from '@enum-ms/supplier'
 import { regForm } from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
 import { isNotBlank } from '@/utils/data-type'
-import useMaxHeight from '@compos/use-max-height'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
 import { ElMessage } from 'element-plus'
 import { auditTypeEnum } from '@enum-ms/contract'
@@ -365,16 +364,6 @@ const detailRef = ref()
 const list = ref([])
 const tableLoading = ref(false)
 const selectionData = ref([])
-
-const { maxHeight } = useMaxHeight(
-  {
-    extraBox: ['.el-drawer__header', '.detail-header'],
-    wrapperBox: ['.el-drawer__body', '.table-form'],
-    navbar: false,
-    extraHeight: 90
-  },
-  () => drawerRef.value.loaded
-)
 
 const dataFormat = ref([
   ['freight', ['to-thousand', decimalPrecision.contract]]
