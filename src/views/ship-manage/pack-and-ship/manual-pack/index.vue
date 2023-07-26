@@ -110,8 +110,24 @@
     >
       <template #titleRight>
         <common-button type="primary" size="mini" @click="oneCodeSave">确认</common-button>
+        <span>
+          <el-checkbox
+            v-model="checkAll"
+            :indeterminate="isIndeterminate"
+            label="全选"
+            size="mini"
+            border
+            style="height: 29px"
+            @change="handleCheckAllChange"
+          />
+        </span>
       </template>
-      <one-code-number-list v-model="curRowSelect" :list="curNumberList" :maxHeight="560"></one-code-number-list>
+      <one-code-number-list
+        v-model="curRowSelect"
+        :list="curNumberList"
+        :maxHeight="560"
+        @change="handleNumberChange"
+      ></one-code-number-list>
     </common-dialog>
   </div>
 </template>
@@ -161,6 +177,8 @@ const oneCodeVisible = ref(false)
 const saveOneCodeData = ref()
 const curRowSelect = ref([])
 const curNumberList = ref([])
+const checkAll = ref(false)
+const isIndeterminate = ref(false)
 // 编辑信息（打包记录页面传过来的参数）
 const editData = ref({})
 const bagId = ref()
@@ -384,6 +402,26 @@ function beforeAddIn(row, packTypeK) {
     oneCodeVisible.value = true
   } else {
     addIn(row, packTypeK)
+  }
+}
+
+function handleCheckAllChange() {
+  if (checkAll.value) {
+    curRowSelect.value = curNumberList.value.map((row) => row.number)
+  } else {
+    curRowSelect.value = []
+  }
+}
+
+function handleNumberChange(list) {
+  if (list.length === 0) {
+    isIndeterminate.value = false
+    checkAll.value = false
+  } else if (list.length === curNumberList.value.length) {
+    isIndeterminate.value = false
+    checkAll.value = true
+  } else {
+    isIndeterminate.value = true
   }
 }
 

@@ -78,7 +78,12 @@
 </template>
 <script setup>
 import { ref, provide, watch } from 'vue'
-import { get as artifactTrack, assembleTrack, artifactAssembleList } from '@/api/mes/production-manage/dashboard/production-tracking'
+import {
+  get as artifactTrack,
+  assembleTrack,
+  artifactAssembleList,
+  getLines
+} from '@/api/mes/production-manage/dashboard/production-tracking'
 import useCRUD from '@compos/use-crud'
 import { mesProductionTrackingPM as permission } from '@/page-permission/mes'
 import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
@@ -95,6 +100,7 @@ const optShow = {
 }
 
 const tableRef = ref()
+const productionLineList = ref([])
 const { crud, CRUD, columns } = useCRUD(
   {
     title: '生产跟踪',
@@ -117,6 +123,7 @@ const { loaded, process } = useProcess()
 const artifactTypeList = ref([])
 
 provide('artifactTypeList', artifactTypeList)
+provide('productionLineList', productionLineList)
 
 async function fetchPreloadData() {
   if (!crud.query.areaId) return
@@ -132,19 +139,37 @@ async function fetchPreloadData() {
   }
 }
 
+async function fetchLines() {
+  productionLineList.value = []
+  if (!crud.query.areaId) return
+  try {
+    const data = await getLines({ areaId: crud.query.areaId, factoryId: crud.query.factoryId, taskTypeEnum: crud.query.processType })
+    for (const key in data) {
+      productionLineList.value.push({
+        id: key,
+        name: data[key]
+      })
+    }
+  } catch (err) {
+    console.log('获取生产线失败', err)
+  }
+}
+
 watch(
   [() => crud.query.areaId, () => crud.query.processType, () => crud.query.factoryId],
   (val) => {
     crud.query.classificationId = undefined
     fetchPreloadData()
+    fetchLines()
   },
   { immediate: true }
 )
+
 CRUD.HOOK.beforeToQuery = async (crud) => {
   crud.crudApi.get = crud.query.processType === componentTypeEnum.ARTIFACT.V ? artifactTrack : assembleTrack
 }
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map((v) => {
+  res.data.content = res.data?.content?.map((v) => {
     v.processMap = {}
     v.process?.forEach((p) => {
       v.processMap[p.id] = p
@@ -152,5 +177,6 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     return v
   })
 }
+
 </script>
 <style lang="scss" scoped></style>

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!--工具栏-->
-      <mHeader />
+    <mHeader />
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -147,7 +147,9 @@
       >
         <template v-slot="scope">
           <span>{{ scope.row.supplier && toFixed(scope.row.supplier.price, decimalPrecision.shipment) }}</span>
-          <span :class="scope.row.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" style="margin-left:3px;">{{ logisticsPriceTypeEnum.V[scope.row.priceType].unit }}</span>
+          <span :class="scope.row.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue' : 'orange'" style="margin-left: 3px">{{
+            logisticsPriceTypeEnum.V[scope.row.priceType].unit
+          }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -163,18 +165,10 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('userNames')"
+        v-if="columns.visible('actualUserName')"
         :show-overflow-tooltip="true"
-        prop="userNames"
+        prop="actualUserName"
         label="发货人"
-        align="center"
-        width="120"
-      />
-      <el-table-column
-        v-if="columns.visible('auditUserName')"
-        :show-overflow-tooltip="true"
-        prop="auditUserName"
-        label="过磅人"
         align="center"
         width="120"
       />
@@ -205,7 +199,13 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <priceForm v-model="formVisible" :detailInfo="detailInfo" :showType="showType" :projectType="crud.query.projectType" @success="crud.toQuery" />
+    <priceForm
+      v-model="formVisible"
+      :detailInfo="detailInfo"
+      :showType="showType"
+      :projectType="crud.query.projectType"
+      @success="crud.toQuery"
+    />
   </div>
 </template>
 

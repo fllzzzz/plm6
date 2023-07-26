@@ -105,7 +105,7 @@
               text-color="#626262"
               num-color="#1890ff"
               :end-val="summaryData.shipAmount || 0"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.contract"
             />
           </el-col>
           <el-col class="card-panel-col" style="flex: 5">

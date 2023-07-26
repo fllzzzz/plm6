@@ -1,18 +1,7 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
-      <el-date-picker
-        v-model="query.dateTime"
-        type="month"
-        size="small"
-        class="date-item filter-item"
-        placeholder="选择月"
-        format="YYYY-MM"
-        value-format="x"
-        @change="crud.toQuery"
-        style="width: 120px"
-      />
-      <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="projectChange" />
+      <project-radio-button size="small" :type="'all'" v-model="query.projectId" class="filter-item" @change="projectChange" />
       <common-radio-button
         v-if="query.projectId"
         type="other"
@@ -42,6 +31,17 @@
         class="filter-item"
         @change="crud.toQuery"
       /> -->
+      <el-date-picker
+        v-model="query.dateTime"
+        type="month"
+        size="small"
+        class="date-item filter-item"
+        placeholder="选择月"
+        format="YYYY-MM"
+        value-format="x"
+        @change="crud.toQuery"
+        style="width: 120px"
+      />
       <workshop-select
         v-model="query.workshopId"
         :workshop-type="workshopTypeEnum.ENCLOSURE.V"
@@ -51,7 +51,7 @@
         class="filter-item"
         @change="crud.toQuery"
       />
-      <el-row v-loading="summaryLoading" v-if="checkPermission(crud.permission.get)" :gutter="24" class="panel-group">
+      <el-row v-loading="summaryLoading" v-if="checkPermission(crud.permission.get)" :gutter="10" class="panel-group">
         <el-col :span="6" class="card-panel-col">
           <Panel
             name="期初库存(米)"
@@ -98,7 +98,6 @@
           :params="{ ...query }"
           size="mini"
           type="warning"
-          class="filter-item"
         />
       </template>
     </crudOperation>
@@ -235,7 +234,7 @@ function projectChange(val) {
 </script>
 <style lang="scss" scoped>
 .panel-group {
-  margin-bottom: 10px;
+  margin-bottom: 4px;
   ::v-deep(.card-panel) {
     .card-panel-description {
       .card-panel-text {

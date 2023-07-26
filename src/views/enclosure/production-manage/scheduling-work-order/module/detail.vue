@@ -20,15 +20,24 @@
       </el-tag>
     </template>
     <template #titleRight>
-      <print-table
+      <export-button
+        v-permission="crud.permission.print"
+        :fn="download"
+        :params="{ id: detail?.rowDetail?.id }"
+        class="filter-item"
+        @download-success="downloadSuccess"
+      >
+        下载排产工单详情
+      </export-button>
+      <!-- <print-table
         v-permission="crud.permission.print"
         api-key="enclosureSchedulingWorkOrderDetail"
         :params="{ id: detail?.rowDetail?.id }"
         size="mini"
         type="warning"
         class="filter-item"
-        @print-success="printSuccess"
-      />
+        @print-success="downloadSuccess"
+      /> -->
     </template>
     <template #content>
       <common-table :data="detail.content" :max-height="maxHeight" :data-format="dataFormat" show-summary :summary-method="getSummaries">
@@ -36,20 +45,41 @@
         <el-table-column key="planName" prop="planName" label="批次" show-overflow-tooltip align="center" />
         <el-table-column key="name" prop="name" show-overflow-tooltip label="名称" align="center" />
         <el-table-column key="serialNumber" prop="serialNumber" show-overflow-tooltip label="编号" align="center" />
-        <el-table-column v-if="detail.rowDetail?.category !== mesEnclosureTypeEnum.FOLDING_PIECE.V" key="plate" prop="plate" show-overflow-tooltip label="板型" align="center" />
+        <el-table-column
+          v-if="detail.rowDetail?.category !== mesEnclosureTypeEnum.FOLDING_PIECE.V"
+          key="plate"
+          prop="plate"
+          show-overflow-tooltip
+          label="板型"
+          align="center"
+        />
         <el-table-column key="brand" prop="brand" show-overflow-tooltip label="品牌" align="center" />
         <el-table-column key="color" prop="color" show-overflow-tooltip label="颜色" align="center" />
+        <el-table-column key="unfoldedWidth" prop="unfoldedWidth" show-overflow-tooltip label="宽度(mm)" align="center" />
         <el-table-column key="length" prop="length" show-overflow-tooltip label="单长(mm)" align="center" />
         <el-table-column key="quantity" prop="quantity" show-overflow-tooltip label="数量(件)" align="center" />
         <el-table-column key="totalLength" prop="totalLength" show-overflow-tooltip label="总长度(m)" align="center" />
         <el-table-column key="askCompleteTime" prop="askCompleteTime" show-overflow-tooltip label="完成日期" align="center" />
+        <el-table-column
+          v-if="detail.rowDetail?.category === mesEnclosureTypeEnum.FOLDING_PIECE.V"
+          key="relativePath"
+          prop="relativePath"
+          show-overflow-tooltip
+          label="画图"
+          align="center"
+        >
+          <template v-slot="{ row }">
+            <img v-if="row.relativePath" :src="row.relativePath" alt="加载失败" style="max-width: 100%; display: block" />
+            <span v-else>未上传图片</span>
+          </template>
+        </el-table-column>
       </common-table>
     </template>
   </common-drawer>
 </template>
 
 <script setup>
-import { report } from '@/api/enclosure/production-manage/scheduling-work-order'
+import { report, download } from '@/api/enclosure/production-manage/scheduling-work-order'
 import { computed, defineProps, ref } from 'vue'
 
 import { tableSummary } from '@/utils/el-extra'
@@ -58,6 +88,7 @@ import { mesEnclosureTypeEnum } from '@enum-ms/mes'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
+import ExportButton from '@comp-common/export-button/index.vue'
 
 const props = defineProps({
   project: {
@@ -91,12 +122,12 @@ function beforeClose() {
   crud.toQuery()
 }
 
-// 打印成功（预览和下载不算）
-async function printSuccess() {
+// 下载成功
+async function downloadSuccess() {
   try {
     await report(detail?.rowDetail?.id)
   } catch (error) {
-    console.log('打印成功上报失败')
+    console.log('下载成功上报失败')
   }
 }
 
