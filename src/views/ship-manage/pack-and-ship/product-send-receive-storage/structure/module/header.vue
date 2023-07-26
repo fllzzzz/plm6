@@ -1,6 +1,22 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
+      <project-radio-button size="small" :type="'all'" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
+      <!-- <common-radio-button
+        v-model="query.productType"
+        :options="[packTypeEnum.STRUCTURE, packTypeEnum.MACHINE_PART]"
+        type="enum"
+        size="small"
+        class="filter-item"
+        @change="crud.toQuery"
+      /> -->
+      <common-radio-button
+        type="enum"
+        v-model="query.weightStatus"
+        :options="[weightTypeEnum.NET, weightTypeEnum.GROSS]"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <el-date-picker
         v-model="query.dateTime"
         type="month"
@@ -12,15 +28,6 @@
         @change="crud.toQuery"
         style="width: 120px"
       />
-      <project-radio-button size="small" :type="'all'" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
-      <!-- <common-radio-button
-        v-model="query.productType"
-        :options="[packTypeEnum.STRUCTURE, packTypeEnum.MACHINE_PART]"
-        type="enum"
-        size="small"
-        class="filter-item"
-        @change="crud.toQuery"
-      /> -->
       <workshop-select
         v-model="query.workshopId"
         :workshop-type="workshopTypeEnum.BUILDING.V"
@@ -30,20 +37,16 @@
         class="filter-item"
         @change="crud.toQuery"
       />
-      <common-radio-button
-        type="enum"
-        v-model="query.weightStatus"
-        :options="[weightTypeEnum.NET, weightTypeEnum.GROSS]"
-        class="filter-item"
-        @change="crud.toQuery"
-      />
-      <el-row v-loading="summaryLoading" v-if="checkPermission(crud.permission.get)" :gutter="24" class="panel-group">
+
+      <el-row v-loading="summaryLoading" v-if="checkPermission(crud.permission.get)" :gutter="10" class="panel-group">
         <el-col :span="6" class="card-panel-col">
           <Panel
             name="期初库存(kg)"
             text-color="#626262"
             num-color="#1890ff"
-            :end-val="query.weightStatus === weightTypeEnum.NET.V? totalAmount.beginningNetWeight || 0 : totalAmount.beginningGrossWeight || 0"
+            :end-val="
+              query.weightStatus === weightTypeEnum.NET.V ? totalAmount.beginningNetWeight || 0 : totalAmount.beginningGrossWeight || 0
+            "
             :precision="DP.COM_WT__KG"
           />
         </el-col>
@@ -52,7 +55,7 @@
             name="入库量(kg)"
             text-color="#626262"
             num-color="#1890ff"
-            :endVal="query.weightStatus === weightTypeEnum.NET.V?totalAmount.inboundNetWeight || 0:totalAmount.inboundGrossWeight || 0"
+            :endVal="query.weightStatus === weightTypeEnum.NET.V ? totalAmount.inboundNetWeight || 0 : totalAmount.inboundGrossWeight || 0"
             :precision="DP.COM_WT__KG"
           />
         </el-col>
@@ -61,7 +64,9 @@
             name="出库量(kg)"
             text-color="#626262"
             num-color="#1890ff"
-            :endVal="query.weightStatus === weightTypeEnum.NET.V?totalAmount.outboundNetWeight || 0:totalAmount.outboundGrossWeight || 0"
+            :endVal="
+              query.weightStatus === weightTypeEnum.NET.V ? totalAmount.outboundNetWeight || 0 : totalAmount.outboundGrossWeight || 0
+            "
             :precision="DP.COM_WT__KG"
           />
         </el-col>
@@ -70,7 +75,7 @@
             name="期末库存(kg)"
             text-color="#626262"
             num-color="#1890ff"
-            :end-val="query.weightStatus === weightTypeEnum.NET.V?totalAmount.stockNetWeight || 0:totalAmount.stockGrossWeight || 0"
+            :end-val="query.weightStatus === weightTypeEnum.NET.V ? totalAmount.stockNetWeight || 0 : totalAmount.stockGrossWeight || 0"
             :precision="DP.COM_WT__KG"
           />
         </el-col>
@@ -84,7 +89,6 @@
           :params="{ ...query }"
           size="mini"
           type="warning"
-          class="filter-item"
         />
       </template>
     </crudOperation>
@@ -143,7 +147,7 @@ async function fetchSummaryInfo() {
 </script>
 <style lang="scss" scoped>
 .panel-group {
-  margin-bottom: 10px;
+  margin-bottom: 4px;
   ::v-deep(.card-panel) {
     .card-panel-description {
       .card-panel-text {

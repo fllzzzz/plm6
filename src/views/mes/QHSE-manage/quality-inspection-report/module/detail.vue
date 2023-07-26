@@ -21,6 +21,18 @@
           clearable
           @keyup.enter="fetchList"
         />
+        <common-select
+          v-model="detailQuery.processId"
+          :options="processList"
+          type="other"
+          :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+          size="small"
+          clearable
+          placeholder="选择工序"
+          class="filter-item"
+          style="width: 200px"
+          @change="fetchList"
+        />
         <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="fetchList">搜索</common-button>
         <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
           重置
@@ -76,7 +88,7 @@
 </template>
 
 <script setup>
-import { detail } from '@/api/mes/QHSE-manage/quality-inspection-report'
+import { detail, getProcess } from '@/api/mes/QHSE-manage/quality-inspection-report'
 import { defineProps, defineEmits, ref, watch, inject } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -114,6 +126,7 @@ const { maxHeight } = useMaxHeight(
   drawerRef
 )
 
+const processList = ref([])
 const tableLoading = ref(false)
 const list = ref([])
 const detailQuery = ref({})
@@ -123,6 +136,7 @@ watch(
   () => props.visible,
   (visible) => {
     if (visible) {
+      fetchProcess()
       fetchList()
     } else {
       detailQuery.value = {}
@@ -134,6 +148,29 @@ watch(
 function resetQuery() {
   detailQuery.value = {}
   fetchList()
+}
+
+async function fetchProcess() {
+  processList.value = []
+  try {
+    const { endDate, productType, startDate } = query
+    const data = await getProcess({
+      endDate,
+      productType,
+      startDate,
+      userId: props.info?.userId,
+      projectId: props.projectId,
+      ...detailQuery.value
+    })
+    for (const key in data) {
+      processList.value.push({
+        id: key,
+        name: data[key]
+      })
+    }
+  } catch (error) {
+    console.log('获取工序失败', error)
+  }
 }
 
 async function fetchList() {

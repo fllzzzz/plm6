@@ -170,7 +170,7 @@
 
 <script setup>
 import crudApi, { getTask } from '@/api/mes/task-tracking/assistance-operate/process-assistance'
-import { ref } from 'vue'
+import { ref, provide } from 'vue'
 
 import { componentTypeEnum } from '@enum-ms/mes'
 import { mesProcessAssistancePM as permission } from '@/page-permission/mes'
@@ -211,6 +211,7 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
+provide('permission', permission)
 const { maxHeight } = useMaxHeight({ paginate: true })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
@@ -261,7 +262,7 @@ const assistanceVisible = ref(false)
 const itemInfo = ref({})
 
 function toAssistance(row, item) {
-  itemInfo.value = Object.assign({}, row, item, { topTaskOrderId: currentInfo.value?.id })
+  itemInfo.value = Object.assign(row, item, { topTaskOrderId: currentInfo.value?.id })
   assistanceVisible.value = true
 }
 </script>
