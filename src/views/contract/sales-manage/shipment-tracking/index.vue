@@ -1,14 +1,8 @@
 <template>
   <div class="app-container">
     <div class="head-container common-container">
-      <common-radio-button
-        v-model="productType"
-        :options="installTypeEnumArr"
-        default
-        type="enum"
-        size="small"
-        class="filter-item"
-      />
+      <project-radio-button size="small" v-model="projectId" class="filter-item" />
+      <common-radio-button v-model="productType" :options="productEnum" default type="enum" size="small" class="filter-item" />
       <el-date-picker
         v-model="statisticalTime"
         :default-time="defaultTime"
@@ -29,7 +23,7 @@
           <el-row v-loading="summaryLoading" :gutter="10" class="panel-group" style="margin-bottom: 10px">
             <el-col class="card-panel-col">
               <Panel
-                :name="`累计发运长度（米）`"
+                :name="`累计发运长度(米)`"
                 text-color="#626262"
                 num-color="#1890ff"
                 :end-val="summaryData.shipLength || 0"
@@ -38,7 +32,7 @@
             </el-col>
             <el-col class="card-panel-col">
               <Panel
-                :name="`累计发运面积（平方米）`"
+                :name="`累计发运面积(平方米)`"
                 text-color="#626262"
                 num-color="#1890ff"
                 :end-val="summaryData.shipArea || 0"
@@ -47,7 +41,7 @@
             </el-col>
             <el-col class="card-panel-col">
               <Panel
-                name="累计发运额（元）"
+                name="累计发运额(元)"
                 text-color="#626262"
                 num-color="#1890ff"
                 :end-val="summaryData.shipAmount || 0"
@@ -62,12 +56,12 @@
                 text-color="#626262"
                 num-color="#1890ff"
                 :end-val="summaryData.cargoQuantity || 0"
-                :show-empty="productType === installProjectTypeEnum.AUXILIARY.V"
+                :show-empty="isAuxiliary"
               />
             </el-col>
             <el-col class="card-panel-col">
               <Panel
-                :name="`筛选日期发运长度（米）`"
+                :name="`筛选日期发运长度(米)`"
                 text-color="#626262"
                 num-color="#1890ff"
                 :end-val="summaryData.shipLengthTime || 0"
@@ -76,7 +70,7 @@
             </el-col>
             <el-col class="card-panel-col">
               <Panel
-                :name="`筛选日期发运面积（平方米）`"
+                :name="`筛选日期发运面积(平方米)`"
                 text-color="#626262"
                 num-color="#1890ff"
                 :end-val="summaryData.shipAreaTime || 0"
@@ -85,7 +79,7 @@
             </el-col>
             <el-col class="card-panel-col">
               <Panel
-                name="筛选日期发运额（元）"
+                name="筛选日期发运额(元)"
                 text-color="#626262"
                 num-color="#1890ff"
                 :end-val="summaryData.shipAmountTime || 0"
@@ -97,39 +91,55 @@
         <el-row v-else v-loading="summaryLoading" :gutter="10" class="panel-group">
           <el-col class="card-panel-col">
             <Panel
-              :name="`累计发运量（吨）`"
+              :name="`累计发运量(吨)`"
               text-color="#626262"
               num-color="#1890ff"
               :end-val="summaryData.shipMet || 0"
-              :precision="decimalPrecision.contract"
-              :show-empty="productType === installProjectTypeEnum.AUXILIARY.V"
+              :precision="2"
+              :show-empty="isAuxiliary"
             />
           </el-col>
           <el-col class="card-panel-col">
-            <Panel name="累计发运额（元）" text-color="#626262" num-color="#1890ff" :end-val="summaryData.shipAmount || 0" :precision="decimalPrecision.contract" />
+            <Panel
+              name="累计发运额(元)"
+              text-color="#626262"
+              num-color="#1890ff"
+              :end-val="summaryData.shipAmount || 0"
+              :precision="decimalPrecision.contract"
+            />
           </el-col>
-          <el-col class="card-panel-col">
+          <el-col class="card-panel-col" style="flex: 5">
+            <Panel
+              name="平均车次吨位(吨)"
+              text-color="#626262"
+              num-color="#1890ff"
+              :end-val="summaryData.shipMetAvg || 0"
+              :precision="2"
+              :show-empty="isAuxiliary"
+            />
+          </el-col>
+          <el-col class="card-panel-col" style="flex: 3">
             <Panel
               name="累计车次"
               text-color="#626262"
               num-color="#1890ff"
               :end-val="summaryData.cargoQuantity || 0"
-              :show-empty="productType === installProjectTypeEnum.AUXILIARY.V"
+              :show-empty="isAuxiliary"
             />
           </el-col>
           <el-col class="card-panel-col">
             <Panel
-              :name="`筛选日期发运量（吨）`"
+              :name="`筛选日期发运量(吨)`"
               text-color="#626262"
               num-color="#1890ff"
               :end-val="summaryData.shipMetTime || 0"
               :precision="2"
-              :show-empty="productType === installProjectTypeEnum.AUXILIARY.V"
+              :show-empty="isAuxiliary"
             />
           </el-col>
           <el-col class="card-panel-col">
             <Panel
-              name="筛选日期发运额（元）"
+              name="筛选日期发运额(元)"
               text-color="#626262"
               num-color="#1890ff"
               :end-val="summaryData.shipAmountTime || 0"
@@ -144,18 +154,19 @@
 </template>
 
 <script setup>
-import { shipSummary } from '@/api/contract/sales-manage/shipment-tracking'
+import { shipSummary, bridgeShipSummary } from '@/api/contract/sales-manage/shipment-tracking'
 import { ref, computed, provide, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 
 import { shipmentTrackingPM as permission } from '@/page-permission/contract'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { installProjectTypeEnum } from '@enum-ms/project'
+import { TechnologyMainTypeEnum } from '@enum-ms/contract'
 import { DP } from '@/settings/config'
-import { isBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
 import moment from 'moment'
 
+import box from './box'
 import structure from './structure'
 import enclosure from './enclosure'
 import auxiliaryMaterial from './auxiliary-material'
@@ -167,6 +178,8 @@ const { decimalPrecision } = useDecimalPrecision()
 // 当前显示组件
 const currentView = computed(() => {
   switch (productType.value) {
+    case TechnologyMainTypeEnum.BOX.V:
+      return box
     case installProjectTypeEnum.ENCLOSURE.V:
       return enclosure
     case installProjectTypeEnum.AUXILIARY.V:
@@ -176,9 +189,10 @@ const currentView = computed(() => {
   }
 })
 
-const { globalProjectId, installTypeEnumArr } = mapGetters(['globalProjectId', 'installTypeEnumArr'])
+const { globalProject, installTypeEnumArr } = mapGetters(['globalProject', 'installTypeEnumArr'])
 
 const productType = ref()
+const projectId = ref()
 const summaryLoading = ref(false)
 const summaryData = ref({})
 
@@ -187,12 +201,34 @@ const statisticalTime = ref([moment(times[0]).valueOf(), moment(times[1]).valueO
 
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
+// 产品类型
+const productEnum = computed(() => {
+  if (projectId.value) {
+    // 箱体和建刚不会同时存在
+    if (globalProject.value?.productCategory === TechnologyMainTypeEnum.BOX.V) {
+      return [TechnologyMainTypeEnum.BOX]
+    }
+    return installTypeEnumArr.value
+  }
+  return [...installTypeEnumArr.value, TechnologyMainTypeEnum.BOX]
+})
+
+// 是否为箱体
+const isBox = computed(() => {
+  return productType.value === TechnologyMainTypeEnum.BOX.V
+})
+
+// 是否为辅材
+const isAuxiliary = computed(() => {
+  return productType.value === installProjectTypeEnum.AUXILIARY.V
+})
+
 // 公共参数
 const commonParams = computed(() => {
   return {
     startDate: statisticalTime.value[0],
     endDate: statisticalTime.value[1],
-    projectId: globalProjectId.value,
+    projectId: projectId.value,
     productType: productType.value
   }
 })
@@ -207,6 +243,20 @@ watch(
   { immediate: true, deep: true }
 )
 
+watch(
+  projectId,
+  (val) => {
+    if (productEnum.value.length) {
+      const flag = productEnum.value.every((row) => row.V !== productType.value)
+      // 未选中时给个默认值
+      if (flag) {
+        productType.value = productEnum.value[0].V
+      }
+    }
+  },
+  { immediate: true }
+)
+
 function disabledDate(time) {
   return time > new Date()
 }
@@ -218,13 +268,15 @@ function resetQuery() {
 
 // 获取发运汇总
 async function fetchSummary() {
-  if (!checkPermission(permission.summary) || isBlank(globalProjectId.value)) {
-    summaryData.value = {}
-    return
-  }
+  summaryData.value = {}
+  if (!checkPermission(permission.summary)) return
   try {
     summaryLoading.value = true
-    summaryData.value = (await shipSummary(commonParams.value)) || {}
+    if (isBox.value) {
+      summaryData.value = (await bridgeShipSummary(commonParams.value)) || {}
+    } else {
+      summaryData.value = (await shipSummary(commonParams.value)) || {}
+    }
   } catch (error) {
     console.log(error)
   } finally {
@@ -237,12 +289,12 @@ async function fetchSummary() {
 .panel-group {
   display: flex;
   .card-panel-col {
-    flex: 1;
+    flex: 6;
     min-width: 0;
   }
   ::v-deep(.card-panel) {
     .card-panel-description {
-      margin: 10px 20px;
+      margin: 10px;
       display: flex;
       flex-direction: row;
       justify-content: space-between;

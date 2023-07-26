@@ -12,9 +12,13 @@
       @sort-change="crud.handleSortChange"
     >
       <el-table-column label="序号" align="center" width="50">
-         <template v-slot="scope">
-          <span>{{scope.$index+1}}</span>
-          <table-cell-tag :show="scope.row.deliveryStatus===deliveryStatusEnum.RETURN.V && scope.row.changeFreight===freightChangeTypeEnum.CANCEL.V" name="已作废" color="#f56c6c"/>
+        <template v-slot="scope">
+          <span>{{ scope.$index + 1 }}</span>
+          <table-cell-tag
+            :show="scope.row.deliveryStatus === deliveryStatusEnum.RETURN.V && scope.row.changeFreight === freightChangeTypeEnum.CANCEL.V"
+            name="已作废"
+            color="#f56c6c"
+          />
         </template>
       </el-table-column>
       <el-table-column
@@ -41,13 +45,7 @@
           <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="columns.visible('carModel')"
-        :show-overflow-tooltip="true"
-        prop="carModel"
-        label="车型"
-        align="center"
-      >
+      <el-table-column v-if="columns.visible('carModel')" :show-overflow-tooltip="true" prop="carModel" label="车型" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.carModel }}</span>
         </template>
@@ -80,7 +78,7 @@
         align="center"
         min-width="120"
       />
-       <el-table-column
+      <el-table-column
         v-if="columns.visible('actualWeight')"
         :show-overflow-tooltip="true"
         prop="actualWeight"
@@ -106,7 +104,7 @@
           }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('productType')" key="productType" prop="productType" label="装载类型" width="165" >
+      <el-table-column v-if="columns.visible('productType')" key="productType" prop="productType" label="装载类型" width="165">
         <template v-slot="scope">
           <el-tag
             v-for="item in cleanArray(EO.getBits(packTypeEnum, scope.row.productType, 'V'))"
@@ -147,7 +145,9 @@
       >
         <template v-slot="scope">
           <span>{{ scope.row.supplier && toFixed(scope.row.supplier.price, decimalPrecision.shipment) }}</span>
-          <span :class="scope.row.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" style="margin-left:3px;">{{ logisticsPriceTypeEnum.V[scope.row.priceType].unit }}</span>
+          <span :class="scope.row.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue' : 'orange'" style="margin-left: 3px">{{
+            logisticsPriceTypeEnum.V[scope.row.priceType].unit
+          }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -162,6 +162,14 @@
           <span>{{ toFixed(scope.row.totalPrice, decimalPrecision.shipment) }}</span>
         </template>
       </el-table-column>
+      <el-table-column
+        v-if="columns.visible('actualUserName')"
+        :show-overflow-tooltip="true"
+        prop="actualUserName"
+        label="发货人"
+        align="center"
+        width="120"
+      />
       <el-table-column v-if="columns.visible('auditTime')" key="auditTime" prop="auditTime" sortable="custom" label="承运日期" width="120">
         <template v-slot="scope">
           <span v-parse-time="{ val: scope.row.auditTime, fmt: '{y}-{m}-{d}' }" />
@@ -173,23 +181,23 @@
             size="mini"
             icon="el-icon-edit"
             type="primary"
-            v-if="!(scope.row.deliveryStatus===deliveryStatusEnum.RETURN.V && scope.row.changeFreight===freightChangeTypeEnum.CANCEL.V)"
+            v-if="!(scope.row.deliveryStatus === deliveryStatusEnum.RETURN.V && scope.row.changeFreight === freightChangeTypeEnum.CANCEL.V)"
             v-permission="permission.edit"
-            @click="openForm(scope.row,'edit')"
+            @click="openForm(scope.row, 'edit')"
           />
           <common-button
             size="mini"
             icon="el-icon-view"
             type="primary"
             v-permission="permission.get"
-            @click="openForm(scope.row,'detail')"
+            @click="openForm(scope.row, 'detail')"
           />
         </template>
       </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
-    <priceForm v-model="formVisible" :detailInfo="detailInfo" :showType="showType" @success="crud.toQuery"/>
+    <priceForm v-model="formVisible" :detailInfo="detailInfo" :showType="showType" @success="crud.toQuery" />
   </div>
 </template>
 
@@ -248,10 +256,10 @@ function openForm(row, type) {
 }
 </script>
 <style lang="scss" scoped>
-  .blue{
-    color:#409eff;
-  }
-  .orange{
-    color:#e6a23c;
-  }
+.blue {
+  color: #409eff;
+}
+.orange {
+  color: #e6a23c;
+}
 </style>
