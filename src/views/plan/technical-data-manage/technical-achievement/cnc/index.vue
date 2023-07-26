@@ -47,8 +47,8 @@
         :width="
           (globalProject.projectType === projectTypeEnum.STEEL.V && crud.query.productType === deepenTypeEnum.MACHINE_PART.V) ||
           (globalProject.projectType === projectTypeEnum.BRIDGE.V && crud.query.productType === bridgeProcessTypeEnum.MACHINE_PART.V)
-            ? '250px'
-            : '170px'
+            ? '350px'
+            : '270px'
         "
         align="center"
         fixed="right"
@@ -56,6 +56,7 @@
         <template v-slot="scope">
           <div class="btn">
             <export-button
+              v-permission="permission.download"
               v-if="
                 (globalProject.projectType === projectTypeEnum.STEEL.V && crud.query.productType === deepenTypeEnum.MACHINE_PART.V) ||
                 (globalProject.projectType === projectTypeEnum.BRIDGE.V && crud.query.productType === bridgeProcessTypeEnum.MACHINE_PART.V)
@@ -76,6 +77,19 @@
               type="primary"
               @success="crud.toQuery"
             />
+            <!-- <upload-btn
+              v-permission="permission.matchImport"
+              :dataType="scope.row.dataType"
+              :uploadFun="uploadChoose"
+              :accept="`.zip`"
+              :data="getParams(scope.row)"
+              :tip="uploadType"
+              btnName="匹配导入"
+              size="mini"
+              btnType="warning"
+              style="margin-right: 6px"
+              @success="crud.toQuery"
+            /> -->
             <common-button
               v-permission="permission.detail"
               type="primary"
