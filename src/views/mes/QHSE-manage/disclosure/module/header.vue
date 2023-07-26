@@ -67,6 +67,15 @@
           clearable
           @keyup.enter="crud.toQuery"
         />
+        <el-input
+          v-model="query.serialNumber"
+          placeholder="输入构件编号搜索"
+          class="filter-item"
+          style="width: 200px"
+          size="small"
+          clearable
+          @keyup.enter="crud.toQuery"
+        />
         <rrOperation />
       </div>
     </template>
@@ -92,7 +101,8 @@ const defaultQuery = {
   type: void 0,
   boolApp: false,
   status: { value: improveStatusEnum.WAIT_RECTIFIED.V, resetAble: false },
-  projectId: { value: void 0, resetAble: false }
+  projectId: { value: void 0, resetAble: false },
+  serialNumber: undefined
 }
 
 const { crud, query } = regHeader(defaultQuery)

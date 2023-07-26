@@ -78,6 +78,7 @@
         :data-format="columnsDataFormat"
         :max-height="maxHeight"
         :default-expand-all="false"
+        :cell-class-name="wrongCellMask"
         :expand-row-keys="expandRowKeys"
         row-key="id"
       >
@@ -111,10 +112,11 @@
         <material-secondary-info-columns :basic-class="basicClass" :show-batch-no="false" />
         <warehouse-info-columns />
         <el-table-column label="车间" width="170px" align="center" fixed="right">
-          <template #default="{ row: { sourceRow: row } }">
+          <template #default="{ row: { sourceRow: row }, $index }">
             <workshop-select
               v-model="row.workshopId"
               :factory-id="row.factory?.id"
+              :show-extra="$index !== 0"
               placeholder="可选择车间"
               style="width: 100%"
               clearable
@@ -165,6 +167,7 @@ import { numFmtByUnitForList } from '@/utils/wms/convert-unit'
 import { materialOperateColumns } from '@/utils/columns-format/wms'
 import { getProjectInfo } from '@/utils/project'
 
+import useTableValidate from '@compos/form/use-table-validate'
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import useWmsConfig from '@/composables/store/use-wms-config'
@@ -177,7 +180,7 @@ import materialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import materialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import workshopSelect from '@comp-mes/workshop-select'
+import workshopSelect from '@/components-system/base/workshop-select.vue'
 import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['success', 'update:visible'])
@@ -220,6 +223,15 @@ const rules = computed(() => {
   }
   return _rules
 })
+
+const tableRules = {
+}
+const ditto = new Map([
+  ['workshopId', -1]
+])
+
+// 表格校验
+const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })
 
 // 表单ref
 const formRef = ref()
@@ -327,8 +339,22 @@ watch(
     materialList.value = props.materialList.filter((v) => v.corOperableQuantity > 0) // 过滤不可操作的列表
     form.value.list = materialList.value
     dataFormat()
+    setDitto(form.value.list)
   }
 )
+
+// 设置同上
+function setDitto(list) {
+  if (isBlank(list)) return
+  for (let i = 1; i < list.length; i++) {
+    const row = list[i]
+    ditto.forEach((value, key) => {
+      if (isBlank(row[key])) {
+        row[key] = value
+      }
+    })
+  }
+}
 
 // 表单初始化
 function formInit() {
@@ -373,6 +399,7 @@ async function submit() {
       outboundAddress: form.value.outboundAddress,
       list: []
     }
+    cleanUpData(form.value.list)
     // 无需进行对列表进行数量是否填写校验，提交时过滤数量为空或为0的数据
     form.value.list.forEach((v) => {
       if (v.batchOutboundQuantity) {
@@ -394,6 +421,12 @@ async function submit() {
       toSmallest: true,
       toNum: true
     })
+    const { validResult, dealList } = tableValidate(data.list)
+    if (validResult) {
+      data.list = dealList
+    } else {
+      return validResult
+    }
     if (data.list.length === 0) {
       ElMessage.warning('请填写数据')
       return
@@ -424,6 +457,7 @@ function handleProjectChange(val) {
     form.value.list = materialList.value
   }
   dataFormat()
+  setDitto(form.value.list)
 }
 
 // 数据格式化
