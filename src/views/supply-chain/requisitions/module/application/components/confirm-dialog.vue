@@ -128,7 +128,7 @@
         <div class="table-remark">
           <span>备注</span>
           <el-input
-            class="remark"
+            class="remark input-border-none"
             v-model="form.remark"
             type="textarea"
             :rows="2"
