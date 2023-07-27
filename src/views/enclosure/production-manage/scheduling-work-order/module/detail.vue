@@ -53,19 +53,28 @@
           label="板型"
           align="center"
         />
+        <el-table-column key="thickness" prop="thickness" show-overflow-tooltip label="厚度(mm)" align="center" />
         <el-table-column key="brand" prop="brand" show-overflow-tooltip label="品牌" align="center" />
         <el-table-column key="color" prop="color" show-overflow-tooltip label="颜色" align="center" />
         <el-table-column key="unfoldedWidth" prop="unfoldedWidth" show-overflow-tooltip label="宽度(mm)" align="center" />
         <el-table-column key="length" prop="length" show-overflow-tooltip label="单长(mm)" align="center" />
         <el-table-column key="quantity" prop="quantity" show-overflow-tooltip label="数量(件)" align="center" />
         <el-table-column key="totalLength" prop="totalLength" show-overflow-tooltip label="总长度(m)" align="center" />
+        <el-table-column
+          v-if="detail.rowDetail?.category !== mesEnclosureTypeEnum.SANDWICH_BOARD.V"
+          key="totalWeight"
+          prop="totalWeight"
+          show-overflow-tooltip
+          label="总重量(kg)"
+          align="center"
+        />
         <el-table-column key="askCompleteTime" prop="askCompleteTime" show-overflow-tooltip label="完成日期" align="center" />
         <el-table-column
           v-if="detail.rowDetail?.category === mesEnclosureTypeEnum.FOLDING_PIECE.V"
           key="relativePath"
           prop="relativePath"
           show-overflow-tooltip
-          label="画图"
+          label="图片"
           align="center"
         >
           <template v-slot="{ row }">
@@ -100,7 +109,9 @@ const props = defineProps({
 const drawerRef = ref()
 const dataFormat = ref([
   ['askCompleteTime', ['parse-time', '{y}-{m}-{d}']],
-  ['totalLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]]
+  ['thickness', ['to-fixed', DP.MES_ENCLOSURE_T__MM]],
+  ['totalLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]],
+  ['totalWeight', ['to-fixed', DP.COM_WT__KG]]
 ])
 
 const { CRUD, crud, detail } = regDetail()
@@ -134,7 +145,7 @@ async function downloadSuccess() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['totalLength', DP.MES_ENCLOSURE_L__M]]
+    props: ['quantity', ['totalLength', DP.MES_ENCLOSURE_L__M], ['totalWeight', DP.COM_WT__KG]]
   })
 }
 

@@ -109,7 +109,8 @@ const getters = {
   deliveryInstallEnumArr: state => state.user.deliveryInstallEnumArr,
   contractSaleTypeEnumArr: state => state.user.contractSaleTypeEnumArr,
   flag: state => state.user.flag, // 是否有围护  0 是  1 否
-  hasIntelligent: state => state.user.hasIntelligent // 是否有智能线 0 否 1 是
+  hasIntelligent: state => state.user.hasIntelligent, // 是否有智能线 0 否 1 是
+  hasBridgeMenu: state => state.user.hasBridgeMenu // 是否有桥梁菜单 0 否 1 是
 }
 
 export default getters
