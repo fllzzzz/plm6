@@ -36,7 +36,8 @@ const state = {
   deliveryInstallEnumArr: [deliveryInstallTypeEnum.ARTIFACT, deliveryInstallTypeEnum.ENCLOSURE],
   contractSaleTypeEnumArr: [contractSaleTypeEnum.STRUCTURE, contractSaleTypeEnum.ENCLOSURE, contractSaleTypeEnum.MACHINE_PART, contractSaleTypeEnum.AUXILIARY_MATERIAL],
   flag: 0,
-  hasIntelligent: 0
+  hasIntelligent: 0,
+  hasBridgeMenu: 0
 }
 
 const mutations = {
@@ -81,6 +82,9 @@ const mutations = {
   },
   SET_HAS_INTELLIGENT: (state, hasIntelligent) => {
     state.hasIntelligent = hasIntelligent
+  },
+  SET_HAS_BRIDGE_MENU: (state, hasBridgeMenu) => {
+    state.hasBridgeMenu = hasBridgeMenu
   }
 }
 
@@ -120,7 +124,7 @@ const actions = {
   // 设置用户信息
   setInfo(res, commit) {
     // dept
-    const { permissions = [], roles = [], productMenu, enclosureType, boolSmartLine } = res
+    const { permissions = [], roles = [], productMenu, enclosureType, boolSmartLine, boolBridge } = res
     let { menus = [] } = res
 
     // 如果没有任何权限，则赋予一个默认的权限，避免请求死循环
@@ -155,6 +159,7 @@ const actions = {
     commit('SET_CONTRACT_SALE_TYPE_ENUM_ARR', contractSaleTypeArr)
     commit('SET_FLAG', enclosureType)
     commit('SET_HAS_INTELLIGENT', boolSmartLine)
+    commit('SET_HAS_BRIDGE_MENU', boolBridge)
     commit('SET_MENUS', menus)
     commit('SET_PRODUCT_MENU', productMenu)
     commit('SET_USER', res)
