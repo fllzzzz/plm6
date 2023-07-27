@@ -27,6 +27,15 @@ export function editStatus(type, id, params) {
   })
 }
 
+export function editRemark(data) {
+  return request({
+    module: 'plan',
+    url: 'artifact/updateRemark',
+    method: 'put',
+    data: [data]
+  })
+}
+
 export function del(data) {
   return request({
     module: 'plan',

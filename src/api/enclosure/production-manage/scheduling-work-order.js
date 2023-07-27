@@ -79,4 +79,18 @@ export function report(id) {
   })
 }
 
-export default { get, del, detail }
+/**
+ * 下载排产工单详情
+ * @param {*} id 文件id
+ */
+export function download({ id }) {
+  return request({
+    module: 'enclosure',
+    url: `order/detail/download`,
+    method: 'get',
+    responseType: 'blob',
+    params: { id }
+  })
+}
+
+export default { get, del, detail, download }

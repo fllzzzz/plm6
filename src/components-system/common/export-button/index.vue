@@ -12,9 +12,11 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue'
+import { defineProps, ref, defineEmits } from 'vue'
 import { fileDownload, fileDownloadByReturnStatus } from '@/utils/file'
 import { downloadAttachment } from '@/api/common'
+
+const emit = defineEmits(['download-success'])
 
 const props = defineProps({
   params: {
@@ -58,6 +60,7 @@ async function doExport(params) {
     } else {
       await fileDownload(props.fn, props.params)
     }
+    emit('download-success')
   } catch (error) {
     console.log('通用导出', error)
   } finally {

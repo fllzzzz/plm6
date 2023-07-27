@@ -39,9 +39,10 @@ export function projectNameFormatter(project, config, lineBreak = true) {
 
   // 打印表格取默认配置
   config.arrangement = config.arrangement || _config.arrangement
+  const _serialNumber = project.serialNumber || project.contractNo
 
   const _projectName = config.showProjectFullName ? project.name : project.shortName
-  if (!config.showSerialNumber || !project.serialNumber) {
+  if (!config.showSerialNumber || !_serialNumber) {
     return _projectName
   }
   let extra = `   `
@@ -52,9 +53,9 @@ export function projectNameFormatter(project, config, lineBreak = true) {
   // 默认全局配置
   switch (config.arrangement) {
     case projectNameArrangementModeEnum.SERIAL_NUMBER_START.V:
-      return `${project.serialNumber}${extra}${_projectName}`
+      return `${_serialNumber}${extra}${_projectName}`
     case projectNameArrangementModeEnum.SERIAL_NUMBER_END.V:
-      return `${_projectName}${extra}${project.serialNumber}`
+      return `${_projectName}${extra}${_serialNumber}`
     default:
       return `${_projectName}`
   }

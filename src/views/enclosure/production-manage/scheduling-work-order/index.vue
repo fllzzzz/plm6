@@ -46,12 +46,11 @@
               align="center"
               min-width="140"
             >
-
-        <template v-slot="{row}">
-          <table-cell-tag :show="Boolean(row.printQuantity)" name="已打印" color="#e64242" :offset="15" />
-          <span>{{ row.orderNumber }}</span>
-        </template>
-      </el-table-column>
+              <template v-slot="{ row }">
+                <table-cell-tag :show="Boolean(row.printQuantity)" name="已打印" color="#e64242" :offset="15" />
+                <span>{{ row.orderNumber }}</span>
+              </template>
+            </el-table-column>
             <el-table-column
               key="userName"
               prop="userName"
@@ -130,7 +129,12 @@
               fixed="right"
             >
               <template #default="{ row }">
-                <udOperation :data="row" :show-edit="false" :show-del="!row.booleanProduce" :show-detail="checkPermission(permission.detail)" />
+                <udOperation
+                  :data="row"
+                  :show-edit="false"
+                  :show-del="!row.booleanProduce"
+                  :show-detail="checkPermission(permission.detail)"
+                />
               </template>
             </el-table-column>
           </common-table>

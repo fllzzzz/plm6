@@ -22,6 +22,7 @@
         :load="load"
         @sort-change="crud.handleSortChange"
         @selection-change="crud.selectionChangeHandler"
+        @row-dblclick="dbclick"
         return-source-data
         :showEmptySymbol="false"
       >
@@ -216,16 +217,38 @@
             {{ scope.row.drawingNumber ? scope.row.drawingNumber : '-' }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="columns.visible('remark')"
-          key="remark"
-          prop="remark"
-          :show-overflow-tooltip="true"
-          label="备注"
-          min-width="100"
-        >
+        <el-table-column v-if="columns.visible('remark')" key="remark" prop="remark" :show-overflow-tooltip="true" label="备注" width="350px">
+          <template v-slot:header>
+            <el-tooltip
+              class="item"
+              effect="light"
+              :content="`双击备注可修改`"
+              placement="top"
+            >
+              <div style="display:inline-block;">
+                <span>备注</span>
+                <i class="el-icon-info" />
+              </div>
+            </el-tooltip>
+          </template>
           <template v-slot="scope">
-            {{ scope.row.remark ? scope.row.remark : '-' }}
+            <template v-if="scope.row.dataType===2">
+              <span v-if="!scope.row.edit">{{ scope.row.remark || '-'}}</span>
+              <span v-else>
+                <el-input
+                  v-model="scope.row.remark"
+                  type="textarea"
+                  :maxlength="64"
+                  clearable
+                  :rows="1"
+                  size="mini"
+                  style="width:180px;"
+                />
+                <el-button size="mini" type="primary" :loading="scope.row.editLoading" @click="saveIt(scope.row)">保存</el-button>
+                <el-button size="mini" type="info" @click="cancelIt(scope.row)">取消</el-button>
+              </span>
+            </template>
+            <template v-else>-</template>
           </template>
         </el-table-column>
         <el-table-column
@@ -311,7 +334,7 @@ icon-class="document"
 </template>
 
 <script setup>
-import crudApi, { editStatus, artifactPart } from '@/api/plan/technical-manage/artifact-tree'
+import crudApi, { editStatus, artifactPart, editRemark } from '@/api/plan/technical-manage/artifact-tree'
 import { ref, nextTick, watch } from 'vue'
 import { artifactTreePM as permission } from '@/page-permission/plan'
 import checkPermission from '@/utils/system/check-permission'
@@ -405,6 +428,35 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
+function dbclick(row, column, event) {
+  if (column.property === 'remark' && !row.edit && row.dataType === 2) {
+    row.edit = true
+  }
+}
+
+function cancelIt(row) {
+  row.remark = row.originalRemark
+  row.edit = false
+}
+
+async function saveIt(row) {
+  try {
+    row.editLoading = true
+    await editRemark({
+      id: row.id,
+      remark: row.remark
+    })
+    this.$notify({ title: '修改成功', type: 'success', duration: 2500 })
+    crud.toQuery()
+  } catch (error) {
+    row.remark = row.originalRemark
+    console.log('编辑备注', error)
+  } finally {
+    row.edit = false
+    row.editLoading = false
+  }
+}
+
 function changeIndex(val) {
   if (val.children) {
     return val.index
@@ -442,6 +494,9 @@ function cellClassName({ row, rowIndex }) {
 CRUD.HOOK.handleRefresh = (crud, data) => {
   let index = 1
   data.data.content = data.data.content.map((v) => {
+    v.edit = false
+    v.originalRemark = v.remark
+    v.editLoading = false
     v.monomerId = crud.query.monomerId
     v.areaId = crud.query.areaId
     v.dataType = 2
