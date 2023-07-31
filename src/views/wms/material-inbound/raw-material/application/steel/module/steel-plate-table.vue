@@ -33,7 +33,7 @@
     </el-expand-table-column>
     <el-table-column label="序号" type="index" align="center" width="60" />
     <el-table-column prop="serialNumber" label="编号" align="center" min-width="110px" />
-    <el-table-column prop="classifyName" label="物料种类" align="center" min-width="120" show-overflow-tooltip>
+    <el-table-column prop="classifyName"  sortable :sort-by="['serialNumber']" label="物料种类" align="center" min-width="120" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
           <span v-empty-text="row.classifyName" />
@@ -53,7 +53,7 @@
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="thickness" align="center" min-width="100px" :label="`厚 (${baseUnit.thickness.unit})`">
+    <el-table-column prop="thickness" sortable align="center" min-width="100px" :label="`厚 (${baseUnit.thickness.unit})`">
       <template #default="{ row }">
         <common-input-number
           v-if="(props.boolPartyA || props.noDetail) ||(form.selectObj?.[row.mergeId]?.isSelected && Boolean(currentCfg?.thickness & basicClass) && !row.boolApplyPurchase)"
