@@ -58,8 +58,7 @@
             <export-button
               v-permission="permission.download"
               v-if="
-                (globalProject.projectType === projectTypeEnum.STEEL.V && crud.query.productType === deepenTypeEnum.MACHINE_PART.V) ||
-                (globalProject.projectType === projectTypeEnum.BRIDGE.V && crud.query.productType === bridgeProcessTypeEnum.MACHINE_PART.V)
+                (globalProject.projectType === projectTypeEnum.STEEL.V && crud.query.productType === deepenTypeEnum.MACHINE_PART.V)
               "
               :fn="dxfZipDownload"
               :params="{ projectId: globalProjectId, monomerId: scope.row.monomerId }"
@@ -77,7 +76,8 @@
               type="primary"
               @success="crud.toQuery"
             />
-            <!-- <upload-btn
+            <upload-btn
+              v-if="globalProject.projectType === projectTypeEnum.STEEL.V"
               v-permission="permission.matchImport"
               :dataType="scope.row.dataType"
               :uploadFun="uploadChoose"
@@ -89,7 +89,7 @@
               btnType="warning"
               style="margin-right: 6px"
               @success="crud.toQuery"
-            /> -->
+            />
             <common-button
               v-permission="permission.detail"
               type="primary"
@@ -115,7 +115,7 @@
 </template>
 
 <script setup>
-import crudApi, { dxfZipDownload } from '@/api/plan/technical-data-manage/technical-achievement'
+import crudApi, { dxfZipDownload, uploadChoose } from '@/api/plan/technical-data-manage/technical-achievement'
 import { ref, watch, computed } from 'vue'
 import { mapGetters } from '@/store/lib'
 
