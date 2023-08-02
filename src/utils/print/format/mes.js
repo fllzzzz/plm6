@@ -12,8 +12,7 @@ import useWageQuotaMeteConvert from '@compos/mes/use-wage-quota-mete-convert'
 function productionLineMete({ header, table = [], footer, qrCode }) {
   const _table = table.map(row => {
     row.processSequence = row.processSummaryDetailsDOList.map((o) => {
-      return `【${o.name}│${
-        o.completeQuantity === row.taskQuantity ? '√' : o.completeQuantity || 0
+      return `【${o.name}│${o.completeQuantity === row.taskQuantity ? '√' : o.completeQuantity || 0
       }】`
     }).join('→')
 
@@ -210,6 +209,22 @@ function projectSummary({ header, table = [], footer, qrCode }) {
   }
 }
 
+// 项目编号配置
+function projectConfig({ header, table = [], footer, qrCode }) {
+  if (header) {
+    header.project = {
+      'name': header.projectName,
+      'serialNumber': header.serialNumber
+    }
+  }
+  return {
+    header,
+    table,
+    qrCode,
+    footer
+  }
+}
+
 // 工资生产量
 function wageProducedMete({ header, table = [], footer, qrCode }) {
   const _table = table.map(row => {
@@ -364,6 +379,7 @@ export default {
   meteUnit,
   surfaceArea,
   projectSummary,
+  projectConfig,
   unProducedMete,
   unCompleteMete,
   wageProducedMete,
