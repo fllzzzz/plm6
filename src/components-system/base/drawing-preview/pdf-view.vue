@@ -15,6 +15,7 @@ import pdf from '@/components/PDF/pdf'
 const emit = defineEmits(['changeFileLoading'])
 const productId = inject('productId')
 const productType = inject('productType')
+const projectType = inject('projectType')
 const multipleDrawing = inject('multipleDrawing')
 const drawingSN = inject('drawingSN')
 const pdfjsDistPath = import.meta.env.BASE_URL + 'assets'
@@ -41,7 +42,8 @@ async function fetchDrawing() {
     changeFileLoading(true)
     const param = {
       productId: productId.value,
-      productType: productType.value
+      productType: productType.value,
+      projectType: projectType.value
     }
     if (multipleDrawing.value && isNotBlank(drawingSN.value)) {
       param.number = drawingSN.value

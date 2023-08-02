@@ -13,7 +13,8 @@ export default function useDrawing({ pidField = 'id', typeField = 'productType',
       drawingSN: row.numbers, // 图纸编号
       attachmentId: row.attachmentId,
       productId: row[pidField],
-      productType: productTypeField && componentTypeEnum[productTypeField]?.V || row[typeField]
+      productType: productTypeField && componentTypeEnum[productTypeField]?.V || row[typeField],
+      projectType: row.projectType
     }
     showDrawing.value = true
   }
