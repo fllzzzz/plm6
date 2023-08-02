@@ -33,7 +33,7 @@
     <template #content>
       <common-table :data="list" v-loading="tableLoading" show-summary :summary-method="getSummaries" :data-format="dataFormat" :max-height="maxHeight">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="serialNumber" label="运输单号" align="center" width="100" show-overflow-tooltip />
+        <el-table-column prop="serialNumber" label="运输单号" align="center" min-width="100" show-overflow-tooltip />
         <el-table-column prop="auditTime" label="运输日期" align="center" width="100" show-overflow-tooltip />
         <el-table-column prop="userName" label="装车人" align="center" min-width="140" show-overflow-tooltip />
         <el-table-column prop="actualUserName" label="过磅复核人" align="center" min-width="140" show-overflow-tooltip />
@@ -60,7 +60,6 @@
 import { logisticsRecordDetail } from '@/api/supply-chain/logistics-payment-manage/jd-product-logistics-record-ledger'
 import { ref, defineEmits, defineProps, watch, computed } from 'vue'
 
-import { digitUppercase, getDP, toThousand } from '@/utils/data-type/number'
 import { tableSummary } from '@/utils/el-extra'
 import { logisticsPriceTypeEnum } from '@enum-ms/mes'
 
@@ -118,7 +117,7 @@ const dataFormat = ref([
   ['priceType', ['parse-enum', logisticsPriceTypeEnum]],
   ['auditTime', ['parse-time', '{y}-{m}-{d}']],
   ['actualWeight', ['to-fixed', 2]],
-  ['price', 'to-thousand']
+  ['totalPrice', 'to-thousand']
 ])
 
 const { maxHeight } = useMaxHeight(
@@ -136,16 +135,10 @@ const { maxHeight } = useMaxHeight(
 
 // 合计
 function getSummaries(param) {
-  const summary = tableSummary(param, {
-    props: ['invoiceAmount']
+  return tableSummary(param, {
+    props: ['totalPrice'],
+    toThousandFields: ['totalPrice']
   })
-  const num = summary[2]
-  if (num) {
-    const dp = getDP(num)
-    summary[3] = digitUppercase(num)
-    summary[2] = toThousand(num, dp)
-  }
-  return summary
 }
 
 // 获取物流记录

@@ -121,7 +121,6 @@
 import { logisticsRecordDetail } from '@/api/supply-chain/logistics-payment-manage/jd-logistics-record-ledger'
 import { ref, nextTick, defineEmits, defineProps, watch, computed } from 'vue'
 
-import { digitUppercase, getDP, toThousand } from '@/utils/data-type/number'
 import { tableSummary } from '@/utils/el-extra'
 
 import useVisible from '@/composables/use-visible'
@@ -206,16 +205,10 @@ const { maxHeight } = useMaxHeight(
 
 // 合计
 function getSummaries(param) {
-  const summary = tableSummary(param, {
-    props: ['freight']
+  return tableSummary(param, {
+    props: ['freight'],
+    toThousandFields: ['freight']
   })
-  const num = summary[2]
-  if (num) {
-    const dp = getDP(num)
-    summary[3] = digitUppercase(num)
-    summary[2] = toThousand(num, dp)
-  }
-  return summary
 }
 
 // 时间变动
