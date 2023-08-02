@@ -93,7 +93,7 @@
       >
         <template v-slot="scope">
           <common-button v-if="checkPermission(permission.detail)" icon="el-icon-view" type="info" size="mini" @click="openDetail(scope.row, 'detail')"/>
-          <udOperation :data="scope.row" :show-del="scope.row.auditStatus!==auditTypeEnum.PASS.V?true:false" :permission="permission"/>
+          <udOperation :data="scope.row" :permission="permission"/>
         </template>
       </el-table-column>
     </common-table>

@@ -379,29 +379,6 @@ watch(
   { immediate: true, deep: true }
 )
 
-watch(
-  () => list.value,
-  (val) => {
-    if (val.length > 0) {
-      list.value.map(v => {
-        v.canSelect = !v.boolPayment
-      })
-      if (form.logisticsCargoIds.length > 0) {
-        for (let i = 0; i < form.logisticsCargoIds.length; i++) {
-          const findVal = val.find(v => v.id === form.logisticsCargoIds[i])
-          if (isNotBlank(findVal)) {
-            findVal.canSelect = true
-            nextTick(() => {
-              detailRef.value?.toggleRowSelection(findVal, true)
-            })
-          }
-        }
-      }
-    }
-  },
-  { immediate: true, deep: true }
-)
-
 const totalFreight = computed(() => {
   const freightData = selectionData.value?.map((v) => v.freight)
   return freightData?.reduce((prev, curr) => {
@@ -451,6 +428,22 @@ async function fetchList() {
     console.log('获取物流是否付款记录失败', error)
   } finally {
     list.value = _list
+    if (list.value.length > 0) {
+      list.value.map(v => {
+        v.canSelect = !v.boolPayment
+      })
+      if (form.logisticsCargoIds.length > 0) {
+        for (let i = 0; i < form.logisticsCargoIds.length; i++) {
+          const findVal = list.value.find(v => v.id === form.logisticsCargoIds[i])
+          if (isNotBlank(findVal)) {
+            findVal.canSelect = true
+            nextTick(() => {
+              detailRef.value?.toggleRowSelection(findVal, true)
+            })
+          }
+        }
+      }
+    }
     tableLoading.value = false
   }
 }
