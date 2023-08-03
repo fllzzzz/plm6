@@ -92,14 +92,14 @@ export function uploadCompile(data) {
  * @param {*}  areaId|required 区域id
  * @returns
  */
-export function previewPDF({ productId, productType, number }) {
+export function previewPDF({ productId, productType, number, projectType }) {
   return request({
     module: 'plan',
     url: 'drawing/product',
     method: 'get',
     responseType: 'blob',
     timeout: 6000000,
-    params: { productId, productType, number }
+    params: { productId, productType, number, projectType }
   })
 }
 /**
