@@ -54,6 +54,9 @@ const mesUnfinishedList = mes.unCompleteMete
 const mesStructureProjectSummary = mes.projectSummary
 const mesEnclosureProjectSummary = mes.projectSummary
 
+const productSendReceiveStorageDetail = mes.projectConfig
+const enclosureProductSendReceiveStorageDetail = mes.projectConfig
+
 const mesWageSummary = mes.wageProducedMete
 const mesWageDetail = mes.wageCompleteMete
 const mesPaintingList = mes.surfaceArea
@@ -117,6 +120,8 @@ export default {
   mesUnfinishedList,
   mesStructureProjectSummary,
   mesEnclosureProjectSummary,
+  productSendReceiveStorageDetail,
+  enclosureProductSendReceiveStorageDetail,
   mesStructureProductionStatistics,
   mesStructureProductionStatisticsIn,
   mesEnclosureProductionStatistics,
