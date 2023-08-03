@@ -5,7 +5,9 @@ import { matClsEnum } from '@/utils/enum/modules/classification'
 import { calcSectionSteelTotalLength, calcSectionSteelWeight } from '@/utils/wms/measurement-calc'
 import { dataValidate } from '@/composables/form/use-table-validate'
 import { compareArray } from '@/utils/data-type/array'
+import { MAT_BASE_UNIT } from '@/settings/config'
 
+const baseUnit = MAT_BASE_UNIT[matClsEnum.SECTION_STEEL.V]
 const sectionSteelSpecTmpl = {
   title: '型材申购清单', // 表格名称
   dlgWidth: '1500px', // 预览窗口宽度
@@ -15,9 +17,9 @@ const sectionSteelSpecTmpl = {
   fields: [
     { label: '物料种类', field: 'classifyName', excelField: '__EMPTY' },
     { label: '规格/材质', field: 'specification', excelField: '__EMPTY_1' },
-    { label: '定尺长度（mm）', field: 'length', type: 'number', excelField: '__EMPTY_2' },
-    { label: '数量（根）', field: 'quantity', type: 'number', excelField: '__EMPTY_3' },
-    { label: '总重（kg）', field: 'weighingTotalWeight', type: 'number', precision: 0, excelField: '__EMPTY_4' },
+    { label: '定尺长度（mm）', field: 'length', type: 'number', precision: baseUnit.length.precision, excelField: '__EMPTY_2' },
+    { label: '数量（根）', field: 'quantity', type: 'number', precision: baseUnit.measure.precision, excelField: '__EMPTY_3' },
+    { label: '总重（kg）', field: 'weighingTotalWeight', type: 'number', precision: baseUnit.weight.precision, excelField: '__EMPTY_4' },
     { label: '品牌', field: 'brand', excelField: '__EMPTY_5' }
   ],
   // 校验规则
