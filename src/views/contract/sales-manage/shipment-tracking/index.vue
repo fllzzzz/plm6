@@ -189,7 +189,7 @@ const currentView = computed(() => {
   }
 })
 
-const { globalProject, installTypeEnumArr } = mapGetters(['globalProject', 'installTypeEnumArr'])
+const { globalProject, installTypeEnumArr, hasBridgeMenu } = mapGetters(['globalProject', 'installTypeEnumArr', 'hasBridgeMenu'])
 
 const productType = ref()
 const projectId = ref()
@@ -210,7 +210,11 @@ const productEnum = computed(() => {
     }
     return installTypeEnumArr.value
   }
-  return [...installTypeEnumArr.value, TechnologyMainTypeEnum.BOX]
+  // 是否有桥梁菜单
+  if (hasBridgeMenu.value) {
+    return [...installTypeEnumArr.value, TechnologyMainTypeEnum.BOX]
+  }
+  return installTypeEnumArr.value
 })
 
 // 是否为箱体
