@@ -86,12 +86,16 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
         detail.editObj[v.mergeId] = {
           ...v,
           applyPurchaseObj: {
-            [v.applyPurchaseId]: { ...v }
+            [v.applyPurchaseId]: [{ ...v }]
           },
           isSelected: true
         }
       } else {
-        detail.editObj[v.mergeId].applyPurchaseObj[v.applyPurchaseId] = { ...v }
+        if (!detail.editObj[v.mergeId].applyPurchaseObj[v.applyPurchaseId]) {
+          detail.editObj[v.mergeId].applyPurchaseObj[v.applyPurchaseId] = [{ ...v }]
+        } else {
+          detail.editObj[v.mergeId].applyPurchaseObj[v.applyPurchaseId].push({ ...v })
+        }
         detail.editObj[v.mergeId].quantity += v.quantity
         detail.editObj[v.mergeId].mete += v.mete
       }

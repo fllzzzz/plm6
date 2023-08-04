@@ -389,6 +389,7 @@ async function handleOrderInfoChange(order, oldOrder) {
           _v.boolApplyPurchase = true
           let _totalMete = 0
           let _totalQuantity = 0
+          const applyPurchaseArr = []
           _v.applyPurchase.forEach((item) => {
             item.applyPurchaseSN = item.serialNumber
             applyPurchaseObj[item.id] = item
@@ -427,23 +428,42 @@ async function handleOrderInfoChange(order, oldOrder) {
               item.quantity = null
               item.mete = null
             }
-            if (props.edit && form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]) {
-              const _quantity = form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]?.quantity
-              const _mete = form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]?.mete
-              item.quantity = _quantity
-              _totalQuantity += _quantity
-              item.mete = _mete
-              _totalMete += _mete
-              item.theoryWeight = form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]?.theoryWeight
-              item.theoryTotalWeight = form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]?.theoryTotalWeight
+            if (props.edit && form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]?.length) {
+              const editArr = form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]
+              for (let i = 0; i < editArr.length; i++) {
+                const editItem = editArr[i]
+                item.unitWeight = editItem?.unitWeight // 单位重量
+                item.length = editItem?.length
+                item.width = editItem?.width
+                item.thickness = editItem?.thickness
+                const _quantity = editItem.quantity
+                const _mete = editItem.mete
+                item.quantity = _quantity
+                _totalQuantity += _quantity
+                item.mete = _mete
+                _totalMete += _mete
+                item.theoryWeight = editItem.theoryWeight
+                item.theoryTotalWeight = editItem.theoryTotalWeight
+
+                item.originQuantity = item.quantity
+                item.originMete = item.mete
+                if (item?.project) {
+                  order.projects.push(item?.project)
+                }
+                item.spanMerge = i === 0 ? editArr.length : 0
+                item.isBranch = i > 0
+                applyPurchaseArr.push(JSON.parse(JSON.stringify(item)))
+              }
             } else {
               _totalQuantity += item.quantity || 0
               _totalMete += item.mete || 0
-            }
-            item.originQuantity = item.quantity
-            item.originMete = item.mete
-            if (item?.project) {
-              order.projects.push(item?.project)
+
+              item.originQuantity = item.quantity
+              item.originMete = item.mete
+              if (item?.project) {
+                order.projects.push(item?.project)
+              }
+              applyPurchaseArr.push(JSON.parse(JSON.stringify(item)))
             }
           })
           if ((_v.basicClass & (matClsEnum.MATERIAL.V))) {
@@ -467,6 +487,7 @@ async function handleOrderInfoChange(order, oldOrder) {
               )
             }
           }
+          _v.applyPurchase = applyPurchaseArr
           _v.quantity = _totalQuantity
           _v.mete = _totalMete
         } else {
