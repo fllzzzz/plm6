@@ -1,8 +1,8 @@
-import { getLogistics, getIntegrateLogistics } from '@/api/bim/model'
+import { getLogistics, getBridgeLogistics, getIntegrateLogistics } from '@/api/bim/model'
 import { parseTime } from '@/utils/date'
 import { ref } from 'vue'
 
-export default function useLogisticsInfo({ props, bimModel, modelStatus, viewerPanel, monomerId, addBlinkByIds, removeBlink }) {
+export default function useLogisticsInfo({ props, bimModel, modelStatus, viewerPanel, monomerId, addBlinkByIds, removeBlink, isBridgeProject }) {
   const logisticsList = ref([])
 
   function createLogisticsBtn() {
@@ -74,7 +74,8 @@ export default function useLogisticsInfo({ props, bimModel, modelStatus, viewerP
     try {
       let data
       if (props.showMonomerModel) {
-        data = await getLogistics({ fileId: modelStatus.value.fileId })
+        const getApi = isBridgeProject.value ? getBridgeLogistics : getLogistics
+        data = await getApi({ fileId: modelStatus.value.fileId })
       } else {
         data = await getIntegrateLogistics({ projectId: props.projectId })
       }
