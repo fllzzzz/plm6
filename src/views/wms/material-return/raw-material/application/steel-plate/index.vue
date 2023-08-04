@@ -100,7 +100,7 @@
             <common-input-number
               v-model="row.mete"
               :min="0"
-              :max="+row.maxMete"
+              :max="+(row.singleMete * row.quantity)"
               controls-position="right"
               :controls="false"
               :precision="baseUnit.weight.precision"
@@ -308,10 +308,11 @@ async function calcTheoryWeight(row) {
 // 计算总重
 function calcTotalWeight(row) {
   if (isNotBlank(row.singleMete) && row.quantity) {
-    row.mete = toPrecision(
-      row.maxMete * (row.singleMete / row.source.singleMete) * (row.quantity / row.maxQuantity),
-      baseUnit.value.weight.precision
-    )
+    // row.mete = toPrecision(
+    //   row.maxMete * (row.singleMete / row.source.singleMete) * (row.quantity / row.maxQuantity),
+    //   baseUnit.value.weight.precision
+    // )
+    row.mete = toPrecision(row.singleMete * row.quantity, baseUnit.value.weight.precision)
   } else {
     row.mete = undefined
   }
