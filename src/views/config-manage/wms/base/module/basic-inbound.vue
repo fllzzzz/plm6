@@ -38,7 +38,7 @@
           <span>单件钢材重量误差({{ form.steelDiffType === numOrPctEnum.NUMBER.V ? STEEL_DIFF_UNIT : '%' }})</span>
         </template>
         <div class="flex-r">
-          <common-radio-button v-model="form.steelDiffType" :options="numOrPctEnum.ENUM" default type="enum" size="small" />
+          <common-radio-button v-model="form.steelDiffType" :options="numOrPctEnum.ENUM" default type="enum" size="small" style="min-width:123px;"/>
           <common-input-number
             v-model="form.steelDiff"
             :max="form.steelDiffType === numOrPctEnum.NUMBER.V ? 999999999999 : 100"
@@ -64,14 +64,12 @@
           controls-position="right"
           size="small"
           placeholder="请输入允许的误差值"
-          style="width: 200px;"
+          style="width: 200px"
           :min="0"
         />
       </el-form-item>
       <el-form-item>
-        <span class="form-item-tip">
-          可配置采购比入库比误差值。【采购重量】与【入库重量】的差值（绝对值）超过该误差，将不支持入库。
-        </span>
+        <span class="form-item-tip"> 可配置采购比入库比误差值。【采购重量】与【入库重量】的差值（绝对值）超过该误差，将不支持入库。 </span>
       </el-form-item>
       <!-- <el-form-item label="存储位置填写场景">
         <common-radio v-model="form.warehouseFillWay" :options="inboundFillWayEnum.ENUM" type="enum" size="small" />
