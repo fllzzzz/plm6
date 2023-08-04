@@ -78,4 +78,41 @@ export function editArea(data) {
   })
 }
 
+/**
+ * 获取油漆手工填报列表
+ */
+export function manualList(params) {
+  return request({
+    module: 'mes',
+    url: `kanban/painting/manual/entry/list`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 保存或者更新油漆手工填报列表
+ */
+export function manualEdit(data) {
+  return request({
+    module: 'mes',
+    url: `kanban/painting/save/manual/entry/list`,
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 下载油漆手工填报列表
+ */
+export function downloadManualList(params) {
+  return request({
+    module: 'mes',
+    url: `kanban/painting/download/manual/entry/list`,
+    responseType: 'blob',
+    method: 'get',
+    params
+  })
+}
+
 export default { get }

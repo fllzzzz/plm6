@@ -236,7 +236,12 @@ export const paintingDashboardPM = {
   get: ['mes_painting:get'], // 涂装计算列表
   edit: ['mes_painting:edit'], // 涂装计算编辑
   editArea: ['mes_painting:editArea'], // 涂装计算面积编辑
-  print: ['mes_painting:print'] // 涂装计算列表打印
+  print: ['mes_painting:print'], // 涂装计算列表打印
+  manual: {
+    get: ['mes_manual_filling:get'], // 手工填报查看
+    edit: ['mes_manual_filling:edit'], // 手工填报编辑
+    download: ['mes_manual_filling:download'] // 手工填报下载
+  }
 }
 
 // --------------------------- 项目制造 end --------------------------------
