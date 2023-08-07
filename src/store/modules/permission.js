@@ -75,11 +75,11 @@ const actions = {
           if (menu && menu.redirect !== menu.realRedirect) {
             moduleRoutes.push({ path: menu.redirect, redirect: menu.realRedirect, hidden: true })
           }
-          let _routes = deepClone(state.treeRoutes[moduleId])
-          // 建刚mes 处理菜单隐藏 ；全局项目类型为桥梁时不做处理
-          if (menu && menu.id === 2 && rootGetters.currentProjectType && _routes && _routes.length && !(rootGetters.currentProjectType & projectTypeEnum.BRIDGE.V)) {
-            _routes = filterRoutesByProjectType(_routes, rootGetters.currentProjectType)
-          }
+          const _routes = deepClone(state.treeRoutes[moduleId])
+          // // 建刚mes 处理菜单隐藏 ；全局项目类型为桥梁时不做处理
+          // if (menu && menu.id === 2 && rootGetters.currentProjectType && _routes && _routes.length && !(rootGetters.currentProjectType & projectTypeEnum.BRIDGE.V)) {
+          //   _routes = filterRoutesByProjectType(_routes, rootGetters.currentProjectType)
+          // }
           moduleRoutes = moduleRoutes.concat(_routes)
         }
       }
@@ -90,23 +90,23 @@ const actions = {
   }
 }
 
-const filterRoutesByProjectType = (routes, projectType) => {
-  const routesArr = routes.filter(route => {
-    if (route.children && route.children.length) {
-      route.children = filterRoutesByProjectType(route.children, projectType)
-    }
-    // 根据projectType 筛选
-    if (route.meta && route.meta.projectType && !(route.meta.projectType & projectType)) {
-      return false
-    }
-    // 筛选后 无children 也过滤；例：route.meta.title = 标准用量统计
-    if (typeof route.children === 'object' && route.children.length === 0) {
-      return false
-    }
-    return route
-  })
-  return routesArr
-}
+// const filterRoutesByProjectType = (routes, projectType) => {
+//   const routesArr = routes.filter(route => {
+//     if (route.children && route.children.length) {
+//       route.children = filterRoutesByProjectType(route.children, projectType)
+//     }
+//     // 根据projectType 筛选
+//     if (route.meta && route.meta.projectType && !(route.meta.projectType & projectType)) {
+//       return false
+//     }
+//     // 筛选后 无children 也过滤；例：route.meta.title = 标准用量统计
+//     if (typeof route.children === 'object' && route.children.length === 0) {
+//       return false
+//     }
+//     return route
+//   })
+//   return routesArr
+// }
 
 // 过滤异步路由
 export const filterAsyncRoutes = (commit, routes, moduleId, basePath, hasLayout = false, treeRoutes = {}, allRoutes = []) => { // 遍历后台传来的路由字符串，转换为组件对象, 含递归

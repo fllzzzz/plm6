@@ -1,8 +1,9 @@
-import { getArtifactInfo, getIntegrateArtifactInfo } from '@/api/bim/model'
+import { getArtifactInfo, getBridgeArtifactInfo, getIntegrateArtifactInfo } from '@/api/bim/model'
 import { ref } from 'vue'
 import { modelMenuBarEnum } from '@enum-ms/bim'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 
-export default function useArtifactInfo({ props, menuBar, bimModel, viewerPanel, modelStatus, viewer, fetchDrawing }) {
+export default function useArtifactInfo({ props, menuBar, bimModel, viewerPanel, modelStatus, viewer, fetchDrawing, addBlinkByIds, isBridgeProject }) {
   const currentInfo = ref({})
 
   function createArtifactInfoPanel() {
@@ -141,20 +142,30 @@ export default function useArtifactInfo({ props, menuBar, bimModel, viewerPanel,
     try {
       let info
       if (props.showMonomerModel) {
-        info = await getArtifactInfo({ fileId: modelStatus.value.fileId, elementId, menuBar: menuBar.value })
+        const getApi = isBridgeProject.value ? getBridgeArtifactInfo : getArtifactInfo
+        info = await getApi({ fileId: modelStatus.value.fileId, elementId, menuBar: menuBar.value })
       } else {
         info = await getIntegrateArtifactInfo({ projectId: props.projectId, elementId, menuBar: menuBar.value })
       }
       currentInfo.value = info
 
+      if (isBridgeProject.value) {
+        _panel.setTitleContent(info.productType ? bridgeComponentTypeEnum.VL[info.productType] + '详情' : '详情')
+        if (info.unitElementIds?.length) {
+          addBlinkByIds(info.unitElementIds)
+        }
+      }
+
       const _el = document.getElementsByClassName('bf-panel-artifact-info')[0].getElementsByClassName('bf-panel-container')[0]
       _el.innerHTML = '' // 清空旧数据
       const html = `
         <div class="bf-artifact-info-container">
+          ${isBridgeProject.value ? '' : `
           <div>
             <span>名称</span>
             <span>${info.name}</span>
           </div>
+          `}
           <div>
             <span>编号</span>
             <span>${info.serialNumber}</span>
@@ -175,7 +186,15 @@ export default function useArtifactInfo({ props, menuBar, bimModel, viewerPanel,
             <span>单元</span>
             <span>${info.areaName}</span>
           </div>
-          ${getMenuBarHtml(info)}
+          ${
+  info.productType === bridgeComponentTypeEnum.CELL.V && isBridgeProject.value
+    ? `<div>
+              <span>分段编号</span>
+              <span>${info.boxSerialNumber || '-'}</span>
+            </div>`
+    : ''
+}
+          ${isBridgeProject.value ? (info.productType !== bridgeComponentTypeEnum.CELL.V ? getMenuBarHtml(info) : '') : getMenuBarHtml(info)}
         </div>
       `
       _el.innerHTML = html

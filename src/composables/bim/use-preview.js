@@ -1,8 +1,8 @@
-import { getArtifactSearch } from '@/api/bim/model'
+import { getArtifactSearch, getBridgeArtifactSearch } from '@/api/bim/model'
 import { watch, ref } from 'vue'
 import { ElLoading } from 'element-plus'
 
-export default function usePreview({ props, modelStatus, initModelColor, overrideComponentsColorById, isolateComponentsById }) {
+export default function usePreview({ props, modelStatus, initModelColor, overrideComponentsColorById, isolateComponentsById, isBridgeProject }) {
   const serialNumberElementIds = ref()
 
   watch(
@@ -24,7 +24,8 @@ export default function usePreview({ props, modelStatus, initModelColor, overrid
     })
     if (!props.serialNumber) return
     try {
-      const _elementIds = await getArtifactSearch({
+      const getApi = isBridgeProject.value ? getBridgeArtifactSearch : getArtifactSearch
+      const _elementIds = await getApi({
         serialNumber: props.serialNumber,
         fileId: modelStatus.value.fileId
       })
