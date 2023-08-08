@@ -4,6 +4,7 @@
       <mat-header-query
         :basic-class="query.basicClass"
         :query="query"
+        multiple
         :to-query="crud.toQuery"
         show-project-warehouse-type
         :show-material-is-whole="false"

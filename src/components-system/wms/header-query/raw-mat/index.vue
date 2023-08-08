@@ -64,6 +64,7 @@
     size="small"
     class="filter-item"
     style="width: 300px"
+    :multiple="props.multiple"
     placeholder="可选择/输入科目、编号搜索"
     @change="toQuery"
   />
@@ -123,6 +124,10 @@ const props = defineProps({
   showWarehouse: {
     type: Boolean,
     default: true
+  },
+  multiple: {
+    type: Boolean,
+    default: false
   }
 })
 
