@@ -1,7 +1,7 @@
-import { getArtifactProduction, getIntegrateArtifactProduction } from '@/api/bim/model'
+import { getArtifactProduction, getBridgeArtifactProduction, getIntegrateArtifactProduction } from '@/api/bim/model'
 import { modelMenuBarEnum } from '@enum-ms/bim'
 
-export default function useStatusInfo({ props, menuBar, bimModel, viewerPanel, modelStatus }) {
+export default function useStatusInfo({ props, menuBar, bimModel, viewerPanel, modelStatus, isBridgeProject }) {
   function createStatusInfoPanel() {
     const _panelConfig = bimModel.getPanelConfig()
     _panelConfig.className = 'bf-panel bf-panel-status-info'
@@ -30,7 +30,8 @@ export default function useStatusInfo({ props, menuBar, bimModel, viewerPanel, m
     try {
       let data
       if (props.showMonomerModel) {
-        data = await getArtifactProduction({ fileId: modelStatus.value.fileId, menuBar: menuBar.value })
+        const getApi = isBridgeProject.value ? getBridgeArtifactProduction : getArtifactProduction
+        data = await getApi({ fileId: modelStatus.value.fileId, menuBar: menuBar.value })
       } else {
         data = await getIntegrateArtifactProduction({ projectId: props.projectId, menuBar: menuBar.value })
       }

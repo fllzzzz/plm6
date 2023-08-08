@@ -1,9 +1,9 @@
-import { getStatusDetail, getIntegrateStatusDetail } from '@/api/bim/model'
+import { getStatusDetail, getBridgeStatusDetail, getIntegrateStatusDetail } from '@/api/bim/model'
 import bfColorCard from '@/components-system/bim/bf-color-card.vue'
 import { createApp, watch, ref } from 'vue'
 import { modelMenuBarEnum } from '@enum-ms/bim'
 
-export default function useColorCard({ props, isMobile, menuBar, colors, objectIdGroup, bimModel, viewerPanel, modelStatus, searchBySN, fetchArtifactStatus, isolateComponentsById, clearIsolation, hideComponentsById, showComponentsById, overrideComponentsColorById }) {
+export default function useColorCard({ props, isMobile, menuBar, colors, objectIdGroup, bimModel, viewerPanel, modelStatus, searchBySN, fetchArtifactStatus, isolateComponentsById, clearIsolation, hideComponentsById, showComponentsById, overrideComponentsColorById, isBridgeProject }) {
   const curElementIds = ref([])
   const ccApp = ref()
 
@@ -96,7 +96,8 @@ export default function useColorCard({ props, isMobile, menuBar, colors, objectI
     try {
       let data
       if (props.showMonomerModel) {
-        data = await getStatusDetail({ fileId: modelStatus.value.fileId, status: card.value, menuBar: menuBar.value })
+        const getApi = isBridgeProject.value ? getBridgeStatusDetail : getStatusDetail
+        data = await getApi({ fileId: modelStatus.value.fileId, status: card.value, menuBar: menuBar.value })
       } else {
         data = await getIntegrateStatusDetail({ projectId: props.projectId, status: card.value, menuBar: menuBar.value })
       }

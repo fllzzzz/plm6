@@ -56,7 +56,7 @@
               type="primary"
               @success="crud.toQuery"
             />
-             <!-- <upload-btn
+             <upload-btn
               v-permission="permission.matchImport"
               :dataType="scope.row.dataType"
               :uploadFun="uploadChoose"
@@ -68,7 +68,7 @@
               btnType="warning"
               style="margin-right: 6px"
               @success="crud.toQuery"
-            /> -->
+            />
             <common-button
               v-permission="permission.detail"
               type="primary"
@@ -94,7 +94,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/plan/technical-data-manage/technical-achievement'
+import crudApi, { uploadChoose } from '@/api/plan/technical-data-manage/technical-achievement'
 import { ref, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 

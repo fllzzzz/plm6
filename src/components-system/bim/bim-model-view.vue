@@ -16,9 +16,11 @@ import * as bimModel from '../../../public/assets/bimface/bimfaceAPI.js'
 import { getTranslate, getIMTranslate } from '@/api/bim/model.js'
 import { defineProps, watch, ref, reactive, computed, defineExpose } from 'vue'
 
+import { mapGetters } from '@/store/lib'
 import { constantize } from '@/utils/enum/base'
 import { isBlank } from '@/utils/data-type'
 
+import { projectTypeEnum } from '@/utils/enum/modules/contract'
 import { modelTranslateStatusEnum, modelIntegrationStatusEnum as imTipStatusEnum, modelMenuBarEnum } from '@enum-ms/bim'
 
 import useMyToolbar from '@compos/bim/use-my-toolbar'
@@ -32,6 +34,8 @@ import useLogisticsInfo from '@compos/bim/use-logistics-info'
 import useDrawing from '@compos/bim/use-drawing'
 import usePreview from '@compos/bim/use-preview'
 // import useRightClickEvent from '@compos/bim/use-right-click-event'
+
+const { globalProject } = mapGetters(['globalProject'])
 
 const props = defineProps({
   monomerId: {
@@ -111,6 +115,9 @@ const _3DConfig = ref()
 const commonTipStatusEnum = computed(() => {
   return modelStatus.value.modelType === 'integration' ? imTipStatusEnum : tipStatusEnum
 })
+const isBridgeProject = computed(() => {
+  return globalProject.value?.projectType === projectTypeEnum.BRIDGE.V
+})
 
 const viewerPanel = reactive({
   panelPositions: {},
@@ -177,7 +184,7 @@ const {
   overrideComponentsColorById,
   setSelectedComponentsByObjectData,
   clearSelectedComponents
-} = useArtifactColoring({ props, bimModel, modelStatus, viewer: _viewer, colors, objectIdGroup })
+} = useArtifactColoring({ props, bimModel, modelStatus, viewer: _viewer, colors, objectIdGroup, isBridgeProject })
 const { createDrawing, fetchDrawing } = useDrawing()
 const { createArtifactInfoPanel, fetchArtifactInfo, clearArtifactInfoPanel } = useArtifactInfo({
   props,
@@ -186,14 +193,17 @@ const { createArtifactInfoPanel, fetchArtifactInfo, clearArtifactInfoPanel } = u
   viewer: _viewer,
   viewerPanel,
   modelStatus,
-  fetchDrawing
+  fetchDrawing,
+  addBlinkByIds,
+  isBridgeProject
 })
 const { createStatusInfoPanel, fetchStatusInfo, clearStatusInfoPanel } = useStatusInfo({
   props,
   menuBar,
   bimModel,
   viewerPanel,
-  modelStatus
+  modelStatus,
+  isBridgeProject
 })
 const { createProTreePanel, clearProTreePanel, fetchProTree } = useProjectTreePanel({
   props,
@@ -205,7 +215,8 @@ const { createProTreePanel, clearProTreePanel, fetchProTree } = useProjectTreePa
   clearSelectedComponents,
   addBlinkByIds,
   removeBlink,
-  getModelViewSize
+  getModelViewSize,
+  isBridgeProject
 })
 const { createLogisticsBtn, hideLogisticsBtn } = useLogisticsInfo({
   props,
@@ -214,7 +225,8 @@ const { createLogisticsBtn, hideLogisticsBtn } = useLogisticsInfo({
   viewerPanel,
   monomerId: computed(() => props.monomerId),
   addBlinkByIds,
-  removeBlink
+  removeBlink,
+  isBridgeProject
 })
 const { createMyToolbar } = useMyToolbar({
   menuBar,
@@ -234,7 +246,7 @@ const { createMyToolbar } = useMyToolbar({
   fetchStatusInfo,
   clearSelectedComponents
 })
-const { createSearchHtml, searchBySN } = useArtifactSearch({ props, modelStatus, addBlinkByIds, removeBlink })
+const { createSearchHtml, searchBySN } = useArtifactSearch({ props, modelStatus, addBlinkByIds, removeBlink, isBridgeProject })
 const { createColorCardHtml } = useColorCard({
   props,
   isMobile: props.isMobile,
@@ -250,7 +262,8 @@ const { createColorCardHtml } = useColorCard({
   clearIsolation,
   hideComponentsById,
   showComponentsById,
-  overrideComponentsColorById
+  overrideComponentsColorById,
+  isBridgeProject
 })
 // const { addRightEventListener } = useRightClickEvent({ viewerPanel, fetchArtifactInfo })
 const previewSNElementIds = ref([])
@@ -358,7 +371,8 @@ async function loadModel(viewToken) {
             modelStatus,
             initModelColor,
             overrideComponentsColorById,
-            isolateComponentsById
+            isolateComponentsById,
+            isBridgeProject
           })
           previewSNElementIds.value = serialNumberElementIds
         }
@@ -386,6 +400,9 @@ async function loadModel(viewToken) {
         if (menuBar.value && menuBar.value !== modelMenuBarEnum.PROJECT_TREE.V) {
           const selectedIds = _viewer.value.getSelectedComponents()
           if (isBlank(selectedIds)) {
+            if (isBridgeProject.value) {
+              removeBlink()
+            }
             clearArtifactInfoPanel()
           } else {
             fetchArtifactInfo(selectedIds[0])

@@ -67,6 +67,10 @@ const props = defineProps({
   productType: {
     type: Number,
     default: undefined
+  },
+  projectType: {
+    type: Number,
+    default: undefined
   }
 })
 
@@ -77,6 +81,10 @@ provide(
 provide(
   'productType',
   computed(() => props.productType)
+)
+provide(
+  'projectType',
+  computed(() => props.projectType)
 )
 provide('isPreview', true)
 provide('id', 'small')
