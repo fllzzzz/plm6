@@ -6,7 +6,7 @@
         :query="query"
         :to-query="crud.toQuery"
         :show-material-is-whole="false"
-        material-cascader-multiple
+        multiple
       >
         <template #afterProjectWarehouseType>
           <common-radio-button

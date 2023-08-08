@@ -8,7 +8,7 @@
         :show-basic-class-query="false"
         :show-warehouse="false"
         :show-material-is-whole="false"
-        material-cascader-multiple
+        multiple
       >
         <template #firstItem>
           <el-date-picker

@@ -60,7 +60,6 @@
     check-strictly
     show-all-levels
     clearable
-    :multiple="materialCascaderMultiple"
     size="small"
     class="filter-item"
     style="width: 300px"
@@ -104,11 +103,6 @@ const props = defineProps({
   },
   toQuery: {
     type: Function
-  },
-  // 显示多选
-  materialCascaderMultiple: {
-    type: Boolean,
-    default: false
   },
   // 显示公共库/项目库
   showProjectWarehouseType: {
