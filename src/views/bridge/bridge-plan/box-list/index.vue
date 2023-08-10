@@ -214,15 +214,26 @@
       </common-table>
       <!--分页组件-->
       <pagination />
+      <bim-preview-drawer
+        v-model:visible="showDrawing"
+        :bool-bim="drawingRow?.boolBim"
+        :drawingSN="drawingRow?.drawingSN"
+        :monomer-id="drawingRow?.monomerId"
+        :area-id="crud.query.areaId"
+        :serial-number="drawingRow?.serialNumber"
+        :productId="drawingRow?.productId"
+        :productType="drawingRow?.productType"
+        isBridge
+      />
       <!-- pdf预览 -->
-      <drawing-preview-fullscreen-dialog
+      <!-- <drawing-preview-fullscreen-dialog
         v-model="showDrawing"
         :bool-bim="drawingRow?.boolBim"
         :serial-number="drawingRow?.serialNumber"
         :productId="drawingRow?.productId"
         :productType="drawingRow?.productType"
         :projectType="drawingRow?.projectType"
-      />
+      /> -->
     </template>
     <template v-else>
       <span style="color:red;font-size:13px;">{{pageText}}</span>
@@ -245,10 +256,11 @@ import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
+import bimPreviewDrawer from '@/components-system/bim/bim-preview-drawer'
+// import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
-const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id' })
+const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', typeField: 'productType' })
 
 const optShow = {
   add: false,

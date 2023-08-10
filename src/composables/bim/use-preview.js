@@ -27,7 +27,8 @@ export default function usePreview({ props, modelStatus, initModelColor, overrid
       const getApi = isBridgeProject.value ? getBridgeArtifactSearch : getArtifactSearch
       const _elementIds = await getApi({
         serialNumber: props.serialNumber,
-        fileId: modelStatus.value.fileId
+        fileId: modelStatus.value.fileId,
+        productType: props.productType
       })
       initModelColor()
       overrideComponentsColorById(_elementIds, { color: '#1682e6', opacity: 1 })

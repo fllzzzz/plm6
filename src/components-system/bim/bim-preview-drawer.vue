@@ -19,6 +19,7 @@
           :productId="productId"
           :productType="productType"
           :boolBim="boolBim"
+          :isBridge="isBridge"
           is-preview
           class="model"
           :max-height="maxHeight"
@@ -55,6 +56,10 @@ const props = defineProps({
     default: false
   },
   boolBim: {
+    type: Boolean,
+    default: false
+  },
+  isBridge: {
     type: Boolean,
     default: false
   },
