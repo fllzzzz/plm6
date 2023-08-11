@@ -101,8 +101,8 @@
             value-format="x"
             :shortcuts="PICKER_OPTIONS_SHORTCUTS"
             unlink-panels
-            start-placeholder="出库时间"
-            end-placeholder="出库时间"
+            start-placeholder="审核时间"
+            end-placeholder="审核时间"
             style="width: 240px"
             class="filter-item"
             @change="crud.toQuery"

@@ -38,6 +38,16 @@
               <span v-parse-time="row.outboundReceipt.outboundTime" />
             </template>
           </el-table-column>
+          <el-table-column
+            v-if="columns.visible('outboundReceipt.reviewTime')"
+            key="outboundReceipt.reviewTime"
+            :show-overflow-tooltip="true"
+            prop="outboundReceipt.reviewTime"
+            fixed="left"
+            label="审核时间"
+            align="center"
+            width="125"
+          />
         </template>
       </material-base-info-columns>
       <!-- 次要信息 -->
@@ -95,15 +105,6 @@
         :show-overflow-tooltip="true"
         prop="outboundReceipt.createTime"
         label="申请时间"
-        align="center"
-        width="125"
-      />
-      <el-table-column
-        v-if="columns.visible('outboundReceipt.reviewTime')"
-        key="outboundReceipt.reviewTime"
-        :show-overflow-tooltip="true"
-        prop="outboundReceipt.reviewTime"
-        label="审核时间"
         align="center"
         width="125"
       />
@@ -189,7 +190,6 @@ const { CRUD, crud, columns } = useCRUD(
       'outboundReceipt.applicantName',
       'outboundReceipt.reviewerName',
       'outboundReceipt.createTime',
-      'outboundReceipt.reviewTime',
       'recipientName',
       'invoiceType',
       'taxRate'

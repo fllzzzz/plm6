@@ -1,11 +1,11 @@
-import { getArtifactStatus, getIntegrationArtifactStatus } from '@/api/bim/model.js'
+import { getArtifactStatus, getBridgeArtifactStatus, getIntegrationArtifactStatus } from '@/api/bim/model.js'
 import { ElLoading } from 'element-plus'
 import { computed } from 'vue'
 import { modelMenuBarEnum } from '@enum-ms/bim'
 
 import { arr2obj } from '@/utils/convert/type'
 
-export default function useArtifactColoring({ props, bimModel, modelStatus, viewer, colors, objectIdGroup }) {
+export default function useArtifactColoring({ props, bimModel, modelStatus, viewer, colors, objectIdGroup, isBridgeProject }) {
   const colorsMap = computed(() => {
     return arr2obj(colors.value, 'value')
   })
@@ -45,8 +45,9 @@ export default function useArtifactColoring({ props, bimModel, modelStatus, view
     try {
       let objectIdMap = {}
       if (props.showMonomerModel) {
+        const getApi = isBridgeProject.value ? getBridgeArtifactStatus : getArtifactStatus
         // 模型objectId，根据生产安装状态分组
-        objectIdMap = await getArtifactStatus({ fileId: modelStatus.value.fileId, menuBar })
+        objectIdMap = await getApi({ fileId: modelStatus.value.fileId, menuBar })
       } else {
         objectIdMap = await getIntegrationArtifactStatus({ projectId: props.projectId, menuBar })
       }

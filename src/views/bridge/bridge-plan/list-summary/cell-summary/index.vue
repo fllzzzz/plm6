@@ -202,14 +202,26 @@
       <span style="color:red;font-size:13px;">当前项目内容没有包含桥梁分段,请到合同管理中进行配置</span>
     </template>
     <!-- pdf预览 -->
-    <drawing-preview-fullscreen-dialog
+    <bim-preview-drawer
+        v-model:visible="showDrawing"
+        :bool-bim="drawingRow?.boolBim"
+        :drawingSN="drawingRow?.drawingSN"
+        :monomer-id="drawingRow?.monomerId"
+        :area-id="crud.query.areaId"
+        :serial-number="drawingRow?.serialNumber"
+        :productId="drawingRow?.productId"
+        :productType="drawingRow?.productType"
+        :projectType="drawingRow?.projectType"
+        isBridge
+      />
+    <!-- <drawing-preview-fullscreen-dialog
         v-model="showDrawing"
         :bool-bim="drawingRow?.boolBim"
         :serial-number="drawingRow?.serialNumber"
         :productId="drawingRow?.productId"
         :productType="drawingRow?.productType"
         :projectType="drawingRow?.projectType"
-      />
+      /> -->
   </div>
 </template>
 
@@ -228,7 +240,8 @@ import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
+import bimPreviewDrawer from '@/components-system/bim/bim-preview-drawer'
+// import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id' })

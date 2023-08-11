@@ -35,6 +35,7 @@
       :serial-number="serialNumber"
       :productId="productId"
       :productType="productType"
+      :projectType="projectType"
     />
   </div>
 </template>

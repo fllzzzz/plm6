@@ -19,6 +19,7 @@
           :productId="productId"
           :productType="productType"
           :boolBim="boolBim"
+          :isBridge="isBridge"
           is-preview
           class="model"
           :max-height="maxHeight"
@@ -30,6 +31,7 @@
           :serial-number="serialNumber"
           :productId="productId"
           :productType="productType"
+          :projectType="projectType"
           class="drawing"
           style="position: relative"
           :style="{ height: `${maxHeight}px` }"
@@ -58,6 +60,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  isBridge: {
+    type: Boolean,
+    default: false
+  },
   monomerId: {
     type: Number,
     default: undefined
@@ -77,6 +83,10 @@ const props = defineProps({
     default: undefined
   },
   productType: {
+    type: Number,
+    default: undefined
+  },
+  projectType: {
     type: Number,
     default: undefined
   }

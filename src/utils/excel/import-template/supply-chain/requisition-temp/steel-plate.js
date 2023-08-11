@@ -6,7 +6,9 @@ import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
 import { dataValidate } from '@/composables/form/use-table-validate'
 import { compareArray } from '@/utils/data-type/array'
 import { getBaseUnit } from '@/utils/wms/convert-unit'
+import { MAT_BASE_UNIT } from '@/settings/config'
 
+const baseUnit = MAT_BASE_UNIT[matClsEnum.STEEL_PLATE.V]
 const sectionSteelSpecTmpl = {
   title: '钢板申购清单', // 表格名称
   dlgWidth: '1500px', // 预览窗口宽度
@@ -16,11 +18,11 @@ const sectionSteelSpecTmpl = {
   fields: [
     { label: '物料种类', field: 'classifyName', excelField: '__EMPTY' },
     { label: '材质', field: 'material', excelField: '__EMPTY_1' },
-    { label: '厚（mm）', field: 'thickness', type: 'number', excelField: '__EMPTY_2' },
-    { label: '宽（mm）', field: 'width', type: 'number', excelField: '__EMPTY_3' },
-    { label: '长（mm）', field: 'length', type: 'number', excelField: '__EMPTY_4' },
-    { label: '数量（张）', field: 'quantity', type: 'number', excelField: '__EMPTY_5' },
-    { label: '总重（kg）', field: 'weighingTotalWeight', type: 'number', precision: 0, excelField: '__EMPTY_6' },
+    { label: '厚（mm）', field: 'thickness', type: 'number', precision: baseUnit.thickness.precision, excelField: '__EMPTY_2' },
+    { label: '宽（mm）', field: 'width', type: 'number', precision: baseUnit.width.precision, excelField: '__EMPTY_3' },
+    { label: '长（mm）', field: 'length', type: 'number', precision: baseUnit.length.precision, excelField: '__EMPTY_4' },
+    { label: '数量（张）', field: 'quantity', type: 'number', precision: baseUnit.measure.precision, excelField: '__EMPTY_5' },
+    { label: '总重（kg）', field: 'weighingTotalWeight', type: 'number', precision: baseUnit.weight.precision, excelField: '__EMPTY_6' },
     { label: '品牌', field: 'brand', excelField: '__EMPTY_7' }
   ],
   // 校验规则
