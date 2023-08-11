@@ -19,6 +19,7 @@
     <template v-if="dialogVisible">
       <el-form ref="formRef" :model="form" :disabled="cu.status.edit === FORM.STATUS.PROCESSING">
         <common-table
+          v-if="dialogVisible"
           :data="formList"
           :data-format="columnsDataFormat"
           :max-height="maxHeight"
@@ -97,6 +98,8 @@ import { destinationTypeEnum } from '@enum-ms/production'
 import { deepClone, isBlank, isNotBlank } from '@/utils/data-type'
 import { materialColumns } from '@/utils/columns-format/wms'
 import { DP } from '@/settings/config'
+import { obj2arr } from '@/utils/convert/type'
+import cloneDeep from 'lodash/cloneDeep'
 
 import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 import { regExtra } from '@/composables/form/use-form'
@@ -246,8 +249,18 @@ const amountRules = {
 }
 
 // 项目
+const validateProject = (value, row) => {
+  if (isBlank(row.applyPurchaseId)) {
+    if (!value) {
+      return false
+    }
+    return true
+  }
+  return true
+}
+
 const projectRules = {
-  projectId: [{ required: true, message: '请选择项目', trigger: 'change' }]
+  projectId: [{ validator: validateProject, message: '请选择项目', trigger: 'change' }]
 }
 
 const tableRules = computed(() => {
@@ -286,7 +299,7 @@ const ditto = new Map([
 ])
 provide('ditto', ditto)
 // 表格校验
-const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })
+const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })
 
 function showHook() {
   formList.value = form.list.filter((v) => {
@@ -299,10 +312,53 @@ function showHook() {
   setDitto(formList.value) // 在list变化时设置同上
 }
 
+function cleanArrUpData(list, ditto = new Map()) {
+  const copyList = cloneDeep(list)
+  list.length = 0
+  // 清空数组, 保留数组地址不变
+  copyList.forEach((row, index) => {
+    ditto.forEach((val, name) => {
+      if (row[name] === val) {
+        delete row[name] // 删除同上
+      }
+    })
+    // 删除uid
+    delete row.uid
+
+    // delete rowCopy.verify // 删除验证字段
+    const rowArr = obj2arr(row)
+    const notBlankRow = rowArr.some((v) => isNotBlank(v))
+    if (notBlankRow) {
+      list.push(row)
+    }
+  })
+
+  // 给同上赋值
+  const prevAttr = new Map()
+  list.forEach((v) => {
+    delete v.verify
+    ditto.forEach((val, key) => {
+      if (isBlank(v[key])) {
+        v[key] = prevAttr.get(key)
+      } else {
+        prevAttr.set(key, v[key])
+      }
+      if (['projectId', 'monomerId', 'areaId'].indexOf(key) > -1) {
+        if (isNotBlank(v.purchaseProjectDisabled)) {
+          if (v.purchaseProjectDisabled) {
+            v[key] = undefined
+          }
+        }
+      }
+    })
+  })
+  return list
+}
+
 // 表单提交数据清理
 cu.submitFormFormat = async (form) => {
   const _list = deepClone(form.list)
-  cleanUpData(_list)
+  cleanArrUpData(_list, ditto)
   form.list = await numFmtByBasicClass(_list, { toSmallest: true, toNum: true })
   form.list.forEach((v) => {
     if (boolManuf.value) {
@@ -353,14 +409,26 @@ function setDitto(list) {
     const row = list[i]
     if (basicClass === row.basicClass) {
       ditto.forEach((value, key) => {
-        if (isBlank(row[key])) {
-          row[key] = value
+        if (['projectId', 'monomerId', 'areaId'].indexOf(key) > -1) {
+          if (isBlank(row.applyPurchaseId) && isBlank(row[key])) {
+            row[key] = value
+          }
+        } else {
+          if (isBlank(row[key])) {
+            row[key] = value
+          }
         }
       })
     } else {
       dittoWithNotWare.forEach((value, key) => {
-        if (isBlank(row[key])) {
-          row[key] = value
+        if (['projectId'].indexOf(key) > -1) {
+          if (isBlank(row.applyPurchaseId) && isBlank(row[key])) {
+            row[key] = value
+          }
+        } else {
+          if (isBlank(row[key])) {
+            row[key] = value
+          }
         }
       })
       basicClass = row.basicClass

@@ -418,7 +418,6 @@ watch(
 init()
 
 FORM.HOOK.beforeToEdit = async (crud, form) => {
-  console.log(form)
   if (!props.edit) return
   // 采购合同id
   form.purchaseId = form.purchaseOrder?.id
@@ -471,7 +470,8 @@ function validate() {
               weight: _weight,
               amount: v.unitPrice ? toPrecision(_weight * v.unitPrice, DP.YUAN) : undefined,
               applyPurchaseId: a.applyPurchaseId,
-              purchaseDetailId: a.purchaseDetailId
+              purchaseDetailId: a.purchaseDetailId,
+              purchaseProjectDisabled: a.applyPurchaseId ? (!a.project?.id) : false
             })
           }
         })

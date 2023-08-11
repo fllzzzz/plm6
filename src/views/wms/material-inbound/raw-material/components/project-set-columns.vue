@@ -164,7 +164,7 @@ watchEffect(() => {
 watch(
   projectOptions,
   (opts) => {
-    if (opts && opts.length === 1 && currentForm.value.list[0]) currentForm.value.list[0].projectId = opts[0].id
+    if (opts && opts.length === 1 && currentForm.value.list[0] && !(isNotBlank(currentForm.value.list[0].applyPurchaseId) && isBlank(currentForm.value.list[0].projectId))) currentForm.value.list[0].projectId = opts[0].id
   },
   { immediate: true }
 )

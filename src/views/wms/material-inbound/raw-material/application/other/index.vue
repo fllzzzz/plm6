@@ -278,7 +278,8 @@ function validate() {
               uid: createUniqueString(),
               mete: a.mete,
               applyPurchaseId: a.applyPurchaseId,
-              purchaseDetailId: a.purchaseDetailId
+              purchaseDetailId: a.purchaseDetailId,
+              purchaseProjectDisabled: a.applyPurchaseId ? (!a.project?.id) : false
             })
           }
         })
