@@ -223,6 +223,7 @@
         :serial-number="drawingRow?.serialNumber"
         :productId="drawingRow?.productId"
         :productType="drawingRow?.productType"
+        :projectType="drawingRow?.projectType"
         isBridge
       />
       <!-- pdf预览 -->

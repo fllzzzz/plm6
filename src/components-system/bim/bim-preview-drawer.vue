@@ -31,6 +31,7 @@
           :serial-number="serialNumber"
           :productId="productId"
           :productType="productType"
+          :projectType="projectType"
           class="drawing"
           style="position: relative"
           :style="{ height: `${maxHeight}px` }"
@@ -82,6 +83,10 @@ const props = defineProps({
     default: undefined
   },
   productType: {
+    type: Number,
+    default: undefined
+  },
+  projectType: {
     type: Number,
     default: undefined
   }
