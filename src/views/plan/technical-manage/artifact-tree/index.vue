@@ -248,7 +248,7 @@
                 <el-button size="mini" type="info" @click="cancelIt(scope.row)">取消</el-button>
               </span>
             </template>
-            <template v-else>-</template>
+            <template v-else>{{scope.row.remark || '-'}}</template>
           </template>
         </el-table-column>
         <el-table-column

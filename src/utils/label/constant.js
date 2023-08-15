@@ -27,7 +27,7 @@ const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, printConfig
   <div class="artifact-label">
     <table class="artifact-table">
       <tr>
-        <td style="width:50%;font-size:10pt;${printConfig?.showMonomer ? '' : 'border:none;'}">${emptyTextFormatter(component.projectName)}</td>
+        <td style="width:50%;font-size:10pt;">${emptyTextFormatter(component.projectName)}</td>
         <td style="width:50%;font-size:10pt;${printConfig?.showMonomer ? '' : 'display:none;'}">${emptyTextFormatter(component.monomerName)}</td>
       </tr>
     </table>
@@ -110,7 +110,7 @@ const ARTIFACT_CUSTOM_L_HTML = function ({ component = defComponent, printConfig
     </table>
     <table class="artifact-table">
       <tr>
-        <td style="width:50%;font-size:10pt;${printConfig?.showMonomer ? '' : 'border:none;'}">${emptyTextFormatter(component.projectName)}</td>
+        <td style="width:50%;font-size:10pt;">${emptyTextFormatter(component.projectName)}</td>
         <td style="width:50%;font-size:10pt;${printConfig?.showMonomer ? '' : 'display:none;'}">${emptyTextFormatter(component.monomerName)}</td>
       </tr>
     </table>

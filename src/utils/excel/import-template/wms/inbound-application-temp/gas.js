@@ -1,5 +1,5 @@
 import store from '@/store/index'
-import { deepClone } from '@/utils/data-type'
+import { deepClone, toPrecision } from '@/utils/data-type'
 import { createUniqueString, trimStr } from '@/utils/data-type/string'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { judgeMaterialUnitExist } from '@/utils/convert/unit'
@@ -138,6 +138,13 @@ const sectionSteelSpecTmpl = {
         row.accountingUnit = materialSpecInfo.classify.accountingUnit // 核算单位
         row.accountingPrecision = materialSpecInfo.classify.accountingPrecision // 核算单位小数精度
         row.measurePrecision = materialSpecInfo.classify.measurePrecision // 计量单位小数精度
+
+        if (row.quantity) {
+          row.quantity = toPrecision(row.quantity, row.measurePrecision)
+        }
+        if (row.mete) {
+          row.mete = toPrecision(row.mete, row.accountingPrecision)
+        }
 
         // 没有计量单位，将数量设置为空
         if (!row.measureUnit) {

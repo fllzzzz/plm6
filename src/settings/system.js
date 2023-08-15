@@ -32,7 +32,7 @@ export const projectNameShowConfig = {
  */
 export const showProjectSearch = [
   // bim
-  { component: '/bim/model-show/index', type: pt.STEEL.V, required: true },
+  { component: '/bim/model-show/index', type: allPT, required: true },
   { component: '/bim/integration-model-show/index', type: pt.STEEL.V, required: true },
   // 发运管理
   { component: '/ship-manage/pack-and-ship/manual-pack/index', type: allPT, required: true },
