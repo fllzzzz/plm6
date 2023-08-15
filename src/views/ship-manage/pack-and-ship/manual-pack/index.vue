@@ -400,6 +400,8 @@ function beforeAddIn(row, packTypeK) {
     curRowSelect.value = []
     curNumberList.value = row.originNumberList
     oneCodeVisible.value = true
+    checkAll.value = false
+    isIndeterminate.value = false
   } else {
     addIn(row, packTypeK)
   }

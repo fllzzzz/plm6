@@ -39,17 +39,37 @@
       <el-form-item label="备注" prop="remark">
         <span>{{detail.remark}}</span>
       </el-form-item>
+      <el-form-item label="附件">
+        <div v-for="item in detail.attachments" :key="item.id">
+          <span style="cursor: pointer; color: #409eff;margin-left:3px;" @click="attachmentView(item)">{{ item.name }}</span>
+          <export-button :params="{ id: item.id }" />
+        </div>
+      </el-form-item>
     </el-form>
+    <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow = false" />
   </common-dialog>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { regDetail } from '@compos/use-crud'
 
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { projectNameFormatter } from '@/utils/project'
 
+import ExportButton from '@comp-common/export-button/index.vue'
+import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
+
 const { crud, detail } = regDetail()
+
+const pdfShow = ref(false)
+const currentId = ref()
+
+// 预览附件
+function attachmentView(item) {
+  currentId.value = item.id
+  pdfShow.value = true
+}
 
 </script>
 
