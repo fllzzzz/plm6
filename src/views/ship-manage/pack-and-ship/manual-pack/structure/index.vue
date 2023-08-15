@@ -68,6 +68,19 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="columns.visible('length')"
+        prop="length"
+        sortable="custom"
+        :show-overflow-tooltip="true"
+        :label="`长度\n(mm)`"
+        align="left"
+        min-width="85px"
+      >
+        <template #default="{ row }">
+          {{ toFixed(row.length, DP.MES_ARTIFACT_L__MM) }}
+        </template>
+      </el-table-column>
+      <el-table-column
         v-if="columns.visible('material')"
         prop="material"
         sortable="custom"
