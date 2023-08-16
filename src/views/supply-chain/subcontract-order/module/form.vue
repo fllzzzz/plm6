@@ -103,6 +103,16 @@
           show-word-limit
         />
       </el-form-item>
+      <el-form-item label="附件" prop="attachments">
+        <upload-btn ref="uploadRef" v-model:files="form.attachmentFiles" :file-classify="fileClassifyEnum.NORMAL.V" :limit="1"  :accept="'.pdf,.jpg,.jpeg,.png'"/>
+        <template v-if="form.attachments?.length > 0 && (!form.attachmentFiles || form.attachmentFiles.length===0)">
+          <div v-for="item in form.attachments" :key="item.id">
+            <span style="cursor: pointer; color: #409eff;margin-left:3px;" @click="attachmentView(item)">{{ item.name }}</span>
+            <export-button :params="{ id: item.id }" />
+          </div>
+        </template>
+      </el-form-item>
+      <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow = false" />
     </el-form>
   </common-dialog>
 </template>
@@ -113,7 +123,11 @@ import { ref } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { supplierTypeEnum } from '@enum-ms/supplier'
 import { invoiceTypeEnum } from '@enum-ms/finance'
+import { fileClassifyEnum } from '@enum-ms/file'
 
+import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
+
+import ExportButton from '@comp-common/export-button/index.vue'
 import supplierSelect from '@comp-base/supplier-select/index.vue'
 import projectSubcontractSelect from '@/components-system/project/project-subcontract-select.vue'
 import monomerSelect from '@/components-system/plan/monomer-select'
@@ -133,10 +147,14 @@ const defaultForm = {
   invoiceType: undefined,
   taxRate: undefined,
   remark: undefined,
-  signDate: undefined
+  signDate: undefined,
+  attachmentFiles: [],
+  attachmentIds: undefined
 }
 
-const { crud, form } = regForm(defaultForm, formRef)
+const pdfShow = ref(false)
+const currentId = ref()
+const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
 const validateTaxRate = (rule, value, callback) => {
   if (form.invoiceType !== invoiceTypeEnum.RECEIPT.V) {
@@ -159,6 +177,12 @@ const rules = {
   taxRate: [{ required: true, validator: validateTaxRate, trigger: 'blur' }]
 }
 
+// 预览附件
+function attachmentView(item) {
+  currentId.value = item.id
+  pdfShow.value = true
+}
+
 function invoiceTypeChange(val) {
   if (val === invoiceTypeEnum.RECEIPT.V) {
     form.taxRate = undefined
@@ -169,6 +193,10 @@ function projectChange() {
   form.monomerIds = []
 }
 
+// 提交前
+CRUD.HOOK.beforeSubmit = async () => {
+  crud.form.attachmentIds = crud.form.attachmentFiles ? crud.form.attachmentFiles.map((v) => v.id) : crud.form.attachmentIds
+}
 </script>
 <style lang="scss" scoped>
 .add-row-box {
