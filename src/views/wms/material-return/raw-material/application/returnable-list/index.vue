@@ -106,6 +106,8 @@ import { calcTheoryWeight } from '@/utils/wms/measurement-calc'
 import { createUniqueString } from '@/utils/data-type/string'
 import { specFormat } from '@/utils/wms/spec-format'
 import { toFixed } from '@/utils/data-type'
+import { MIN_UNIT } from '@/settings/config'
+import { convertUnits } from '@/utils/convert/unit'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -229,7 +231,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
       unitNetCalcMete: 'returnableMete',
       unitNetCalcQuantity: 'quantity',
       length: ['length', 'singleReturnableLength'],
-      mete: ['mete', 'returnableMete', 'singleMete', 'singleReturnableMete']
+      mete: ['mete', 'returnableMete']
     }
   )
   // 计算理论重量
@@ -241,6 +243,8 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
       row.totalLength = row.length * row.quantity
       row.sourceReturnableLength = row.returnableLength
     }
+    row.singleMete = convertUnits(row.singleMete, MIN_UNIT.WEIGHT, curMatBaseUnit.value.weight.unit, 5)
+    row.singleReturnableMete = convertUnits(row.singleReturnableMete, MIN_UNIT.WEIGHT, curMatBaseUnit.value.weight.unit, 5)
     // 编辑模式，不是当前退库单的在退库中的物料 “显示退库中”
     row.showReviewPending = row.boolReviewPending && (!props.edit || (props.edit && !props.sourceReturnIds.includes(row.id)))
   })

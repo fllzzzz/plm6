@@ -281,7 +281,7 @@ async function calcTheoryWeight(row) {
   })
   if (row.theoryWeight) {
     // 将小数精度提高一位计算，计算总重与实际总重出现误差
-    row.singleMete = toPrecision((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete, baseUnit.value.weight.precision)
+    row.singleMete = toPrecision((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete, 5)
   } else {
     row.singleMete = undefined
   }
@@ -295,6 +295,9 @@ function calcTotalWeight(row) {
     //   baseUnit.value.weight.precision
     // )
     row.mete = toPrecision(row.singleMete * row.quantity, baseUnit.value.weight.precision)
+    if (row.mete > row.maxMete && row.mete > row.singleMete) {
+      row.mete = toPrecision(Math.min(row.maxMete, row.singleMete), baseUnit.value.weight.precision)
+    }
   } else {
     row.mete = undefined
   }
