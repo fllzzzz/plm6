@@ -9,7 +9,7 @@
       :contract-unit="order?.meteUnit"
       :contract-value="order?.mete"
       :showContractTotal="!boolPartyA && !!form.purchaseId"
-      :inbound-unit="order?.meteUnit"
+      :inbound-unit="STEEL_BASE_UNIT.weight.unit"
       :inbound-value="order?.inboundTotalMete"
       :showInboundTotal="!boolPartyA && !!form.purchaseId"
       :validate="validate"
@@ -96,7 +96,7 @@ import { steelInboundApplicationPM as permission } from '@/page-permission/wms'
 
 import { createUniqueString } from '@/utils/data-type/string'
 import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reactive } from 'vue'
-import { STEEL_ENUM, DP } from '@/settings/config'
+import { STEEL_ENUM, DP, STEEL_BASE_UNIT } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@/utils/enum/modules/finance'
 import { orderSupplyTypeEnum, inboundFillWayEnum } from '@/utils/enum/modules/wms'
