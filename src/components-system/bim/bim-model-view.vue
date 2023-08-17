@@ -62,6 +62,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  isBridge: {
+    type: Boolean,
+    default: false
+  },
   previewShowAll: {
     type: Boolean,
     default: false
@@ -116,7 +120,7 @@ const commonTipStatusEnum = computed(() => {
   return modelStatus.value.modelType === 'integration' ? imTipStatusEnum : tipStatusEnum
 })
 const isBridgeProject = computed(() => {
-  return globalProject.value?.projectType === projectTypeEnum.BRIDGE.V
+  return globalProject.value?.projectType === projectTypeEnum.BRIDGE.V || props.isBridge
 })
 
 const viewerPanel = reactive({
