@@ -100,6 +100,7 @@ import crudApi from '@/api/wms/material-return/raw-material/returnable-list'
 import { rawMaterialReturnableListPM as permission } from '@/page-permission/wms'
 import { computed, defineEmits, defineProps, defineExpose, provide, reactive, ref, watchEffect } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
+import { STEEL_ENUM, MANUF_ENUM } from '@/settings/config'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { calcTheoryWeight } from '@/utils/wms/measurement-calc'
@@ -220,6 +221,7 @@ const basicClass = computed(() => {
 watchEffect(() => calcReturnInfo())
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
+  const meteKey = (props.basicClass & STEEL_ENUM || props.basicClass & MANUF_ENUM) ? ['mete', 'returnableMete'] : ['mete', 'returnableMete', 'singleReturnableMete', 'singleMete']
   await setSpecInfoToList(data.content)
   data.content = await numFmtByBasicClass(
     data.content,
@@ -231,7 +233,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
       unitNetCalcMete: 'returnableMete',
       unitNetCalcQuantity: 'quantity',
       length: ['length', 'singleReturnableLength'],
-      mete: ['mete', 'returnableMete']
+      mete: meteKey
     }
   )
   // 计算理论重量
@@ -243,8 +245,10 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
       row.totalLength = row.length * row.quantity
       row.sourceReturnableLength = row.returnableLength
     }
-    row.singleMete = convertUnits(row.singleMete, MIN_UNIT.WEIGHT, curMatBaseUnit.value.weight.unit, 5)
-    row.singleReturnableMete = convertUnits(row.singleReturnableMete, MIN_UNIT.WEIGHT, curMatBaseUnit.value.weight.unit, 5)
+    if (props.basicClass & STEEL_ENUM || props.basicClass & MANUF_ENUM) {
+      row.singleMete = convertUnits(row.singleMete, MIN_UNIT.WEIGHT, curMatBaseUnit.value.weight?.unit, 5)
+      row.singleReturnableMete = convertUnits(row.singleReturnableMete, MIN_UNIT.WEIGHT, curMatBaseUnit.value.weight?.unit, 5)
+    }
     // 编辑模式，不是当前退库单的在退库中的物料 “显示退库中”
     row.showReviewPending = row.boolReviewPending && (!props.edit || (props.edit && !props.sourceReturnIds.includes(row.id)))
   })
