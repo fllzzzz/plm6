@@ -108,6 +108,7 @@ import { specFormat } from '@/utils/wms/spec-format'
 import { toFixed } from '@/utils/data-type'
 import { MIN_UNIT } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
+import { STEEL_ENUM } from '@/settings/config'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -220,6 +221,7 @@ const basicClass = computed(() => {
 watchEffect(() => calcReturnInfo())
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
+  const meteKey = props.basicClass & STEEL_ENUM ? ['mete', 'returnableMete'] : ['mete', 'returnableMete', 'singleReturnableMete', 'singleMete']
   await setSpecInfoToList(data.content)
   data.content = await numFmtByBasicClass(
     data.content,
@@ -231,7 +233,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
       unitNetCalcMete: 'returnableMete',
       unitNetCalcQuantity: 'quantity',
       length: ['length', 'singleReturnableLength'],
-      mete: ['mete', 'returnableMete']
+      mete: meteKey
     }
   )
   // 计算理论重量
@@ -243,15 +245,19 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
       row.totalLength = row.length * row.quantity
       row.sourceReturnableLength = row.returnableLength
     }
-    row.singleMete = convertUnits(row.singleMete, MIN_UNIT.WEIGHT, curMatBaseUnit.value.weight.unit, 5)
-    row.singleReturnableMete = convertUnits(row.singleReturnableMete, MIN_UNIT.WEIGHT, curMatBaseUnit.value.weight.unit, 5)
+    if (props.basicClass & STEEL_ENUM) {
+      row.singleMete = convertUnits(row.singleMete, MIN_UNIT.WEIGHT, curMatBaseUnit.value.weight?.unit, 5)
+      row.singleReturnableMete = convertUnits(row.singleReturnableMete, MIN_UNIT.WEIGHT, curMatBaseUnit.value.weight?.unit, 5)
+    }
     // 编辑模式，不是当前退库单的在退库中的物料 “显示退库中”
     row.showReviewPending = row.boolReviewPending && (!props.edit || (props.edit && !props.sourceReturnIds.includes(row.id)))
   })
+  console.log(data.content)
 }
 
 // 添加退库信息
 function handleAddReturn(row) {
+  console.log(row)
   const selectList = props.selectList
   const newData = reactive({
     uid: createUniqueString(), // 当前退库记录唯一id
