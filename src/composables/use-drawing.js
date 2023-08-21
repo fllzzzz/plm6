@@ -8,7 +8,7 @@ export default function useDrawing({ pidField = 'id', typeField = 'productType',
   function drawingPreview(row) {
     drawingRow.value = {
       boolBim: row.boolBim,
-      monomerId: row.monomerId,
+      monomerId: row.monomerId || row?.monomer?.id,
       serialNumber: row.serialNumber,
       drawingSN: row.numbers, // 图纸编号
       attachmentId: row.attachmentId,

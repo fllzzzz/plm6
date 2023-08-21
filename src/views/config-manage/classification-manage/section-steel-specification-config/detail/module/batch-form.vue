@@ -1,5 +1,5 @@
 <template>
-  <common-dialog
+  <common-drawer
     append-to-body
     :close-on-click-modal="false"
     :before-close="crud.cancelBCU"
@@ -7,8 +7,7 @@
     :title="crud.bStatus.title"
     :show-close="false"
     custom-class="section-steel-detail-batch-form"
-    width="1000px"
-    top="10vh"
+    size="85%"
   >
     <template #titleRight>
       <span style="float: right">
@@ -20,54 +19,56 @@
         <common-button size="mini" @click="crud.cancelBCU">关 闭</common-button>
       </span>
     </template>
-    <div>
-      <el-form ref="formRef" :model="form" :disabled="crud.bStatus.cu === CRUD.STATUS.PROCESSING">
-        <common-table
-          :data="form.list"
-          :show-empty-symbol="false"
-          return-source-data
-          empty-text="暂无数据"
-          :max-height="maxHeight"
-          default-expand-all
-          :cell-class-name="wrongCellMask"
-          row-key="uid"
-        >
-          <el-table-column label="序号" type="index" align="center" width="60" />
-          <el-table-column key="name" prop="specification" :show-overflow-tooltip="true" label="规格">
-            <template v-slot="scope">
-              <el-input v-model.trim="scope.row.specification" type="text" clearable placeholder="规格" size="small" style="width: 100%" />
-            </template>
-          </el-table-column>
-          <template v-for="sd in standard" :key="sd.id">
-            <el-table-column :show-overflow-tooltip="true" :prop="`${prefix}${sd.id}`" :label="`${sd.name}\n理论重量(kg/m)`" align="center">
+    <template #content>
+      <div>
+        <el-form ref="formRef" :model="form" :disabled="crud.bStatus.cu === CRUD.STATUS.PROCESSING">
+          <common-table
+            :data="form.list"
+            :show-empty-symbol="false"
+            return-source-data
+            empty-text="暂无数据"
+            :max-height="maxHeight-20"
+            default-expand-all
+            :cell-class-name="wrongCellMask"
+            row-key="uid"
+          >
+            <el-table-column label="序号" type="index" align="center" width="60" />
+            <el-table-column key="name" prop="specification" :show-overflow-tooltip="true" label="规格">
               <template v-slot="scope">
-                <el-input-number
-                  class="align-left"
-                  v-model="scope.row[`${prefix}${sd.id}`]"
-                  :placeholder="`${sd.name}`"
-                  type="text"
-                  controls-position="right"
-                  style="width: 100%"
-                  :min="0.001"
+                <el-input v-model.trim="scope.row.specification" type="text" clearable placeholder="规格" size="small" style="width: 100%" />
+              </template>
+            </el-table-column>
+            <template v-for="sd in standard" :key="sd.id">
+              <el-table-column :show-overflow-tooltip="true" :prop="`${prefix}${sd.id}`" :label="`${sd.name}\n理论重量(kg/m)`" align="center">
+                <template v-slot="scope">
+                  <el-input-number
+                    class="align-left"
+                    v-model="scope.row[`${prefix}${sd.id}`]"
+                    :placeholder="`${sd.name}`"
+                    type="text"
+                    :controls="false"
+                    style="width: 100%"
+                    :min="0.001"
+                  />
+                </template>
+              </el-table-column>
+            </template>
+            <el-table-column label="操作" width="70px" align="center" fixed="right">
+              <template v-slot="scope">
+                <common-button
+                  type="danger"
+                  icon="el-icon-delete"
+                  size="mini"
+                  style="padding: 6px"
+                  @click.stop="removeRow(form.list, scope.$index)"
                 />
               </template>
             </el-table-column>
-          </template>
-          <el-table-column label="操作" width="70px" align="center" fixed="right">
-            <template v-slot="scope">
-              <common-button
-                type="danger"
-                icon="el-icon-delete"
-                size="mini"
-                style="padding: 6px"
-                @click.stop="removeRow(form.list, scope.$index)"
-              />
-            </template>
-          </el-table-column>
-        </common-table>
-      </el-form>
-    </div>
-  </common-dialog>
+          </common-table>
+        </el-form>
+      </div>
+    </template>
+  </common-drawer>
 </template>
 
 <script setup>
@@ -111,8 +112,8 @@ const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: 
 const { maxHeight } = useMaxHeight(
   {
     mainBox: '.section-steel-detail-batch-form',
-    extraBox: ['.el-dialog__header'],
-    wrapperBox: ['.el-dialog__body'],
+    extraBox: ['.el-drawer__header'],
+    wrapperBox: ['.el-drawer__body'],
     clientHRepMainH: true,
     navbar: false
   },

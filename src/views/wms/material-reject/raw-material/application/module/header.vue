@@ -27,7 +27,7 @@
       />
       <supplier-select
         v-model="query.supplierId"
-        :type="supplierTypeEnum.RAW_MATERIAL.V"
+        :type="(supplierTypeEnum.RAW_MATERIAL.V | supplierTypeEnum.OTHER.V)"
         mode="cross"
         clearable
         class="filter-item"
