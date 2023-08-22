@@ -190,7 +190,7 @@
 
 <script setup>
 import { detail } from '@/api/mes/task-tracking/assistance-operate/process-assistance'
-import { defineProps, defineEmits, ref } from 'vue'
+import { defineProps, defineEmits, ref, watch } from 'vue'
 // import { ElMessage, ElNotification, ElMessageBox } from 'element-plus'
 
 import { taskTypeENUM } from '@enum-ms/mes'
@@ -249,12 +249,23 @@ function resetQuery() {
   fetch()
 }
 
+watch([() => detailData.value.id, () => detailList.value.length], ([val, detailVal]) => {
+  fetch()
+  if (detailVal) {
+    pIds.value = [props.info?.groups?.id]
+    detailList.value.forEach((v) => {
+      pIds.value.push(v.groups.id)
+    })
+  } else {
+    pIds.value = [props.info?.groups?.id]
+  }
+})
+
 function handleSelectChange(val) {
   selections.value = val
 }
 
 async function fetch() {
-  pIds.value = [props.info?.groups?.id]
   try {
     tableLoading.value = true
     tableData.value = []
@@ -276,10 +287,9 @@ async function fetch() {
       v.isComplete = Boolean(
         v.totalCompleteMete?.quantity && v.totalTaskMete?.quantity && v.totalCompleteMete?.quantity === v.totalTaskMete?.quantity
       )
-      if (v?.mesBuildingAssistDetailDTOS?.length > 0) {
+      if (v?.mesBuildingAssistDetailDTOS?.length) {
         v?.mesBuildingAssistDetailDTOS.forEach(async (p) => {
           p.groupsId = p?.groups?.id
-          pIds.value.push(p.groupsId)
           if (!classIdGroupsObj.value[v?.configId]) {
             let res = {}
             if (props.info?.taskTypeEnum === taskTypeENUM.MACHINE_PART.V) {
@@ -304,13 +314,13 @@ async function fetch() {
           if (props.info?.taskTypeEnum === taskTypeENUM.MACHINE_PART.V) {
             res = await manualFetchGroupsTree({
               productType: props.info?.taskTypeEnum,
-              disabledIds: pIds.value || []
+              disabledIds: pIds.value
             })
           } else {
             res = await manualFetchGroupsTree({
               productType: props.info?.taskTypeEnum,
               structureClassId: v.configId,
-              disabledIds: pIds.value || [],
+              disabledIds: pIds.value,
               _factoryIds: (v.factoryId && [v.factoryId]) || []
             })
           }
