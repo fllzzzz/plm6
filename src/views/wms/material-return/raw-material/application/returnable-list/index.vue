@@ -106,6 +106,9 @@ import { calcTheoryWeight } from '@/utils/wms/measurement-calc'
 import { createUniqueString } from '@/utils/data-type/string'
 import { specFormat } from '@/utils/wms/spec-format'
 import { toFixed } from '@/utils/data-type'
+import { MIN_UNIT } from '@/settings/config'
+import { convertUnits } from '@/utils/convert/unit'
+import { STEEL_ENUM } from '@/settings/config'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -218,6 +221,7 @@ const basicClass = computed(() => {
 watchEffect(() => calcReturnInfo())
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
+  const meteKey = props.basicClass & STEEL_ENUM ? ['mete', 'returnableMete'] : ['mete', 'returnableMete', 'singleReturnableMete', 'singleMete']
   await setSpecInfoToList(data.content)
   data.content = await numFmtByBasicClass(
     data.content,
@@ -229,7 +233,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
       unitNetCalcMete: 'returnableMete',
       unitNetCalcQuantity: 'quantity',
       length: ['length', 'singleReturnableLength'],
-      mete: ['mete', 'returnableMete', 'singleMete', 'singleReturnableMete']
+      mete: meteKey
     }
   )
   // 计算理论重量
@@ -240,6 +244,10 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
       row.returnableLength = row.singleReturnableLength * row.quantity
       row.totalLength = row.length * row.quantity
       row.sourceReturnableLength = row.returnableLength
+    }
+    if (props.basicClass & STEEL_ENUM) {
+      row.singleMete = convertUnits(row.singleMete, MIN_UNIT.WEIGHT, curMatBaseUnit.value.weight?.unit, 5)
+      row.singleReturnableMete = convertUnits(row.singleReturnableMete, MIN_UNIT.WEIGHT, curMatBaseUnit.value.weight?.unit, 5)
     }
     // 编辑模式，不是当前退库单的在退库中的物料 “显示退库中”
     row.showReviewPending = row.boolReviewPending && (!props.edit || (props.edit && !props.sourceReturnIds.includes(row.id)))

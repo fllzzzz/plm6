@@ -249,12 +249,12 @@ export function getArtifactSearch({ serialNumber, fileId }) {
  * @param {number} serialNumber 构件编号
  * @param {number} fileId 元件id
  */
-export function getBridgeArtifactSearch({ serialNumber, fileId }) {
+export function getBridgeArtifactSearch({ serialNumber, fileId, productType }) {
   return request({
     url: '/api/model/3DModel/bridge/element',
     method: 'get',
     timeout: 600000,
-    params: { serialNumber, fileId }
+    params: { serialNumber, fileId, productType }
   })
 }
 

@@ -43,7 +43,8 @@ export default function useArtifactSearch({ props, modelStatus, addBlinkByIds, r
         const getApi = isBridgeProject.value ? getBridgeArtifactSearch : getArtifactSearch
         _elementIds = await getApi({
           serialNumber: serialNumber,
-          fileId: modelStatus.value.fileId
+          fileId: modelStatus.value.fileId,
+          productType: props.productType
         })
       } else {
         _elementIds = await getIntegrateArtifactSearch({

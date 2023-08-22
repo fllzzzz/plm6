@@ -39,6 +39,14 @@
         fixed="left"
         width="100px"
       />
+      <el-table-column
+        label="任务数"
+        align="center"
+        min-width="80px"
+        v-if="columns.visible('taskQuantity')"
+        prop="taskQuantity"
+        key="taskQuantity"
+      />
       <template v-for="item in process" :key="item.id">
         <el-table-column
           v-if="crud.query.processType === item.productType && item.productionLineTypeEnum & artifactProductLineEnum.TRADITION.V"
@@ -177,6 +185,5 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     return v
   })
 }
-
 </script>
 <style lang="scss" scoped></style>
