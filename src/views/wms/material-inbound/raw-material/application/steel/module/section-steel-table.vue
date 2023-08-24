@@ -445,8 +445,24 @@ function rowWatch(row) {
   watchEffect(() => {
     weightOverDiff(row)
     if (row.needFirstCalcTheoryWeight) {
-      calcTheoryWeight(row)
-      calcTotalWeight(row)
+      if ((props.boolPartyA || props.noDetail) || (form.selectObj?.[row.mergeId]?.isSelected && !row.boolApplyPurchase)) {
+        calcTheoryWeight(row)
+        calcTotalWeight(row)
+      }
+      if (row.boolApplyPurchase && form.selectObj?.[row.mergeId]?.isSelected) {
+        row?.applyPurchase.map(v => {
+          if (isNotBlank(v.length) && isNotBlank(v.quantity)) {
+            v.totalLength = calcSectionSteelTotalLength({
+              length: v.length, // 长度
+              quantity: v.quantity // 数量
+            })
+          } else {
+            v.totalLength = undefined
+          }
+        })
+        row.theoryTotalWeight = row?.applyPurchase?.reduce((a, b) => a + (b.theoryTotalWeight || 0), 0)
+        row.totalLength = row?.applyPurchase?.reduce((a, b) => a + (b.totalLength || 0), 0)
+      }
       row.needFirstCalcTheoryWeight = false
     }
   })
@@ -456,6 +472,7 @@ function rowWatch(row) {
       if (row.boolApplyPurchase && form.selectObj?.[row.mergeId]?.isSelected) {
         row.quantity = row?.applyPurchase?.reduce((a, b) => a + (b.quantity || 0), 0)
         row.theoryTotalWeight = row?.applyPurchase?.reduce((a, b) => a + (b.theoryTotalWeight || 0), 0)
+        row.totalLength = row?.applyPurchase?.reduce((a, b) => a + (b.totalLength || 0), 0)
       }
     },
     { deep: true }
@@ -506,13 +523,15 @@ async function calcTheoryWeight(row) {
 
 // 计算总长
 function calcTotalLength(row) {
-  if (isNotBlank(row.length) && row.quantity) {
-    row.totalLength = calcSectionSteelTotalLength({
-      length: row.length, // 长度
-      quantity: row.quantity // 数量
-    })
-  } else {
-    row.totalLength = undefined
+  if ((props.boolPartyA || props.noDetail) || (form.selectObj?.[row.mergeId]?.isSelected && !row.boolApplyPurchase)) {
+    if (isNotBlank(row.length) && row.quantity) {
+      row.totalLength = calcSectionSteelTotalLength({
+        length: row.length, // 长度
+        quantity: row.quantity // 数量
+      })
+    } else {
+      row.totalLength = undefined
+    }
   }
 }
 

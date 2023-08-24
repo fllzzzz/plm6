@@ -128,7 +128,7 @@ import { defineProps, ref, reactive, computed, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { projectNameFormatter } from '@/utils/project'
 import { isNotBlank, toPrecision } from '@/utils/data-type'
-import { calcSectionSteelWeight, calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
+import { calcSectionSteelTotalLength, calcSectionSteelWeight, calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
 import useMaxHeight from '@compos/use-max-height'
 
 const props = defineProps({
@@ -211,6 +211,13 @@ function rowWatch(row) {
       },
       { immediate: isImmediate }
     )
+    watch(
+      [() => row.length, () => row.quantity],
+      async () => {
+        calcTotalLength(row)
+      },
+      { immediate: isImmediate }
+    )
   }
   if (props.basicClass & matClsEnum.STEEL_PLATE.V) {
     // 计算单件理论重量
@@ -235,6 +242,18 @@ function rowWatch(row) {
     },
     { immediate: isImmediate }
   )
+}
+
+// 型材计算总长
+function calcTotalLength(row) {
+  if (isNotBlank(row.length) && row.quantity) {
+    row.totalLength = calcSectionSteelTotalLength({
+      length: row.length, // 长度
+      quantity: row.quantity // 数量
+    })
+  } else {
+    row.totalLength = undefined
+  }
 }
 
 // 计算总重

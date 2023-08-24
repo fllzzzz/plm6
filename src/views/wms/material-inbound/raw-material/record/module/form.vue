@@ -90,6 +90,11 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
           },
           isSelected: true
         }
+        if (v.basicClass & matClsEnum.SECTION_STEEL.V) {
+          if (isNotBlank(detail.purchaseOrder)) {
+            detail.editObj[v.mergeId].length = detail.purchaseOrder?.details.find(k => k.id === v.mergeId)?.length || detail.editObj[v.mergeId].length
+          }
+        }
       } else {
         if (!detail.editObj[v.mergeId].applyPurchaseObj[v.applyPurchaseId]) {
           detail.editObj[v.mergeId].applyPurchaseObj[v.applyPurchaseId] = [{ ...v }]
@@ -101,7 +106,6 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
       }
     })
   }
-  console.log(detail)
 }
 
 function handleSuccess() {
