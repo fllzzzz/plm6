@@ -85,6 +85,11 @@
               <span>{{ row.totalCompleteMete?.grossWeight || 0 }}</span>
             </template>
           </el-table-column>
+          <el-table-column align="center" prop="produceQuantity" :show-overflow-tooltip="true" label="已完成数">
+            <template #default="{ row }">
+              <span>{{ row.produceQuantity || 0 }}</span>
+            </template>
+          </el-table-column>
           <!-- <el-table-column
           v-if="crud.query.taskTypeEnum === taskTypeENUM.MACHINE_PART.V"
           align="center"
@@ -104,7 +109,7 @@
             <span>{{ row.workshop?.name }}>{{ row.productionLine?.name }}>{{ row.groups?.name }}</span>
           </template>
         </el-table-column> -->
-          <el-table-column align="center" prop="quantity" :show-overflow-tooltip="true" label="可协同数量">
+          <el-table-column align="center" prop="quantity" :show-overflow-tooltip="true" label="可协同数量" width="160px">
             <template #default="{ row }">
               <common-input-number
                 v-model="row.quantity"
@@ -114,6 +119,7 @@
                 placeholder="协同数量"
                 style="width: 100%"
               />
+              <!-- <common-button type="success" icon="el-icon-plus" size="mini" @click.stop="add(row)" /> -->
             </template>
           </el-table-column>
           <el-table-column :show-overflow-tooltip="true" prop="groupsId" label="协同生产组" min-width="150px" align="center">
@@ -160,6 +166,31 @@
       </el-form>
     </template>
   </common-drawer>
+  <!-- 一物一码 选择弹窗 -->
+  <!-- <common-dialog
+    title="选择一物一码编号"
+    v-model="oneCodeVisible"
+    :center="false"
+    :close-on-click-modal="false"
+    width="680px"
+    custom-class="code-dialog"
+  >
+    <template #titleRight>
+      <common-button type="primary" size="mini" @click="oneCodeSave">确认</common-button>
+      <span>
+        <el-checkbox
+          v-model="checkAll"
+          :indeterminate="isIndeterminate"
+          label="全选"
+          size="mini"
+          border
+          style="height: 29px"
+          @change="handleCheckAllChange"
+        />
+      </span>
+    </template>
+    <one-code-number-list v-model="curRowSelect" :list="curNumberList" :maxHeight="560" @change="handleNumberChange"></one-code-number-list>
+  </common-dialog> -->
 </template>
 
 <script setup>
@@ -170,12 +201,17 @@ import { save } from '@/api/mes/task-tracking/assistance-operate/process-assista
 import useVisible from '@compos/use-visible'
 import { ElNotification } from 'element-plus'
 import useMaxHeight from '@compos/use-max-height'
-import useTableValidate from '@compos/form/use-table-validate'
+import useTableNullValidate from '@compos/form/use-table-null-validate'
+// import oneCodeNumberList from '@/components-system/mes/one-code-number-list'
 // import { DP } from '@/settings/config'
 
 // import UploadBtn from './uploadBtn'
 
 // const permission = inject('permission')
+
+// 一物一码弹窗
+// const checkAll = ref(false)
+// const oneCodeVisible = ref(false)
 
 const cascaderRef = ref([])
 const submitLoading = ref(false)
@@ -215,15 +251,16 @@ watch(
   (val) => {
     if (val) {
       form.value.list = []
+      console.log(props.detailList, 'props.detailList')
       if (props.detailList.length) {
         props.detailList.forEach((v) => {
           const item = Object.assign(v, JSON.parse(JSON.stringify(props.detailData)))
           form.value.list.push(item)
         })
       }
-    //   else {
-    //     form.value.list.push(JSON.parse(JSON.stringify(props.detailData)))
-    //   }
+      //   else {
+      //     form.value.list.push(JSON.parse(JSON.stringify(props.detailData)))
+      //   }
     }
   },
   { immediate: true, deep: true }
@@ -254,7 +291,7 @@ const tableRules = {
   groupsId: [{ validator: validateGroupsId, required: true, message: '选择生产组', trigger: 'change' }]
 }
 
-const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules }) // 表格校验
+const { tableValidate, wrongCellMask } = useTableNullValidate({ rules: tableRules }) // 表格校验
 
 function handleSelectChange(val) {
   selections.value = val
@@ -288,6 +325,12 @@ function handleExpandChange(expend, row, index, curCascaderRef) {
 
 // --------------------------- 设置级联数据默认展开第一个【防止面板跳来跳去】 end --------------------------------
 
+// 一物一码弹窗
+// function add(row) {
+//   oneCodeVisible.value = true
+//   console.log(row, 'row')
+// }
+
 async function addRow() {
   const boolQuery = { boolUpdateGroup: true, boolCanDelete: true }
   const item = Object.assign(JSON.parse(JSON.stringify(props.detailData)), boolQuery)
@@ -300,6 +343,7 @@ function deleteRow(index) {
 async function submitIt() {
   submitLoading.value = true
   const { validResult, dealList } = tableValidate(form.value.list)
+  console.log(form.value, formRef.value, 'form.value')
   if (validResult) {
     form.value.list = dealList
   } else {
@@ -313,9 +357,9 @@ async function submitIt() {
         groupsId: v.groupsId
       }
     })
-    console.log(_list, '_list')
     await save({
-      assistList: _list
+      assistList: _list,
+      id: props.detailData.id
     })
     ElNotification({
       title: '工序协同保存成功',
@@ -330,27 +374,6 @@ async function submitIt() {
     submitLoading.value = false
   }
 }
-
-// function toBatchDelete() {
-//   if (!selections.value?.length) {
-//     ElMessage.warning('请至少选择一条数据')
-//     return
-//   }
-//   ElMessageBox.confirm(`是否确认删除所选择的班组协同？`, '提示', {
-//     confirmButtonText: '确认',
-//     cancelButtonText: '取消',
-//     type: 'warning'
-//   }).then(async () => {
-//     try {
-//       const ids = selections.value.map((v) => v.id)
-//       await del({ ids })
-//       ElNotification({ title: '班组删除成功', type: 'success' })
-//       fetch()
-//     } catch (error) {
-//       console.log('班组删除失败', error)
-//     }
-//   })
-// }
 </script>
 <style lang="scss" scoped>
 ::v-deep(.el-input__inner) {
