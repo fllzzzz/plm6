@@ -94,11 +94,18 @@
         </el-tooltip>
       <rrOperation/>
     </div>
-    <crudOperation />
+    <crudOperation>
+      <template #optLeft>
+        <export-button v-permission="crud.permission.get" :params="query" :fn="download" response-header-result>
+          下载进销存明细（根据查询条件）
+        </export-button>
+      </template>
+    </crudOperation>
   </div>
 </template>
 
 <script setup>
+import { download } from '@/api/wms/report/raw-material/psi'
 import { ref, reactive } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS, STEEL_ENUM } from '@/settings/config'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -110,6 +117,7 @@ import moment from 'moment'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
+import ExportButton from '@comp-common/export-button/index.vue'
 
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 const options = reactive({
