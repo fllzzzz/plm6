@@ -34,4 +34,41 @@ export function invoiceRecord(params) {
     params
   })
 }
+
+// 物流费变更
+export function feeChange(data) {
+  return request({
+    url: '/api/scm/logistics-order/changeFee',
+    method: 'post',
+    data
+  })
+}
+
+// 物流费变更记录
+export function feeChangeRecord(params) {
+  return request({
+    url: '/api/scm/logistics-fee-record',
+    method: 'get',
+    params
+  })
+}
+
+// 物流费变更审核
+export function feeChangeAudit(data) {
+  return request({
+    url: '/api/scm/logistics-fee-record/check',
+    method: 'put',
+    data: [data]
+  })
+}
+
+// 物流费待审核记录
+export function feeUnAudit(params) {
+  return request({
+    url: '/api/scm/logistics-fee-record/unCheckCount',
+    method: 'get',
+    params
+  })
+}
+
 export default { get }

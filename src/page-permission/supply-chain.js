@@ -91,7 +91,9 @@ export const supplierLogisticsLogPM = {
 export const supplierLogisticsPaymentPM = {
   get: ['supplier_logistics_payment:get'], // 原材料物流列表
   detail: ['supplier_logistics_payment:detail'], // 关联供方/付款/收票记录
-  print: ['supplier_logistics_payment:print'] // 入库单付款收票记录打印
+  print: ['supplier_logistics_payment:print'], // 入库单付款收票记录打印
+  freightChangeAdd: ['supplier_logistics_payment:freightChangeAdd'], // 物流费用变更新增
+  freightChangeAudit: ['supplier_logistics_payment:freightChangeAudit'] // 物流费用审核
 }
 
 // 制成品物流

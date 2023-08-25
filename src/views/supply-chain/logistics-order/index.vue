@@ -13,7 +13,7 @@
       :expand-row-keys="expandRowKeys"
       row-key="id"
     >
-      <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
+      <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
         <template #default="{ row }">
           <p>
             关联项目：<span>{{ row.projectsFullName }}</span>
@@ -23,7 +23,7 @@
           </p>
         </template>
       </el-expand-table-column>
-      <el-table-column label="序号" type="index" align="center" width="60" />
+      <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
       <el-table-column
         v-if="columns.visible('createTime')"
         key="createTime"
@@ -170,6 +170,14 @@
           <receipt-sn-clickable :receipt-types="['INBOUND']" :receipt="row.inboundReceipt" />
         </template>
       </el-table-column>
+      <el-table-column
+        v-if="columns.visible('purchaseSupplierName')"
+        key="purchaseSupplierName"
+        :show-overflow-tooltip="true"
+        prop="purchaseSupplierName"
+        label="原材料供应商"
+        min-width="200"
+      />
       <el-table-column
         v-if="columns.visible('supplier.name')"
         key="supplier.name"

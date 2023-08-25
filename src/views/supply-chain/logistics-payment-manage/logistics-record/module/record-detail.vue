@@ -16,6 +16,7 @@
       <common-radio-button
         v-model="freightChangeType"
         :options="freightChangeTypeEnum.ENUM"
+        :unshowVal="props.type === logisticsSearchTypeEnum.MATERIAL.V?[freightChangeTypeEnum.CANCEL.V]:[]"
         showOptionAll
         type="enumSL"
         size="small"

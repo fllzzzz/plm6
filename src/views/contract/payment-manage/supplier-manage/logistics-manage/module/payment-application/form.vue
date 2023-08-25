@@ -373,6 +373,7 @@ watch(
   () => crud.status.cu,
   (val) => {
     if (val > 0) {
+      selectionData.value = []
       resetSubmit()
     }
   },
@@ -417,7 +418,7 @@ CRUD.HOOK.afterToAdd = () => {
 }
 
 async function fetchList() {
-  selectionData.value = []
+  const selectData = JSON.parse(JSON.stringify(selectionData.value))
   let _list = []
   tableLoading.value = true
   const params = form.id ? { ...query.value, supplierId: crud.query.supplierId, supplierPaymentId: form.id } : { ...query.value, supplierId: crud.query.supplierId }
@@ -427,11 +428,26 @@ async function fetchList() {
   } catch (error) {
     console.log('获取物流是否付款记录失败', error)
   } finally {
+    if (selectData.length > 0) {
+      selectData.forEach(v => {
+        if (_list.findIndex(k => k.id === v.id) < 0) {
+          _list.unshift(v)
+        }
+      })
+    }
     list.value = _list
     if (list.value.length > 0) {
       list.value.map(v => {
         v.canSelect = !v.boolPayment
       })
+      if (selectData.length > 0) {
+        selectData.forEach(v => {
+          const findVal = list.value.find(k => k.id === v.id)
+          nextTick(() => {
+            detailRef.value?.toggleRowSelection(findVal, true)
+          })
+        })
+      }
       if (form.logisticsCargoIds.length > 0) {
         for (let i = 0; i < form.logisticsCargoIds.length; i++) {
           const findVal = list.value.find(v => v.id === form.logisticsCargoIds[i])

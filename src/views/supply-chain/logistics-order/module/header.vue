@@ -42,7 +42,7 @@
         clearable
         class="filter-item"
         @change="crud.toQuery"
-        placeholder="可选择供应商搜索"
+        placeholder="可选择物流供应商搜索"
         show-hide
         style="width: 250px"
       />
@@ -63,6 +63,16 @@
         placeholder="按采购员搜索"
         class="filter-item"
         @keyup.enter="crud.toQuery"
+      />
+      <supplier-select
+        v-model="query.purchaseSupplierId"
+        :type="showType"
+        clearable
+        class="filter-item"
+        @change="crud.toQuery"
+        placeholder="可选择原材料供应商搜索"
+        show-hide
+        style="width: 250px"
       />
       <br />
       <warehouse-project-cascader
@@ -135,7 +145,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { supplierTypeEnum } from '@enum-ms/supplier'
 import { baseMaterialTypeEnum } from '@enum-ms/wms'
@@ -161,10 +171,15 @@ const defaultQuery = {
   inboundSN: undefined, // 入库单号
   serialNumber: undefined, // 物流单号（系统）
   supplierId: undefined, // 供应商id
-  operatorName: undefined // 创建人
+  operatorName: undefined, // 创建人
+  purchaseSupplierId: undefined
 }
 
 const { crud, query } = regHeader(defaultQuery)
+
+const showType = computed(() => {
+  return supplierTypeEnum.RAW_MATERIAL.V
+})
 
 // 物流信息变化
 function handleLogisticsTransportChange() {

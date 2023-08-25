@@ -252,12 +252,10 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
     // 编辑模式，不是当前退库单的在退库中的物料 “显示退库中”
     row.showReviewPending = row.boolReviewPending && (!props.edit || (props.edit && !props.sourceReturnIds.includes(row.id)))
   })
-  console.log(data.content)
 }
 
 // 添加退库信息
 function handleAddReturn(row) {
-  console.log(row)
   const selectList = props.selectList
   const newData = reactive({
     uid: createUniqueString(), // 当前退库记录唯一id
