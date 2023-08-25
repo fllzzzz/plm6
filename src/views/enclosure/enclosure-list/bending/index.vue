@@ -78,7 +78,7 @@
               maxlength="10"
               style="width:100%;"
             />
-             <span v-else style="cursor: pointer" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span>
+             <span v-else style="cursor: pointer" @dblclick="dbClick(scope.row)">{{ scope.row.serialNumber }}</span>
             <!-- <div>{{ scope.row.serialNumber }}</div> -->
           </template>
         </el-table-column>
@@ -705,6 +705,13 @@ watch(
   },
   { deep: true, immediate: true }
 )
+
+function dbClick(row) {
+  if (!row.attachmentId) {
+    return
+  }
+  drawingPreview(row)
+}
 
 getTechnicalTypeStatus()
 
