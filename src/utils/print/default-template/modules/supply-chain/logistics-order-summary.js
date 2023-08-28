@@ -203,15 +203,16 @@ const logisticsOrderSummary = {
       { show: true, key: 'licensePlate', title: '车牌号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.LICENSE_PLATE.K },
       { show: true, key: 'basicClass', title: '物料种类', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.ENUM.K, format: { enum: 'matClsEnum', key: 'L' }},
       { show: true, key: 'loadingWeight', title: '装载重量（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 16, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, unit: weightUnitEnum.KG.V }},
-      { show: true, key: 'invoiceType', title: '票据类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 14, type: typeEnum.ENUM.K, format: { enum: 'invoiceTypeEnum', key: 'SL' }},
+      { show: true, key: 'invoiceType', title: '票据类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 12, type: typeEnum.ENUM.K, format: { enum: 'invoiceTypeEnum', key: 'SL' }},
       { show: true, key: 'taxRate', title: '税率', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.RATE.K, format: { precision: 2 }},
       { show: true, key: 'freight', title: '运费（含税）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 14, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
       { show: true, key: 'amountExcludingVAT', title: '不含税金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 14, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
       { show: true, key: 'inputVAT', title: '进项税额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 16, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
       { show: false, key: 'purchaseOrder.serialNumber', title: '采购合同编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 14, type: typeEnum.GUID.K },
-      { show: true, key: 'inboundReceipt.serialNumber', title: '入库单号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 16, type: typeEnum.GUID.K },
-      { show: false, key: 'applicantName', title: '操作员', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.USER_NAME.K },
-      { show: true, key: 'purchaseUserName', title: '采购员', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.USER_NAME.K },
+      { show: true, key: 'inboundReceipt.serialNumber', title: '入库单号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 12, type: typeEnum.GUID.K },
+      { show: false, key: 'applicantName', title: '操作员', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.USER_NAME.K },
+      { show: true, key: 'purchaseUserName', title: '采购员', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.USER_NAME.K },
+      { show: true, key: 'purchaseSupplierName', title: '原材料供应商', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 16, type: typeEnum.COMPANY_NAME.K },
       { show: true, key: 'supplierName', title: '物流公司', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 16, type: typeEnum.COMPANY_NAME.K }
     ]
   }
