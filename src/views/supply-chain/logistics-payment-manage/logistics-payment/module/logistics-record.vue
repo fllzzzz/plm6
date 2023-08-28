@@ -322,7 +322,7 @@ async function fetchList() {
 
 // 打开入库记录
 function openRecord(row) {
-  currentRow.value = row.sourceRow
+  currentRow.value = row
   nextTick(() => {
     recordVisible.value = true
   })
