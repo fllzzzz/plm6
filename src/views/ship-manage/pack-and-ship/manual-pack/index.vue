@@ -75,9 +75,9 @@
         @change="fetchMonomerAndArea"
       />
       <area-tabs
-        v-if="packType === packTypeEnum.ENCLOSURE.V"
+        v-if="packType === packTypeEnum.ENCLOSURE.V && areaInfo.length"
         class="filter-item"
-        :style="areaInfo.length > 0 ? 'width:calc(100% - 230px)' : 'width:calc(100% - 380px)'"
+        style="width: 100%"
         v-model="batchId"
         :area-info="areaInfo"
         :default-tab="defaultTab"
@@ -93,9 +93,7 @@
       :project-id="globalProjectId"
       :workshop-id="workshopId"
       :monomer-id="monomerId"
-      :area-id="areaId"
-      :batch-id="batchId"
-      :category="category"
+      :area-id="packType === packTypeEnum.ENCLOSURE.V ? batchId : areaId"
       @add="beforeAddIn"
     />
     <pack-list-drawer v-model:visible="packVisible" :bagId="bagId" :type-val="typeVal" :edit-data="editData" @handleSuccess="handleSuccess" />
@@ -164,7 +162,7 @@ const { globalProjectId, globalProject } = mapGetters(['globalProjectId', 'globa
 const packType = ref()
 // const factoryId = ref()
 const workshopId = ref()
-const category = ref()
+// const category = ref()
 const monomerId = ref()
 const areaId = ref()
 const batchId = ref()
@@ -458,7 +456,10 @@ function tabClick(val) {
 </script>
 
 <style lang="scss" scoped>
-.app-container {
+.manual-pack-wrapper {
+  >.head-container {
+    margin-bottom: 0;
+  }
   .app-container {
     padding: 0;
   }

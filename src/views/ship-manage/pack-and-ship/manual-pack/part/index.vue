@@ -230,11 +230,7 @@ const props = defineProps({
     type: [String, Number],
     default: undefined
   },
-  workShopId: {
-    type: [String, Number],
-    default: undefined
-  },
-  category: {
+  workshopId: {
     type: [String, Number],
     default: undefined
   },
@@ -258,9 +254,11 @@ const ids = computed(() => {
 })
 
 watch(
-  () => [props.projectId, props.workshopId, props.monomerId, props.areaId, props.category],
+  () => [props.projectId, props.workshopId, props.monomerId, props.areaId],
   () => {
-    crud.toQuery()
+    setTimeout(() => {
+      crud.toQuery()
+    }, 100)
   },
   { immediate: true }
 )
@@ -268,7 +266,6 @@ watch(
 CRUD.HOOK.beforeRefresh = () => {
   crud.query.projectId = props.projectId
   crud.query.workshopId = props.workshopId
-  crud.query.category = props.category
   crud.query.monomerId = props.monomerId
   crud.query.areaId = props.areaId
 }
