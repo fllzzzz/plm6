@@ -273,7 +273,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 .wrap {
   display: flex;
   .wrap-left {
-    width: 380px;
+    width: 400px;
     margin-right: 20px;
   }
   .wrap-right {
