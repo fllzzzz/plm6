@@ -27,7 +27,7 @@
     class="filter-item"
     @keyup.enter="toQuery"
   />
-  <el-input
+  <!-- <el-input
     v-model.trim="queryVO.heatNoAndBatchNo"
     clearable
     style="width: 200px"
@@ -35,11 +35,14 @@
     placeholder="炉批号"
     class="filter-item"
     @keyup.enter="toQuery"
-  />
+  /> -->
+  <batch-input class="filter-item" style="width: 200px" placeholder="炉批号" :query="props.query" @to-query="toQuery" />
 </template>
 
 <script setup>
 import { defineProps, defineEmits, ref, watchEffect } from 'vue'
+
+import BatchInput from './batch-input.vue'
 
 const emit = defineEmits(['to-query'])
 
