@@ -27,7 +27,9 @@
         </template>
         <div style="width: 100%; overflow: hidden; text-overflow: ellipsis">
           <svg-icon style="margin-right: 5px" :icon-class="data.icon" />
-          <span :style="`font-size:${data.fontSize}px;${node.isLeaf ? '' : `font-weight: bold;`}`">{{ node.label }}</span>
+          <el-tooltip effect="dark" :content="node.label || ''" placement="top-start">
+            <span :style="`font-size:${data.fontSize}px;${node.isLeaf ? '' : `font-weight: bold;`}`">{{ node.label }}</span>
+          </el-tooltip>
         </div>
         <!-- <span style="float: right; padding: 0 2px 0 6px; font-size: 10px; color: #ccc">
             <span>{{ data.type }}</span>
