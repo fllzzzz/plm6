@@ -15,7 +15,7 @@
             class="filter-item"
           />
           <component-radio-button
-            v-if="typeVal === packEnum.BOX.V"
+            v-else
             v-model="packType"
             :options="bridgePackTypeEnum.ENUM"
             :disabledVal="[bridgePackTypeEnum.AUXILIARY_MATERIAL.V]"
@@ -33,7 +33,7 @@
             @change="handleProjectChange"
           /> -->
           <common-select
-            v-if="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
+            v-show="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
             v-model="workshopId"
             :options="workshopList"
             type="other"
@@ -67,15 +67,16 @@
           /> -->
         <!-- <monomer-select v-model="monomerId" :default="false" clearable :project-id="globalProjectId" class="filter-item" /> -->
       </div>
-      <monomer-select-area-tabs
-        v-if="packType === packTypeEnum.STRUCTURE.V || packType === packTypeEnum.MACHINE_PART.V || typeVal === packEnum.BOX.V"
-        :project-id="globalProjectId"
-        :default="false"
-        needConvert
-        @change="fetchMonomerAndArea"
-      />
+      <span v-show="packType === packTypeEnum.STRUCTURE.V || packType === packTypeEnum.MACHINE_PART.V || typeVal === packEnum.BOX.V">
+        <monomer-select-area-tabs
+          :project-id="globalProjectId"
+          :default="false"
+          needConvert
+          @change="fetchMonomerAndArea"
+        />
+      </span>
       <area-tabs
-        v-if="packType === packTypeEnum.ENCLOSURE.V && areaInfo.length"
+        v-show="packType === packTypeEnum.ENCLOSURE.V && areaInfo.length"
         class="filter-item"
         style="width: 100%"
         v-model="batchId"
@@ -348,10 +349,6 @@ const currentView = computed(() => {
       return partTable
     case packTypeEnum.AUXILIARY_MATERIAL.V:
       return auxiliaryMaterialTable
-    case bridgePackTypeEnum.BOX.V:
-      return boxTable
-    case bridgePackTypeEnum.MACHINE_PART.V:
-      return cellTable
     default:
       return ''
   }
