@@ -123,6 +123,7 @@
           min-width="120px"
         />
         <el-table-column key="measureUnit" prop="measureUnit" label="单位" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="mete" prop="mete" label="核算量" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="quantity" prop="quantity" label="清单量" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="cargoQuantity" prop="cargoQuantity" label="已发运" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="unCargoQuantity" prop="unCargoQuantity" label="未发运" align="center" :show-overflow-tooltip="true" />

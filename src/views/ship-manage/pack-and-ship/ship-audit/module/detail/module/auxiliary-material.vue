@@ -9,6 +9,7 @@
     </el-table-column>
     <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" />
     <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" />
+    <el-table-column :show-overflow-tooltip="true" prop="shipMete" label="核算量" align="center" />
     <el-table-column prop="showQuantity" label="数量" align="center" />
     <!-- <el-table-column :show-overflow-tooltip="true" label="计量单位" align="center">
       <span>件</span>
@@ -29,11 +30,11 @@ import { defineProps } from 'vue'
 defineProps({
   list: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   maxHeight: {
     type: [String, Number],
-    default: undefined,
-  },
+    default: undefined
+  }
 })
 </script>

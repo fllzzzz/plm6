@@ -17,6 +17,7 @@
       <el-table-column v-if="columns.visible('name')" key="name" prop="name" label="名称" align="center" />
       <el-table-column v-if="columns.visible('specification')" key="specification" prop="specification" label="规格" align="center" />
       <el-table-column v-if="columns.visible('measureUnit')" key="measureUnit" prop="measureUnit" label="单位" align="center" />
+      <el-table-column v-if="columns.visible('mete')" key="mete" prop="mete" label="核算量" align="center" />
       <el-table-column
         v-if="columns.visible('quantity')"
         key="quantity"

@@ -24,9 +24,9 @@
       </tr>
       <tr v-if="packageInfo.productType === packTypeEnum.AUXILIARY_MATERIAL.V">
         <td>名称</td>
-        <td>单位</td>
+        <td>核算单位</td>
         <td>规格</td>
-        <td>数量</td>
+        <td>核算量</td>
       </tr>
       <tr v-if="packageInfo.productType === packTypeEnum.ENCLOSURE.V">
         <td>编号</td>
@@ -48,9 +48,9 @@
       <template v-if="packageInfo.productType === packTypeEnum.AUXILIARY_MATERIAL.V">
         <tr v-for="(item, index) in breakUpList[page - 1]" :key="index">
           <td class="col-1">{{ item.name }}</td>
-          <td class="col-1">{{ item.measureUnit }}</td>
+          <td class="col-1">{{ item.accountingUnit }}</td>
           <td class="col-1">{{ item.specification }}</td>
-          <td class="col-1">{{ item.quantity }}</td>
+          <td class="col-1">{{ item.mete }}</td>
         </tr>
       </template>
       <template v-if="packageInfo.productType === packTypeEnum.ENCLOSURE.V">
@@ -100,9 +100,9 @@
       </tr>
       <tr>
         <td>名称</td>
-        <td>单位</td>
+        <td>核算单位</td>
         <td>规格</td>
-        <td>数量</td>
+        <td>核算量</td>
       </tr>
       <!-- <tr v-if="packageInfo.productType === packTypeEnum.ENCLOSURE.V">
         <td>编号</td>
@@ -161,6 +161,7 @@ const breakUpList = computed(() => {
   for (var i = 0, len = packageInfo.value.list?.length; i < len; i += 11) {
     _list.push(packageInfo.value.list.slice(i, Math.min(i + 11, len)))
   }
+  console.log(_list)
   return _list
 })
 const structureData = computed(() => {

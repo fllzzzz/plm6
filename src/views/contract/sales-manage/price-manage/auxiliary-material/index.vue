@@ -29,6 +29,8 @@
         align="center"
         min-width="120"
       />
+      <el-table-column v-if="columns.visible('accountingUnit')" prop="accountingUnit" :show-overflow-tooltip="true" label="核算单位" align="center" min-width="100" />
+      <el-table-column v-if="columns.visible('mete')" prop="mete" :show-overflow-tooltip="true" label="核算量" align="center" min-width="100" />
       <el-table-column v-if="columns.visible('measureUnit')" :show-overflow-tooltip="true" prop="measureUnit" label="单位" align="center" />
       <el-table-column v-if="columns.visible('quantity')" :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" />
       <el-table-column
@@ -122,7 +124,7 @@ const { changedCellMask } = useTableChange({ fieldMap: sourceMap })
 // 价格变动
 function handlePrice(row) {
   row.unitPrice = row.newUnitPrice
-  row.totalPrice = row.quantity * (row.unitPrice || 0)
+  row.totalPrice = row.mete * (row.unitPrice || 0)
 }
 
 defineExpose({
