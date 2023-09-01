@@ -48,3 +48,17 @@ export function exportDetailsExcel(params) {
     params
   })
 }
+
+/**
+ * 入库明细excel导出（带退货数据）
+ */
+export function exportSalesReturnExcel(params) {
+  return request({
+    module: 'wms',
+    url: `report/raw-materials/inboundAndReject/details/excel`,
+    method: 'get',
+    responseType: 'blob',
+    timeout: 60000000,
+    params
+  })
+}

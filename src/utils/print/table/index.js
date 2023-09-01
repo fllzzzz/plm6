@@ -800,7 +800,7 @@ function setHeaderFieldStyle(globalConfig) {
   const itemHeight = setItemHeight(config)
   isNotBlank(fields) &&
     fields.forEach((field) => {
-      let _style = ''
+      let _style = 'overflow: hidden;text-overflow: ellipsis;white-space: nowrap;'
       if (isNotBlank(field.width)) {
         _style += `width:${field.width}${globalConfig.unit};`
       } else if (isNotBlank(field.maxWidth)) {
@@ -844,9 +844,11 @@ function setFooterFieldStyle(globalConfig) {
  */
 function setItemHeight(config) {
   const width = config.width
-  const fields = config.fields
+  const fields = config.fields.filter(row => isNotBlank(row.show) ? row.show : true)
   let line = 1
   let calcWidth = 0
+  // 最小高度：字体大小（pt） * 默认行高 * 0.3528（转成mm）
+  const minHeight = config.size * 1.5 * 0.3528
 
   isNotBlank(fields) &&
     fields.forEach((field) => {
@@ -858,8 +860,9 @@ function setItemHeight(config) {
         calcWidth = field.width
       }
     })
+  const height = (config.height / line)
   // 减margin
-  return (config.height / line) - 2
+  return (height < minHeight ? minHeight : height) - 2
 }
 
 /**
