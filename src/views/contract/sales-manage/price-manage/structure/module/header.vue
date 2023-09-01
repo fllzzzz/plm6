@@ -1,27 +1,6 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
-      <div>
-        <!-- <monomer-select
-          v-model="query.monomerId"
-          :project-id="projectId"
-          class="filter-item"
-          @change="handleMonomerChange"
-          @getAreaInfo="getAreaInfo"
-        />
-        <common-select
-          v-model="query.areaId"
-          :options="areaInfo"
-          type="other"
-          :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
-          size="small"
-          clearable
-          placeholder="请选择区域"
-          class="filter-item"
-          style="width:200px;"
-          @change="areaChange"
-        /> -->
-      </div>
       <el-input
         v-model="query.name"
         placeholder="可输入名称搜索"
@@ -49,7 +28,7 @@
             <common-button type="warning" size="mini" @click="handelModifying(false, true)">取消录入</common-button>
             <common-button type="success" size="mini" @click="confirmModifying">预览并保存</common-button>
           </span>
-          <common-button v-else type="primary" size="mini" @click="handelModifying(true)">录入价格</common-button>
+          <common-button v-else type="primary" size="mini" @click="handelModifying(true)" :disabled="crud.selections?.length===0">录入价格</common-button>
         </span>
         <print-table
           v-permission="crud.permission.print"
@@ -80,7 +59,7 @@
         </span>
       </template>
     </crudOperation>
-    <mPreview v-model="previewVisible" :modified-data="modifiedData" v-bind="$attrs" :params="previewParams" @success="handleSuccess" />
+    <mPreview v-model="previewVisible" :modified-data="submitList" v-bind="$attrs" :params="previewParams" @success="handleSuccess" />
   </div>
 </template>
 
@@ -91,10 +70,9 @@ import { ref, watch, nextTick, inject, computed, defineExpose, defineEmits, defi
 import checkPermission from '@/utils/system/check-permission'
 import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { convertUnits } from '@/utils/convert/unit'
-import { toThousand } from '@/utils/data-type/number'
-import { emptyTextFormatter } from '@/utils/data-type'
 import { pricingMannerEnum } from '@enum-ms/contract'
 import { DP } from '@/settings/config'
+import { isNotBlank } from '@data-type/index'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import { regHeader } from '@compos/use-crud'
@@ -112,6 +90,10 @@ const props = defineProps({
   showAble: {
     type: Boolean,
     default: false
+  },
+  submitList: {
+    type: Array,
+    default: () => []
   }
 })
 
@@ -138,11 +120,6 @@ watch(
   },
   { immediate: true }
 )
-
-// 有变动的数据
-const modifiedData = computed(() => {
-  return crud.data.filter((v) => (v.pricingManner !== v.originPricingManner && v.unitPrice !== '-') || v.unitPrice !== v.originUnitPrice)
-})
 
 // 预览参数
 const previewParams = computed(() => {
@@ -172,13 +149,14 @@ const { crud, query, CRUD } = regHeader(defaultQuery)
 
 // 刷新数据后
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
-  data.content.forEach((v) => {
+  data.content.forEach((v, index) => {
     v.totalWeight = convertUnits(v.totalWeight, 'kg', 't', DP.COM_WT__T)
-    v.newUnitPrice = v.unitPrice // number类型的单价（unitPrice可能会有千位符）
-    v.originNewUnitPrice = v.newUnitPrice
-    v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice, decimalPrecision.value.contract))
-    v.totalPrice = (v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalWeight : v.totalLength) * (v.newUnitPrice || 0)
+    v.pricingManner = isNotBlank(v.pricingManner) ? v.pricingManner : -1
+    v.unitPrice = v.unitPrice || '同上'
+    v.originUnitPrice = v.unitPrice
+    v.totalPrice = (v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalWeight : v.totalLength) * (v.unitPrice && typeof v.unitPrice === 'number' ? v.unitPrice : 0)
     v.originPricingManner = v.pricingManner
+    v.orderIndex = index + 1
   })
   fetchCost()
 }
@@ -212,9 +190,9 @@ function handelModifying(status, reset = false) {
   if (reset) {
     crud.data.forEach((v) => {
       v.unitPrice = v.originUnitPrice
-      v.newUnitPrice = v.originNewUnitPrice
+      // v.newUnitPrice = v.originNewUnitPrice
       v.pricingManner = v.originPricingManner
-      v.totalPrice = (v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalWeight : v.totalLength) * (v.newUnitPrice || 0)
+      v.totalPrice = (v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalWeight : v.totalLength) * (v.unitPrice && typeof v.unitPrice === 'number' ? v.unitPrice : 0)
     })
   }
   modifying.value = status
