@@ -129,26 +129,6 @@ const props = defineProps({
     type: [String, Number],
     default: undefined
   },
-  workShopId: {
-    type: [String, Number],
-    default: undefined
-  },
-  category: {
-    type: [String, Number],
-    default: undefined
-  },
-  monomerId: {
-    type: [String, Number],
-    default: undefined
-  },
-  areaId: {
-    type: [String, Number],
-    default: undefined
-  },
-  batchId: {
-    type: [String, Number],
-    default: undefined
-  },
   maxHeight: {
     type: [String, Number],
     default: undefined
@@ -161,7 +141,7 @@ const ids = computed(() => {
 })
 
 watch(
-  () => [props.projectId, props.workshopId, props.monomerId, props.category],
+  () => [props.projectId],
   () => {
     crud.toQuery()
   },
@@ -170,9 +150,6 @@ watch(
 
 CRUD.HOOK.beforeRefresh = () => {
   crud.query.projectId = props.projectId
-  crud.query.workshopId = props.workshopId
-  crud.query.category = props.category
-  crud.query.monomerId = props.monomerId
 }
 
 function add(row) {

@@ -260,7 +260,9 @@ const ids = computed(() => {
 watch(
   () => [props.projectId, props.workshopId, props.monomerId, props.areaId],
   () => {
-    crud.toQuery()
+    setTimeout(() => {
+      crud.toQuery()
+    }, 100)
   },
   { immediate: true, deep: true }
 )
