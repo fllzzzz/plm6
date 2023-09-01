@@ -6,11 +6,12 @@
     :project-id="projectId"
     class="filter-item"
     :default="false"
+    style="width: 200px"
     @getAreaInfo="getAreaInfo"
   />
   <area-tabs
     class="filter-item"
-    :style="areaInfo.length>0?'width:calc(100% - 230px)':'width:calc(100% - 380px)'"
+    style="width:calc(100% - 206px);marginRight: 0px"
     v-model="areaId"
     :area-info="areaInfo"
     :default-tab="defaultTab"

@@ -21,7 +21,7 @@
         <common-select
           v-model="form.type"
           :options="workshopTypeEnum.ENUM"
-          :unshowOptions="flag ? [workshopTypeEnum.BRIDGE.K, workshopTypeEnum.ENCLOSURE.K] : [workshopTypeEnum.BRIDGE.K]"
+          :unshowOptions="workshopTypeUnShowOptions"
           type="enum"
           size="small"
           placeholder="车间类型"
@@ -45,12 +45,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { mapGetters } from '@/store/lib'
 import { workshopTypeEnum } from '@enum-ms/common'
 
-const { flag } = mapGetters(['flag'])
+const { flag, hasBridgeMenu } = mapGetters(['flag', 'hasBridgeMenu'])
 const formRef = ref()
 
 const defaultForm = {
@@ -78,6 +78,17 @@ const rules = {
   ],
   remark: [{ max: 500, message: '不能超过 500 个字符', trigger: 'blur' }]
 }
+
+const workshopTypeUnShowOptions = computed(() => {
+  const unshowOptions = []
+  if (!hasBridgeMenu.value) {
+    unshowOptions.push(workshopTypeEnum.BRIDGE.K)
+  }
+  if (flag.value) {
+    unshowOptions.push(workshopTypeEnum.ENCLOSURE.K)
+  }
+  return unshowOptions
+})
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

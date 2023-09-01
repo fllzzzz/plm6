@@ -13,14 +13,16 @@
   >
     <el-table-column :show-overflow-tooltip="true" prop="index" label="序号" align="center" width="60" type="index" />
     <el-table-column :show-overflow-tooltip="true" prop="project" key="project.shortName" label="项目" min-width="120" />
+    <el-table-column :show-overflow-tooltip="true" prop="monomerName" key="monomerName" label="单体" min-width="100" />
+    <el-table-column :show-overflow-tooltip="true" prop="areaName" key="areaName" label="区域" width="80" />
     <el-table-column :show-overflow-tooltip="true" prop="serialNumber" key="serialNumber" label="编号" align="center" />
     <el-table-column :show-overflow-tooltip="true" prop="specification" key="specification" label="规格" align="center" />
     <el-table-column :show-overflow-tooltip="true" prop="material" key="material" label="材质" align="center" />
     <el-table-column :show-overflow-tooltip="true" prop="quantity" key="quantity" label="数量" align="center" />
-    <el-table-column :show-overflow-tooltip="true" prop="netWeight" key="netWeight" label="单净重（kg）" align="center" />
-    <el-table-column :show-overflow-tooltip="true" prop="grossWeight" key="grossWeight" label="单毛重（kg）" align="center" />
-    <el-table-column :show-overflow-tooltip="true" prop="totalNetWeight" key="totalNetWeight" label="总净重（kg）" align="center" />
-    <el-table-column :show-overflow-tooltip="true" prop="totalGrossWeight" key="totalGrossWeight" label="总毛重（kg）" align="center" />
+    <el-table-column :show-overflow-tooltip="true" prop="netWeight" key="netWeight" :label="`单净重\n（kg）`" align="center" />
+    <el-table-column :show-overflow-tooltip="true" prop="grossWeight" key="grossWeight" :label="`单毛重\n（kg）`" align="center" />
+    <el-table-column :show-overflow-tooltip="true" prop="totalNetWeight" key="totalNetWeight" :label="`总净重\n（kg）`" align="center" />
+    <el-table-column :show-overflow-tooltip="true" prop="totalGrossWeight" key="totalGrossWeight" :label="`总毛重\n（kg）`" align="center" />
     <el-table-column :show-overflow-tooltip="true" prop="picturePath" key="picturePath" label="图形" align="center" width="150">
       <template v-slot="scope">
         <!-- <div v-if="scope.row.picturePath" style="width: 100%; height: 80px">

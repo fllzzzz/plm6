@@ -78,7 +78,7 @@
               maxlength="10"
               style="width:100%;"
             />
-             <span v-else style="cursor: pointer" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span>
+             <span v-else style="cursor: pointer" @dblclick="dbClick(scope.row)">{{ scope.row.serialNumber }}</span>
             <!-- <div>{{ scope.row.serialNumber }}</div> -->
           </template>
         </el-table-column>
@@ -403,6 +403,12 @@
             <common-button size="mini" type="primary" icon="el-icon-view" v-permission="permission.drawDownload" @click="drawingPreview(scope.row)" v-if="scope.row.attachmentId"/>
           </template>
         </el-table-column>
+        <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="上传时间" align="center" show-overflow-tooltip width="110">
+          <template v-slot="scope">
+            {{scope.row.createTime?parseTime(scope.row.createTime,'{y}-{m}-{d}'):'-'}}
+          </template>
+        </el-table-column>
+        <el-table-column v-if="columns.visible('userName')" key="userName" prop="userName" label="上传人" align="center" show-overflow-tooltip width="100" />
         <!--状态、编辑与删除-->
         <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" align="center" width="70px" fixed="right">
           <template v-slot="scope">
@@ -477,6 +483,7 @@ import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import { mapGetters } from '@/store/lib'
+import { parseTime } from '@/utils/date'
 
 import { DP } from '@/settings/config'
 import { processingEnum } from '@enum-ms/plan'
@@ -553,6 +560,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['enclosurePlanId'],
+    invisibleColumns: ['createTime', 'userName'],
     crudApi: { ...crudApi },
     hasPagination: true
   },
@@ -698,6 +706,13 @@ watch(
   { deep: true, immediate: true }
 )
 
+function dbClick(row) {
+  if (!row.attachmentId) {
+    return
+  }
+  drawingPreview(row)
+}
+
 getTechnicalTypeStatus()
 
 // 获取技术交底配置状态
@@ -821,7 +836,7 @@ function getTotalData(row) {
     row.totalLength = (row.length * row.quantity) / 1000
     thicknessChange(row)
   }
-  if (crud.query.category === TechnologyTypeAllEnum.BENDING.V) {
+  if (crud.query.category === TechnologyTypeAllEnum.BENDING.V || (crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V || crud.query.category === TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V)) {
     if (row.length && row.quantity && row.unfoldedWidth) {
       row.totalArea = (row.unfoldedWidth * row.length * row.quantity) / 1000000
     }

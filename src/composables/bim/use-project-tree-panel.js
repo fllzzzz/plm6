@@ -1,7 +1,7 @@
-import { getProjectTree, getIntegrateMonomer } from '@/api/bim/model'
+import { getProjectTree, getBridgeProjectTree, getIntegrateMonomer } from '@/api/bim/model'
 import { ref, watch } from 'vue'
 
-export default function useProjectTreePanel({ props, bimModel, modelStatus, viewerPanel, viewProAreaTree, setSelectedComponentsByObjectData, clearSelectedComponents, addBlinkByIds, removeBlink, getModelViewSize }) {
+export default function useProjectTreePanel({ props, bimModel, modelStatus, viewerPanel, viewProAreaTree, setSelectedComponentsByObjectData, clearSelectedComponents, addBlinkByIds, removeBlink, getModelViewSize, isBridgeProject }) {
   const areaList = ref([])
   const monomerMap = ref({})
 
@@ -190,7 +190,8 @@ export default function useProjectTreePanel({ props, bimModel, modelStatus, view
     let _treeApi
     // 获取区域数据
     try {
-      const { content } = await getProjectTree(modelStatus.value.fileId)
+      const getApi = isBridgeProject.value ? getBridgeProjectTree : getProjectTree
+      const { content } = await getApi(modelStatus.value.fileId)
       areaList.value = content
       for (let i = 0; i < content.length; i++) {
         const _areaItem = content[i]

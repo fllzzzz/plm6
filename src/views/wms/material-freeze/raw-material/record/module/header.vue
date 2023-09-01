@@ -2,7 +2,7 @@
   <div class="head-container">
     <div v-if="crud.searchToggle">
       <!-- 物料查询相关 -->
-      <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery" show-project-warehouse-type>
+      <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery" multiple show-project-warehouse-type>
         <template #firstItem>
           <common-radio-button
             v-model="query.freezeType"

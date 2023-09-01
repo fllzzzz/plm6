@@ -92,6 +92,10 @@ const props = defineProps({
   productType: {
     type: Number,
     default: undefined
+  },
+  projectType: {
+    type: Number,
+    default: undefined
   }
 })
 
@@ -102,6 +106,10 @@ provide(
 provide(
   'productType',
   computed(() => props.productType)
+)
+provide(
+  'projectType',
+  computed(() => props.projectType)
 )
 
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'modelValue', showHook: initPreview, closeHook: closeHandle })

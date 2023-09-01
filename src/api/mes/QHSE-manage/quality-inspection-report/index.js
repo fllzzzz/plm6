@@ -30,6 +30,21 @@ export function detail(params) {
   })
 }
 
+/**
+ *
+ * 获取质检详情工序列表
+ * @export
+ * @returns
+ */
+export function getProcess(params) {
+  return request({
+    module: 'mes',
+    url: 'report/inspection/summary/details/getprocesslist',
+    method: 'get',
+    params
+  })
+}
+
 export default {
   get
 }

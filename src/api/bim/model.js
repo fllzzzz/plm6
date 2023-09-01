@@ -129,6 +129,15 @@ export function getArtifactStatus({ fileId, menuBar }) {
   })
 }
 
+export function getBridgeArtifactStatus({ fileId, menuBar }) {
+  return request({
+    url: 'api/model/3DModel/bridge/status',
+    method: 'get',
+    timeout: 600000, // 后台处理数据过慢
+    params: { fileId, menuBar }
+  })
+}
+
 /**
  * 集成模型状态
  */
@@ -168,6 +177,19 @@ export function getProjectTree(fileId) {
 }
 
 /**
+ * 获取项目树构件信息
+ * @param {number} fileId 单体id
+ */
+export function getBridgeProjectTree(fileId) {
+  return request({
+    url: '/api/model/3DModel/bridge/project/tree',
+    method: 'get',
+    timeout: 600000,
+    params: { fileId }
+  })
+}
+
+/**
  * 获取构件信息
  * @param {number} fileId 文件id
  * @param {number} elementId 元件id
@@ -175,6 +197,20 @@ export function getProjectTree(fileId) {
 export function getArtifactInfo({ fileId, elementId, menuBar }) {
   return request({
     url: '/api/model/3DModel/artifact',
+    method: 'get',
+    timeout: 600000,
+    params: { fileId, elementId, menuBar }
+  })
+}
+
+/**
+ * 获取构件信息
+ * @param {number} fileId 文件id
+ * @param {number} elementId 元件id
+ */
+export function getBridgeArtifactInfo({ fileId, elementId, menuBar }) {
+  return request({
+    url: '/api/model/3DModel/bridge/box',
     method: 'get',
     timeout: 600000,
     params: { fileId, elementId, menuBar }
@@ -211,6 +247,20 @@ export function getArtifactSearch({ serialNumber, fileId }) {
 /**
  * 通过构件编号搜索
  * @param {number} serialNumber 构件编号
+ * @param {number} fileId 元件id
+ */
+export function getBridgeArtifactSearch({ serialNumber, fileId, productType }) {
+  return request({
+    url: '/api/model/3DModel/bridge/element',
+    method: 'get',
+    timeout: 600000,
+    params: { serialNumber, fileId, productType }
+  })
+}
+
+/**
+ * 通过构件编号搜索
+ * @param {number} serialNumber 构件编号
  * @param {number} projectId 元件id
  */
 export function getIntegrateArtifactSearch({ serialNumber, projectId }) {
@@ -229,6 +279,19 @@ export function getIntegrateArtifactSearch({ serialNumber, projectId }) {
 export function getArtifactProduction({ fileId, menuBar }) {
   return request({
     url: '/api/model/3DModel/artifact/production',
+    method: 'get',
+    timeout: 600000,
+    params: { fileId, menuBar }
+  })
+}
+
+/**
+ * 获取生产信息
+ * @param {number} fileId 文件id
+ */
+export function getBridgeArtifactProduction({ fileId, menuBar }) {
+  return request({
+    url: '/api/model/3DModel/bridge/production',
     method: 'get',
     timeout: 600000,
     params: { fileId, menuBar }
@@ -263,6 +326,19 @@ export function getStatusDetail({ fileId, status, menuBar }) {
 
 /**
  * 获取状态下的信息
+ * @param {number} fileId 文件id
+ */
+export function getBridgeStatusDetail({ fileId, status, menuBar }) {
+  return request({
+    url: '/api/model/3DModel/bridge/status/details',
+    method: 'get',
+    timeout: 600000,
+    params: { fileId, status, menuBar }
+  })
+}
+
+/**
+ * 获取状态下的信息
  * @param {number} projectId 文件id
  */
 export function getIntegrateStatusDetail({ projectId, status, menuBar }) {
@@ -281,6 +357,19 @@ export function getIntegrateStatusDetail({ projectId, status, menuBar }) {
 export function getLogistics({ fileId }) {
   return request({
     url: '/api/model/3DModel/logistics',
+    method: 'get',
+    timeout: 600000,
+    params: { fileId }
+  })
+}
+
+/**
+ * 获取物流信息
+ * @param {number} fileId 单体id
+ */
+export function getBridgeLogistics({ fileId }) {
+  return request({
+    url: '/api/model/3DModel/bridge/logistics',
     method: 'get',
     timeout: 600000,
     params: { fileId }

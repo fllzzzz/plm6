@@ -62,9 +62,9 @@
         needConvert
       />
       <area-tabs
-        v-if="packType === packTypeEnum.ENCLOSURE.V"
+        v-if="packType === packTypeEnum.ENCLOSURE.V && areaInfo.length"
         class="filter-item"
-        :style="areaInfo.length > 0 ? 'width:calc(100% - 230px)' : 'width:calc(100% - 380px)'"
+        style="width: 100%"
         v-model="batchId"
         :area-info="areaInfo"
         :default-tab="defaultTab"
@@ -80,9 +80,7 @@
       :project-id="globalProjectId"
       :workshop-id="workshopId"
       :monomer-id="monomerId"
-      :area-id="areaId"
-      :batch-id="batchId"
-      :category="category"
+      :area-id="packType === packTypeEnum.ENCLOSURE.V ? batchId : areaId"
       @add="beforeAddIn"
     />
     <pack-list-drawer v-model:visible="packVisible" :bagId="bagId" :edit-data="editData" @handleSuccess="handleSuccess" />
@@ -97,8 +95,24 @@
     >
       <template #titleRight>
         <common-button type="primary" size="mini" @click="oneCodeSave">确认</common-button>
+        <span>
+          <el-checkbox
+            v-model="checkAll"
+            :indeterminate="isIndeterminate"
+            label="全选"
+            size="mini"
+            border
+            style="height: 29px"
+            @change="handleCheckAllChange"
+          />
+        </span>
       </template>
-      <one-code-number-list v-model="curRowSelect" :list="curNumberList" :maxHeight="560"></one-code-number-list>
+      <one-code-number-list
+        v-model="curRowSelect"
+        :list="curNumberList"
+        :maxHeight="560"
+        @change="handleNumberChange"
+      ></one-code-number-list>
     </common-dialog>
   </div>
 </template>
@@ -134,7 +148,7 @@ const { globalProjectId } = mapGetters(['globalProjectId'])
 const packType = ref(packTypeEnum.STRUCTURE.V)
 // const factoryId = ref()
 const workshopId = ref()
-const category = ref()
+// const category = ref()
 const monomerId = ref()
 const areaId = ref()
 const batchId = ref()
@@ -147,6 +161,8 @@ const oneCodeVisible = ref(false)
 const saveOneCodeData = ref()
 const curRowSelect = ref([])
 const curNumberList = ref([])
+const checkAll = ref(false)
+const isIndeterminate = ref(false)
 // 编辑信息（打包记录页面传过来的参数）
 const editData = ref({})
 const bagId = ref()
@@ -310,8 +326,30 @@ function beforeAddIn(row, packTypeK) {
     curRowSelect.value = []
     curNumberList.value = row.originNumberList
     oneCodeVisible.value = true
+    checkAll.value = false
+    isIndeterminate.value = false
   } else {
     addIn(row, packTypeK)
+  }
+}
+
+function handleCheckAllChange() {
+  if (checkAll.value) {
+    curRowSelect.value = curNumberList.value.map((row) => row.number)
+  } else {
+    curRowSelect.value = []
+  }
+}
+
+function handleNumberChange(list) {
+  if (list.length === 0) {
+    isIndeterminate.value = false
+    checkAll.value = false
+  } else if (list.length === curNumberList.value.length) {
+    isIndeterminate.value = false
+    checkAll.value = true
+  } else {
+    isIndeterminate.value = true
   }
 }
 
@@ -346,7 +384,10 @@ function tabClick(val) {
 </script>
 
 <style lang="scss" scoped>
-.app-container {
+.manual-pack-wrapper {
+  >.head-container {
+    margin-bottom: 0;
+  }
   .app-container {
     padding: 0;
   }
