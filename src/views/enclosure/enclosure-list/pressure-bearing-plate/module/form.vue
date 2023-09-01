@@ -578,7 +578,7 @@ function getTotalData(row) {
     row.totalLength = row.length * row.quantity / 1000
     thicknessChange(row)
   }
-  if (crud.query.category === TechnologyTypeAllEnum.BENDING.V) {
+  if (crud.query.category === TechnologyTypeAllEnum.BENDING.V || (crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V || crud.query.category === TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V)) {
     if (row.length && row.quantity && row.unfoldedWidth) {
       row.totalArea = row.unfoldedWidth * row.length * row.quantity / 1000000
     }

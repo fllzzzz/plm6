@@ -124,6 +124,7 @@
         <el-tag type="success" size="medium" effect="plain" class="filter-item">
           <span>{{ `总长度:${sumData.totalLength?sumData.totalLength.toFixed(DP.MES_ENCLOSURE_L__M):0}m` }}</span>
           <span>{{ ` | 总数量:${sumData.totalQuantity || 0}张` }}</span>
+          <span>{{ ` | 总面积:${sumData.totalArea?sumData.totalArea.toFixed(DP.COM_AREA__M2):0}㎡` }}</span>
         </el-tag>
       </template>
       <template #viewLeft>

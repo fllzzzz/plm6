@@ -3,15 +3,6 @@
     <template #optLeft>
       <div v-show="crud.searchToggle">
         <el-input
-          v-model="query.name"
-          size="small"
-          placeholder="输入名称搜索"
-          style="width: 170px"
-          class="filter-item"
-          clearable
-          @keyup.enter="crud.toQuery"
-        />
-        <el-input
           v-model="query.serialNumber"
           size="small"
           placeholder="输入编号搜索"
@@ -77,7 +68,6 @@ import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {
-  name: void 0,
   minLength: void 0,
   maxLength: void 0,
   serialNumber: void 0,
