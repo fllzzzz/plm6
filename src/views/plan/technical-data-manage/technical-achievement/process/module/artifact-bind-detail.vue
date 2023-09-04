@@ -98,6 +98,20 @@
             <div style="color:#999;font-size:13px;">1. 解绑操作即刻生效，无需提交。</div>
           </div>
           <div style="flex:1;padding-left:10px;">
+            <div style="margin-bottom:10px;text-align:right;">
+               <el-popconfirm
+                confirm-button-text="确定"
+                cancel-button-text="取消"
+                icon-color="red"
+                title="确定解绑吗?"
+                @confirm="unbindAll"
+                v-if="checkPermission(permission.unbind)"
+              >
+                <template #reference>
+                  <common-button type="primary">一键解绑</common-button>
+                </template>
+              </el-popconfirm>
+            </div>
             <common-table
               ref="detailRef"
               border
@@ -138,10 +152,11 @@
 </template>
 
 <script setup>
-import { bindStructureList, unbindStructure } from '@/api/plan/technical-data-manage/process'
+import { bindStructureList, unbindStructure, unbindAllStructure } from '@/api/plan/technical-data-manage/process'
 import { defineProps, defineEmits, ref, watch, inject } from 'vue'
 import useVisible from '@compos/use-visible'
 
+import checkPermission from '@/utils/system/check-permission'
 import { planProcessTypeEnum } from '@enum-ms/plan'
 import { ElMessage } from 'element-plus'
 import { planProcessListPM as permission } from '@/page-permission/plan'
@@ -196,7 +211,7 @@ watch(
   (val) => {
     if (val) {
       for (const i in query.value) {
-        if (props.currentRow.boolSingleProject) {
+        if (props.currentRow.boolSingleProject && i === 'projectId') {
           query.value[i] = props.currentRow.projectId
         } else {
           query.value[i] = undefined
@@ -207,6 +222,17 @@ watch(
   },
   { deep: true, immediate: true }
 )
+
+async function unbindAll() {
+  try {
+    await unbindAllStructure(props.currentRow.id)
+    ElMessage.success('一键解绑构件成功')
+    fetchList()
+    emit('success')
+  } catch (error) {
+    console.log('解绑失败', error)
+  }
+}
 
 async function deleteItem(row) {
   try {
@@ -242,7 +268,7 @@ async function fetchList() {
 
 function resetSubmit() {
   for (const i in query.value) {
-    if (props.currentRow.boolSingleProject) {
+    if (props.currentRow.boolSingleProject && i === 'projectId') {
       query.value[i] = props.currentRow.projectId
     } else {
       query.value[i] = undefined

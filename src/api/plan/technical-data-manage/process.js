@@ -77,6 +77,15 @@ export function unbindStructure(data) {
   })
 }
 
+// 一键解绑所有构件
+export function unbindAllStructure(processFileId) {
+  return request({
+    module: 'plan',
+    url: 'artifact-processFile/unbindAll/' + processFileId,
+    method: 'put'
+  })
+}
+
 // 获取系统已配置构件类型
 export function systemStructureClass() {
   return request({
