@@ -45,9 +45,9 @@
         <span v-if="checkPermission(crud.permission.save)" style="margin-right: 6px">
           <span v-if="modifying">
             <common-button type="warning" size="mini" @click="handelModifying(false, true)">取消录入</common-button>
-            <common-button type="success" size="mini" @click="previewVisible = true">预览并保存</common-button>
+            <common-button type="success" size="mini" @click="confirmModifying">预览并保存</common-button>
           </span>
-          <common-button v-else type="primary" size="mini" @click="handelModifying(true)">录入价格</common-button>
+          <common-button v-else type="primary" size="mini" :disabled="crud.selections?.length===0" @click="handelModifying(true)">录入价格</common-button>
         </span>
         <print-table
           v-permission="crud.permission.print"
@@ -73,20 +73,17 @@
         </span>
       </template> -->
     </crudOperation>
-    <mPreview v-model="previewVisible" :modified-data="modifiedData" v-bind="$attrs" :params="previewParams" @success="handleSuccess" />
+    <mPreview v-model="previewVisible" :modified-data="submitList" v-bind="$attrs" :params="previewParams" @success="handleSuccess" />
   </div>
 </template>
 
 <script setup>
 // import { cost } from '@/api/contract/sales-manage/price-manage/auxiliary-material'
-import { ref, watch, nextTick, inject, computed, defineExpose } from 'vue'
+import { ref, watch, nextTick, inject, computed, defineExpose, defineProps, defineEmits } from 'vue'
 
 import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 import checkPermission from '@/utils/system/check-permission'
 import { contractSaleTypeEnum } from '@enum-ms/mes'
-import { toThousand } from '@/utils/data-type/number'
-import { emptyTextFormatter } from '@/utils/data-type'
-import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -94,14 +91,19 @@ import rrOperation from '@crud/RR.operation'
 import mPreview from '../../preview'
 
 const projectId = inject('projectId')
+const emit = defineEmits(['checkSubmit'])
 // const monomerId = inject('monomerId')
 
-// 有变动的数据
-const modifiedData = computed(() => {
-  return crud.data.filter((v) => v.unitPrice !== v.originUnitPrice)
+const props = defineProps({
+  showAble: {
+    type: Boolean,
+    default: false
+  },
+  submitList: {
+    type: Array,
+    default: () => []
+  }
 })
-
-const { decimalPrecision } = useDecimalPrecision()
 
 // 预览参数
 const previewParams = computed(() => {
@@ -125,8 +127,8 @@ watch(
 )
 
 const modifying = ref(false)
-// const costLoading = ref(false)
 const previewVisible = ref(false)
+// const costLoading = ref(false)
 // const costData = {
 //   totalPrice: 0,
 //   totalMete: 0
@@ -140,15 +142,20 @@ const { crud, query, CRUD } = regHeader(defaultQuery)
 
 // 刷新数据后
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
-  data.content.forEach(v => {
-    v.newUnitPrice = v.unitPrice // number类型的单价（unitPrice可能会有千位符）
-    v.originNewUnitPrice = v.newUnitPrice
-    v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice, decimalPrecision.value.contract))
-    v.totalPrice = v.quantity * (v.newUnitPrice || 0)
+  data.content.forEach((v, index) => {
+    v.unitPrice = v.unitPrice || '同上'
+    v.originUnitPrice = v.unitPrice
+    v.totalPrice = v.quantity * (v.unitPrice && typeof v.unitPrice === 'number' ? v.unitPrice : 0)
+    v.orderIndex = index + 1
   })
-  // fetchCost()
 }
 
+function confirmModifying() {
+  emit('checkSubmit')
+  nextTick(() => {
+    previewVisible.value = props.showAble
+  })
+}
 // 获取商务配套件成本
 // async function fetchCost() {
 //   if (!checkPermission(crud.permission.cost)) return
@@ -176,8 +183,8 @@ function handelModifying(status, reset = false) {
   if (reset) {
     crud.data.forEach((v) => {
       v.unitPrice = v.originUnitPrice
-      v.newUnitPrice = v.originNewUnitPrice
-      v.totalPrice = v.quantity * (v.newUnitPrice || 0)
+      // v.newUnitPrice = v.originNewUnitPrice
+      v.totalPrice = v.quantity * (v.unitPrice && typeof v.unitPrice === 'number' ? v.unitPrice : 0)
     })
   }
   modifying.value = status

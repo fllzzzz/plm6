@@ -78,7 +78,7 @@
               maxlength="10"
               style="width:100%;"
             />
-             <span v-else style="cursor: pointer" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span>
+             <span v-else style="cursor: pointer" @dblclick="dbClick(scope.row)">{{ scope.row.serialNumber }}</span>
             <!-- <div>{{ scope.row.serialNumber }}</div> -->
           </template>
         </el-table-column>
@@ -706,6 +706,13 @@ watch(
   { deep: true, immediate: true }
 )
 
+function dbClick(row) {
+  if (!row.attachmentId) {
+    return
+  }
+  drawingPreview(row)
+}
+
 getTechnicalTypeStatus()
 
 // 获取技术交底配置状态
@@ -829,7 +836,7 @@ function getTotalData(row) {
     row.totalLength = (row.length * row.quantity) / 1000
     thicknessChange(row)
   }
-  if (crud.query.category === TechnologyTypeAllEnum.BENDING.V) {
+  if (crud.query.category === TechnologyTypeAllEnum.BENDING.V || (crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V || crud.query.category === TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V)) {
     if (row.length && row.quantity && row.unfoldedWidth) {
       row.totalArea = (row.unfoldedWidth * row.length * row.quantity) / 1000000
     }
