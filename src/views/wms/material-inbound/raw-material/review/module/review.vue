@@ -74,8 +74,43 @@
           <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="form.basicClass" />
           <!-- 金额设置 -->
           <template v-if="showAmount && !boolPartyA">
-            <el-table-column prop="unitPrice" label="含税单价" align="right" min-width="120px" show-overflow-tooltip />
-            <el-table-column prop="amount" label="金额" align="right" min-width="120px" show-overflow-tooltip />
+            <template v-if="isNotBlank(form.purchaseOrder?.detail)">
+              <el-table-column prop="unitPrice" label="含税单价" align="right" min-width="120px" show-overflow-tooltip />
+              <el-table-column prop="amount" label="金额" align="right" min-width="120px" show-overflow-tooltip />
+            </template>
+            <template v-else>
+              <el-table-column prop="unitPrice" align="center" width="135px" label="含税单价">
+                <template #default="{ row: { sourceRow: row } }">
+                  <common-input-number
+                    v-if="row"
+                    v-model="row.unitPrice"
+                    :min="0"
+                    :max="9999999999"
+                    :controls="false"
+                    :step="1"
+                    size="mini"
+                    placeholder="含税单价"
+                    @change="handleUnitPriceChange($event, row)"
+                  />
+                </template>
+              </el-table-column>
+              <el-table-column prop="amount" align="center" width="135px" label="金额">
+                <template #default="{ row: { sourceRow: row } }">
+                  <common-input-number
+                    v-if="row"
+                    v-model="row.amount"
+                    :min="0"
+                    :max="9999999999"
+                    :controls="false"
+                    :step="1"
+                    size="mini"
+                    :precision="DP.YUAN"
+                    placeholder="金额"
+                    @change="handleAmountChange($event, row)"
+                  />
+                </template>
+              </el-table-column>
+            </template>
           </template>
           <!-- <el-table-column prop="sourceRequisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip /> -->
           <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
@@ -121,7 +156,8 @@ import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 // import { deepClone, isBlank, isNotBlank, toFixed } from '@/utils/data-type'
-import { deepClone, isBlank, isNotBlank } from '@/utils/data-type'
+import { deepClone, isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
+import { getDP } from '@/utils/data-type/number'
 import { materialColumns } from '@/utils/columns-format/wms'
 import { DP } from '@/settings/config'
 
@@ -501,19 +537,19 @@ function setDitto(list) {
 //   )
 // }
 
-// function handleUnitPriceChange(val, row) {
-//   const dp = getDP(val)
-//   if (dp > 10) {
-//     row.unitPrice = toPrecision(val, 10)
-//     val = row.unitPrice
-//   }
-//   row.amount = isNotBlank(val) ? toPrecision(val * row.mete, 2) : undefined
-// }
+function handleUnitPriceChange(val, row) {
+  const dp = getDP(val)
+  if (dp > 10) {
+    row.unitPrice = toPrecision(val, 10)
+    val = row.unitPrice
+  }
+  row.amount = isNotBlank(val) ? toPrecision(val * row.mete, 2) : undefined
+}
 
-// // 处理金额变化
-// function handleAmountChange(val, row) {
-//   row.unitPrice = isNotBlank(val) ? toPrecision(val / row.mete, 10) : undefined
-// }
+// 处理金额变化
+function handleAmountChange(val, row) {
+  row.unitPrice = isNotBlank(val) ? toPrecision(val / row.mete, 10) : undefined
+}
 
 // 合计
 function getSummaries(param) {
