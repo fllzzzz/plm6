@@ -74,11 +74,7 @@
           <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="form.basicClass" />
           <!-- 金额设置 -->
           <template v-if="showAmount && !boolPartyA">
-            <template v-if="isNotBlank(form.purchaseOrder?.detail)">
-              <el-table-column prop="unitPrice" label="含税单价" align="right" min-width="120px" show-overflow-tooltip />
-              <el-table-column prop="amount" label="金额" align="right" min-width="120px" show-overflow-tooltip />
-            </template>
-            <template v-else>
+            <template v-if="isBlank(form.purchaseOrder?.details) && fillableAmount">
               <el-table-column prop="unitPrice" align="center" width="135px" label="含税单价">
                 <template #default="{ row: { sourceRow: row } }">
                   <common-input-number
@@ -110,6 +106,10 @@
                   />
                 </template>
               </el-table-column>
+              </template>
+            <template v-else>
+              <el-table-column prop="unitPrice" label="含税单价" align="right" min-width="120px" show-overflow-tooltip />
+              <el-table-column prop="amount" label="金额" align="right" min-width="120px" show-overflow-tooltip />
             </template>
           </template>
           <!-- <el-table-column prop="sourceRequisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip /> -->
