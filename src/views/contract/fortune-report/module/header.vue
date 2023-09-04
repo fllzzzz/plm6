@@ -37,7 +37,7 @@
       v-model="query.orderSourceType"
       :options="orderSourceTypeEnum.ENUM"
       class="filter-item"
-      :showOptionAll="false"
+      showOptionAll
       type="enum"
       @change="crud.toQuery"
     />
@@ -80,7 +80,7 @@ const defaultQuery = {
   year: parseTime(new Date(), '{y}'),
   projectId: undefined,
   businessType: businessTypeEnum.MACHINING.V,
-  orderSourceType: orderSourceTypeEnum.INSIDE.V,
+  orderSourceType: undefined,
   settlementStatus: undefined
 }
 const { crud, query } = regHeader(defaultQuery)
