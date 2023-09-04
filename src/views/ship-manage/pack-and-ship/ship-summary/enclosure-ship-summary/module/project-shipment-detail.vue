@@ -111,7 +111,7 @@
           <common-button type="primary" icon="el-icon-view" size="mini" @click.stop="showDetail" />
         </el-descriptions-item>
       </el-descriptions>
-      <common-table v-show="query.category === 64" :data="list" v-loading="tableLoading" :show-empty-symbol="false">
+      <common-table v-show="query.category === 64" :data="list" v-loading="tableLoading">
         <el-table-column prop="index" label="序号" align="center" width="45" type="index" />
         <el-table-column key="name" prop="name" label="名称" align="center" :show-overflow-tooltip="true" min-width="100px" />
         <el-table-column
@@ -122,8 +122,9 @@
           :show-overflow-tooltip="true"
           min-width="120px"
         />
-        <el-table-column key="measureUnit" prop="measureUnit" label="单位" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="accountingUnit" prop="accountingUnit" label="核算单位" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="mete" prop="mete" label="核算量" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="measureUnit" prop="measureUnit" label="计量单位" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="quantity" prop="quantity" label="清单量" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="cargoQuantity" prop="cargoQuantity" label="已发运" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="unCargoQuantity" prop="unCargoQuantity" label="未发运" align="center" :show-overflow-tooltip="true" />

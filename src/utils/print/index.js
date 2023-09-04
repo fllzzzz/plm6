@@ -240,14 +240,14 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
   <div class="row-0 col border-r" style="width:26%;">
   <div class="col-div">名称</div>
   </div>
-  <div class="row-0 col border-r" style="width:23%;">
+  <div class="row-0 col border-r" style="width:14%;">
   <div class="col-div">单位</div>
   </div>
   <div class="row-0 col border-r" style="width:35%;">
   <div class="col-div">规格</div>
   </div>
-  <div class="row-0 col" style="width:14%;">
-  <div class="col-div">数量</div>
+  <div class="row-0 col" style="width:23%;">
+  <div class="col-div">核算量</div>
   </div>
 </div>
 </div>`
@@ -327,14 +327,14 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
       <div class="row-0 col border-r" style="width:26%;">
       <div class="col-div">${item.name}</div>
       </div>
-      <div class="row-0 col border-r" style="width:23%;">
-      <div class="col-div">${item.measureUnit}</div>
+      <div class="row-0 col border-r" style="width:14%;">
+      <div class="col-div">${item.accountingUnit}</div>
       </div>
       <div class="row-0 col border-r" style="width:35%;">
       <div class="col-div">${item.specification}</div>
       </div>
-      <div class="row-0 col" style="width:14%;">
-      <div class="col-div">${item.quantity}</div>
+      <div class="row-0 col" style="width:23%;">
+      <div class="col-div">${item.packageMete}</div>
       </div>
     </div>
     `

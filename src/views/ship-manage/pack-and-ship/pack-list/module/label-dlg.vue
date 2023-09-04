@@ -50,7 +50,7 @@
           <td class="col-1">{{ item.name }}</td>
           <td class="col-1">{{ item.accountingUnit }}</td>
           <td class="col-1">{{ item.specification }}</td>
-          <td class="col-1">{{ item.mete }}</td>
+          <td class="col-1">{{ item.packageMete }}</td>
         </tr>
       </template>
       <template v-if="packageInfo.productType === packTypeEnum.ENCLOSURE.V">
