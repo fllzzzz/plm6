@@ -186,6 +186,7 @@ const boxProductSendReceiveStorage = mes.boxProductSendReceiveStorage
 const enclosureProductSendReceiveStorage = mes.enclosureProductSendReceiveStorage
 const productSendReceiveStorageDetail = mes.productSendReceiveStorageDetail
 const boxProductSendReceiveStorageDetail = mes.boxProductSendReceiveStorageDetail
+const structureFinishedGoodsInventoryDetail = mes.structureFinishedGoodsInventoryDetail
 const enclosureProductSendReceiveStorageDetail = mes.enclosureProductSendReceiveStorageDetail
 const mesBeginningInventoryDetail = mes.mesBeginningInventoryDetail
 const mesEndInventoryDetail = mes.mesEndInventoryDetail
@@ -199,6 +200,10 @@ const enclosureBeginningInventoryDetail = mes.enclosureBeginningInventoryDetail
 const enclosureEndInventoryDetail = mes.enclosureEndInventoryDetail
 const enclosureInboundInventoryDetail = mes.enclosureInboundInventoryDetail
 const enclosureOutboundInventoryDetail = mes.enclosureOutboundInventoryDetail
+const enclosureTotalBeginningInventoryDetail = mes.enclosureTotalBeginningInventoryDetail
+const enclosureTotalEndInventoryDetail = mes.enclosureTotalEndInventoryDetail
+const enclosureTotalInboundInventoryDetail = mes.enclosureTotalInboundInventoryDetail
+const enclosureTotalOutboundInventoryDetail = mes.enclosureTotalOutboundInventoryDetail
 const mesMainMaterialTrack = mes.mainMaterialTrackSummary
 const mesMainMaterialTrackUseRecord = mes.mainMaterialTrackUseRecord
 const mesMainMaterialTrackStock = mes.mainMaterialTrackStock
@@ -266,6 +271,7 @@ const bridgeStudSleeveStatisticsList = bridge.studSleeveStatisticsList
 const bridgeProjectShipDetail = bridge.bridgeProjectShipDetail
 const bridgeProductSendReceiveStorage = bridge.productSendReceiveStorage
 const bridgeProductSendReceiveStorageDetail = bridge.productSendReceiveStorageDetail
+const bridgestructureFinishedGoodsInventoryDetail = bridge.structureFinishedGoodsInventoryDetail
 const boxSummary = bridge.boxSummary // 分段清单汇总
 const cellSummary = bridge.cellSummary // 单元清单汇总
 const partSummary = bridge.partSummary // 零件清单汇总
@@ -478,6 +484,7 @@ export default {
   enclosureProductSendReceiveStorage, // 围护制品入发存
   productSendReceiveStorageDetail, // 发运管理制成品入发存详情
   boxProductSendReceiveStorageDetail, // 分段制品入发存详情
+  structureFinishedGoodsInventoryDetail, // 发运管理制成品库存详情
   enclosureProductSendReceiveStorageDetail, // 发运管理围护制成品入发存详情
   mesBeginningInventoryDetail, // 期初库存
   mesEndInventoryDetail, // 期末库存
@@ -491,7 +498,10 @@ export default {
   enclosureEndInventoryDetail, // 围护期末库存
   enclosureInboundInventoryDetail, // 围护入库量
   enclosureOutboundInventoryDetail, // 围护出库量
-
+  enclosureTotalInboundInventoryDetail, // 围护制品入库库存
+  enclosureTotalBeginningInventoryDetail, // 围护制品期初库存
+  enclosureTotalOutboundInventoryDetail, // 围护制品出库库存
+  enclosureTotalEndInventoryDetail, // 围护制品期末库存
   // bridge
   bridgeSchedulingDetail, // 工单详情
   bridgeProductionTaskOrder, // 工单管理：构件生产任务单
@@ -556,6 +566,7 @@ export default {
   bridgeProjectShipDetail, // 发运管理项目发运详情
   bridgeProductSendReceiveStorage, // 发运管理制成品入发存
   bridgeProductSendReceiveStorageDetail, // 发运管理制成品入发存详情
+  bridgestructureFinishedGoodsInventoryDetail, // 发运管理制成品库存详情
   boxSummary, // 分段清单汇总
   cellSummary, // 单元清单汇总
   partSummary, // 零件清单汇总

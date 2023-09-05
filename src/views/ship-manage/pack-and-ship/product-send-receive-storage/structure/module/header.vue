@@ -39,7 +39,7 @@
       />
 
       <el-row v-loading="summaryLoading" v-if="checkPermission(crud.permission.get)" :gutter="10" class="panel-group">
-        <el-col :span="6" class="card-panel-col">
+        <el-col :span="6" class="card-panel-col" style="cursor: pointer;" @click="inventoryDetails(1)">
           <Panel
             name="期初库存(kg)"
             text-color="#626262"
@@ -50,7 +50,7 @@
             :precision="DP.COM_WT__KG"
           />
         </el-col>
-        <el-col :span="6" class="card-panel-col">
+        <el-col :span="6" class="card-panel-col" style="cursor: pointer;" @click="inventoryDetails(2)">
           <Panel
             name="入库量(kg)"
             text-color="#626262"
@@ -59,7 +59,7 @@
             :precision="DP.COM_WT__KG"
           />
         </el-col>
-        <el-col :span="6" class="card-panel-col">
+        <el-col :span="6" class="card-panel-col" style="cursor: pointer;" @click="inventoryDetails(3)">
           <Panel
             name="出库量(kg)"
             text-color="#626262"
@@ -70,7 +70,7 @@
             :precision="DP.COM_WT__KG"
           />
         </el-col>
-        <el-col :span="6" class="card-panel-col">
+        <el-col :span="6" class="card-panel-col" style="cursor: pointer;" @click="inventoryDetails(4)">
           <Panel
             name="期末库存(kg)"
             text-color="#626262"
@@ -92,6 +92,7 @@
         />
       </template>
     </crudOperation>
+    <detail-drawer v-model:showDetailDrawer="showDetailDrawer" :query="crud.query" :inventoryType="inventoryType"  />
   </div>
 </template>
 
@@ -107,7 +108,9 @@ import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import Panel from '@/components/Panel'
 import moment from 'moment'
+import detailDrawer from './detail-drawer'
 
+const showDetailDrawer = ref(false)
 const defaultTime = moment().valueOf().toString()
 
 const defaultQuery = {
@@ -120,6 +123,7 @@ const defaultQuery = {
 const { crud, query } = regHeader(defaultQuery)
 const totalAmount = ref({})
 const summaryLoading = ref(false)
+const inventoryType = ref()
 
 watch(
   query,
@@ -144,6 +148,12 @@ async function fetchSummaryInfo() {
     summaryLoading.value = false
   }
 }
+
+const inventoryDetails = (v) => {
+  showDetailDrawer.value = true
+  inventoryType.value = v
+}
+
 </script>
 <style lang="scss" scoped>
 .panel-group {
