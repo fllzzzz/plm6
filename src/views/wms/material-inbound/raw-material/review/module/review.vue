@@ -108,7 +108,7 @@
                     :controls="false"
                     :step="1"
                     size="mini"
-                    :precision="decimalPrecision.wms"
+                    :precision="DP.YUAN"
                     placeholder="金额"
                     @change="handleAmountChange($event, row)"
                   />

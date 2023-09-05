@@ -14,6 +14,7 @@
     <el-table-column :show-overflow-tooltip="true" prop="index" label="序号" align="center" width="60" type="index" />
     <el-table-column :show-overflow-tooltip="true" prop="project" key="project.shortName" label="项目" min-width="120" />
     <el-table-column :show-overflow-tooltip="true" prop="monomerName" key="monomerName" label="单体" min-width="100" />
+    <el-table-column :show-overflow-tooltip="true" prop="areaName" key="areaName" label="区域" width="80" />
     <el-table-column :show-overflow-tooltip="true" prop="serialNumber" key="serialNumber" label="编号" align="center" />
     <el-table-column :show-overflow-tooltip="true" prop="specification" key="specification" label="规格" align="center" />
     <el-table-column :show-overflow-tooltip="true" prop="material" key="material" label="材质" align="center" />

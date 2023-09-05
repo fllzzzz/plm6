@@ -44,9 +44,9 @@
         <template #default="{ row }">
           <template v-if="props.params.type === contractSaleTypeEnum.STRUCTURE.V">
             <span v-if="row.originUnitPrice === row.unitPrice">{{ row.unitPrice }}</span>
-            <cell-change-preview :old="row.originUnitPrice" :new="row.unitPrice" v-else/>
+            <cell-change-preview :old="row.originUnitPrice==='同上'?'-':row.originUnitPrice" :new="row.unitPrice" v-else/>
           </template>
-          <cell-change-preview :old="row.originUnitPrice" :new="row.unitPrice" v-else/>
+          <cell-change-preview :old="row.originUnitPrice==='同上'?'-':row.originUnitPrice" :new="row.unitPrice" v-else/>
         </template>
       </el-table-column>
     </common-table>
@@ -126,13 +126,13 @@ async function submit() {
       if (props.params.type !== contractSaleTypeEnum.AUXILIARY_MATERIAL.V) {
         _list.push({
           id: v.id,
-          unitPrice: v.newUnitPrice ? v.newUnitPrice : (v.unitPrice !== '-' ? v.unitPrice : null),
-          pricingManner: props.params.type === contractSaleTypeEnum.STRUCTURE.V || props.params.type === contractSaleTypeEnum.ENCLOSURE.V ? v.pricingManner : undefined
+          unitPrice: (v.unitPrice !== '同上' ? v.unitPrice : null),
+          pricingManner: v.pricingManner
         })
       } else {
         _list.push({
           id: v.id,
-          unitPrice: v.newUnitPrice
+          unitPrice: (v.unitPrice !== '同上' ? v.unitPrice : null)
         })
       }
     })

@@ -9,6 +9,9 @@
     :wrapper-closable="false"
     size="100%"
   >
+    <template #titleAfter>
+      <el-tag>项目：{{projectNameFormatter(currentRow)}}</el-tag>
+    </template>
     <template #content>
       <el-tabs v-model="activeName" class="tab-container">
         <el-tab-pane label="收款列表" name="collection" v-if="checkPermission(permission.collection?.get)">
@@ -33,6 +36,7 @@
 </template>
 
 <script setup>
+import { projectNameFormatter } from '@/utils/project'
 import { defineProps, defineEmits, watch, ref } from 'vue'
 import { ElTabs, ElTabPane } from 'element-plus'
 import useVisible from '@compos/use-visible'
