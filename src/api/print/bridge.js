@@ -526,6 +526,14 @@ export function productSendReceiveStorageDetail(params) {
   })
 }
 
+export function structureFinishedGoodsInventoryDetail(params) {
+  return request({
+    url: `/api/mes/bridge/warehouse/finish-product/detail/print`,
+    method: 'get',
+    params
+  })
+}
+
 // 分段清单汇总
 export function boxSummary(params) {
   return request({
@@ -619,6 +627,7 @@ export default {
   // 发运管理
   productSendReceiveStorage, // 制成品入发存
   productSendReceiveStorageDetail, // 制成品入发存详情
+  structureFinishedGoodsInventoryDetail, // 制成品库存详情
 
   // 清单汇总
   boxSummary, // 分段清单汇总

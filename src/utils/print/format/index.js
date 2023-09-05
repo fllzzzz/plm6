@@ -42,6 +42,7 @@ const mesStructureProjectSummary = mes.projectSummary
 const mesEnclosureProjectSummary = mes.projectSummary
 
 const productSendReceiveStorageDetail = mes.projectConfig
+const structureFinishedGoodsInventoryDetail = mes.projectConfig
 const enclosureProductSendReceiveStorageDetail = mes.projectConfig
 
 const mesWageSummary = mes.wageProducedMete
@@ -99,6 +100,7 @@ export default {
   mesStructureProjectSummary,
   mesEnclosureProjectSummary,
   productSendReceiveStorageDetail,
+  structureFinishedGoodsInventoryDetail,
   enclosureProductSendReceiveStorageDetail,
   mesStructureProductionStatistics,
   mesStructureProductionStatisticsIn,

@@ -348,6 +348,42 @@ export function enclosureOutboundInventoryDetail(params) {
   })
 }
 
+// 围护制品期初库存详情
+export function enclosureTotalBeginningInventoryDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/print/finish-product/enclosure`,
+    method: 'get',
+    params
+  })
+}
+
+// 围护制品入库库存详情
+export function enclosureTotalInboundInventoryDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/print/finish-product/enclosure`,
+    method: 'get',
+    params
+  })
+}
+
+// 围护制品出库库存详情
+export function enclosureTotalOutboundInventoryDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/print/finish-product/enclosure`,
+    method: 'get',
+    params
+  })
+}
+
+// 围护制品期末库存详情
+export function enclosureTotalEndInventoryDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/print/finish-product/enclosure`,
+    method: 'get',
+    params
+  })
+}
+
 // 班组报表
 /**
  * 围护生产线报表
@@ -1084,6 +1120,15 @@ export function productSendReceiveStorageDetail(params) {
   })
 }
 
+// 制成品库存详情
+export function structureFinishedGoodsInventoryDetail(params) {
+  return request({
+    url: `api/mes/building/warehouse/print/finish-product/artifact`,
+    method: 'get',
+    params
+  })
+}
+
 // 围护制成品入发存详情
 export function enclosureProductSendReceiveStorageDetail(params) {
   return request({
@@ -1229,6 +1274,10 @@ export default {
   enclosureEndInventoryDetail, // 围护期末库存
   enclosureInboundInventoryDetail, // 围护入库量
   enclosureOutboundInventoryDetail, // 围护出库量
+  enclosureTotalInboundInventoryDetail, // 围护入库库存详情
+  enclosureTotalBeginningInventoryDetail, // 围护期初库存详情
+  enclosureTotalOutboundInventoryDetail, // 围护出库库存详情
+  enclosureTotalEndInventoryDetail, // 围护期末库存详情
 
   // 生产订单
   artifactClassList, // 构件分类清单明细
@@ -1291,6 +1340,7 @@ export default {
   boxProductSendReceiveStorageDetail, // 分段制成品入发存
   enclosureProductSendReceiveStorageDetail, // 围护制成品入发存详情
   sectionProductInventoryDetail, // 分段制品库存详情
+  structureFinishedGoodsInventoryDetail, // 制成品库存详情
 
   // 项目报表
   mainMaterialTrackSummary, // 主材跟踪汇总
