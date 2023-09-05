@@ -222,7 +222,7 @@ export function warehouseStateReport(params) {
  */
 export function mesBeginningInventoryDetail(params) {
   return request({
-    url: `/api/mes/building/warehouse/print/finish-product/artifact`,
+    url: `/api/mes/bridge/warehouse/print/finish-product/box`,
     method: 'get',
     params
   })
@@ -262,7 +262,7 @@ export function mesOutboundInventoryDetail(params) {
  */
 export function boxBeginningInventoryDetail(params) {
   return request({
-    url: `/api/mes/building/warehouse/print/finish-product/artifact`,
+    url: `/api/mes/bridge/warehouse/print/finish-product/box`,
     method: 'get',
     params
   })
@@ -272,7 +272,7 @@ export function boxBeginningInventoryDetail(params) {
  */
 export function boxEndInventoryDetail(params) {
   return request({
-    url: `/api/mes/building/warehouse/print/finish-product/artifact`,
+    url: `/api/mes/bridge/warehouse/print/finish-product/box`,
     method: 'get',
     params
   })
@@ -282,7 +282,7 @@ export function boxEndInventoryDetail(params) {
  */
 export function boxInboundInventoryDetail(params) {
   return request({
-    url: `/api/mes/building/warehouse/print/finish-product/artifact`,
+    url: `/api/mes/bridge/warehouse/print/finish-product/box`,
     method: 'get',
     params
   })
@@ -292,7 +292,17 @@ export function boxInboundInventoryDetail(params) {
  */
 export function boxOutboundInventoryDetail(params) {
   return request({
-    url: `/api/mes/building/warehouse/print/finish-product/artifact`,
+    url: `/api/mes/bridge/warehouse/print/finish-product/box`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 入发存报表/分段制品库存详情打印
+ */
+export function sectionProductInventoryDetail(params) {
+  return request({
+    url: '/api/mes/bridge/warehouse/print/finish-product/box',
     method: 'get',
     params
   })
@@ -1280,6 +1290,7 @@ export default {
   productSendReceiveStorageDetail, // 制成品入发存详情
   boxProductSendReceiveStorageDetail, // 分段制成品入发存
   enclosureProductSendReceiveStorageDetail, // 围护制成品入发存详情
+  sectionProductInventoryDetail, // 分段制品库存详情
 
   // 项目报表
   mainMaterialTrackSummary, // 主材跟踪汇总

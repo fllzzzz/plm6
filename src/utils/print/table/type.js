@@ -203,6 +203,7 @@ const tableType = {
   enclosureEndInventoryDetail: { L: '期末库存', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
   enclosureInboundInventoryDetail: { L: '入库量', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
   enclosureOutboundInventoryDetail: { L: '出库量', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
+  sectionProductInventoryDetail: { L: '库存详情', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
 
   mesPackingList: { L: '打包清单', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
   mesBridgePackingList: { L: '桥梁打包清单', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },

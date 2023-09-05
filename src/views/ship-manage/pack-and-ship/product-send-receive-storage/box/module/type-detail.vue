@@ -43,12 +43,12 @@
           <print-table
             :api-key="
               showType === 'INBOUND'
-                ? 'mesInboundInventoryDetail'
+                ? 'boxInboundInventoryDetail'
                 : showType === 'OUTBOUND'
-                ? 'mesOutboundInventoryDetail'
+                ? 'boxOutboundInventoryDetail'
                 : showType === 'STOCK'
-                ? 'mesEndInventoryDetail'
-                : 'mesBeginningInventoryDetail'
+                ? 'boxEndInventoryDetail'
+                : 'boxBeginningInventoryDetail'
             "
             :params="{
               projectId: props.detailQuery?.projectId,

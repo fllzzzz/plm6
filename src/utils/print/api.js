@@ -190,6 +190,7 @@ const enclosureProductSendReceiveStorageDetail = mes.enclosureProductSendReceive
 const mesBeginningInventoryDetail = mes.mesBeginningInventoryDetail
 const mesEndInventoryDetail = mes.mesEndInventoryDetail
 const mesInboundInventoryDetail = mes.mesInboundInventoryDetail
+const sectionProductInventoryDetail = mes.sectionProductInventoryDetail
 const mesOutboundInventoryDetail = mes.mesOutboundInventoryDetail
 const boxBeginningInventoryDetail = mes.boxBeginningInventoryDetail
 const boxEndInventoryDetail = mes.boxEndInventoryDetail
@@ -487,6 +488,7 @@ export default {
   boxEndInventoryDetail, // 期末库存
   boxInboundInventoryDetail, // 入库量
   boxOutboundInventoryDetail, // 出库量
+  sectionProductInventoryDetail, // 库存详情
   enclosureBeginningInventoryDetail, // 围护期初库存
   enclosureEndInventoryDetail, // 围护期末库存
   enclosureInboundInventoryDetail, // 围护入库量
