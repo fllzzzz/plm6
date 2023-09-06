@@ -69,17 +69,17 @@
               <span v-else>期末量</span>
             </template>
           </el-table-column>
-          <!-- 分页 -->
-          <el-pagination
-          :total="total"
-          :current-page="queryPage.pageNumber"
-          :page-size="queryPage.pageSize"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          layout="total, prev, pager, next, sizes"
-          style="margin-top: 8px"
-        />
         </common-table>
+        <!-- 分页 -->
+        <el-pagination
+        :total="total"
+        :current-page="queryPage.pageNumber"
+        :page-size="queryPage.pageSize"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        layout="total, prev, pager, next, sizes"
+        style="margin-top: 8px"
+      />
     </div>
   </template>
  </common-drawer>

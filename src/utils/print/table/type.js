@@ -203,7 +203,10 @@ const tableType = {
   enclosureEndInventoryDetail: { L: '期末库存', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
   enclosureInboundInventoryDetail: { L: '入库量', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
   enclosureOutboundInventoryDetail: { L: '出库量', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
-  sectionProductInventoryDetail: { L: '库存详情', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
+  sectionProductStartDetail: { L: '期初库存详情(总)', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
+  sectionProductEndDetail: { L: '期末库存详情(总)', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
+  sectionProductInDetail: { L: '入库库存详情(总)', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
+  sectionProductOutDetail: { L: '出库库存详情(总)', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
   enclosureTotalBeginningInventoryDetail: { L: '围护期初库存详情', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
   enclosureTotalInboundInventoryDetail: { L: '围护入库库存详情', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
   enclosureTotalOutboundInventoryDetail: { L: '围护出库库存详情', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
@@ -274,7 +277,10 @@ const tableType = {
   enclosureProductSendReceiveStorage: { L: '制成品入发存', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
   productSendReceiveStorageDetail: { L: '制成品入发存详情', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
   boxProductSendReceiveStorageDetail: { L: '分段制成品入发存详情', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
-  structureFinishedGoodsInventoryDetail: { L: '制成品库存详情', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  structureFinishedStartDetail: { L: '结构制品期初库存详情(总)', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  structureFinishedEndtDetail: { L: '结构制品期末库存详情(总)', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  structureFinishedInDetail: { L: '结构制品入库库存详情(总)', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  structureFinishedOutDetail: { L: '结构制品出库库存详情(总)', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
   enclosureProductSendReceiveStorageDetail: { L: '制成品入发存详情', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
 
   // 项目报表

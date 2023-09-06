@@ -186,12 +186,18 @@ const boxProductSendReceiveStorage = mes.boxProductSendReceiveStorage
 const enclosureProductSendReceiveStorage = mes.enclosureProductSendReceiveStorage
 const productSendReceiveStorageDetail = mes.productSendReceiveStorageDetail
 const boxProductSendReceiveStorageDetail = mes.boxProductSendReceiveStorageDetail
-const structureFinishedGoodsInventoryDetail = mes.structureFinishedGoodsInventoryDetail
+const structureFinishedStartDetail = mes.structureFinishedGoodsInventoryDetail
+const structureFinishedEndtDetail = mes.structureFinishedGoodsInventoryDetail
+const structureFinishedInDetail = mes.structureFinishedGoodsInventoryDetail
+const structureFinishedOutDetail = mes.structureFinishedGoodsInventoryDetail
 const enclosureProductSendReceiveStorageDetail = mes.enclosureProductSendReceiveStorageDetail
 const mesBeginningInventoryDetail = mes.mesBeginningInventoryDetail
 const mesEndInventoryDetail = mes.mesEndInventoryDetail
 const mesInboundInventoryDetail = mes.mesInboundInventoryDetail
-const sectionProductInventoryDetail = mes.sectionProductInventoryDetail
+const sectionProductStartDetail = mes.sectionProductInventoryDetail
+const sectionProductEndDetail = mes.sectionProductInventoryDetail
+const sectionProductInDetail = mes.sectionProductInventoryDetail
+const sectionProductOutDetail = mes.sectionProductInventoryDetail
 const mesOutboundInventoryDetail = mes.mesOutboundInventoryDetail
 const boxBeginningInventoryDetail = mes.boxBeginningInventoryDetail
 const boxEndInventoryDetail = mes.boxEndInventoryDetail
@@ -485,7 +491,10 @@ export default {
   enclosureProductSendReceiveStorage, // 围护制品入发存
   productSendReceiveStorageDetail, // 发运管理制成品入发存详情
   boxProductSendReceiveStorageDetail, // 分段制品入发存详情
-  structureFinishedGoodsInventoryDetail, // 发运管理制成品库存详情
+  structureFinishedStartDetail, // 结构制品期初库存详情(总)
+  structureFinishedEndtDetail, // 结构制品期末库存详情(总)
+  structureFinishedInDetail, // 结构制品入库库存详情(总)
+  structureFinishedOutDetail, // 结构制品出库库存详情(总)
   enclosureProductSendReceiveStorageDetail, // 发运管理围护制成品入发存详情
   mesBeginningInventoryDetail, // 期初库存
   mesEndInventoryDetail, // 期末库存
@@ -495,7 +504,10 @@ export default {
   boxEndInventoryDetail, // 期末库存
   boxInboundInventoryDetail, // 入库量
   boxOutboundInventoryDetail, // 出库量
-  sectionProductInventoryDetail, // 库存详情
+  sectionProductStartDetail, // 分段期初库存详情(总)
+  sectionProductEndDetail, // 分段期末库存详情(总)
+  sectionProductInDetail, // 分段入库库存详情(总)
+  sectionProductOutDetail, // 分段出库库存详情(总)
   enclosureBeginningInventoryDetail, // 围护期初库存
   enclosureEndInventoryDetail, // 围护期末库存
   enclosureInboundInventoryDetail, // 围护入库量

@@ -7,7 +7,7 @@
   >
     <template #titleRight>
       <print-table
-      api-key="sectionProductInventoryDetail"
+      :api-key="props.inventoryType === 1 ? 'sectionProductStartDetail' : props.inventoryType === 2 ? 'sectionProductInDetail' : props.inventoryType === 3 ? 'sectionProductOutDetail' : 'sectionProductEndDetail'"
       v-permission="permission.detailPrint"
       :params="{
           ...queryList,
@@ -48,7 +48,7 @@
           <common-button class="filter-item" type="success" size="mini" icon="el-icon-search" @click="fetchList" style="margin-left: 10px">搜索</common-button>
           <common-button class="filter-item" type="warning" size="mini" icon="el-icon-refresh-left" @click=";(updata = {}), fetchList()">重置</common-button>
         </div>
-        <common-table :data="list" :data-format="dataFormat">
+        <common-table :data="list" :data-format="dataFormat" v-loading="tableLoading">
           <el-table-column label="序号" type="index" align="center" min-width="50" />
           <el-table-column label="项目简称" align="center" min-width="120" prop="project">
             <template #default="{row}">
@@ -130,9 +130,13 @@ const queryList = computed(() => {
     type: props.inventoryType
   }
 })
+const tableLoading = ref(false)
 
 const dataFormat = ref([
-  ['netWeight', ['to-fixed', DP.COM_WT__KG]]
+  ['netWeight', ['to-fixed', DP.COM_WT__KG]],
+  ['grossWeight', ['to-fixed', DP.COM_WT__KG]],
+  ['totalNetWeight', ['to-fixed', DP.COM_WT__KG]],
+  ['totalGrossWeight', ['to-fixed', DP.COM_WT__KG]]
 ])
 
 function getAreaInfo(val) {
@@ -141,6 +145,7 @@ function getAreaInfo(val) {
 
 async function fetchList() {
   list.value = []
+  tableLoading.value = true
   try {
     const res = await artifactProductDetail({
       ...queryList.value,
@@ -152,6 +157,8 @@ async function fetchList() {
     console.log(res)
   } catch (error) {
     console.log(error)
+  } finally {
+    tableLoading.value = false
   }
 }
 

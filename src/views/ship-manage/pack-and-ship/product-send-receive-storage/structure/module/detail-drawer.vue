@@ -9,7 +9,7 @@
   >
     <template #titleRight>
       <print-table
-        api-key="structureFinishedGoodsInventoryDetail"
+        :api-key="props.inventoryType === 1 ? 'structureFinishedStartDetail' : props.inventoryType === 2 ? 'structureFinishedInDetail' : props.inventoryType === 3 ? 'structureFinishedOutDetail' : 'structureFinishedEndtDetail'"
         v-permission="permission.detailPrint"
         :params="{
           ...queryList,
@@ -54,7 +54,7 @@
             重置
           </common-button>
         </div>
-        <common-table :data="list" v-loading="tableLoading">
+        <common-table :data="list" v-loading="tableLoading" :data-format="dataFormat">
           <el-table-column label="序号" align="center" type="index" min-width="50" />
           <el-table-column label="项目简称" align="center" min-width="120" prop="project">
             <template #default="{ row }">
@@ -91,6 +91,7 @@
 import { defineProps, defineEmits, computed, ref } from 'vue'
 import { mesProductSendReceiveStoragePM as permission } from '@/page-permission/ship-manage'
 import { artifactProductDetail } from '@/api/ship-manage/pack-and-ship/product-receive-send-storage'
+import { DP } from '@/settings/config'
 import usePagination from '@compos/use-pagination'
 import useVisible from '@compos/use-visible'
 import monomerSelect from '@/components-system/plan/monomer-select'
@@ -119,6 +120,13 @@ const { visible: showDrawer, handleClose } = useVisible({
 })
 
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchList })
+
+const dataFormat = ref([
+  ['netWeight', ['to-fixed', DP.COM_WT__KG]],
+  ['grossWeight', ['to-fixed', DP.COM_WT__KG]],
+  ['totalNetWeight', ['to-fixed', DP.COM_WT__KG]],
+  ['totalGrossWeight', ['to-fixed', DP.COM_WT__KG]]
+])
 
 const list = ref([])
 const tableLoading = ref(false)
