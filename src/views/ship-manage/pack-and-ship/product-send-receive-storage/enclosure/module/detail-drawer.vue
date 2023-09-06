@@ -138,9 +138,13 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 
 async function fetchBatch() {
   try {
-    const data = await getEnclosureBatch(uploadData.value?.projectId)
-    areaInfo.value = data || []
-    areaInfo.value = areaInfo.value.filter(v => v.category === props.category)
+    if (uploadData.value.projectId !== null) {
+      const data = await getEnclosureBatch(uploadData.value?.projectId)
+      areaInfo.value = data || []
+      console.log(data)
+      areaInfo.value = areaInfo.value.filter(v => v.category === queryData.value.category)
+      console.log(areaInfo.value)
+    }
   } catch (e) {
     console.log('获取围护的批次失败', e)
   }
@@ -155,8 +159,6 @@ async function fetchList() {
       ...uploadData.value,
       ...queryPage
     })
-    console.log(res)
-    console.log(props.query)
     list.value = res.content
     setTotalPage(res.totalElements)
   } catch (error) {
