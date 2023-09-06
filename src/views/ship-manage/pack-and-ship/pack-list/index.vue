@@ -80,6 +80,14 @@
         min-width="60"
       />
       <el-table-column
+        label="核算量"
+        align="center"
+        min-width="70"
+        v-if="columns.visible('mete')"
+        key="mete"
+        prop="mete"
+      />
+      <el-table-column
         v-if="columns.visible('totalGrossWeight') && crud.query.productType === packTypeEnum.STRUCTURE.V"
         key="totalGrossWeight"
         prop="totalGrossWeight"
