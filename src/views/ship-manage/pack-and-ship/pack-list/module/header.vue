@@ -257,12 +257,14 @@ async function getLabelInfo(row) {
     if (auxList?.length > 0 && structureList?.length > 0) {
       for (let m = 0; m < auxList.length; m++) {
         const a = auxList[m]
-        const { name, specification, measureUnit, serialNumber, material, packageQuantity, grossWeight, plate, length } = a
+        const { name, specification, measureUnit, accountingUnit, packageMete, serialNumber, material, packageQuantity, grossWeight, plate, length } = a
         _auxList.push({
           serialNumber,
           name,
           specification,
           measureUnit,
+          accountingUnit,
+          packageMete,
           material,
           quantity: packageQuantity,
           totalWeight: (packageQuantity * grossWeight).toFixed(DP.COM_WT__KG),
@@ -297,6 +299,7 @@ async function getLabelInfo(row) {
               name,
               specification,
               measureUnit,
+              accountingUnit, packageMete,
               serialNumber,
               material,
               packageQuantity,
@@ -311,6 +314,7 @@ async function getLabelInfo(row) {
               name,
               specification,
               measureUnit,
+              accountingUnit, packageMete,
               material,
               quantity: packageQuantity,
               totalWeight: (packageQuantity * grossWeight).toFixed(DP.COM_WT__KG),
