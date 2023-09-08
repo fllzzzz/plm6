@@ -44,6 +44,11 @@
         <div>{{ scope.row.projectManagerName || '-' }}</div>
       </template>
     </el-table-column>
+    <el-table-column v-if="columns.visible('customerUnit')" key="customerUnit" prop="customerUnit" :show-overflow-tooltip="true" label="客户名称" align="center" min-width="90">
+      <template v-slot="scope">
+        <div>{{ scope.row.customerUnit || '-' }}</div>
+      </template>
+    </el-table-column>
     <el-table-column v-if="columns.visible('signingDate')" key="signingDate" prop="signingDate" :show-overflow-tooltip="true" label="签订日期" align="center" width="80">
       <template v-slot="scope">
         <div>{{ scope.row.signingDate? parseTime(scope.row.signingDate,'{y}-{m}-{d}'):'-' }}</div>

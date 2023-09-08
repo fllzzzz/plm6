@@ -29,7 +29,7 @@
       <el-table-column v-if="columns.visible('shortName')" key="shortName" prop="shortName" :show-overflow-tooltip="true" label="项目" min-width="150">
         <template v-slot="scope">
           <el-tooltip :content="scope.row.serialNumber+' '+scope.row.name" :show-after="50" placement="top">
-            <span>{{scope.row.shortName}}</span>
+            <span>{{showFullName?scope.row.name:scope.row.shortName}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -233,7 +233,7 @@
 
 <script setup>
 import crudApi, { editStatus, downloadProjectInfo } from '@/api/contract/project'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { ElSelect } from 'element-plus'
 
 import checkPermission from '@/utils/system/check-permission'
@@ -258,6 +258,10 @@ import ExportButton from '@comp-common/export-button/index.vue'
 const store = useStore()
 
 const { decimalPrecision } = useDecimalPrecision()
+
+const showFullName = computed(() => {
+  return store.getters.projectNameShowConfig.showProjectFullName
+})
 
 const optShow = {
   add: true,

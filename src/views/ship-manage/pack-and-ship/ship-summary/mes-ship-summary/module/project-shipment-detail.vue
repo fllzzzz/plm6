@@ -113,7 +113,6 @@
         v-show="category === mesShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V"
         :data="list"
         v-loading="tableLoading"
-        :show-empty-symbol="false"
       >
         <el-table-column prop="index" label="序号" align="center" width="45" type="index" />
         <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" :show-overflow-tooltip="true" min-width="100px" />
@@ -127,9 +126,11 @@
           :show-overflow-tooltip="true"
           min-width="120px"
         />
-        <el-table-column key="unit" prop="unit" label="单位" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="accountingUnit" prop="accountingUnit" label="核算单位" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="mete" prop="mete" label="核算量" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="measureUnit" prop="measureUnit" label="计量单位" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="quantity" prop="quantity" label="清单量" align="center" :show-overflow-tooltip="true" />
-        <el-table-column key="shipQuantity" prop="shipQuantity" label="已发运" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="cargoQuantity" prop="cargoQuantity" label="已发运" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="unCargoQuantity" prop="unCargoQuantity" label="未发运" align="center" :show-overflow-tooltip="true" />
       </common-table>
     </div>
