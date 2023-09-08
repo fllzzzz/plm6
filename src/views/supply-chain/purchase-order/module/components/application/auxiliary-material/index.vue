@@ -210,13 +210,13 @@ function delRow(sn, $index) {
 
 function handleQuantityChange(row) {
   if (form.useRequisitions) {
-    row.mete = toPrecision(row.quantity * row.unitNet, row.measurePrecision)
+    row.mete = toPrecision(row.quantity * row.unitNet, row.accountingPrecision)
   }
 }
 
 function handleMeteChange(row) {
   if (form.useRequisitions) {
-    row.quantity = toPrecision(row.mete * row.accountingUnitNet, row.accountingPrecision)
+    row.quantity = toPrecision(row.mete * row.accountingUnitNet, row.measurePrecision)
   }
 }
 

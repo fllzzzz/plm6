@@ -478,16 +478,16 @@ function delRow(sn, $index) {
   }
 }
 
-function handleQuantityChange(row, { unitNet, measurePrecision }) {
+function handleQuantityChange(row, { unitNet, accountingPrecision }) {
   if (!props.boolPartyA) {
-    row.mete = toPrecision(row.quantity * unitNet, measurePrecision)
+    row.mete = toPrecision(row.quantity * unitNet, accountingPrecision)
   }
 }
 
-function handleMeteChange(row, { accountingUnitNet, accountingPrecision }) {
+function handleMeteChange(row, { accountingUnitNet, measurePrecision }) {
   // 非甲供 并且 存在计量单位
   if (!props.boolPartyA && row.measureUnit) {
-    row.quantity = toPrecision(row.mete * accountingUnitNet, accountingPrecision)
+    row.quantity = toPrecision(row.mete * accountingUnitNet, measurePrecision)
   }
 }
 
