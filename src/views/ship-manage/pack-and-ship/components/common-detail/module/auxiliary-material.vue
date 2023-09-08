@@ -13,14 +13,20 @@
     </el-table-column>
     <!-- <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" /> -->
     <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" />
-    <el-table-column prop="measureUnit" label="单位" align="center" />
     <el-table-column :show-overflow-tooltip="true" prop="color" label="颜色">
       <template #default="{ row }">
         <span>{{ row.color ? row.color : '-' }}</span>
       </template>
     </el-table-column>
     <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" />
+    <el-table-column :show-overflow-tooltip="true" prop="measureUnit" label="计量单位" align="center" />
     <el-table-column prop="showQuantity" label="数量" align="center" />
+    <el-table-column :show-overflow-tooltip="true" prop="accountingUnit" label="核算单位" align="center" />
+    <el-table-column prop="shipMete" label="核算量" align="center">
+      <template #default="{row}">
+        <span>{{ row.shipMete ? row.shipMete : row.packageMete }}</span>
+      </template>
+    </el-table-column>
   </common-table>
 </template>
 

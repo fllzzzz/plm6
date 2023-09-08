@@ -192,6 +192,7 @@
           <span :style="{ color: scope.row.acceptDifference ? '#13ce66' : '#ff4949' }">{{ scope.row.differenceRate }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="构件毛重" align="center" v-if="columns.visible('totalGrossWeight')" prop="totalGrossWeight" key="totalGrossWeight" :show-overflow-tooltip="true"></el-table-column>
       <!--详情与下载-->
       <el-table-column v-if="checkPermission([...permission.detail])" label="操作" width="100px" align="center" fixed="right">
         <template v-slot="scope">
@@ -249,7 +250,8 @@ const { crud, columns } = useCRUD(
     sort: ['auditTime.desc'],
     permission: { ...permission },
     crudApi: { ...crudApi },
-    optShow: { ...optShow }
+    optShow: { ...optShow },
+    invisibleColumns: ['totalGrossWeight']
   },
   tableRef
 )

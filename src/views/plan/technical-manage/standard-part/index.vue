@@ -3,7 +3,7 @@
     <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length > 0">
       <!--工具栏-->
       <div class="head-container">
-        <mHeader :project-id="globalProjectId" @currentChange="currentChange" @currentAreaChange="currentAreaChange"/>
+        <mHeader :project-id="globalProjectId" @currentChange="currentChange" @currentAreaChange="currentAreaChange" />
       </div>
       <!--表格渲染-->
       <common-table
@@ -19,45 +19,140 @@
         :cell-class-name="wrongCellMask"
         @selection-change="crud.selectionChangeHandler"
       >
-      <el-table-column key="selection" type="selection" width="55" />
-      <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-      <el-table-column
-        prop="name"
-        label="名称"
-        align="center"
-        fixed="left"
-        min-width="150"
-        v-if="columns.visible('name')"
-        :show-overflow-tooltip="true"
-      >
-        <template #default="{ row }">
-          <el-input v-if="row.isModify" v-model.trim="row.name" type="text" placeholder="名称" style="width:100%" maxlength="20"/>
-          <span v-else>{{row.name}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('specification')" :show-overflow-tooltip="true" prop="specification" label="规格" align="center" min-width="200px">
-        <template #default="{ row }">
-          <el-input v-if="row.isModify" v-model.trim="row.specification" type="text" placeholder="规格" style="width:100%" maxlength="20"/>
-          <span v-else>{{row.specification}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('measureUnit')" :show-overflow-tooltip="true" prop="measureUnit" label="单位" align="center" min-width="70px" />
-      <el-table-column v-if="columns.visible('quantity')" :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" min-width="120px">
-        <template #default="{ row }">
-          <common-input-number
-            v-if="row.isModify"
-            v-model="row.quantity"
-            :min="0"
-            :max="999999999"
-            :controls="false"
-            :step="1"
-            size="mini"
-            placeholder="数量"
-          />
-          <span v-else>{{ row.quantity }}</span>
-        </template>
-      </el-table-column>
-      <!-- <el-table-column v-if="columns.visible('quantity')" :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" min-width="120px">
+        <el-table-column key="selection" type="selection" width="55" />
+        <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
+        <el-table-column
+          prop="name"
+          label="名称"
+          align="center"
+          fixed="left"
+          min-width="150"
+          v-if="columns.visible('name')"
+          :show-overflow-tooltip="true"
+        >
+          <template #default="{ row }">
+            <el-input v-if="row.isModify" v-model.trim="row.name" type="text" placeholder="名称" style="width: 100%" maxlength="20" />
+            <span v-else>{{ row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('specification')"
+          :show-overflow-tooltip="true"
+          prop="specification"
+          label="规格"
+          align="center"
+          min-width="200px"
+        >
+          <template #default="{ row }">
+            <el-input
+              v-if="row.isModify"
+              v-model.trim="row.specification"
+              type="text"
+              placeholder="规格"
+              style="width: 100%"
+              maxlength="20"
+            />
+            <span v-else>{{ row.specification }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('accountingUnit')"
+          :show-overflow-tooltip="true"
+          prop="accountingUnit"
+          label="核算单位"
+          align="center"
+          min-width="180px"
+        >
+          <template #default="{ row }">
+            <div v-if="row.isModify" style="display: flex; justify-content: center; align-items: center;">
+              <div>
+                <el-input v-if="!row.boolWeightTypeEnum" v-model.trim="row.accountingUnit" placeholder="核算单位" type="text" style="width: 100px" maxlength="20" />
+                <common-select
+                  v-else
+                  style="width: 100px"
+                  v-model="row.accountingUnit"
+                  placeholder="核算单位"
+                  :options="weightUnit"
+                  :data-structure="{ key: 'value', label: 'label', value: 'value' }"
+                />
+              </div>
+              <common-select
+                v-model="row.boolWeightTypeEnum"
+                style="width: 100px; margin-left: 10px"
+                :options="accountingUnitValue"
+                :data-structure="{ key: 'value', label: 'label', value: 'value' }"
+              />
+            </div>
+            <span v-else>{{ row.accountingUnit }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('mete')"
+          :show-overflow-tooltip="true"
+          prop="mete"
+          label="核算量"
+          align="center"
+          min-width="120px"
+        >
+          <template #default="{ row }">
+            <common-input-number
+              v-if="row.isModify"
+              v-model="row.mete"
+              placeholder="核算量"
+              size="mini"
+              :controls="false"
+              :precision="3"
+              :step="0.001"
+              :min="0"
+              :max="99999"
+            />
+            <span v-else>{{ row.mete }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('measureUnit')"
+          :show-overflow-tooltip="true"
+          prop="measureUnit"
+          label="单位"
+          align="center"
+          min-width="70px"
+        >
+          <template #default="{ row }">
+            <el-input
+              v-if="row.isModify"
+              v-model="row.measureUnit"
+              placeholder="单位"
+              type="text"
+              style="width: 100%"
+              maxlength="20"
+            ></el-input>
+            <span v-else>{{ row.measureUnit }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('quantity')"
+          :show-overflow-tooltip="true"
+          prop="quantity"
+          label="数量"
+          align="center"
+          min-width="120px"
+        >
+          <template #default="{ row }">
+            <common-input-number
+              v-if="row.isModify"
+              v-model="row.quantity"
+              :min="0"
+              :max="999999999"
+              :controls="false"
+              :precision="3"
+              :step="0.001"
+              size="mini"
+              placeholder="数量"
+            />
+            <span v-else>{{ row.quantity }}</span>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column v-if="columns.visible('quantity')" :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
             v-if="row.isModify"
@@ -95,63 +190,70 @@
           <span>{{toThousand(scope.row.totalWeight,DP.COM_WT__KG)}}</span>
         </template>
       </el-table-column> -->
-      <el-table-column v-if="columns.visible('useProperty')" :show-overflow-tooltip="true" prop="useProperty" label="使用范围" align="center" min-width="120px">
-      <template #default="{ row }">
-        <common-select
-          v-if="row.isModify"
-          v-model="row.useProperty"
-          :options="auxiliaryMaterialUseTypeEnum.ENUM"
-          type="enum"
-          size="small"
-          clearable
-          placeholder="使用范围"
-        />
-        <span v-else>{{ auxiliaryMaterialUseTypeEnum.VL[row.useProperty] }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column prop="remark" label="备注" :show-overflow-tooltip="true" align="center">
-      <template #default="{ row }">
-        <el-input
-          v-if="row.isModify"
-          v-model.trim="row.remark"
-          type="textarea"
-          :autosize="{ minRows: 1, maxRows: 6 }"
-          :maxlength="200"
-          placeholder="备注"
-          style="width:100%"
-        />
-        <span v-else>{{ row.remark }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-        v-if="checkPermission([...permission.edit, ...permission.del])"
-        label="操作"
-        width="180px"
-        align="center"
-        fixed="right"
-      >
-        <template v-slot="scope">
-          <template v-if="scope.row.isModify">
-            <common-button type="info" size="mini" @click="rowCancel(scope.row)">取消</common-button>
-            <common-button type="primary" size="mini" @click="rowSubmit(scope.row)">保存</common-button>
+        <el-table-column
+          v-if="columns.visible('useProperty')"
+          :show-overflow-tooltip="true"
+          prop="useProperty"
+          label="使用范围"
+          align="center"
+          min-width="120px"
+        >
+          <template #default="{ row }">
+            <common-select
+              v-if="row.isModify"
+              v-model="row.useProperty"
+              :options="auxiliaryMaterialUseTypeEnum.ENUM"
+              type="enum"
+              size="small"
+              clearable
+              placeholder="使用范围"
+            />
+            <span v-else>{{ auxiliaryMaterialUseTypeEnum.VL[row.useProperty] }}</span>
           </template>
-          <template v-else>
-            <common-button size="small" class="el-icon-edit" type="primary" @click="editRow(scope.row)" v-permission="permission.edit"/>
-            <el-popconfirm
-              confirm-button-text="确定"
-              cancel-button-text="取消"
-              icon-color="red"
-              title="确定删除吗?"
-              @confirm="deleteRow(scope.row)"
-              v-if="checkPermission(permission.del)"
-            >
-              <template #reference>
-                <common-button size="small" class="el-icon-delete" type="danger"/>
-              </template>
-            </el-popconfirm>
+        </el-table-column>
+        <el-table-column prop="remark" label="备注" :show-overflow-tooltip="true" align="center">
+          <template #default="{ row }">
+            <el-input
+              v-if="row.isModify"
+              v-model.trim="row.remark"
+              type="textarea"
+              :autosize="{ minRows: 1, maxRows: 6 }"
+              :maxlength="200"
+              placeholder="备注"
+              style="width: 100%"
+            />
+            <span v-else>{{ row.remark }}</span>
           </template>
-        </template>
-      </el-table-column>
+        </el-table-column>
+        <el-table-column
+          v-if="checkPermission([...permission.edit, ...permission.del])"
+          label="操作"
+          width="180px"
+          align="center"
+          fixed="right"
+        >
+          <template v-slot="scope">
+            <template v-if="scope.row.isModify">
+              <common-button type="info" size="mini" @click="rowCancel(scope.row)">取消</common-button>
+              <common-button type="primary" size="mini" @click="rowSubmit(scope.row)">保存</common-button>
+            </template>
+            <template v-else>
+              <common-button size="small" class="el-icon-edit" type="primary" @click="editRow(scope.row)" v-permission="permission.edit" />
+              <el-popconfirm
+                confirm-button-text="确定"
+                cancel-button-text="取消"
+                icon-color="red"
+                title="确定删除吗?"
+                @confirm="deleteRow(scope.row)"
+                v-if="checkPermission(permission.del)"
+              >
+                <template #reference>
+                  <common-button size="small" class="el-icon-delete" type="danger" />
+                </template>
+              </el-popconfirm>
+            </template>
+          </template>
+        </el-table-column>
       </common-table>
       <!--分页组件-->
       <pagination />
@@ -188,6 +290,28 @@ const optShow = {
   del: true,
   download: false
 }
+
+const accountingUnitValue = ref([
+  {
+    value: true,
+    label: '重量'
+  },
+  {
+    value: false,
+    label: '其他'
+  }
+])
+
+const weightUnit = ref([
+  {
+    value: '吨',
+    label: '吨'
+  },
+  {
+    value: '千克',
+    label: '千克'
+  }
+])
 
 const tableRef = ref()
 const originRow = ref({})
@@ -293,7 +417,7 @@ async function rowSubmit(row) {
 }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {
-  data.data.content.map(v => {
+  data.data.content.map((v) => {
     v.projectId = v.project.id
     if (isNotBlank(v.monomer)) {
       v.monomerId = v.monomer.id
