@@ -36,20 +36,20 @@
     <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" min-width="150" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
-          <span v-empty-text="row.classifyName" />
+          <span>{{ row.classifyName || '-'}}</span>
         </el-tooltip>
       </template>
     </el-table-column>
     <el-table-column prop="specification" label="规格" align="center" min-width="200px" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.specificationLabels" placement="top">
-          <span v-empty-text="row.specification" />
+          <span>{{row.specification || '-'}}</span>
         </el-tooltip>
       </template>
     </el-table-column>
     <el-table-column prop="measureUnit" label="计量单位" align="center" min-width="70px">
       <template #default="{ row }">
-        <span v-empty-text>{{ row.measureUnit }}</span>
+        <span>{{ row.measureUnit || '-' }}</span>
       </template>
     </el-table-column>
     <template v-if="props.boolPartyA || props.noDetail">
@@ -85,7 +85,7 @@
     </template>
     <el-table-column prop="accountingUnit" label="核算单位" align="center" min-width="70px">
       <template #default="{ row }">
-        <span v-empty-text>{{ row.accountingUnit }}</span>
+        <span>{{ row.accountingUnit || '-' }}</span>
       </template>
     </el-table-column>
     <template v-if="props.boolPartyA || props.noDetail">
@@ -129,7 +129,7 @@
           size="mini"
           placeholder="颜色"
         />
-        <span v-else v-empty-text>{{ row.color }}</span>
+        <span v-else>{{ row.color || '-' }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="brand" label="品牌" align="center" min-width="120px">
@@ -141,7 +141,7 @@
           size="mini"
           placeholder="品牌"
         />
-        <span v-else v-empty-text>{{ row.brand }}</span>
+        <span v-else>{{ row.brand || '-'}}</span>
       </template>
     </el-table-column>
     <template v-if="!props.boolPartyA && !props.noDetail">
