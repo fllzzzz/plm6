@@ -21,6 +21,7 @@
       />
       <time-range-select :query="query" clearable class="filter-item" style="width: 270px" @change="crud.toQuery" />
       <el-input v-model.trim="query.projectManagerName" placeholder="项目经理搜索" style="width: 200px" class="filter-item" />
+      <el-input v-model.trim="query.customerUnit" placeholder="客户名称搜索" style="width: 200px" class="filter-item" />
       <rrOperation />
       <div v-loading="totalLoading" style="margin-bottom: 6px">
         <el-row :gutter="10" class="panel-group">
@@ -101,6 +102,10 @@ const { crud, query, CRUD } = regHeader(defaultQuery)
 
 const totalSum = ref({})
 const totalLoading = ref(false)
+
+CRUD.HOOK.afterToQuery = () => {
+  getSum()
+}
 
 async function getSum() {
   try {
