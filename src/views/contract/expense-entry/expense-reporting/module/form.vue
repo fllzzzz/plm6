@@ -83,7 +83,7 @@
             placeholder="输入报销费用"
             controls-position="right"
             :precision="DP.YUAN"
-            :min="0"
+            :min="-9999999999"
             :max="9999999999"
           />
         </el-form-item>
@@ -133,8 +133,8 @@ const defaultForm = {
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
 
 const validateQuantity = (rule, value, callback) => {
-  if (!value) {
-    callback(new Error('填写数据必须大于0'))
+  if (value === 0) {
+    callback(new Error('报销费用不能为0'))
   }
   callback()
 }
