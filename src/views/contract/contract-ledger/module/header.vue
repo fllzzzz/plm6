@@ -40,6 +40,12 @@
         style="width:200px"
         class="filter-item"
       />
+       <el-input
+        v-model.trim="query.customerUnit"
+        placeholder="客户名称搜索"
+        style="width:200px"
+        class="filter-item"
+      />
       <rrOperation/>
       <crudOperation>
         <template #optLeft>
@@ -65,7 +71,7 @@
 
 <script setup>
 import { ledgerSum } from '@/api/contract/contract-ledger'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 
 import { regHeader } from '@compos/use-crud'
 import { settlementStatusEnum } from '@enum-ms/finance'
@@ -86,17 +92,13 @@ const defaultQuery = {
   projectManagerName: undefined
 }
 
-const { crud, query } = regHeader(defaultQuery)
+const { crud, query, CRUD } = regHeader(defaultQuery)
 
 const totalSum = ref({})
 
-watch(
-  () => crud.query,
-  (value) => {
-    getSum()
-  },
-  { deep: true, immediate: true }
-)
+CRUD.HOOK.afterToQuery = () => {
+  getSum()
+}
 
 async function getSum() {
   try {

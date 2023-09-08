@@ -23,7 +23,7 @@ export function add(data) {
     module: 'plan',
     url: 'standardPart',
     method: 'post',
-    data: data.list
+    data
   })
 }
 

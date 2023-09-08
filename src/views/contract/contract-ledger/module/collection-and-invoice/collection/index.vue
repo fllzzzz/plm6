@@ -134,6 +134,19 @@
           <div v-else>{{ scope.row.paymentUnit  }}</div>
         </template>
       </el-table-column>
+      <el-table-column key="remark" prop="remark" label="备注" align="center" min-width="90" :show-overflow-tooltip="true">
+        <template v-slot="scope">
+          <el-input
+            v-if="scope.row.isModify"
+            v-model.trim="scope.row.remark"
+            placeholder="备注"
+            type="textarea"
+            style="width:100%;"
+            maxlength="200"
+          />
+          <div v-else>{{ scope.row.remark  }}</div>
+        </template>
+      </el-table-column>
       <el-table-column key="writtenByName" prop="writtenByName" label="办理人" align="center" width="100px">
         <template v-slot="scope">
           <div>{{ scope.row.writtenByName }}</div>

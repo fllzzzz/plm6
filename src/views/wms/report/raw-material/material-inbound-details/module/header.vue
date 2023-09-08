@@ -122,13 +122,16 @@
         <export-button v-permission="permission.get" :params="query" :fn="exportDetailsExcel" response-header-result>
           下载入库明细（根据查询条件）
         </export-button>
+        <export-button v-permission="permission.get" :params="query" :fn="exportSalesReturnExcel" response-header-result>
+          下载入库明细（体现退货，根据查询条件）
+        </export-button>
       </template>
     </crudOperation>
   </div>
 </template>
 
 <script setup>
-import { exportDetailsExcel } from '@/api/wms/report/raw-material/inbound'
+import { exportDetailsExcel, exportSalesReturnExcel } from '@/api/wms/report/raw-material/inbound'
 import { ref, inject } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { supplierTypeEnum } from '@enum-ms/supplier'
