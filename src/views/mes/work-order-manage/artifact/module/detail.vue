@@ -63,13 +63,13 @@
           <common-button v-permission="permission.edit" v-show="!processId && isEdit === false && props.detailData.productType === componentTypeEnum.ARTIFACT.V" size="mini" type="primary" @click="editMode">编辑</common-button>
           <el-popover
             v-model:visible="delBtn"
-            placement="top"
+            placement="bottom"
             width="180"
             trigger="click"
             @show="onPopoverBatchClickShow"
             @hide="onPopoverBatchClickHide"
           >
-            <p>是否确认批量撤回操作</p>
+            <p>是否确认批量撤回操作？</p>
             <div style="text-align: right; margin: 0">
               <common-button size="mini" type="text" @click.stop="cancelBatch">取消</common-button>
               <common-button size="mini" type="danger" @click="batchBack">确定</common-button>
@@ -133,7 +133,7 @@
                 @show="onPopoverDelClickShow"
                 @hide="onPopoverDelClickHide"
               >
-                <p>是否确认撤回操作</p>
+                <p>是否确认撤回操作？</p>
                 <div style="text-align: right; margin: 0">
                   <common-button size="mini" type="text" @click.stop="cancelDelete(scope.row)">取消</common-button>
                   <common-button type="primary" size="mini" @click.stop="handleDelete(scope.row)">确定</common-button>
@@ -536,7 +536,7 @@ async function initBack() {
 // 整个工单撤回
 async function taskOrderBack() {
   if (!isAllOrder.value) return
-  ElMessageBox.confirm(`是否确认撤回整个工单`, '提示', {
+  ElMessageBox.confirm(`是否确认撤回整个工单？`, '提示', {
     confirmButtonText: '确认',
     cancelButtonText: '取消',
     type: 'warning'
