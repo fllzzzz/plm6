@@ -180,6 +180,27 @@
         width="80"
       />
       <el-table-column
+        v-if="columns.visible('freight')"
+        align="right"
+        key="freight"
+        prop="freight"
+        show-overflow-tooltip
+        label="成品运费"
+        min-width="100"
+      >
+        <template #default="{ row }">
+          <span
+            v-if="checkPermission(permission.detail)"
+            style="color: #ff5600"
+            class="pointer"
+            @click="openDetail('freight', row)"
+          >
+            {{ row.freight }}
+          </span>
+          <span v-else>{{ row.freight }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
         v-if="columns.visible('availableBalance')"
         align="right"
         key="availableBalance"
@@ -292,6 +313,7 @@
     <invoice-record v-model="invoiceVisible" :detail-row="detailRow" />
     <collection-record v-model="collectionVisible" :detail-row="detailRow" />
     <export-record v-model="exportVisible" :detail-row="detailRow" />
+    <freight-record v-model="freightVisible" :detail-row="detailRow" />
     <happened-record v-model="happenedVisible" :detail-row="detailRow" />
     <available-balance v-model="availableBalanceVisible" :detail-row="detailRow" />
     <composite-cost v-model="compositeCostVisible" :detail-row="detailRow" />
@@ -317,6 +339,7 @@ import costPageDialog from './cost-page-dialog/index'
 import invoiceRecord from './module/invoice-record'
 import collectionRecord from './module/collection-record'
 import exportRecord from './module/export-tax-rebate-record'
+import freightRecord from './module/freight-record'
 import happenedRecord from './module/happened-record'
 import availableBalance from './module/available-balance'
 import compositeCost from './module/composite-cost'
@@ -333,6 +356,7 @@ const tableRef = ref()
 const invoiceVisible = ref(false)
 const collectionVisible = ref(false)
 const exportVisible = ref(false)
+const freightVisible = ref(false)
 const happenedVisible = ref(false)
 const availableBalanceVisible = ref(false)
 const compositeCostVisible = ref(false)
@@ -350,6 +374,7 @@ const columnsDataFormat = ref([
   ['retainedProfit', ['to-thousand-ck', 'YUAN']],
   ['happenedAmount', 'to-thousand'],
   ['availableBalance', 'to-thousand'],
+  ['freight', 'to-thousand'],
   ['periodExpense', 'to-thousand'],
   ['invoiceAmount', 'to-thousand'],
   ['projectRetention', 'to-thousand'],
@@ -385,6 +410,8 @@ function openDetail(type, row) {
     collectionVisible.value = true
   } else if (type === 'export') {
     exportVisible.value = true
+  } else if (type === 'freight') {
+    freightVisible.value = true
   } else if (type === 'happened') {
     happenedVisible.value = true
   } else if (type === 'availableBalance') {
