@@ -55,6 +55,49 @@
             <span v-else>{{ row.specification }}</span>
           </template>
         </el-table-column>
+         <el-table-column
+          v-if="columns.visible('measureUnit')"
+          :show-overflow-tooltip="true"
+          prop="measureUnit"
+          label="计量单位"
+          align="center"
+          min-width="70px"
+        >
+          <template #default="{ row }">
+            <el-input
+              v-if="row.isModify"
+              v-model="row.measureUnit"
+              placeholder="单位"
+              type="text"
+              style="width: 100%"
+              maxlength="20"
+            ></el-input>
+            <span v-else>{{ row.measureUnit }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('quantity')"
+          :show-overflow-tooltip="true"
+          prop="quantity"
+          label="数量"
+          align="center"
+          min-width="120px"
+        >
+          <template #default="{ row }">
+            <common-input-number
+              v-if="row.isModify"
+              v-model="row.quantity"
+              :min="0"
+              :max="999999999"
+              :controls="false"
+              :precision="3"
+              :step="0.001"
+              size="mini"
+              placeholder="数量"
+            />
+            <span v-else>{{ row.quantity }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('accountingUnit')"
           :show-overflow-tooltip="true"
@@ -107,49 +150,6 @@
               :max="99999"
             />
             <span v-else>{{ row.mete }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('measureUnit')"
-          :show-overflow-tooltip="true"
-          prop="measureUnit"
-          label="单位"
-          align="center"
-          min-width="70px"
-        >
-          <template #default="{ row }">
-            <el-input
-              v-if="row.isModify"
-              v-model="row.measureUnit"
-              placeholder="单位"
-              type="text"
-              style="width: 100%"
-              maxlength="20"
-            ></el-input>
-            <span v-else>{{ row.measureUnit }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('quantity')"
-          :show-overflow-tooltip="true"
-          prop="quantity"
-          label="数量"
-          align="center"
-          min-width="120px"
-        >
-          <template #default="{ row }">
-            <common-input-number
-              v-if="row.isModify"
-              v-model="row.quantity"
-              :min="0"
-              :max="999999999"
-              :controls="false"
-              :precision="3"
-              :step="0.001"
-              size="mini"
-              placeholder="数量"
-            />
-            <span v-else>{{ row.quantity }}</span>
           </template>
         </el-table-column>
         <!-- <el-table-column v-if="columns.visible('quantity')" :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" min-width="120px">

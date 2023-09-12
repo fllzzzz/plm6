@@ -160,3 +160,22 @@ export function setRejectBasicConf(data) {
     data
   })
 }
+
+// 获取退库审核配置
+export function getReturnBasicConf() {
+  return request({
+    module: 'wms',
+    url: 'config/return',
+    method: 'get'
+  })
+}
+
+// 保存退库审核配置
+export function setReturnBasicConf(data) {
+  return request({
+    module: 'wms',
+    url: 'config/return',
+    method: 'put',
+    data
+  })
+}

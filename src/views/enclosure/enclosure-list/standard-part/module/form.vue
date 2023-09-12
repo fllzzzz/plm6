@@ -6,7 +6,7 @@
     :title="crud.status.title"
     :show-close="true"
     :wrapper-closable="false"
-    size="65%"
+    size="90%"
     custom-class="standard-part"
   >
     <template #titleAfter>
@@ -20,7 +20,7 @@
         <common-table
           ref="detailRef"
           border
-          :data="form.list"
+          :data="form.standardPartList"
           :max-height="maxHeight-110"
           style="width: 100%"
           class="table-form"
@@ -77,6 +77,27 @@
                 placeholder="数量"
                 @change="weightChange(scope.row)"
               /> -->
+            </template>
+          </el-table-column>
+          <el-table-column label="核算单位" align="center" min-width="120" prop="accountingUnit">
+            <template v-slot="scope">
+              <div style="display: flex; justify-content: space-between; align-items: center">
+                <div>
+                  <el-input v-if="!scope.row.boolWeightTypeEnum" v-model="scope.row.accountingUnit" style="width: 110px" placeholder="核算单位"></el-input>
+                  <common-select v-else style="width: 110px" :options="unitWeight" v-model="scope.row.accountingUnit" :data-structure="{ key: 'value', label: 'label', value: 'value' }"></common-select>
+                </div>
+                <common-select
+                  style="width: 100px"
+                  :options="accountingUnit"
+                  v-model="scope.row.boolWeightTypeEnum"
+                  :data-structure="{ key: 'value', label: 'label', value: 'value' }"
+                ></common-select>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="mete" label="核算量" align="center" min-width="80">
+            <template v-slot="scope">
+              <common-input-number v-model="scope.row.mete" type="text" placeholder="核算量" style="width: 100%" :min="0" :step="0.001" :precision="3" :max="99999" :controls="false" />
             </template>
           </el-table-column>
           <!-- <el-table-column label="单重(kg)" prop="weight" align="center">
@@ -147,8 +168,33 @@ const formRef = ref()
 const drawerRef = ref()
 
 const defaultForm = {
-  list: []
+  // areaId: 0,
+  // monomerId: 0,
+  projectId: 0,
+  standardPartList: []
 }
+
+const accountingUnit = ref([
+  {
+    value: true,
+    label: '重量'
+  },
+  {
+    value: false,
+    label: '其他'
+  }
+])
+
+const unitWeight = ref([
+  {
+    value: '千克',
+    label: '千克'
+  },
+  {
+    value: '吨',
+    label: '吨'
+  }
+])
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
@@ -176,13 +222,19 @@ const tableRules = {
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
 
 function deleteRow(index) {
-  form.list.splice(index, 1)
+  form.standardPartList.splice(index, 1)
 }
 
 function addRow() {
-  form.list.push({
+  form.standardPartList.push({
     ...crud.query
   })
+}
+
+CRUD.HOOK.beforeToCU = () => {
+  form.projectId = crud.query.projectId
+  // form.monomerId = crud.query.monomerId
+  // form.areaId = crud.query.areaId
 }
 
 // function weightChange(row) {
@@ -190,11 +242,11 @@ function addRow() {
 // }
 
 CRUD.HOOK.beforeSubmit = (crud, form) => {
-  if (crud.form.list.length <= 0) {
+  if (crud.form.standardPartList.length <= 0) {
     ElMessage({ message: '请先填写明细', type: 'error' })
     return false
   }
-  const { validResult } = tableValidate(crud.form.list)
+  const { validResult } = tableValidate(crud.form.standardPartList)
   if (!validResult) {
     return false
   }
