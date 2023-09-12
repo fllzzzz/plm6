@@ -56,6 +56,7 @@
           <template #default="{ row }">
             <div
               v-if="
+                row.processMap &&
                 row.processMap[item.id] &&
                 row.processMap[item.id]?.inspectionQuantity === row?.quantity &&
                 row.processMap[item.id]?.quantity === row?.quantity
@@ -64,7 +65,7 @@
             >
               √
             </div>
-            <div v-else-if="row.processMap[item.id]">
+            <div v-else-if="row.processMap && row.processMap[item.id]">
               <span class="tc-danger" :style="row.processMap[item.id]?.quantity === 0 ? 'color: #303133' : ''">
                 {{ row.processMap[item.id]?.quantity }}
               </span>
