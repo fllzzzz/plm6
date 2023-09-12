@@ -7,6 +7,13 @@ const inboundFillWayEnum = {
 }
 constantize(inboundFillWayEnum)
 
+// 退库审核配置
+const returnAuditEnum = {
+  REVIEWING: { L: '审核后通过', K: 'REVIEWING', V: 1 << 0 },
+  APPLICATION: { L: '提交即通过', K: 'APPLICATION', V: 1 << 1 }
+}
+constantize(returnAuditEnum)
+
 // 物料加权方式
 const materialWeightingWayEnum = {
   WHOLE: { L: '全库加权', K: 'WHOLE', V: 1 << 0 },
@@ -272,7 +279,8 @@ export {
   inspectionDetailStatusEnum,
   materialWeightingWayEnum,
   materialLabelPrintTypeEnum,
-  outboundDestinationTypeEnum
+  outboundDestinationTypeEnum,
+  returnAuditEnum
 }
 
 export default {
@@ -305,5 +313,6 @@ export default {
   inspectionDetailStatusEnum,
   materialWeightingWayEnum,
   materialLabelPrintTypeEnum,
-  outboundDestinationTypeEnum
+  outboundDestinationTypeEnum,
+  returnAuditEnum
 }
