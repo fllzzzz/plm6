@@ -56,27 +56,6 @@
               <el-input v-model.trim="scope.row.specification" type="text" placeholder="规格" style="width: 100%" maxlength="30" />
             </template>
           </el-table-column>
-          <el-table-column label="核算单位" align="center" min-width="120" prop="accountingUnit">
-            <template v-slot="scope">
-              <div style="display: flex; justify-content: space-between; align-items: center">
-                <div>
-                  <el-input v-if="!scope.row.boolWeightTypeEnum" v-model="scope.row.accountingUnit" style="width: 110px" placeholder="核算单位"></el-input>
-                  <common-select v-else style="width: 110px" :options="unitWeight" v-model="scope.row.accountingUnit" :data-structure="{ key: 'value', label: 'label', value: 'value' }"></common-select>
-                </div>
-                <common-select
-                  style="width: 100px"
-                  :options="accountingUnit"
-                  v-model="scope.row.boolWeightTypeEnum"
-                  :data-structure="{ key: 'value', label: 'label', value: 'value' }"
-                ></common-select>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column prop="mete" label="核算量" align="center" min-width="80">
-            <template v-slot="scope">
-              <common-input-number v-model="scope.row.mete" type="text" placeholder="核算量" style="width: 100%" :min="0" :step="0.001" :precision="3" :max="99999" :controls="false" />
-            </template>
-          </el-table-column>
           <el-table-column prop="measureUnit" label="计量单位" align="center">
             <template v-slot="scope">
               <el-input v-model.trim="scope.row.measureUnit" type="text" placeholder="计量单位" style="width: 100%" maxlength="10" />
@@ -104,6 +83,27 @@
                 placeholder="数量"
                 @change="weightChange(scope.row)"
               /> -->
+            </template>
+          </el-table-column>
+          <el-table-column label="核算单位" align="center" min-width="120" prop="accountingUnit">
+            <template v-slot="scope">
+              <div style="display: flex; justify-content: space-between; align-items: center">
+                <div>
+                  <el-input v-if="!scope.row.boolWeightTypeEnum" v-model="scope.row.accountingUnit" style="width: 110px" placeholder="核算单位"></el-input>
+                  <common-select v-else style="width: 110px" :options="unitWeight" v-model="scope.row.accountingUnit" :data-structure="{ key: 'value', label: 'label', value: 'value' }"></common-select>
+                </div>
+                <common-select
+                  style="width: 100px"
+                  :options="accountingUnit"
+                  v-model="scope.row.boolWeightTypeEnum"
+                  :data-structure="{ key: 'value', label: 'label', value: 'value' }"
+                ></common-select>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="mete" label="核算量" align="center" min-width="80">
+            <template v-slot="scope">
+              <common-input-number v-model="scope.row.mete" type="text" placeholder="核算量" style="width: 100%" :min="0" :step="0.001" :precision="3" :max="99999" :controls="false" />
             </template>
           </el-table-column>
           <!-- <el-table-column label="单重(kg)" prop="weight" align="center">
