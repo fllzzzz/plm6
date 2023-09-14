@@ -325,7 +325,7 @@ const { crud, columns, CRUD } = useCRUD(
     optShow: { ...optShow },
     requiredQuery: ['projectId'],
     crudApi: { ...crudApi },
-    hasPagination: false
+    hasPagination: true
   },
   tableRef
 )
