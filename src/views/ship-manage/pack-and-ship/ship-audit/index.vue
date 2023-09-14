@@ -221,8 +221,9 @@
 </template>
 
 <script setup>
-import { get, getBridge, detail, detailBridge, audit, auditDetail } from '@/api/ship-manage/pack-and-ship/ship-audit'
-import { ref, provide, reactive } from 'vue'
+import { get, getBridge, detail, detailBridge, audit, auditDetail, download as mesDownload } from '@/api/ship-manage/pack-and-ship/ship-audit'
+import { download as bridgeDownload } from '@/api/bridge/bridge-pack-and-ship/ship-audit'
+import { ref, provide, reactive, watch } from 'vue'
 import { ElNotification } from 'element-plus'
 
 import { shipAuditPM as permission } from '@/page-permission/ship-manage'
@@ -267,6 +268,18 @@ const { crud, CRUD, columns } = useCRUD(
     optShow: { ...optShow }
   },
   tableRef
+)
+
+watch(
+  () => currentProjectType.value,
+  (val) => {
+    if (val === projectTypeEnum.BRIDGE.V) {
+      crud.crudApi.download = bridgeDownload
+    } else {
+      crud.crudApi.download = mesDownload
+    }
+  },
+  { immediate: true }
 )
 
 provide('permission', permission)
