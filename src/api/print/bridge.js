@@ -456,6 +456,15 @@ export function bridgeProjectShipDetail(params) {
   })
 }
 
+// 发运管理-项目发运详情
+export function bridgeProjectShipDetailDirect(params) {
+  return request({
+    url: `/api/mes/bridge/cargo/project/cargoList/directShipment/details/print`,
+    method: 'get',
+    params
+  })
+}
+
 // 工厂报表-车间报表详情
 export function factoryWorkshopReport(params) {
   return request({
@@ -614,6 +623,7 @@ export default {
 
   // 发运管理
   bridgeProjectShipDetail, // 项目发运详情
+  bridgeProjectShipDetailDirect, // 项目直发件发运详情
 
   // 工厂报表-车间报表
   factoryWorkshopReport, // 车间报表详情

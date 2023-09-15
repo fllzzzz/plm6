@@ -10,7 +10,7 @@
   >
     <template #titleRight>
       <print-table
-        api-key="bridgeProjectDetail"
+        :api-key="category === bridgeShipStatisticsTypeEnum.BOX.V ?'bridgeProjectDetail':'bridgeProjectShipDetailDirect'"
         v-permission="permission.print"
         :params="{
           projectId: props.projectId,
@@ -77,7 +77,7 @@
 </template>
 
 <script setup>
-import { inboundDetail } from '@/api/ship-manage/pack-and-ship/bridge-ship-summary'
+import { inboundDetail, inboundDetailDirect } from '@/api/ship-manage/pack-and-ship/bridge-ship-summary'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
@@ -86,6 +86,7 @@ import { tableSummary } from '@/utils/el-extra'
 import { toThousand } from '@/utils/data-type/number'
 import { defineProps, defineEmits, ref } from 'vue'
 import { bridgeShipSummaryPM as permission } from '@/page-permission/ship-manage'
+import { bridgeShipStatisticsTypeEnum } from '@enum-ms/ship-manage'
 
 const emit = defineEmits(['update:visible'])
 const list = ref([])
@@ -107,6 +108,10 @@ const props = defineProps({
   },
   projectId: {
     type: Number
+  },
+  category: {
+    type: [Number, String],
+    default: bridgeShipStatisticsTypeEnum.BOX.V
   }
 })
 
@@ -130,12 +135,14 @@ async function fetchDetail() {
   list.value = []
   tableLoading.value = true
   try {
-    const { content = [], totalElements } = await inboundDetail({
+    const api = props.category === bridgeShipStatisticsTypeEnum.BOX.V ? inboundDetail : inboundDetailDirect
+    const params = {
       projectId: props.projectId,
       ...props.query,
       workshopId: props.workshopId,
       ...queryPage
-    })
+    }
+    const { content = [], totalElements } = await api(params)
     list.value = content
     setTotalPage(totalElements)
     tableLoading.value = false

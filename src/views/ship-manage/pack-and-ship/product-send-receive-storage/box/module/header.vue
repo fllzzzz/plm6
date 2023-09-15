@@ -13,6 +13,7 @@
         style="width: 120px"
       />
       <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
+      <common-radio-button v-model="query.productType" :options="bridgeProductTypeEnum.ENUM" type="enum" class="filter-item" @change="crud.toQuery" />
       <!-- <common-radio-button
         v-model="query.productType"
         :options="[packTypeEnum.STRUCTURE, packTypeEnum.MACHINE_PART]"
@@ -96,8 +97,8 @@
 import { summaryData } from '@/api/ship-manage/pack-and-ship/box-product-receive-send-storage'
 import { ref, watch } from 'vue'
 // import { packTypeEnum } from '@enum-ms/mes'
+import { bridgeProductTypeEnum } from '@enum-ms/ship-manage'
 import { weightTypeEnum, workshopTypeEnum } from '@enum-ms/common'
-import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import checkPermission from '@/utils/system/check-permission'
 import { DP } from '@/settings/config'
 import workshopSelect from '@comp-mes/workshop-select'
@@ -110,7 +111,7 @@ import detailDrawer from './detail-drawer'
 const defaultTime = moment().valueOf().toString()
 
 const defaultQuery = {
-  productType: bridgeComponentTypeEnum.BOX.V,
+  productType: bridgeProductTypeEnum.BOX.V,
   dateTime: defaultTime.toString(),
   projectId: undefined,
   weightStatus: weightTypeEnum.NET.V

@@ -43,7 +43,7 @@
         />
       </div>
       <el-descriptions
-        v-show="category === bridgeShipStatisticsTypeEnum.BOX.V"
+        v-show="category === bridgeShipStatisticsTypeEnum.BOX.V || category === bridgeShipStatisticsTypeEnum.DIRECT.V"
         v-loading="summaryLoading"
         :data="summaryData"
         direction="vertical"
@@ -60,11 +60,12 @@
           }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="任务总量（吨）">
-          <span class="tc-primary" style="cursor: pointer" @click="openDetail('ASSIGNMENT')">{{
+          <span class="tc-primary" style="cursor: pointer" @click="openDetail('ASSIGNMENT')" v-if="category === bridgeShipStatisticsTypeEnum.BOX.V">{{
             props.weightStatus === weightTypeEnum.NET.V
               ? convertUnits(summaryData?.schedulingMete || 0, 'kg', 't', 2)
               : convertUnits(summaryData?.schedulingGrossMete || 0, 'kg', 't', 2)
           }}</span>
+          <span v-else>-</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="入库量（吨）">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('STORAGE')">{{
@@ -149,18 +150,20 @@
       :workshopId="props.workshopId"
       :projectId="props.currentRow.projectId"
       :detail-data="props.currentRow"
+      :category="category"
     />
   </div>
 </template>
 
 <script setup>
 import { ref, defineProps, watch, nextTick, computed } from 'vue'
-import { projectSummary, auxInboundDetail } from '@/api/ship-manage/pack-and-ship/bridge-ship-summary'
+import { projectSummary, projectSummaryDirect, auxInboundDetail } from '@/api/ship-manage/pack-and-ship/bridge-ship-summary'
 import { weightTypeEnum } from '@enum-ms/common'
 import { convertUnits } from '@/utils/convert/unit'
 import { bridgeShipStatisticsTypeEnum } from '@enum-ms/ship-manage'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import mDetail from './detail.vue'
+import directDetail from './direct-detail'
 import detailDrawer from './detail-drawer.vue'
 
 const props = defineProps({
@@ -198,7 +201,7 @@ const detailVisible = ref(false)
 const drawerVisible = ref(false)
 
 const showComponent = computed(() => {
-  return mDetail
+  return category.value === bridgeShipStatisticsTypeEnum.BOX.V ? mDetail : directDetail
 })
 
 watch(
@@ -226,6 +229,8 @@ watch(
   (val) => {
     if (val === bridgeShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V) {
       fetchAuxMat()
+    } else {
+      fetchSummary()
     }
   }
 )
@@ -242,11 +247,13 @@ async function fetchSummary() {
     return
   }
   try {
-    const data = await projectSummary({
+    const api = category.value === bridgeShipStatisticsTypeEnum.BOX.V ? projectSummary : projectSummaryDirect
+    const params = {
       projectId: props.currentRow.projectId,
       ...query.value,
       workshopId: props.workshopId
-    })
+    }
+    const data = await api(params)
     summaryData.value = data || {}
   } catch (err) {
     console.log('获取项目发运数据汇总', err)

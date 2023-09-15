@@ -37,11 +37,21 @@ export function shipmentSummary(params) {
   })
 }
 
-// 查询项目发运数据汇总
+// 查询项目发运数据结构汇总
 export function projectSummary(params) {
   return request({
     module: 'mes',
     url: `cargo/project/detail/summary`,
+    method: 'get',
+    params
+  })
+}
+
+// 查询项目直发件发运数据
+export function structureDirectSummary(params) {
+  return request({
+    module: 'mes',
+    url: `cargo/project/detail/directShipment/summary`,
     method: 'get',
     params
   })
@@ -52,6 +62,24 @@ export function summaryDetail(params) {
   return request({
     module: 'mes',
     url: `cargo/project/detail/type`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运统计-查询项目各类数据详情
+export function structureDirectSummaryDetail(params) {
+  return request({
+    module: 'mes',
+    url: `cargo/project/detail/directShipment/type`,
+    method: 'get',
+    params
+  })
+}
+// 项目直发件发运详情
+export function inboundDetailDirect(params) {
+  return request({
+    url: `/api/mes/building/cargo/project/cargoList/directShipment/details/page`,
     method: 'get',
     params
   })

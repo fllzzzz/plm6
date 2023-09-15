@@ -157,6 +157,7 @@ const mesProductionStatisticsReport = mes.productionStatisticsReport
 
 const mesStudSleeveStatisticsList = mes.studSleeveStatisticsList
 const mesProjectShipDetail = mes.mesProjectShipDetail
+const mesProjectShipDetailDirect = mes.mesProjectShipDetailDirect
 const bridgeProjectDetail = mes.bridgeProjectShipDetail
 const enclosureProjectShipDetail = mes.enclosureProjectShipDetail
 const mesShipMeteDetail = mes.mesShipMeteDetail
@@ -165,19 +166,33 @@ const mesShipInboundMeteDetail = mes.mesShipInboundMeteDetail
 const mesShipTotalMeteDetail = mes.mesShipTotalMeteDetail
 const mesShipMonthMeteDetail = mes.mesShipMonthMeteDetail
 const mesShipStockMeteDetail = mes.mesShipStockMeteDetail
+const mesShipMeteDetailDirect = mes.mesShipMeteDetailDirect
+const mesShipTaskMeteDetailDirect = mes.mesShipMeteDetailDirect
+const mesShipInboundMeteDetailDirect = mes.mesShipMeteDetailDirect
+const mesShipTotalMeteDetailDirect = mes.mesShipMeteDetailDirect
+const mesShipMonthMeteDetailDirect = mes.mesShipMeteDetailDirect
+const mesShipStockMeteDetailDirect = mes.mesShipMeteDetailDirect
+const mesShipTrainMeteDetailDirect = mes.mesShipMeteDetailDirect
+
 const bridgeShipMeteDetail = mes.bridgeShipMeteDetail
 const bridgeShipTaskMeteDetail = mes.bridgeShipTaskMeteDetail
 const bridgeShipInboundMeteDetail = mes.bridgeShipInboundMeteDetail
 const bridgeShipTotalMeteDetail = mes.bridgeShipTotalMeteDetail
 const bridgeShipMonthMeteDetail = mes.bridgeShipMonthMeteDetail
 const bridgeShipStockMeteDetail = mes.bridgeShipStockMeteDetail
+const mesShipTrainMeteDetail = mes.mesShipTrainMeteDetail
+const bridgeShipMeteDetailDirect = mes.bridgeShipMeteDetailDirect
+const bridgeShipTaskMeteDetailDirect = mes.bridgeShipMeteDetailDirect
+const bridgeShipInboundMeteDetailDirect = mes.bridgeShipMeteDetailDirect
+const bridgeShipTotalMeteDetailDirect = mes.bridgeShipMeteDetailDirect
+const bridgeShipMonthMeteDetailDirect = mes.bridgeShipMeteDetailDirect
+const bridgeShipStockMeteDetailDirect = mes.bridgeShipMeteDetailDirect
 const enclosureShipMeteDetail = mes.enclosureShipMeteDetail
 const enclosureShipTaskMeteDetail = mes.enclosureShipTaskMeteDetail
 const enclosureShipInboundMeteDetail = mes.enclosureShipInboundMeteDetail
 const enclosureShipTotalMeteDetail = mes.enclosureShipTotalMeteDetail
 const enclosureShipMonthMeteDetail = mes.enclosureShipMonthMeteDetail
 const enclosureShipStockMeteDetail = mes.enclosureShipStockMeteDetail
-const mesShipTrainMeteDetail = mes.mesShipTrainMeteDetail
 const mesAuxMatDetail = mes.mesAuxMatDetail
 const bridgeAuxMatDetail = mes.bridgeAuxMatDetail
 const enclosureAuxMatDetail = mes.enclosureAuxMatDetail
@@ -276,6 +291,7 @@ const bridgeFactoryWorkshopReport = bridge.factoryWorkshopReport
 
 const bridgeStudSleeveStatisticsList = bridge.studSleeveStatisticsList
 const bridgeProjectShipDetail = bridge.bridgeProjectShipDetail
+const bridgeProjectShipDetailDirect = bridge.bridgeProjectShipDetailDirect
 const bridgeProductSendReceiveStorage = bridge.productSendReceiveStorage
 const bridgeProductSendReceiveStorageDetail = bridge.productSendReceiveStorageDetail
 const bridgestructureFinishedGoodsInventoryDetail = bridge.structureFinishedGoodsInventoryDetail
@@ -462,6 +478,7 @@ export default {
   mesStudSleeveStatisticsList, // 栓钉套筒统计清单详情
 
   mesProjectShipDetail, // 发运管理项目发运详情
+  mesProjectShipDetailDirect, // 发运管理项目直发件发运详情
   bridgeProjectDetail, // 发运管理桥梁项目发运详情
   enclosureProjectShipDetail, // 发运管理围护项目发运详情
   mesShipMeteDetail, // 发运统计/清单总量详情
@@ -470,12 +487,25 @@ export default {
   mesShipTotalMeteDetail, // 发运统计/累计发运详情
   mesShipMonthMeteDetail, // 发运统计/本月发运详情
   mesShipStockMeteDetail, // 发运统计/库存详情
+  mesShipMeteDetailDirect, // 发运统计/直发件清单总量详情
+  mesShipTaskMeteDetailDirect, // 发运统计/直发件建钢任务总量详情
+  mesShipInboundMeteDetailDirect, // 发运统计/直发件入库量详情
+  mesShipTotalMeteDetailDirect, // 发运统计/直发件累计发运详情
+  mesShipMonthMeteDetailDirect, // 发运统计/直发件本月发运详情
+  mesShipStockMeteDetailDirect, // 发运统计/直发件库存详情
+  mesShipTrainMeteDetailDirect, // 发运统计/直发件累计车次详情
   bridgeShipMeteDetail, // 发运统计/桥梁清单总量详情
   bridgeShipTaskMeteDetail, // 发运统计/任务总量详情
   bridgeShipInboundMeteDetail, // 发运统计/入库量详情
   bridgeShipTotalMeteDetail, // 发运统计/累计发运详情
   bridgeShipMonthMeteDetail, // 发运统计/本月发运详情
   bridgeShipStockMeteDetail, // 发运统计/库存详情
+  bridgeShipMeteDetailDirect, // 发运统计/桥梁直发件清单总量详情
+  bridgeShipTaskMeteDetailDirect, // 发运统计/直发件任务总量详情
+  bridgeShipInboundMeteDetailDirect, // 发运统计/直发件入库量详情
+  bridgeShipTotalMeteDetailDirect, // 发运统计/直发件累计发运详情
+  bridgeShipMonthMeteDetailDirect, // 发运统计/直发件本月发运详情
+  bridgeShipStockMeteDetailDirect, // 发运统计/直发件库存详情
   enclosureShipMeteDetail, // 发运统计/围护清单总量详情
   enclosureShipTaskMeteDetail, // 发运统计/任务总量详情
   enclosureShipInboundMeteDetail, // 发运统计/入库量详情
@@ -578,6 +608,7 @@ export default {
   bridgeStudSleeveStatisticsList, // 栓钉套筒统计清单详情
 
   bridgeProjectShipDetail, // 发运管理项目发运详情
+  bridgeProjectShipDetailDirect, // 发运管理项目直发件发运详情
   bridgeProductSendReceiveStorage, // 发运管理制成品入发存
   bridgeProductSendReceiveStorageDetail, // 发运管理制成品入发存详情
   bridgestructureFinishedGoodsInventoryDetail, // 发运管理制成品库存详情

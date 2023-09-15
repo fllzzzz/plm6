@@ -31,16 +31,32 @@ constantize(enclosureTypeEnum)
 // 发运管理/建钢-发运统计
 const mesShipStatisticsTypeEnum = {
   STRUCTURE: { L: '结构制品', K: 'STRUCTURE', V: 1 << 0 },
-  AUXILIARY_MATERIAL: { L: '配套制品', K: 'AUXILIARY_MATERIAL', V: 1 << 1 }
+  AUXILIARY_MATERIAL: { L: '配套制品', K: 'AUXILIARY_MATERIAL', V: 1 << 1 },
+  DIRECT: { L: '直发件', K: 'DIRECT', V: 17 }
 }
 constantize(mesShipStatisticsTypeEnum)
 
 // 发运管理/桥梁-发运统计
 const bridgeShipStatisticsTypeEnum = {
   BOX: { L: '分段', K: 'BOX', V: 1 << 0 },
-  AUXILIARY_MATERIAL: { L: '配套件', K: 'AUXILIARY_MATERIAL', V: 1 << 1 }
+  AUXILIARY_MATERIAL: { L: '配套件', K: 'AUXILIARY_MATERIAL', V: 1 << 1 },
+  DIRECT: { L: '直发件', K: 'DIRECT', V: 17 }
 }
 constantize(bridgeShipStatisticsTypeEnum)
+
+// 发运管理/建钢-制成品入发存
+const mesProductTypeEnum = {
+  STRUCTURE: { L: '结构制品', K: 'STRUCTURE', V: 1 << 1 },
+  DIRECT: { L: '直发件', K: 'DIRECT', V: 17 }
+}
+constantize(mesProductTypeEnum)
+
+// 发运管理/桥梁-制成品入发存
+const bridgeProductTypeEnum = {
+  BOX: { L: '分段', K: 'BOX', V: 1 << 1 },
+  DIRECT: { L: '直发件', K: 'DIRECT', V: 1 << 2 }
+}
+constantize(bridgeProductTypeEnum)
 
 // 发运管理/围护-发运统计
 const enclosureShipStatisticsTypeEnum = {
@@ -80,7 +96,9 @@ export {
   bridgeShipStatisticsTypeEnum,
   enclosureShipStatisticsTypeEnum,
   packTypeEnum,
-  packEnum
+  packEnum,
+  mesProductTypeEnum,
+  bridgeProductTypeEnum
 }
 
 export default {
@@ -91,5 +109,7 @@ export default {
   bridgeShipStatisticsTypeEnum,
   enclosureShipStatisticsTypeEnum,
   packTypeEnum,
-  packEnum
+  packEnum,
+  mesProductTypeEnum,
+  bridgeProductTypeEnum
 }

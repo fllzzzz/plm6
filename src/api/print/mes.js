@@ -749,10 +749,28 @@ export function mesProjectShipDetail(params) {
   })
 }
 
+// 发运管理-项目直发件发运详情
+export function mesProjectShipDetailDirect(params) {
+  return request({
+    url: `/api/mes/building/cargo/project/cargoList/directShipment/details/print`,
+    method: 'get',
+    params
+  })
+}
+
 // 发运管理-桥梁项目发运详情
 export function bridgeProjectShipDetail(params) {
   return request({
     url: `/api/mes/bridge/cargo/project/cargoList/details/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-项目发运详情
+export function bridgeProjectShipDetailDirect(params) {
+  return request({
+    url: `/api/mes/bridge/cargo/project/cargoList/directShipment/details/print`,
     method: 'get',
     params
   })
@@ -771,6 +789,15 @@ export function enclosureProjectShipDetail(params) {
 export function mesShipMeteDetail(params) {
   return request({
     url: `api/mes/building/cargo/project/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-直发件清单总量详情
+export function mesShipMeteDetailDirect(params) {
+  return request({
+    url: `/api/mes/building/cargo/project/detail/directShipment/type/print`,
     method: 'get',
     params
   })
@@ -824,6 +851,15 @@ export function mesShipStockMeteDetail(params) {
 export function bridgeShipMeteDetail(params) {
   return request({
     url: `api/mes/bridge/cargo/project/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-桥梁直发件清单总量详情
+export function bridgeShipMeteDetailDirect(params) {
+  return request({
+    url: `/api/mes/bridge/cargo/project/directShipment/detail/type/print`,
     method: 'get',
     params
   })
@@ -1290,8 +1326,11 @@ export default {
 
   // 发运管理
   mesProjectShipDetail, // 项目发运详情
+  mesProjectShipDetailDirect, // 项目直发件发运详情
   bridgeProjectShipDetail, // 桥梁项目发运详情
+  bridgeProjectShipDetailDirect, // 项目直发件发运详情
   enclosureProjectShipDetail, // 围护项目发运详情
+  mesShipMeteDetailDirect, // 直发件清单总量详情
   mesShipMeteDetail, // 清单总量详情
   mesShipTaskMeteDetail, // 任务总量详情
   mesShipInboundMeteDetail, // 入库量详情
@@ -1299,6 +1338,7 @@ export default {
   mesShipMonthMeteDetail, // 本月发运详情
   mesShipStockMeteDetail, // 库存
   bridgeShipMeteDetail, // 桥梁清单总量详情
+  bridgeShipMeteDetailDirect, // 桥梁直发件清单总量详情
   bridgeShipTaskMeteDetail, // 桥梁任务总量详情
   bridgeShipInboundMeteDetail, // 桥梁入库量详情
   bridgeShipTotalMeteDetail, // 桥梁累计发运详情

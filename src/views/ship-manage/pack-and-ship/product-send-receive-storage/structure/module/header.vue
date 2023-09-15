@@ -10,6 +10,7 @@
         class="filter-item"
         @change="crud.toQuery"
       /> -->
+      <common-radio-button v-model="query.productType" :options="mesProductTypeEnum.ENUM" type="enum" class="filter-item" @change="crud.toQuery" />
       <common-radio-button
         type="enum"
         v-model="query.weightStatus"
@@ -99,7 +100,7 @@
 <script setup>
 import { summaryData } from '@/api/ship-manage/pack-and-ship/product-receive-send-storage'
 import { ref, watch } from 'vue'
-import { packTypeEnum } from '@enum-ms/mes'
+import { mesProductTypeEnum } from '@enum-ms/ship-manage'
 import { weightTypeEnum, workshopTypeEnum } from '@enum-ms/common'
 import checkPermission from '@/utils/system/check-permission'
 import { DP } from '@/settings/config'
@@ -114,7 +115,7 @@ const showDetailDrawer = ref(false)
 const defaultTime = moment().valueOf().toString()
 
 const defaultQuery = {
-  productType: packTypeEnum.STRUCTURE.V,
+  productType: mesProductTypeEnum.STRUCTURE.V,
   dateTime: defaultTime.toString(),
   projectId: undefined,
   weightStatus: weightTypeEnum.NET.V
