@@ -237,7 +237,7 @@
             {{ scope.row.userName || '-' }}
           </template>
         </el-table-column>
-        <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="上传时间" width="160px">
+        <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="上传时间" width="150px">
           <template v-slot="scope">
             <div>{{ scope.row.createTime ? parseTime(scope.row.createTime, '{y}-{m}-{d}') : '-' }}</div>
           </template>
@@ -342,6 +342,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['projectId'],
+    invisibleColumns: [],
     crudApi: { ...crudApi },
     hasPagination: true
   },
