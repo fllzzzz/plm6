@@ -150,4 +150,13 @@ export function dxfZipDownload(params) {
   })
 }
 
+export function fileMatchingDetailsDownload(params) {
+  return request({
+    url: '/api/plan/drawing/drawing/contrast/download',
+    method: 'get',
+    responseType: 'blob',
+    params
+  })
+}
+
 export default { get, del, download }
