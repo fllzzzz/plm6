@@ -197,7 +197,9 @@ const mesAuxMatDetail = mes.mesAuxMatDetail
 const bridgeAuxMatDetail = mes.bridgeAuxMatDetail
 const enclosureAuxMatDetail = mes.enclosureAuxMatDetail
 const mesProductSendReceiveStorage = mes.productSendReceiveStorage
+const mesDirectProductSendReceiveStorage = mes.productSendReceiveStorage
 const boxProductSendReceiveStorage = mes.boxProductSendReceiveStorage
+const boxProductSendReceiveStorageDirect = mes.boxProductSendReceiveStorage
 const enclosureProductSendReceiveStorage = mes.enclosureProductSendReceiveStorage
 const productSendReceiveStorageDetail = mes.productSendReceiveStorageDetail
 const boxProductSendReceiveStorageDetail = mes.boxProductSendReceiveStorageDetail
@@ -517,7 +519,9 @@ export default {
   bridgeAuxMatDetail, // 发运统计/桥梁配套件
   enclosureAuxMatDetail, // 发运统计/围护配套件详情
   mesProductSendReceiveStorage, // 发运管理制成品入发存
+  mesDirectProductSendReceiveStorage, // 发运管理直发件制成品入发存
   boxProductSendReceiveStorage, // 分段制品入发存
+  boxProductSendReceiveStorageDirect, // 直发件制品入发存
   enclosureProductSendReceiveStorage, // 围护制品入发存
   productSendReceiveStorageDetail, // 发运管理制成品入发存详情
   boxProductSendReceiveStorageDetail, // 分段制品入发存详情

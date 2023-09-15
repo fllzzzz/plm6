@@ -81,7 +81,7 @@
       <template #viewLeft>
         <print-table
           v-permission="crud.permission.print"
-          api-key="boxProductSendReceiveStorage"
+          :api-key="query.productType===bridgeProductTypeEnum.BOX.V?'boxProductSendReceiveStorage':'boxProductSendReceiveStorageDirect'"
           :params="{ ...query }"
           size="mini"
           type="warning"

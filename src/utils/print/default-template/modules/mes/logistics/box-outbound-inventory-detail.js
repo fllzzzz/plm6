@@ -1,12 +1,12 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum } from '@/utils/print/enum'
 
-// 发运管理-分段制成品入发存/入库量
+// 发运管理-桥梁制成品制成品入发存/入库量
 const boxOutboundInventoryDetail = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
   type: 'boxOutboundInventoryDetail', // 表格类型 KEY
-  name: '分段出库量明细（平台）', // 表格名称
+  name: '桥梁制成品出库量明细（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -60,7 +60,7 @@ const boxOutboundInventoryDetail = {
   title: {
     show: true,
     allPage: false,
-    title: '分段出库量明细',
+    title: '桥梁制成品出库量明细',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,

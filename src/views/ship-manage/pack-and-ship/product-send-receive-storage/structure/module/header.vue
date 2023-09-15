@@ -86,7 +86,7 @@
       <template #viewLeft>
         <print-table
           v-permission="crud.permission.print"
-          api-key="mesProductSendReceiveStorage"
+          :api-key="query.productType===mesProductTypeEnum.STRUCTURE.V?'mesProductSendReceiveStorage':'mesDirectProductSendReceiveStorage'"
           :params="{ ...query }"
           size="mini"
           type="warning"
