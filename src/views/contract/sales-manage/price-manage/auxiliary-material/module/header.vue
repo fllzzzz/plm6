@@ -145,7 +145,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach((v, index) => {
     v.unitPrice = v.unitPrice || '同上'
     v.originUnitPrice = v.unitPrice
-    v.totalPrice = v.quantity * (v.unitPrice && typeof v.unitPrice === 'number' ? v.unitPrice : 0)
+    v.totalPrice = v.mete * (v.unitPrice && typeof v.unitPrice === 'number' ? v.unitPrice : 0)
     v.orderIndex = index + 1
   })
 }
@@ -184,7 +184,7 @@ function handelModifying(status, reset = false) {
     crud.data.forEach((v) => {
       v.unitPrice = v.originUnitPrice
       // v.newUnitPrice = v.originNewUnitPrice
-      v.totalPrice = v.quantity * (v.unitPrice && typeof v.unitPrice === 'number' ? v.unitPrice : 0)
+      v.totalPrice = v.mete * (v.unitPrice && typeof v.unitPrice === 'number' ? v.unitPrice : 0)
     })
   }
   modifying.value = status
