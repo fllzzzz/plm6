@@ -10,7 +10,6 @@
     :loading="!loaded"
     :clearable="clearable"
     :showOptionAll="showOptionAll"
-    :disabledVal="disabledVal"
     :showExtra="showExtra"
     :allLabelText="'全部车间'"
     :disabledVal="disabledVal"
@@ -76,10 +75,6 @@ const props = defineProps({
   showOptionAll: {
     type: Boolean,
     default: false
-  },
-  disabledVal: {
-    type: Array,
-    default: () => []
   },
   showExtra: {
     type: Boolean,
