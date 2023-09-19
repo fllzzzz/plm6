@@ -10,6 +10,7 @@
     :loading="!loaded"
     :clearable="clearable"
     :showOptionAll="showOptionAll"
+    :disabledVal="disabledVal"
     :showExtra="showExtra"
     :allLabelText="'全部车间'"
     :disabledVal="disabledVal"
@@ -29,7 +30,7 @@ const emit = defineEmits(['change', 'update:modelValue', 'nameChange'])
 
 const props = defineProps({
   modelValue: {
-    type: [Number, String, undefined],
+    type: [Array, Number, String, undefined],
     default: undefined
   },
   factoryId: {
@@ -75,6 +76,10 @@ const props = defineProps({
   showOptionAll: {
     type: Boolean,
     default: false
+  },
+  disabledVal: {
+    type: Array,
+    default: () => []
   },
   showExtra: {
     type: Boolean,
