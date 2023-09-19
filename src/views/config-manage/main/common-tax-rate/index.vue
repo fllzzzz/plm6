@@ -42,13 +42,10 @@ import { configCommonTaxRatePM as permission } from '@/page-permission/config'
 
 import { ref } from 'vue'
 import { taxRateEnum } from '@enum-ms/config'
-import { useStore } from 'vuex'
 
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import mForm from './module/form.vue'
-
-const store = useStore()
 
 const optShow = {
   add: false,
@@ -76,14 +73,6 @@ CRUD.HOOK.handleRefresh = (crud, { data: { content = [] }}) => {
     v.taxRate = v.taxRateList.map((v) => `${v}%`).join('、')
   })
 }
-
-CRUD.HOOK.afterSubmit = () => {
-  store.dispatch('config/fetchTaxRate')
-}
-CRUD.HOOK.afterDelete = () => {
-  store.dispatch('config/fetchTaxRate')
-}
-
 </script>
 
 <style lang="scss" scoped>

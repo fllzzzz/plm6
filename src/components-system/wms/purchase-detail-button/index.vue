@@ -15,7 +15,7 @@ import { purchaseOrderDetailCPM as permission } from '@/page-permission/supply-c
 import { defineProps } from 'vue'
 import useOtherCrudDetail from '@/composables/use-other-crud-detail'
 import DetailWrapper from '@crud/detail-wrapper.vue'
-import PurchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/index.vue'
+import PurchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/raw-material.vue'
 import checkPermission from '@/utils/system/check-permission'
 
 const props = defineProps({

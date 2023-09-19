@@ -29,7 +29,7 @@
           <span>
             <span class="extra-label">
               <span class="title">类型：</span>
-              <span v-parse-enum="{ e: matClsEnum, v: data.basicClass, bit: true, split: ' | ' }"></span>
+              <span v-parse-enum="{ e: rawMatClsEnum, v: data.basicClass, bit: true, split: ' | ' }"></span>
             </span>
             <span v-if="data.supplier" class="extra-label">
               <span class="title">供应商：</span>
@@ -66,14 +66,14 @@ import { detail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-or
 import { purchaseOrderDetailCPM as permission } from '@/page-permission/supply-chain'
 
 import { defineProps, defineEmits, ref, watch, computed } from 'vue'
-import { matClsEnum } from '@/utils/enum/modules/classification'
+import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { isNotBlank, isBlank, judgeSameValue, deepClone } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
 
 import useUnclosedPurchaseOrder from '@compos/store/use-unclosed-purchase-order'
 import useOtherCrudDetail from '@/composables/use-other-crud-detail'
 import DetailWrapper from '@crud/detail-wrapper.vue'
-import PurchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/index.vue'
+import PurchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/raw-material.vue'
 
 const emit = defineEmits(['change', 'info-change', 'update:modelValue', 'update:info'])
 

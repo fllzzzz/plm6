@@ -195,15 +195,21 @@
       <el-table-column label="操作" width="180px" align="center" fixed="right">
         <template #default="{ row }">
           <!-- <e-operation :data="row.id" :permission="permission.download" /> -->
-          <udOperation :disabled-edit="row.purchaseStatus == purchaseStatusEnum.FINISHED.V" :data="row" show-detail />
+          <udOperation
+            :disabled-edit="row.purchaseStatus == purchaseStatusEnum.FINISHED.V"
+            :data="row"
+            show-detail
+            :before-to-detail="beforeToDetail"
+            :before-to-edit="beforeToEdit"
+          />
         </template>
       </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
     <!-- 表单 -->
-    <mForm />
-    <mDetail />
+    <m-raw-material-form />
+    <m-raw-material-detail />
   </div>
 </template>
 
@@ -216,7 +222,7 @@ import { useStore } from 'vuex'
 import EO from '@enum'
 import { invoiceTypeEnum, settlementStatusEnum } from '@enum-ms/finance'
 import { orderSupplyTypeEnum, purchaseStatusEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
-import { matClsEnum, materialPurchaseClsEnum } from '@/utils/enum/modules/classification'
+import { matClsEnum } from '@/utils/enum/modules/classification'
 import { wmsReceiptColumns } from '@/utils/columns-format/wms'
 import { isNotBlank } from '@/utils/data-type'
 import checkPermission from '@/utils/system/check-permission'
@@ -228,8 +234,8 @@ import useCrudEnabledChange from '@compos/use-crud-enabled-change'
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation.vue'
 import mHeader from './module/header'
-import mForm from './module/form/index.vue'
-import mDetail from './module/detail/index.vue'
+import mRawMaterialForm from './module/form/raw-material.vue'
+import mRawMaterialDetail from './module/detail/raw-material.vue'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import useMatClsList from '@/composables/store/use-mat-class-list'
@@ -285,13 +291,10 @@ const tableLoading = computed(() => !clsLoaded.value || crud.loading)
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content = data.content.map((v) => {
     const basicClassArr = EO.getBits(matClsEnum.ENUM, v.basicClass, 'L')
-    v.typeText = v.materialType ? (v.materialType & materialPurchaseClsEnum.MATERIAL.V
-      ? basicClassArr.join(' | ')
-      : materialPurchaseClsEnum.VL[v.materialType] + ' - ' + basicClassArr.join(' | ')) : baseMaterialTypeEnum.VL[v.purchaseType] + ' - ' + basicClassArr.join(' | ')
+    v.typeText = baseMaterialTypeEnum.VL[v.purchaseType] + ' - ' + basicClassArr.join(' | ')
     v.branchCompanyId = v.branchCompany ? v.branchCompany.id : undefined
-    v.requisitionsSNStr = v.applyPurchaseSN ? v.applyPurchaseSN.join('　、　') : ''
-    v.projects = v.project?.id ? [v.project] : v.projects
-    v.projectIds = v.projects ? v.projects.map((p) => p.id) : v.project?.id ? [v.project?.id] : []
+    v.requisitionsSNStr = v.requisitionsSN ? v.requisitionsSN.join('　、　') : ''
+    v.projectIds = v.projects ? v.projects.map((p) => p.id) : []
     v.boolPartyA = v.supplyType === orderSupplyTypeEnum.PARTY_A.V
     v.supplierId = v.supplier ? v.supplier.id : undefined
     if (v.auxMaterialIds) {

@@ -2,14 +2,13 @@
   <div class="inbound-application-header flex-rbc">
     <div>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-position="right" inline label-width="80px">
-        <el-form-item v-if="!props.isManuf" prop="supplyType" label-width="0px">
+        <el-form-item prop="supplyType" label-width="0px">
           <common-radio-button
             v-model="form.supplyType"
             :options="orderSupplyTypeEnum.ENUM"
             default
             type="enumSL"
-            :disabled="edit"
-            :style="!edit ? 'margin-left:10px' : ''"
+            :style="!edit?'margin-left:10px':''"
             style="vertical-align: middle"
           >
             <template #suffix>
@@ -17,19 +16,13 @@
             </template>
           </common-radio-button>
         </el-form-item>
-        <el-form-item
-          v-if="!boolPartyA"
-          prop="purchaseId"
-          :label="props.isManuf ? '订单号' : ''"
-          :label-width="props.isManuf ? '70px' : '0px'"
-        >
+        <el-form-item v-if="form.supplyType === orderSupplyTypeEnum.SELF.V" prop="purchaseId" label-width="0px">
           <purchase-sn-select
             class="input-underline"
             v-model="form.purchaseId"
             :basic-class="props.basicClass"
             @change="handlePurchaseIdChange"
             @info-change="handleOrderInfoChange"
-            :disabled="edit"
             style="width: 300px"
           />
         </el-form-item>
@@ -57,7 +50,7 @@
             />
           </el-form-item>
           <el-form-item
-            v-if="props.basicClass & STEEL_ENUM && orderInfo.weightMeasurementMode === weightMeasurementModeEnum.OVERWEIGHT.V"
+            v-if="props.basicClass & STEEL_ENUM && orderInfo.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V"
             :label="`车次过磅重量(kg)`"
             label-width="150px"
             prop="loadingWeight"
@@ -88,13 +81,12 @@
     </div>
     <div class="child-mr-7">
       <store-operation v-if="!props.edit" type="cu" @clear="handleClear" />
-      <!-- <common-button type="primary" size="mini" @click="openRequisitionsView">查看申购单</common-button> -->
+      <common-button type="primary" size="mini" @click="openRequisitionsView">查看申购单</common-button>
       <el-tooltip
         content="请先选择采购合同编号"
         :disabled="!!form.purchaseId && form.supplyType === orderSupplyTypeEnum.SELF.V"
         placement="bottom"
         effect="light"
-        v-if="boolPartyA || isBlank(orderInfo?.details)"
       >
         <excel-resolve-button
           icon="el-icon-upload2"
@@ -114,7 +106,6 @@
 
 <script setup>
 import { getRequisitionsDetailBySN } from '@/api/wms/requisitions'
-import { inboundDetail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-order'
 import { defineProps, defineEmits, defineExpose, ref, computed, watch, watchEffect, nextTick, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { STEEL_ENUM } from '@/settings/config'
@@ -123,10 +114,8 @@ import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@enum-ms/finance'
 import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 import { patternLicensePlate } from '@/utils/validate/pattern'
-import { setSpecInfoToList } from '@/utils/wms/spec'
-import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 
-// import useUserProjects from '@compos/store/use-user-projects'
+import useUserProjects from '@compos/store/use-user-projects'
 import { regExtra } from '@/composables/form/use-form'
 import useWeightOverDiff from '@/composables/wms/use-trains-weight-over-diff'
 import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
@@ -156,10 +145,6 @@ const props = defineProps({
   currentBasicClass: {
     type: Number
   },
-  isManuf: {
-    type: Boolean,
-    default: false
-  },
   edit: {
     type: Boolean,
     default: false
@@ -168,7 +153,7 @@ const props = defineProps({
 
 const router = useRouter()
 
-// const { projects } = useUserProjects()
+const { projects } = useUserProjects()
 
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { cu, form, FORM } = regExtra() // 表单
@@ -252,8 +237,6 @@ const formRef = ref()
 const trainsDiff = ref({})
 const orderInfo = ref({})
 
-const boolPartyA = computed(() => form.supplyType === orderSupplyTypeEnum.PARTY_A.V)
-
 watchEffect(() => {
   trainsDiff.value = weightOverDiff(form.loadingWeight, cu.props.totalWeight)
   // 在入库列表重量发生变化时，触发校验
@@ -293,18 +276,20 @@ function init() {
 watch(
   () => form.supplyType,
   () => {
-    if (form.supplyType && form.supplyType === orderSupplyTypeEnum.PARTY_A.V) {
-      handlePurchaseIdChange(undefined)
-      const _order = {
-        supplyType: form.supplyType,
-        weightMeasurementMode: weightMeasurementModeEnum.THEORY.V,
-        basicClass: props.basicClass
-        // projects: projects.value
+    if (form.supplyType) {
+      if (form.supplyType === orderSupplyTypeEnum.PARTY_A.V) {
+        handlePurchaseIdChange(undefined)
+        const _order = {
+          supplyType: form.supplyType,
+          weightMeasurementMode: weightMeasurementModeEnum.THEORY.V,
+          basicClass: props.basicClass,
+          projects: projects.value
+        }
+        handleOrderInfoChange(_order)
+      } else {
+        handlePurchaseIdChange(undefined)
+        handleOrderInfoChange(undefined)
       }
-      handleOrderInfoChange(_order)
-    } else {
-      handlePurchaseIdChange(undefined)
-      handleOrderInfoChange(undefined)
     }
   },
   { immediate: true }
@@ -314,16 +299,14 @@ watch(
 function handlePurchaseIdChange(val) {
   nextTick(() => {
     trainsDiff.value = {}
-    formRef?.value?.clearValidate()
+    formRef.value.clearValidate()
   })
-  form.purchaseId = val
   emit('update:purchaseId', val)
 }
 
 // 订单详情变更
-async function handleOrderInfoChange(order, oldOrder) {
+function handleOrderInfoChange(order, oldOrder) {
   cu.props.requisitions = {} // 初始化申购单
-  if (!form.selectObj) form.selectObj = {}
   if (order) {
     // 获取申购单详情
     if (order.requisitionsSN) {
@@ -339,188 +322,6 @@ async function handleOrderInfoChange(order, oldOrder) {
     // 当订单切换时，若订单计量方式发生变化，则重置车次过磅重量
     if (orderInfo.value && orderInfo.value.weightMeasurementMode !== order.weightMeasurementMode) {
       form.loadingWeight = undefined
-    }
-    if (order.applyPurchase?.length) {
-      order.boolApplyPurchase = true
-      order.projects = []
-    } else {
-      order.boolApplyPurchase = false
-    }
-    if (order.id) {
-      const { content = [] } = await getPurchaseOrderDetail(order.id)
-      await setSpecInfoToList(content)
-      await numFmtByBasicClass(
-        content,
-        {
-          toNum: true
-        },
-        { mete: ['mete', 'inboundMete'], quantity: ['inboundQuantity', 'quantity'] }
-      )
-      order.details = content?.map((v) => {
-        const applyPurchaseObj = {}
-        v.mergeId = v.id // 处理合并问题
-        v.purchaseOrderDetailId = v.id
-        v.purchaseQuantity = v.quantity
-        v.purchaseMete = v.mete
-        v.boolApplyPurchase = false
-        v.canPurchaseQuantity = v.purchaseQuantity - v.inboundQuantity > 0 ? v.purchaseQuantity - v.inboundQuantity : 0
-        // const _canMete = toPrecision(v.purchaseMete - v.inboundMete)
-        let _isSelected = false
-        if (form.selectObj?.[v.mergeId]) {
-          _isSelected = form.selectObj[v.mergeId]?.isSelected
-        } else if (props.edit && form?.editObj?.[v.mergeId]) {
-          _isSelected = form?.editObj?.[v.mergeId]?.isSelected
-        }
-        // v.quantity = v.canPurchaseQuantity
-        // v.mete = _canMete > 0 ? _canMete : 0
-        let _v = v
-        if (_isSelected) {
-          _v = {
-            ..._v,
-            ...form?.selectObj?.[v.mergeId],
-            ...form?.editObj?.[v.mergeId]
-          }
-        }
-        form.selectObj[v.mergeId] = {
-          ..._v,
-          isSelected: _isSelected
-        }
-        if (_v.applyPurchase?.length) {
-          _v.boolApplyPurchase = true
-          let _totalMete = 0
-          let _totalQuantity = 0
-          const applyPurchaseArr = []
-          _v.applyPurchase.forEach((item) => {
-            item.applyPurchaseSN = item.serialNumber
-            applyPurchaseObj[item.id] = item
-            if (_v.basicClass & (matClsEnum.SECTION_STEEL.V | matClsEnum.STEEL_PLATE.V)) {
-              const _originInfo = !props.edit ? _v : form?.editObj?.[_v.mergeId]
-              item.sn = _originInfo?.sn
-              item.specificationLabels = _originInfo?.specificationLabels // 规格中文
-              item.serialNumber = _originInfo?.serialNumber // 科目编号 - 规格
-              item.classifyId = _originInfo?.classifyId // 科目id
-              item.classifyFullName = _originInfo?.classifyFullName // 全路径名称
-              item.classifyName = _originInfo?.classifyName // 当前科目名称
-              item.classifyParentFullName = _originInfo?.classifyParentFullName // 父级路径名称
-              item.basicClass = _originInfo?.basicClass // 基础类型
-              item.specification = _originInfo?.specification // 规格
-              item.specificationMap = _originInfo?.specKV // 规格KV格式
-              item.measureUnit = _originInfo?.measureUnit // 计量单位
-              item.accountingUnit = _originInfo?.accountingUnit // 核算单位
-              item.measurePrecision = _originInfo?.measurePrecision // 计量精度
-              item.accountingPrecision = _originInfo?.accountingPrecision // 核算精度
-              item.unitWeight = _originInfo?.unitWeight // 单位重量
-              item.length = _originInfo?.length
-              item.width = _originInfo?.width
-              item.thickness = _originInfo?.thickness
-            }
-            if (_v.basicClass & (matClsEnum.MATERIAL.V)) {
-              const _originInfo = !props.edit ? _v : form?.editObj?.[_v.mergeId]
-              if (_v.applyPurchase?.length) {
-                item.measureUnit = _originInfo?.measureUnit // 计量单位
-                item.accountingUnit = _originInfo?.accountingUnit // 核算单位
-              }
-            }
-            if (!_isSelected || props.edit) {
-              item.applyPurchaseId = item.id
-              item.purchaseQuantity = item.quantity
-              item.purchaseMete = item.mete
-              item.quantity = null
-              item.mete = null
-            }
-            if (props.edit && form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]?.length) {
-              const editArr = form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]
-              for (let i = 0; i < editArr.length; i++) {
-                const editItem = editArr[i]
-                item.unitWeight = editItem?.unitWeight // 单位重量
-                item.length = editItem?.length
-                item.width = editItem?.width
-                item.thickness = editItem?.thickness
-                const _quantity = editItem.quantity
-                const _mete = editItem.mete
-                item.quantity = _quantity
-                _totalQuantity += _quantity
-                item.mete = _mete
-                _totalMete += _mete
-                item.theoryWeight = editItem.theoryWeight
-                item.theoryTotalWeight = editItem.theoryTotalWeight
-
-                item.originQuantity = item.quantity
-                item.originMete = item.mete
-                if (item?.project) {
-                  order.projects.push(item?.project)
-                }
-                item.spanMerge = i === 0 ? editArr.length : 0
-                item.isBranch = i > 0
-                applyPurchaseArr.push(JSON.parse(JSON.stringify(item)))
-              }
-            } else {
-              _totalQuantity += item.quantity || 0
-              _totalMete += item.mete || 0
-
-              item.originQuantity = item.quantity
-              item.originMete = item.mete
-              if (item?.project) {
-                order.projects.push(item?.project)
-              }
-              applyPurchaseArr.push(JSON.parse(JSON.stringify(item)))
-            }
-          })
-          if ((_v.basicClass & (matClsEnum.MATERIAL.V))) {
-            if (!props.edit) {
-              setSpecInfoToList(_v.applyPurchase)
-              numFmtByBasicClass(
-                _v.applyPurchase,
-                {
-                  toNum: true
-                },
-                { mete: ['mete', 'inboundMete', 'purchaseMete'], quantity: ['inboundQuantity', 'quantity', 'purchaseQuantity'] }
-              )
-            } else {
-              setSpecInfoToList(_v.applyPurchase)
-              numFmtByBasicClass(
-                _v.applyPurchase,
-                {
-                  toNum: true
-                },
-                { mete: ['inboundMete', 'purchaseMete'], quantity: ['inboundQuantity', 'purchaseQuantity'] }
-              )
-            }
-          }
-          _v.applyPurchase = applyPurchaseArr
-          _v.quantity = _totalQuantity
-          _v.mete = _totalMete
-        } else {
-          _v.quantity = null
-          _v.mete = null
-        }
-        if (props.edit && form?.editObj?.[_v.mergeId]) {
-          _v.quantity = form?.editObj?.[_v.mergeId]?.quantity
-          _v.mete = form?.editObj?.[_v.mergeId]?.mete
-        } else if (_isSelected) {
-          _v.quantity = form?.selectObj?.[_v.mergeId]?.quantity
-          _v.mete = form?.selectObj?.[_v.mergeId]?.mete
-        }
-        _v.originQuantity = _v.quantity
-        _v.originMete = _v.mete
-        if (props.edit) {
-          _v.needFirstCalcTheoryWeight = true
-        }
-
-        if (v.inboundList?.length) {
-          setSpecInfoToList(v.inboundList)
-          numFmtByBasicClass(
-            v.inboundList,
-            {
-              toNum: true
-            }
-          )
-          v.inboundList.forEach((item) => {
-            item.applyPurchaseSN = applyPurchaseObj[item.applyPurchaseId]?.applyPurchaseSN
-          })
-        }
-        return _v
-      })
     }
   }
   // 订单信息对象重新赋值
@@ -559,7 +360,7 @@ function toInboundRecord() {
 }
 
 // 查看申购单
-// function openRequisitionsView() {}
+function openRequisitionsView() {}
 
 // 表单校验
 async function validate() {

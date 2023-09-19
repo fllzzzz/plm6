@@ -8,7 +8,7 @@ import { ref } from 'vue'
 export default function useFormSet({ FORM, form, cu, emit, isEdit, tableRules, init, setFormCallback }) {
   // 同上数据
   const ditto = new Map([
-    ['workshopId', -1],
+    ['factoryId', -1],
     ['warehouseId', -1]
   ])
 

@@ -77,7 +77,7 @@
 <script setup>
 import { summaryData } from '@/api/bridge/bridge-pack-and-ship/product-receive-send-storage'
 import { ref, watch } from 'vue'
-import workshopSelect from '@comp-base/workshop-select'
+import workshopSelect from '@comp-mes/workshop-select'
 import { bridgePackTypeEnum as packTypeEnum } from '@enum-ms/bridge'
 import checkPermission from '@/utils/system/check-permission'
 import { DP } from '@/settings/config'

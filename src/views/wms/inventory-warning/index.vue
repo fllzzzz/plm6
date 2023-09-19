@@ -25,7 +25,7 @@
         width="150"
       >
         <template #default="{ row }">
-          <workshop-table-cell-tag v-if="row.workshop" :id="row.workshop.id" />
+          <factory-table-cell-tag v-if="row.factory" :id="row.factory.id" />
           <span>{{ row.serialNumber }}</span>
         </template>
       </el-table-column>
@@ -142,7 +142,7 @@ import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import useCrudEnabledChange from '@compos/use-crud-enabled-change'
 import useRowEdit from '@compos/use-row-edit'
-import workshopTableCellTag from '@comp-base/workshop-table-cell-tag.vue'
+import factoryTableCellTag from '@comp-base/factory-table-cell-tag.vue'
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'

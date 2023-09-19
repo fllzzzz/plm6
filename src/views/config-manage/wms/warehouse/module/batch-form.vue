@@ -4,7 +4,7 @@
     :close-on-click-modal="false"
     :before-close="crud.cancelBCU"
     :visible="dialogVisible"
-    :title="`${crud.props.workshop ? crud.props.workshop.name + '：' : ''}${crud.bStatus.title}`"
+    :title="`${crud.props.factory ? crud.props.factory.name + '：' : ''}${crud.bStatus.title}`"
     :show-close="false"
     custom-class="warehouse-batch-add"
     width="1000px"
@@ -43,12 +43,26 @@
               <common-select
                 v-model="row.materialType"
                 :options="matClsEnum.ENUM"
-                :unshowOptions="[matClsEnum.GAS.K]"
                 multiple
                 clearable
                 mode="bit"
                 type="enum"
                 placeholder="可存储材料类型"
+                style="width: 100%"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column key="type" prop="type" :show-overflow-tooltip="true" label="仓库类型" width="125">
+            <template #default="{ row, $index }">
+              <common-select
+                :key="Math.random()"
+                v-model="row.type"
+                :options="warehouseTypeEnum.ENUM"
+                :show-extra="$index !== 0"
+                :extra-val="ditto.get('type')"
+                clearable
+                type="enum"
+                placeholder="仓库类型"
                 style="width: 100%"
               />
             </template>
@@ -84,8 +98,9 @@
 </template>
 
 <script setup>
-// TODO: 考虑根据车间id存为草稿
+// TODO: 考虑根据工厂id存为草稿
 import { computed, ref } from 'vue'
+import { warehouseTypeEnum } from '@enum-ms/wms'
 import { matClsEnum } from '@enum-ms/classification'
 
 import { regBatchForm } from '@compos/use-crud'
@@ -97,6 +112,7 @@ import StoreOperation from '@crud/STORE.operation.vue'
 const tableRules = {
   name: [{ required: true, max: 20, message: '不能超过20个字符', trigger: 'blur' }],
   materialType: [{ required: true, message: '请选择仓库存储的材料类型', trigger: 'change' }],
+  type: [{ required: true, message: '请选择仓库类型', trigger: 'change' }],
   sort: [{ max: 3, message: '不能超过3个字符', trigger: 'blur' }]
 }
 
@@ -105,16 +121,20 @@ const defaultForm = { list: [] }
 const defaultRow = {
   name: undefined,
   materialType: undefined,
+  type: warehouseTypeEnum.NORMAL.V,
   sort: undefined
 }
+
+// 同上的选项与值
+const ditto = new Map([['type', -1]])
 
 const formRef = ref()
 
 const { CRUD, crud, form, ADD_FORM } = regBatchForm(defaultForm, formRef)
 const dialogVisible = computed(() => crud.bStatus.cu > CRUD.STATUS.NORMAL)
 
-const { init, addRow, removeRow } = useTableOperate(defaultRow, 10)
-const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules })
+const { init, addRow, removeRow } = useTableOperate(defaultRow, 10, ditto)
+const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })
 
 const { maxHeight } = useMaxHeight(
   {
@@ -144,11 +164,7 @@ CRUD.HOOK.beforeValidateBCU = () => {
 // 表单提交数据清理
 crud.submitBatchFormFormat = (form) => {
   cleanUpData(form.list)
-  form.list.map(v => {
-    v.workshopId = crud.query.workshopId
-    v.warehouseType = crud.query.warehouseType
-  })
-  form.workshopId = crud.query.workshopId
+  form.factoryId = crud.query.factoryId
   return form
 }
 </script>

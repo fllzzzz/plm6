@@ -28,25 +28,6 @@ export function setInboundBasicConf(data) {
   })
 }
 
-// 获取采购基础配置
-export function getPurchaseBasicConf() {
-  return request({
-    module: 'wms',
-    url: 'config/purchase-spec/base',
-    method: 'get'
-  })
-}
-
-// 保存采购基础配置
-export function setPurchaseBasicConf(data) {
-  return request({
-    module: 'wms',
-    url: 'config/purchase-spec/base',
-    method: 'put',
-    data
-  })
-}
-
 // 获取入库钢材配置
 export function getInboundSteelConf() {
   return request({

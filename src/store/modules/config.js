@@ -16,17 +16,14 @@ import { getUserAllSimple } from '@/api/common'
 import { getDeptAllSimple } from '@/api/common'
 import { getSuppliersBrief } from '@/api/common'
 import { getTaxRateBrief } from '@/api/config/wms/tax-rate'
-import { getApprovalConf } from '@/api/config/approval-config/base'
 import { getCompanyConfig, getLogoConfig } from '@/api/config/main/system-config'
 import { getUnclosedRequisitionsBrief } from '@/api/wms/requisitions'
 import { getPurchasingPurchaseOrderBrief, getPurchaseOrder } from '@/api/supply-chain/purchase-order'
-import { getWarehouseBrief, getWorkshopNameAll } from '@/api/config/wms/warehouse'
+import { getWarehouseBrief } from '@/api/config/wms/warehouse'
 import { getSteelClassifyConfBrief } from '@/api/config/system-config/steel-classic'
 
-import { STEEL_BASE_UNIT } from '@/settings/config'
 import { unitTypeEnum } from '@enum-ms/common'
-import { convertUnits } from '@/utils/convert/unit'
-import { matClsEnum, materialPurchaseClsEnum } from '@enum-ms/classification'
+import { matClsEnum } from '@enum-ms/classification'
 import { setEmptyArr2Undefined, tree2list, tree2listForLeaf } from '@/utils/data-type/tree'
 import { isBlank, isNotBlank } from '@/utils/data-type'
 import { DP } from '@/settings/config'
@@ -81,16 +78,11 @@ const state = {
     website: '', // 网址
     logo: '' // logo
   },
-  approvalCfg: {}, // 审批配置
   unit: { ALL: [], GROUP: [], MAP: new Map(), KS: new Map() }, // 单位列表 ALL，WEIGHT...
   factories: [], // 工厂
   factoryKV: {}, // 工厂id:value 格式
   warehouse: [], // 存储仓库
-  workshopName: [], // 存储仓库所属车间
-  workshopNameKV: {}, // 车间id:value 格式
-  mesWorkShopName: [], // 系统配置车间
   workshops: [], // 车间
-  workshopKV: {}, // 车间id:value 格式
   bridgeWorkshops: [], // 桥梁-车间
   productLines: [], // 工厂-车间-生产线
   bridgeProductLines: [], // 桥梁工厂-车间-生产线
@@ -158,7 +150,6 @@ const state = {
     clsTree: false,
     suppliers: false,
     taxRate: false,
-    approvalCfg: false,
     unclosedRequisitions: false,
     unclosedPurchaseOrder: false,
     purchaseOrders: false,
@@ -167,7 +158,6 @@ const state = {
     subcontractType: false,
     qualityProblemType: false,
     visaReason: false,
-    workshopName: false,
     decimalPrecision: false
   }
 }
@@ -205,9 +195,6 @@ const mutations = {
       [matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass)
     )
   },
-  SET_APPROVAL_CFG(state, cfg) {
-    state.approvalCfg = cfg
-  },
   SET_CLS_TREE(state, tree = []) {
     state.clsTree = tree
   },
@@ -224,28 +211,12 @@ const mutations = {
   },
   SET_WORKSHOPS(state, workshops) {
     state.workshops = workshops
-    state.workshopKV = {}
-    workshops.forEach((v) => {
-      state.workshopKV[v.id] = v
-    })
   },
   SET_BRIDGE_WORKSHOPS(state, bridgeWorkshops) {
     state.bridgeWorkshops = bridgeWorkshops
   },
   SET_WAREHOUSE(state, warehouse) {
     state.warehouse = warehouse
-  },
-  SET_WORKSHOP_NAME(state, workshopName) {
-    state.workshopName = workshopName
-    state.workshopNameKV = {}
-    state.mesWorkShopName = []
-    workshopName.forEach((v) => {
-      v.tagColor = v.workshopId ? '#409eff' : '#e6a23c'
-      state.workshopNameKV[v.id] = v
-      if (v.workshopId) {
-        state.mesWorkShopName.push(v)
-      }
-    })
   },
   SET_PRODUCTION_TEAM(state, productionTeam) {
     state.productionTeam = productionTeam
@@ -398,13 +369,6 @@ const actions = {
     commit('SET_LOADED', { key: 'taxRate' })
     return content
   },
-  // 加载审批配置
-  async fetchApprovalCfg({ commit }) {
-    const res = await getApprovalConf()
-    commit('SET_APPROVAL_CFG', { requisition: res })
-    commit('SET_LOADED', { key: 'approvalCfg' })
-    return { requisition: res }
-  },
   // 物料分类树
   async fetchMatClsTree({ commit }) {
     const res = await getMatClsTree()
@@ -489,13 +453,6 @@ const actions = {
     const { content = [] } = await getFactoriesAllSimple()
     commit('SET_FACTORIES', content)
     commit('SET_LOADED', { key: 'factories' })
-    return content
-  },
-  // 仓库所属车间
-  async fetchWorkshopName({ commit }) {
-    const content = (await getWorkshopNameAll()) || []
-    commit('SET_WORKSHOP_NAME', content)
-    commit('SET_LOADED', { key: 'workshopName' })
     return content
   },
   // 仓库
@@ -675,7 +632,6 @@ const actions = {
     const { content = [] } = await getPurchasingPurchaseOrderBrief()
     content.forEach((v) => {
       if (v.projects) v.projectIds = v.projects.map((v) => v.id)
-      if (v.materialType & materialPurchaseClsEnum.STEEL.V) v.inboundTotalMete = convertUnits(v.inboundTotalMete, 'g', STEEL_BASE_UNIT.weight.unit)
     })
     commit('SET_UNCLOSED_PURCHASE_ORDER', content)
     commit('SET_LOADED', { key: 'unclosedPurchaseOrder' })

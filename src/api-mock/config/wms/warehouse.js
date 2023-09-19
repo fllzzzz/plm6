@@ -1,4 +1,5 @@
 import { enabledEnum } from '@enum-ms/common'
+import { warehouseTypeEnum } from '@enum-ms/wms'
 
 // 获取仓库位置（简要的）
 const getWarehouseBrief = {
@@ -10,9 +11,10 @@ const getWarehouseBrief = {
       message: '成功',
       'data|30': [
         {
-          workshopId: 1,
+          factoryId: 1,
           'id|+1': 1,
           name: '@increment()' + '号仓库',
+          'type|1-2': warehouseTypeEnum.NORMAL.V,
           'materialType|1-64': 1,
           'enabled|1-2': enabledEnum.TRUE.V
         }
@@ -33,9 +35,10 @@ const getWarehouse = {
         'content|10': [
           {
             createTime: 1621315424103,
-            workshopId: 1,
+            factoryId: 1,
             'id|+1': 1,
             name: '@increment()' + '号仓库',
+            'type|1-2': warehouseTypeEnum.NORMAL.V,
             'materialType|1-64': 1,
             'sort|+1': 1,
             'enabled|1-2': enabledEnum.TRUE.V,

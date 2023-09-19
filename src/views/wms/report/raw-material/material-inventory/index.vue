@@ -19,7 +19,7 @@
       <!-- 单位及其数量 -->
       <material-unit-quantity-columns />
       <!-- 价格信息 -->
-      <!-- <amount-info-columns :columns="columns" :basic-class="basicClass" show-unit-price-e :showInput-v-a-t="false" /> -->
+      <amount-info-columns :columns="columns" :basic-class="basicClass" show-unit-price-e :showInput-v-a-t="false" />
       <!-- 仓库信息 -->
       <warehouse-info-columns :columns="columns" show-project show-monomer show-area />
     </common-table>
@@ -46,7 +46,7 @@ import Pagination from '@crud/Pagination'
 import MHeader from './module/header.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
-// import AmountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
+import AmountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
 

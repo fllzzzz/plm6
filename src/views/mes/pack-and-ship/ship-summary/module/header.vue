@@ -74,7 +74,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { shipmentSummary } from '@/api/mes/pack-and-ship/ship-summary'
-import workshopSelect from '@/components-system/base/workshop-select.vue'
+import workshopSelect from '@comp-mes/workshop-select'
 import { regHeader } from '@compos/use-crud'
 import { shipStatusEnum } from '@enum-ms/mes'
 import { weightTypeEnum, workshopTypeEnum } from '@enum-ms/common'

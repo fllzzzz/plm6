@@ -4,36 +4,15 @@
       <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery" :show-material-is-whole="false">
         <template #afterProjectWarehouseType>
           <common-radio-button
-            v-model="query.purchaseType"
-            :options="baseMaterialTypeEnum.ENUM"
-            type="enum"
-            size="small"
-            class="filter-item"
-            @change="crud.toQuery"
-          />
-          <common-radio-button
-            v-if="query.purchaseType & baseMaterialTypeEnum.RAW_MATERIAL.V"
             v-model="query.basicClass"
             :options="rawMatClsEnum.ENUM"
             show-option-all
-            :unshowVal="[rawMatClsEnum.GAS.V]"
             type="enum"
             size="small"
             class="filter-item"
             @change="handleBasicClassChange"
           />
           <common-radio-button
-            v-if="query.purchaseType & baseMaterialTypeEnum.MANUFACTURED.V"
-            v-model="query.basicClass"
-            :options="manufClsEnum.ENUM"
-            show-option-all
-            type="enum"
-            size="small"
-            class="filter-item"
-            @change="handleBasicClassChange"
-          />
-          <common-radio-button
-            v-if="query.purchaseType & baseMaterialTypeEnum.RAW_MATERIAL.V"
             v-model="query.orderSupplyType"
             :options="orderSupplyTypeEnum.ENUM"
             show-option-all
@@ -153,11 +132,11 @@
 
 <script setup>
 import { exportDetailsExcel, exportSalesReturnExcel } from '@/api/wms/report/raw-material/inbound'
-import { ref, inject, watchEffect } from 'vue'
+import { ref, inject } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { supplierTypeEnum } from '@enum-ms/supplier'
-import { rawMatClsEnum, manufClsEnum } from '@enum-ms/classification'
-import { materialRejectStatusEnum, orderSupplyTypeEnum, baseMaterialTypeEnum } from '@/utils/enum/modules/wms'
+import { rawMatClsEnum } from '@enum-ms/classification'
+import { materialRejectStatusEnum, orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
 
 import { regHeader } from '@compos/use-crud'
 import RrOperation from '@crud/RR.operation'
@@ -171,7 +150,6 @@ const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23,
 
 const defaultQuery = {
   inboundTime: [], // [开始时间，结束时间]
-  purchaseType: { value: baseMaterialTypeEnum.RAW_MATERIAL.V, resetAble: false },
   basicClass: undefined, // 物料类型
   orderSupplyType: undefined, // 供货类型
   rejectStatus: undefined, // 退货状态
@@ -187,16 +165,6 @@ const defaultQuery = {
 
 const permission = inject('permission')
 const { crud, query } = regHeader(defaultQuery)
-
-watchEffect(() => {
-  if (query.purchaseType & baseMaterialTypeEnum.MANUFACTURED.V) {
-    query.orderSupplyType = undefined
-    query.basicClass = undefined
-  }
-  if (query.purchaseType & baseMaterialTypeEnum.RAW_MATERIAL.V) {
-    query.basicClass = undefined
-  }
-})
 
 // 基础类型发生变化
 async function handleBasicClassChange(val) {

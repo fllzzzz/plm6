@@ -110,59 +110,13 @@ const scmRequisitionsDetail = {
      * @param {*} format 格式转换
      */
     fields: [ // 字段内容
-      {
-        show: true,
-        source: dataSourceEnum.SYSTEM.V,
-        key: 'serialNumber',
-        title: '申购单号：',
-        width: 90,
-        type: typeEnum.GUID.K
-      },
-      {
-        show: true,
-        source: dataSourceEnum.SYSTEM.V,
-        key: 'type',
-        title: '备料类型：',
-        width: 55,
-        type: typeEnum.ENUM.K,
-        format: {
-          enum: 'preparationTypeEnum'
-        }
-      },
-      // { show: true, source: dataSourceEnum.SYSTEM.V, key: 'arrivalTime', title: '到厂日期：', width: 45, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
-      {
-        show: true,
-        source: dataSourceEnum.SYSTEM.V,
-        key: 'approveInfoName',
-        title: '审批流程：',
-        width: 90,
-        type: typeEnum.GUID.K
-      },
-      {
-        show: true,
-        source: dataSourceEnum.SYSTEM.V,
-        key: 'applicantName',
-        title: '申购人：',
-        width: 100,
-        type: typeEnum.USER_NAME.K
-      },
-      {
-        show: false,
-        source: dataSourceEnum.SYSTEM.V,
-        key: 'printDate',
-        title: '打印时间：',
-        width: 125,
-        type: typeEnum.DATE.K,
-        format: 'YY/MM/DD kk:mm:ss'
-      },
-      {
-        show: false,
-        source: dataSourceEnum.SYSTEM.V,
-        key: 'printer',
-        title: '打印人：',
-        width: 30,
-        type: typeEnum.USER_NAME.K
-      }
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'serialNumber', title: '申购单号：', width: 90, type: typeEnum.GUID.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'type', title: '备料类型：', width: 55, type: typeEnum.ENUM.K, format: { enum: 'preparationTypeEnum' }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'arrivalTime', title: '到厂日期：', width: 45, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'approveInfoName', title: '审批流程：', width: 90, type: typeEnum.GUID.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'applicantName', title: '申购人：', width: 100, type: typeEnum.USER_NAME.K },
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 125, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 30, type: typeEnum.USER_NAME.K }
     ]
   },
   /**
@@ -198,14 +152,7 @@ const scmRequisitionsDetail = {
      * @param {enum} align 水平对齐方式
      * @param {boolean} above 是否显示在字段上方
      */
-    tip: {
-      show: false,
-      text: '',
-      bold: 'unset',
-      size: 9,
-      align: alignEnum.LEFT.V,
-      above: true
-    },
+    tip: { show: false, text: '', bold: 'unset', size: 9, align: alignEnum.LEFT.V, above: true },
     /**
      * 表格列
      * @param {boolean} show 是否显示
@@ -217,22 +164,9 @@ const scmRequisitionsDetail = {
      * @param {enum} type 数据类型
      * @param {*} format 格式转换
      */
-    fields: [{
-      show: true,
-      source: dataSourceEnum.SYSTEM.V,
-      key: 'projectName',
-      title: '项目：',
-      width: 190,
-      type: typeEnum.OTHER.K
-    },
-    {
-      show: true,
-      source: dataSourceEnum.SYSTEM.V,
-      key: 'remark',
-      title: '备注：',
-      width: 190,
-      type: typeEnum.OTHER.K
-    }
+    fields: [
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'projectName', title: '项目：', width: 190, type: typeEnum.OTHER.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'remark', title: '备注：', width: 190, type: typeEnum.OTHER.K }
     ]
   },
   table: {
@@ -242,24 +176,14 @@ const scmRequisitionsDetail = {
      * @param {string} bold 是否加粗 'unset' || 'bold'
      * @param {number} lineHeight 行高
      */
-    th: {
-      size: 10,
-      bold: 'bold',
-      lineHeight: 15,
-      paddingTB: 1
-    },
+    th: { size: 10, bold: 'bold', lineHeight: 15, paddingTB: 1 },
     /**
      * td
      * @param {number} size 字体大小
      * @param {string} bold 是否加粗 'unset' || 'bold'
      * @param {number} lineHeight 行高
      */
-    td: {
-      size: 9,
-      bold: 'unset',
-      lineHeight: 13,
-      paddingTB: 2
-    },
+    td: { size: 9, bold: 'unset', lineHeight: 13, paddingTB: 2 },
     emptyVal: '/', // string 空值显示
     /**
      * 表格序号
@@ -268,21 +192,13 @@ const scmRequisitionsDetail = {
      * @param {number} width 列宽
      * @param {enum} align 水平对齐方式
      */
-    index: {
-      show: true,
-      title: '序号',
-      width: 10,
-      align: alignEnum.CENTER.V
-    },
+    index: { show: true, title: '序号', width: 10, align: alignEnum.CENTER.V },
     /**
      * 合计行
      * @param {boolean} show 是否显示
      * @param {string} title 合计名称
      */
-    summary: {
-      show: true,
-      title: '合计'
-    },
+    summary: { show: true, title: '合计' },
     /**
      * 表格列
      * @param {boolean} show 是否显示
@@ -296,98 +212,83 @@ const scmRequisitionsDetail = {
      * @param {*} format 格式转换
      * @param {boolean} sum 列需要合计
      */
-    fields: [{
-      show: true,
-      key: 'serialNumber',
-      title: '编号',
-      source: dataSourceEnum.SYSTEM.V,
-      align: alignEnum.LEFT.V,
-      minWidth: 18,
-      type: typeEnum.SERIAL_NUMBER.K
-    },
-    {
-      show: true,
-      key: 'classifyName',
-      title: '物料类别',
-      source: dataSourceEnum.SYSTEM.V,
-      align: alignEnum.LEFT.V,
-      minWidth: 18,
-      type: typeEnum.MATERIAL_CLASS_NAME.K
-    },
-    {
-      show: true,
-      key: 'specMerge',
-      title: '规格',
-      source: dataSourceEnum.SYSTEM.V,
-      align: alignEnum.LEFT.V,
-      minWidth: 18,
-      type: typeEnum.SPECIFICATION.K
-    },
-    {
-      show: true,
-      key: 'brand',
-      title: '品牌',
-      source: dataSourceEnum.SYSTEM.V,
-      align: alignEnum.LEFT.V,
-      minWidth: 18,
-      type: typeEnum.BRAND.K
-    },
-    {
-      show: true,
-      key: 'measureUnit',
-      title: '计量单位',
-      source: dataSourceEnum.SYSTEM.V,
-      align: alignEnum.CENTER.V,
-      minWidth: 18,
-      type: typeEnum.MEASUREMENT_UNIT.K
-    },
-    {
-      show: true,
-      key: 'quantity',
-      title: '申购数',
-      source: dataSourceEnum.SYSTEM.V,
-      align: alignEnum.RIGHT.V,
-      minWidth: 18,
-      type: typeEnum.QUANTITY.K,
-      format: {
-        toThousand: false,
-        rowUnit: 'measureUnit'
+    fields: [
+      {
+        show: true,
+        key: 'serialNumber',
+        title: '编号',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.LEFT.V,
+        minWidth: 18,
+        type: typeEnum.SERIAL_NUMBER.K
       },
-      sum: true
-    },
-    {
-      show: true,
-      key: 'accountingUnit',
-      title: '核算单位',
-      source: dataSourceEnum.SYSTEM.V,
-      align: alignEnum.CENTER.V,
-      width: 10,
-      type: typeEnum.ACCOUNTING_UNIT.K
-    },
-    {
-      show: true,
-      key: 'mete',
-      title: '申购量',
-      source: dataSourceEnum.SYSTEM.V,
-      align: alignEnum.RIGHT.V,
-      minWidth: 18,
-      type: typeEnum.METE.K,
-      format: {
-        toThousand: false,
-        rowUnit: 'accountingUnit'
+      {
+        show: true,
+        key: 'classifyName',
+        title: '物料类别',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.LEFT.V,
+        minWidth: 18,
+        type: typeEnum.MATERIAL_CLASS_NAME.K
       },
-      sum: true
-    },
-    {
-      show: true,
-      key: 'arrivalTime',
-      title: '到厂日期',
-      source: dataSourceEnum.SYSTEM.V,
-      align: alignEnum.CENTER.V,
-      minWidth: 18,
-      type: typeEnum.DATE.K,
-      format: 'YY/MM/DD'
-    }
+      {
+        show: true,
+        key: 'specMerge',
+        title: '规格',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.LEFT.V,
+        minWidth: 18,
+        type: typeEnum.SPECIFICATION.K
+      },
+      {
+        show: true,
+        key: 'brand',
+        title: '品牌',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.LEFT.V,
+        minWidth: 18,
+        type: typeEnum.BRAND.K
+      },
+      {
+        show: true,
+        key: 'measureUnit',
+        title: '计量单位',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.CENTER.V,
+        minWidth: 18,
+        type: typeEnum.MEASUREMENT_UNIT.K
+      },
+      {
+        show: true,
+        key: 'quantity',
+        title: '申购数',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.RIGHT.V,
+        minWidth: 18,
+        type: typeEnum.QUANTITY.K,
+        format: { toThousand: false, rowUnit: 'measureUnit' },
+        sum: true
+      },
+      {
+        show: true,
+        key: 'accountingUnit',
+        title: '核算单位',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.CENTER.V,
+        width: 10,
+        type: typeEnum.ACCOUNTING_UNIT.K
+      },
+      {
+        show: true,
+        key: 'mete',
+        title: '申购量',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.RIGHT.V,
+        minWidth: 18,
+        type: typeEnum.METE.K,
+        format: { toThousand: false, rowUnit: 'accountingUnit' },
+        sum: true
+      }
     ]
   }
 }

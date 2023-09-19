@@ -36,8 +36,8 @@ const receiptInfo = computed(() => {
       } else {
         str += '公共库'
       }
-      if (sInfo.workshop) {
-        str += `（${sInfo.workshop.name}）`
+      if (sInfo.factory) {
+        str += `（${sInfo.factory.name}）`
       }
       sourceStrArr.push(str)
     })

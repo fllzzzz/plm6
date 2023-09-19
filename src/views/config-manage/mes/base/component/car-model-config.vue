@@ -25,11 +25,11 @@
           <el-input
             v-if="isEdit"
             v-model="scope.row.name"
+            oninput="value=value.replace(/[^\d.]/g, '').replace(/^\./g, '0.').replace('.','$#$').replace(/\./g,'').replace('$#$','.')"
             size="mini"
             maxlength="50"
             placeholder="车型"
             style="width: 100%"
-            @blur="nameChange(scope.row)"
           ></el-input>
           <span v-else>{{ scope.row.name }}</span>
         </template>
@@ -95,12 +95,6 @@ async function fetchData() {
     console.log('获取车型配置', error)
   } finally {
     dataLoading.value = false
-  }
-}
-
-function nameChange(row) {
-  if (!(row.name && (/^[0-9\u4E00-\u9FA5\.]+$/.test(row.name)))) {
-    row.name = undefined
   }
 }
 

@@ -33,8 +33,8 @@
               <span v-empty-text>{{ detail.areaName }}</span>
             </el-form-item>
 
-            <el-form-item label="车间" prop="workshop.name">
-              <span v-empty-text>{{ detail.workshop?.name }}</span>
+            <el-form-item label="工厂" prop="factory.name">
+              <span v-empty-text>{{ detail.factory?.name }}</span>
             </el-form-item>
 
             <el-form-item label="调整金额" prop="amount">

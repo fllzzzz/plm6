@@ -2,8 +2,7 @@
 
 export const commonPM = {
   // 采购合同详情
-  purchaseOrderDetail: ['scm_purchaseOrder:detail'],
-  requisitionsDetail: ['scm_requisitions:detail']
+  purchaseOrderDetail: ['scm_purchaseOrder:detail']
 }
 
 // wms
@@ -38,13 +37,9 @@ export const purchaseOrderPM = {
 export const scmRequisitionsPM = {
   get: ['scm_requisitions:get'], // 列表
   add: ['scm_requisitions:add'], // 添加
-  edit: ['scm_requisitions:edit'], // 编辑
   detail: ['scm_requisitions:detail'], // 详情
   print: ['scm_requisitions:print'], // 打印
-  trackGet: ['scm_requisitions:trackGet'], // 获取采购进度
-  trackPrint: ['scm_requisitions:trackPrint'], // 打印采购进度
-  editStatus: ['scm_requisitions:editStatus'], // 修改状态
-  del: ['scm_requisitions:del'] // 删除、撤销
+  del: ['scm_requisitions:del'] // 撤销
 }
 
 // --------------------------- 申购订单 end --------------------------------

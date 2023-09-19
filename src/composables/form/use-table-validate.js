@@ -22,7 +22,7 @@ function tableValidate(list, tableRules, ditto, errorMsg) {
   const rules = getRules(tableRules)
   let flag = true
   let message = '请填写数据'
-  const copyList = cloneDeep(list)
+  const copyList = JSON.parse(JSON.stringify(list))
   const blankRowsIndex = [] // 数据为空的下标
   if (list && list.length > 0) {
     let isFirstRow = true // 首行，第一条有数据的记录
@@ -33,7 +33,7 @@ function tableValidate(list, tableRules, ditto, errorMsg) {
 
       // ------ 空行处理 start ------
       // 为了不删除有数据row的同上字段，因此拷贝一个row
-      const rowCopy = cloneDeep(row)
+      const rowCopy = JSON.parse(JSON.stringify(row))
       delete rowCopy.uid
       ditto.forEach((val, name) => {
         if (rowCopy[name] === val) {

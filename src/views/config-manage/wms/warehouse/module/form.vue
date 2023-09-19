@@ -4,7 +4,7 @@
     :close-on-click-modal="false"
     :visible="crud.status.cu > CRUD.STATUS.NORMAL"
     :before-close="crud.cancelCU"
-    :title="`${crud.props.workshop ? crud.props.workshop.name + '：' : ''}${crud.status.title}`"
+    :title="`${crud.props.factory ? crud.props.factory.name + '：' : ''}${crud.status.title}`"
     :show-close="true"
     custom-class="config-wms-warehouse-form"
     width="600px"
@@ -30,13 +30,15 @@
         <common-select
           v-model="form.materialType"
           :options="matClsEnum.ENUM"
-          :unshowOptions="[matClsEnum.GAS.K]"
           multiple
           mode="bit"
           type="enum"
           placeholder="可存储材料类型"
           style="width: 100%"
         />
+      </el-form-item>
+      <el-form-item label="仓库类型" prop="type">
+        <common-select v-model="form.type" :options="warehouseTypeEnum.ENUM" type="enum" placeholder="仓库类型" style="width: 100%" />
       </el-form-item>
       <el-form-item label="排序" prop="sort">
         <common-input-number
@@ -55,6 +57,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { warehouseTypeEnum } from '@enum-ms/wms'
 import { matClsEnum } from '@enum-ms/classification'
 
 import { regForm } from '@compos/use-crud'
@@ -63,21 +66,22 @@ const defaultForm = {
   id: undefined,
   name: undefined,
   materialType: [],
+  type: undefined,
   sort: undefined
 }
 
 // 校验规则
 const rules = ref({
   name: [{ required: true, max: 20, message: '不能超过20个字符', trigger: 'blur' }],
-  materialType: [{ required: true, message: '请选择仓库存储的材料类型', trigger: 'change' }]
+  materialType: [{ required: true, message: '请选择仓库存储的材料类型', trigger: 'change' }],
+  type: [{ required: true, message: '请选择仓库类型', trigger: 'change' }]
 })
 
 const formRef = ref()
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
 crud.submitFormFormat = (form) => {
-  form.workshopId = crud.query.workshopId
-  form.warehouseType = crud.query.warehouseType
+  form.factoryId = crud.query.factoryId
   return form
 }
 </script>

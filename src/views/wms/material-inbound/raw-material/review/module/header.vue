@@ -2,22 +2,20 @@
   <div class="head-container">
     <div v-if="crud.searchToggle">
       <common-radio-button
-        type="enum"
-        v-model="query.basicClass"
-        :options="matClsEnum.ENUM"
-        :unshowVal="[matClsEnum.GAS.V]"
-        show-option-all
-        clearable
-        class="filter-item"
-        @change="crud.toQuery"
-      />
-      <common-radio-button
-        v-if="!(query.basicClass & MANUF_ENUM)"
         v-model="query.orderSupplyType"
         :options="orderSupplyTypeEnum.ENUM"
         show-option-all
         type="enumSL"
         size="small"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <common-radio-button
+        type="enum"
+        v-model="query.basicClass"
+        :options="rawMatClsEnum.ENUM"
+        show-option-all
+        clearable
         class="filter-item"
         @change="crud.toQuery"
       />
@@ -137,11 +135,11 @@
 </template>
 
 <script setup>
-import { ref, computed, watchEffect, inject } from 'vue'
-import { PICKER_OPTIONS_SHORTCUTS, MANUF_ENUM } from '@/settings/config'
+import { ref, computed, inject } from 'vue'
+import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { supplierTypeEnum } from '@enum-ms/supplier'
 import { reviewStatusEnum } from '@enum-ms/common'
-import { matClsEnum } from '@enum-ms/classification'
+import { rawMatClsEnum } from '@enum-ms/classification'
 import { orderSupplyTypeEnum, inspectionStatusEnum } from '@/utils/enum/modules/wms'
 
 import { regHeader } from '@compos/use-crud'
@@ -171,12 +169,6 @@ const defaultQuery = {
 const permission = inject('permission')
 
 const { crud, query } = regHeader(defaultQuery)
-
-watchEffect(() => {
-  if (query.basicClass & MANUF_ENUM) {
-    query.orderSupplyType = undefined
-  }
-})
 
 const selectionIds = computed(() => {
   return crud.selections.map((row) => row.id)

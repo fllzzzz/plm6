@@ -14,19 +14,10 @@
             :template="otherMaterialTemp"
             @success="handleExcelSuccess"
           />
-          <export-button
-            class="filter-item"
-            size="small"
-            type="info"
-            :params="{ basicClass: currentBasicClass, receiptType: receiptTypeEnum.REQUISITIONS.V }"
-            :fn="downloadExcelTemplate"
-          >
-            其它清单模板下载
-          </export-button>
         </div>
       </div>
       <el-form ref="formRef" :model="form">
-        <aux-mat-table ref="tableRef" :max-height="tableMaxHeight" @search-inventory="searchInventory" />
+        <aux-mat-table ref="tableRef" :max-height="tableMaxHeight" />
       </el-form>
     </common-wrapper>
     <common-drawer
@@ -51,18 +42,16 @@
         />
       </template>
     </common-drawer>
-    <inventory-drawer v-model:visible="inventoryVisible" :params="searchInfo" @use-inventory="useInventory" />
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/supply-chain/requisitions-manage/requisitions'
-import { downloadExcelTemplate } from '@/api/wms/common'
 
-import { defineProps, defineEmits, watchEffect, ref, provide, watch, nextTick } from 'vue'
+import { defineProps, defineEmits, ref, provide, watch, nextTick } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank } from '@/utils/data-type'
-import { preparationTypeEnum, requisitionModeEnum, receiptTypeEnum } from '@enum-ms/wms'
+import { preparationTypeEnum } from '@enum-ms/wms'
 import otherMaterialTemp from '@/utils/excel/import-template/supply-chain/requisition-temp/other'
 
 import useForm from '@/composables/form/use-form'
@@ -70,9 +59,7 @@ import useMaxHeight from '@compos/use-max-height'
 import commonWrapper from './../components/common-wrapper.vue'
 import MaterialTableSpecSelect from '@/components-system/classification/material-table-spec-select.vue'
 import AuxMatTable from '../auxiliary-material/module/aux-mat-table.vue'
-import inventoryDrawer from '../components/inventory-drawer'
 import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
-import ExportButton from '@comp-common/export-button/index.vue'
 
 import { ElMessage } from 'element-plus'
 
@@ -81,16 +68,11 @@ const emit = defineEmits(['success'])
 const props = defineProps({
   detail: {
     type: Object
-  },
-  isEdit: {
-    type: Boolean,
-    default: false
   }
 })
 
 const defaultForm = {
-  list: [], // 入库清单
-  originInventoryInfo: {} // 使用库存
+  list: [] // 入库清单
 }
 
 const tableRef = ref() // 表格ref
@@ -98,14 +80,9 @@ const matSpecRef = ref() // 规格列表ref
 const formRef = ref() // form表单ref
 const drawerRef = ref()
 
-const inventoryVisible = ref(false)
-const searchInfo = ref({})
-const searchIdx = ref()
 const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = matClsEnum.OTHER.V // 当前基础分类
-const useInventoryInfo = ref({})
 
-provide('useInventoryInfo', useInventoryInfo) // 供兄弟组件调用
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 
 const { cu, form, FORM } = useForm(
@@ -113,7 +90,7 @@ const { cu, form, FORM } = useForm(
     title: '其它申购',
     defaultForm: defaultForm,
     clearDraftCallback: init,
-    api: props.isEdit ? crudApi.edit : crudApi.add
+    api: crudApi.add
   },
   formRef,
   props.detail
@@ -124,7 +101,22 @@ watch(
   (val = {}) => {
     form.type = val.type
     form.materialType = val.materialType
-    form.projectId = val.projectId
+    // 项目id
+    if (val.type === preparationTypeEnum.PROJECT.V) {
+      form.projectId = val.projectId
+    } else if (val.type === preparationTypeEnum.PUBLIC.V) {
+      form.projectId = []
+    } else {
+      if (Array.isArray(val.projectId)) {
+        if (val.projectId.length === 1) {
+          form.projectId = val.projectId
+        } else {
+          form.projectId = []
+        }
+      } else {
+        form.projectId = val.projectId ? [val.projectId] : []
+      }
+    }
   },
   { deep: true, immediate: true }
 )
@@ -161,50 +153,10 @@ const { maxHeight: tableMaxHeight } = useMaxHeight({
 // 初始化
 init()
 
-watchEffect(() => {
-  if (form.list?.length) {
-    const _obj = {}
-    for (let i = 0; i < form.list.length; i++) {
-      const item = form.list[i]
-      if (item.requisitionMode === requisitionModeEnum.USE_INVENTORY.V) {
-        if (!_obj[item.materialInventoryId]) {
-          _obj[item.materialInventoryId] = item.quantity
-        } else {
-          _obj[item.materialInventoryId] += item.quantity
-        }
-      }
-    }
-    useInventoryInfo.value = _obj
-  }
-})
-
 // 提交后清除校验结果
 FORM.HOOK.afterSubmit = () => {
   emit('success')
   init()
-}
-
-function searchInventory(row, index) {
-  searchInfo.value = row
-  searchIdx.value = index
-  inventoryVisible.value = true
-}
-
-function useInventory(quantity, data) {
-  const materialInventoryId = data.id
-  if (!form.originInventoryInfo) form.originInventoryInfo = {}
-  form.originInventoryInfo[materialInventoryId] = {
-    quantity: data.quantity,
-    frozenQuantity: data.frozenQuantity
-  }
-  form.list[searchIdx.value].quantity = quantity
-  form.list[searchIdx.value].canUseQuantity = data.quantity
-  form.list[searchIdx.value].color = data.color
-  form.list[searchIdx.value].brand = data.brand
-  form.list[searchIdx.value].unitNet = data.unitNet
-  form.list[searchIdx.value].mete = data.quantity * data.unitNet
-  form.list[searchIdx.value].requisitionMode = requisitionModeEnum.USE_INVENTORY.V
-  form.list[searchIdx.value].materialInventoryId = materialInventoryId
 }
 
 // 表单校验

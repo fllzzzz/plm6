@@ -233,7 +233,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import cutConfigSelect from '@/components-system/base/cut-config-select.vue'
 import drillSchedulingDialog from './drill-scheduling-dialog.vue'
-// import workshopSelect from '@comp-base/workshop-select'
+// import workshopSelect from '@comp-mes/workshop-select'
 
 const permission = inject('permission')
 const emit = defineEmits(['update:visible', 'success', 'handleDel'])

@@ -12,14 +12,15 @@ export function getOverweightSMSRecipient() {
 
 /**
  * 设置过磅超标短信接收人
- * @param {array} userChecks 列表信息
+ * @param {number} id 用户id
+ * @param {string} phone 用户手机号
  * @param {number} maxWeight 过磅超标重量允许值
  */
-export function setOverweightSMSRecipient(data) {
+export function setOverweightSMSRecipient({ id, phone, maxWeight }) {
   return request({
     url: 'api/config/mes/overweightSMSRecipient',
     method: 'put',
-    data
+    data: { id, phone, maxWeight }
   })
 }
 

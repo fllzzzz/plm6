@@ -24,7 +24,6 @@
     :sortable="sortable"
   >
     <template #default="{ row }">
-      <slot name="snTag" :row="row"/>
       <!-- 甲供调拨方式 -->
       <table-cell-tag
         v-if="showPartyATransfer && row.partyATransferType"
@@ -86,17 +85,8 @@
       <span>{{ row.serialNumber }}</span>
     </template>
   </el-table-column>
-   <el-table-column
-    v-if="showClassification && !boolManuf"
-    prop="classification"
-    label="分类"
-    align="center"
-    width="100px"
-    :fixed="fixed"
-    show-overflow-tooltip
-  />
-  <!-- <el-table-column
-    v-if="showClassification && !boolManuf"
+  <el-table-column
+    v-if="showClassification"
     prop="classification"
     label="分类"
     align="center"
@@ -104,9 +94,9 @@
     :fixed="fixed"
     show-overflow-tooltip
     :sortable="sortable"
-  /> -->
+  />
   <el-table-column
-    v-if="showClassifyName && !boolManuf"
+    v-if="showClassifyName"
     prop="classifyName"
     :label="classifyNameAlias"
     align="center"
@@ -178,8 +168,8 @@
 import { materialBaseInfoCPM as permission } from '@/page-permission/wms'
 
 import { defineEmits, defineProps, computed, ref } from 'vue'
-import { STEEL_ENUM, MANUF_ENUM } from '@/settings/config'
-import { rawMatClsEnum, matClsEnum } from '@/utils/enum/modules/classification'
+import { STEEL_ENUM } from '@/settings/config'
+import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import {
   materialRejectStatusEnum,
   materialIsWholeEnum,
@@ -196,8 +186,6 @@ import sectionSteel from './module/section-steel.vue'
 import steelCoil from './module/steel-coil.vue'
 import auxMat from './module/aux-mat.vue'
 import gas from './module/gas.vue'
-import structure from './module/structure.vue'
-import enclosure from './module/enclosure.vue'
 import rawMat from './module/raw-mat.vue'
 
 import RejectInfoTable from '@/views/wms/material-reject/raw-material/components/reject-info-table.vue'
@@ -308,9 +296,6 @@ const rejectMaterialDialogVisible = ref(false)
 // 操作次数(列如冻结)
 const operateNumber = ref(0)
 
-// 是否制成品
-const boolManuf = computed(() => Boolean(props.basicClass & MANUF_ENUM))
-
 // 物料全名宽度
 const classifyNameWidth = computed(() => {
   // 基础分类不存在，或基础分类不为钢材，则宽度为100
@@ -368,20 +353,16 @@ function handleFreezeClose(done) {
 
 const comp = computed(() => {
   switch (props.basicClass) {
-    case matClsEnum.STEEL_PLATE.V:
+    case rawMatClsEnum.STEEL_PLATE.V:
       return steelPlate
-    case matClsEnum.SECTION_STEEL.V:
+    case rawMatClsEnum.SECTION_STEEL.V:
       return sectionSteel
-    case matClsEnum.STEEL_COIL.V:
+    case rawMatClsEnum.STEEL_COIL.V:
       return steelCoil
-    case matClsEnum.MATERIAL.V:
+    case rawMatClsEnum.MATERIAL.V:
       return auxMat
-    case matClsEnum.GAS.V:
+    case rawMatClsEnum.GAS.V:
       return gas
-    case matClsEnum.STRUC_MANUFACTURED.V:
-      return enclosure
-    case matClsEnum.ENCL_MANUFACTURED.V:
-      return structure
     default:
       return rawMat
   }

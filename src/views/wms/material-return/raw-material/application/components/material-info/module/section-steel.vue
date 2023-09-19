@@ -45,8 +45,8 @@
       <span v-parse-project="{ project: material.project, onlyShortName: true }" v-empty-text />
     </span>
     <span class="info-item">
-      <span>车间</span>
-      <span v-if="material.workshop">{{ material.workshop.name }}</span>
+      <span>工厂</span>
+      <span v-if="material.factory">{{ material.factory.name }}</span>
     </span>
     <span class="info-item">
       <span>仓库</span>

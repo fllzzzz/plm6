@@ -98,7 +98,7 @@ import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import factorySelect from '@comp-base/factory-select.vue'
-import workshopSelect from '@/components-system/base/workshop-select.vue'
+import workshopSelect from '@comp-mes/workshop-select'
 
 //时间默认为最近30天内
 const defaultQuery = {

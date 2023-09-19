@@ -43,14 +43,10 @@ import { deepClone, isBlank } from '@/utils/data-type'
 import { numFmtByUnit } from '@/utils/wms/convert-unit'
 import { outboundDestinationTypeEnum } from '@/utils/enum/modules/wms'
 
-import useWorkshopName from '@compos/store/use-workshop-name'
-
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
 import commonFormItem from '../components/common-form-item.vue'
 import commonMaterialInfo from '../components/common-material-info.vue'
-
-const { mesWorkShopName } = useWorkshopName()
 
 const props = defineProps({
   basicClass: {
@@ -92,7 +88,6 @@ const validateHalfSize = (rule, value, callback) => {
 const rules = {
   outboundAddress: [{ required: true, message: '出库目的地', trigger: 'change' }],
   projectId: [{ required: true, message: '请选择出库项目', trigger: 'change' }],
-  workshopId: [{ required: true, message: '请选择出库车间', trigger: 'change' }],
   materialOutboundMode: [{ required: true, message: '请选择物料出库方式', trigger: 'change' }],
   halfSize: [{ required: true, validator: validateHalfSize, trigger: 'blur' }],
   quantity: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
@@ -133,7 +128,7 @@ function formInit(data) {
     materialId: data.id, // 物料id
     monomerId: data?.monomerId, // 单体id
     areaId: data?.areaId, // 区域id
-    workshopId: mesWorkShopName.value?.findIndex(v => v.id === data.workshop?.id) > -1 ? data.workshop?.id : undefined, // 车间id
+    factoryId: data.factory?.id, // 车间id
     outboundUnit: data.outboundUnit, // 出库单位
     outboundUnitPrecision: data.outboundUnitPrecision, // 出库单位精度
     outboundAddress: outboundDestinationTypeEnum.FACTORY.V, // 出库目的地

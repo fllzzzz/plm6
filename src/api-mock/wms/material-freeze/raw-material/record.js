@@ -33,9 +33,9 @@ const get = {
               shortName: '长安街',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            workshop: {
+            factory: {
               id: 1,
-              name: '一号车间',
+              name: '一号工厂',
               shortName: '一工'
             },
             warehouse: {
@@ -149,9 +149,9 @@ const get = {
               shortName: '长安街',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            workshop: {
+            factory: {
               id: 1,
-              name: '一号车间',
+              name: '一号工厂',
               shortName: '一工'
             },
             warehouse: {
@@ -202,9 +202,9 @@ const get = {
               shortName: '长安街',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            workshop: {
+            factory: {
               id: 1,
-              name: '一号车间',
+              name: '一号工厂',
               shortName: '一工'
             },
             warehouse: {

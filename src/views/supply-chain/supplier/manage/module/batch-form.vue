@@ -44,19 +44,6 @@
               <el-input v-model="scope.row.name" size="small" style="width: 100%" placeholder="供应商名称" maxlength="32" clearable />
             </template>
           </el-table-column>
-          <el-table-column prop="shortName" label="供应商简称" min-width="150">
-            <template v-slot:header>
-              <el-tooltip class="item" effect="light" content="长度在 2 到 12 个字符" placement="top">
-                <div style="display: inline-block">
-                  <span>供应商简称</span>
-                  <i class="el-icon-info" />
-                </div>
-              </el-tooltip>
-            </template>
-            <template v-slot="scope">
-              <el-input v-model="scope.row.shortName" size="small" style="width: 100%" placeholder="供应商简称" maxlength="12" clearable />
-            </template>
-          </el-table-column>
           <el-table-column prop="socialCode" label="社会统一代码" min-width="150">
             <template v-slot="scope">
               <el-input
@@ -113,7 +100,6 @@ import StoreOperation from '@crud/STORE.operation'
 
 const tableRules = {
   name: [{ min: 2, max: 32, message: '长度在 2 到 32 个字符', trigger: 'blur' }],
-  shortName: [{ min: 2, max: 12, message: '长度在 2 到 12 个字符', trigger: 'blur' }],
   classification: [{ required: true, message: '请选择供应商分类', trigger: 'blur' }]
 }
 
@@ -121,7 +107,6 @@ const defaultForm = { list: [] }
 
 const defaultRow = {
   name: '',
-  shortName: '',
   classification: [],
   supplierClassification: undefined
 }

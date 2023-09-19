@@ -23,7 +23,7 @@
             width="140"
           >
             <template #default="{ row }">
-              <workshop-table-cell-tag :id="row.workshop?.id" />
+              <factory-table-cell-tag :id="row.factory?.id" />
               <span>{{ row.createTime }}</span>
             </template>
           </el-table-column>
@@ -113,7 +113,7 @@ import MHeader from './module/header'
 
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
-import workshopTableCellTag from '@comp-base/workshop-table-cell-tag.vue'
+import factoryTableCellTag from '@comp-base/factory-table-cell-tag.vue'
 import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
 

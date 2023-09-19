@@ -6,7 +6,6 @@ import { MAT_BASE_UNIT } from '@/settings/config'
 // TODO: 加入接口数据缓存有效时间，避免页面长时间未刷新
 const state = {
   baseUnit: MAT_BASE_UNIT, // 基础单位
-  purchaseCfg: {}, // 采购配置
   inboundSteelCfg: {}, // 入库钢材配置
   inboundFillWayCfg: {}, //  入库配置
   outboundCfg: {}, // 出库基础配置
@@ -29,9 +28,6 @@ const mutations = {
   },
   SET_LOADED(state, { key, loaded = true }) {
     state.loaded[key] = loaded
-  },
-  SET_PURCHASE_CFG(state, config) {
-    state.purchaseCfg = config
   },
   SET_INBOUND_STEEL_CFG(state, config) {
     state.inboundSteelCfg = config
@@ -66,9 +62,8 @@ const actions = {
   },
   // wms 基础配置
   async fetchWmsConfig({ commit }) {
-    const { inbound = {}, purchaseSpec = {}, outbound = {}, reject = {}, report = {}, partyABorrowReturn = {}, weightedPrice = {}} = await getWmsConfig()
-    commit('SET_PURCHASE_CFG', purchaseSpec)
-    commit('SET_INBOUND_STEEL_CFG', inbound.fillWay)
+    const { inbound = {}, outbound = {}, reject = {}, report = {}, partyABorrowReturn = {}, weightedPrice = {}} = await getWmsConfig()
+    commit('SET_INBOUND_STEEL_CFG', inbound.steel)
     commit('SET_INBOUND_FILL_WAY_CFG', inbound.fillWay)
     commit('SET_OUTBOUND_CFG', outbound)
     commit('SET_REJECT_CFG', reject)

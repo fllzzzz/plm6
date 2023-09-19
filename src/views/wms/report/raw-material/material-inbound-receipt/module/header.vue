@@ -4,15 +4,13 @@
       <common-radio-button
         type="enum"
         v-model="query.basicClass"
-        :options="matClsEnum.ENUM"
-        :unshowVal="[matClsEnum.GAS.V]"
+        :options="rawMatClsEnum.ENUM"
         show-option-all
         clearable
         class="filter-item"
         @change="crud.toQuery"
       />
       <common-radio-button
-        v-if="!(query.basicClass & MANUF_ENUM)"
         v-model="query.orderSupplyType"
         :options="orderSupplyTypeEnum.ENUM"
         show-option-all
@@ -139,11 +137,11 @@
 </template>
 
 <script setup>
-import { inject, ref, computed, onMounted, watchEffect } from 'vue'
+import { inject, ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { PICKER_OPTIONS_SHORTCUTS, STEEL_ENUM, MANUF_ENUM } from '@/settings/config'
+import { PICKER_OPTIONS_SHORTCUTS, STEEL_ENUM } from '@/settings/config'
 import { supplierTypeEnum } from '@enum-ms/supplier'
-import { matClsEnum } from '@enum-ms/classification'
+import { rawMatClsEnum } from '@enum-ms/classification'
 import { receiptRejectStatusEnum, orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
 
 import { regHeader } from '@compos/use-crud'
@@ -178,17 +176,9 @@ const selectionIds = computed(() => {
   return crud.selections.map((row) => row.id)
 })
 
-watchEffect(() => {
-  if (query.basicClass & MANUF_ENUM) {
-    query.orderSupplyType = undefined
-  }
-})
-
 onMounted(() => {
   if (+route.params.basicClass === STEEL_ENUM) {
-    query.basicClass = matClsEnum.STEEL_PLATE.V
-  } else if (+route.params.basicClass === MANUF_ENUM) {
-    query.basicClass = matClsEnum.STRUC_MANUFACTURED.V
+    query.basicClass = rawMatClsEnum.STEEL_PLATE.V
   } else {
     query.basicClass = route.params.basicClass
   }

@@ -56,7 +56,7 @@ import moment from 'moment'
 import { componentTypeEnum } from '@enum-ms/mes'
 import { weightTypeEnum, workshopTypeEnum } from '@enum-ms/common'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
-import workshopSelect from '@/components-system/base/workshop-select.vue'
+import workshopSelect from '@comp-mes/workshop-select'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 

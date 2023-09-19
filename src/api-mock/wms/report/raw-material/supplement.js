@@ -32,9 +32,9 @@ const supplementRecord = {
               'serialNumber': 'TH-220519-1',
               'receiptType': null
             },
-            'workshop': {
+            'factory': {
               'id': 7,
-              'name': '杭州车间'
+              'name': '杭州工厂'
             },
             project: {
               'id|+1': 1,
@@ -80,9 +80,9 @@ const getDetails = {
           'serialNumber': 'TH-220519-1',
           'receiptType': null
         },
-        'workshop': {
+        'factory': {
           'id': 7,
-          'name': '杭州车间'
+          'name': '杭州工厂'
         },
         project: {
           'id|+1': 1,

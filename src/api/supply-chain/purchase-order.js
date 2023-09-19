@@ -106,18 +106,6 @@ export function detail(id) {
 }
 
 /**
- * 入库采购
- * @param {*} id 详情id
- */
-export function inboundDetail(id) {
-  return request({
-    module: 'scm',
-    url: `purchase-order/inbound/${id}`,
-    method: 'get'
-  })
-}
-
-/**
  * 修改订单状态
  * @param {number} id | required 订单id
  * @param {number} status | required 订单状态

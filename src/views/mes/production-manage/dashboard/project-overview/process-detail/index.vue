@@ -168,7 +168,7 @@ import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import productionLineSelect from '@comp-mes/production-line-select'
-import workshopSelect from '@/components-system/base/workshop-select.vue'
+import workshopSelect from '@comp-mes/workshop-select'
 // import detailDrawer from './detail-drawer.vue'
 
 const store = useStore()

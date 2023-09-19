@@ -226,23 +226,6 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="columns.visible('userName')"
-          key="userName"
-          prop="userName"
-          :show-overflow-tooltip="true"
-          label="导入人"
-          width="110"
-        >
-          <template v-slot="scope">
-            {{ scope.row.userName || '-' }}
-          </template>
-        </el-table-column>
-        <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="上传时间" width="150px">
-          <template v-slot="scope">
-            <div>{{ scope.row.createTime ? parseTime(scope.row.createTime, '{y}-{m}-{d}') : '-' }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column
           v-if="checkPermission([...permission.edit, ...permission.del])"
           label="操作"
           width="180px"
@@ -286,7 +269,6 @@ import { ElMessage } from 'element-plus'
 
 // import { DP } from '@/settings/config'
 // import { toThousand } from '@/utils/data-type/number'
-import { parseTime } from '@/utils/date'
 import { isNotBlank } from '@data-type/index'
 import { validate } from '@compos/form/use-table-validate'
 import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
@@ -342,7 +324,6 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['projectId'],
-    invisibleColumns: [],
     crudApi: { ...crudApi },
     hasPagination: true
   },

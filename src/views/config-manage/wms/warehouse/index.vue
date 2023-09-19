@@ -23,19 +23,6 @@
         align="left"
         min-width="150"
       />
-       <el-table-column
-        v-if="columns.visible('warehouseType')"
-        key="warehouseType"
-        :show-overflow-tooltip="true"
-        prop="warehouseType"
-        label="仓库类型"
-        align="center"
-        width="100"
-      >
-        <template #default="{ row: { sourceRow: row } }">
-         <span>{{row.warehouseType?warehouseTypeEnum.VL[row.warehouseType]:'-'}}</span>
-        </template>
-      </el-table-column>
       <el-table-column
         v-if="columns.visible('materialType')"
         key="materialType"
@@ -49,6 +36,21 @@
           <template v-for="(item, index) in row.materialTypeName" :key="index">
             <el-tag effect="plain" style="margin-right: 5px">{{ item }}</el-tag>
           </template>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('type')"
+        key="type"
+        :show-overflow-tooltip="true"
+        prop="name"
+        label="仓库类型"
+        align="center"
+        width="100px"
+      >
+        <template #default="{ row }">
+          <el-tag :type="row.sourceRow.type === warehouseTypeEnum.NORMAL.V ? 'info' : 'warning'">
+            {{ row.type }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -95,7 +97,7 @@
 
 <script setup>
 import crudApi, { editEnabled } from '@/api/config/wms/warehouse'
-import { configWmsWorkshopWarehousePM as permission } from '@/page-permission/config'
+import { configWmsFactoryWarehousePM as permission } from '@/page-permission/config'
 
 import { ref } from 'vue'
 import { useStore } from 'vuex'
@@ -125,7 +127,7 @@ const optShow = {
 
 const tableRef = ref()
 const store = useStore()
-const columnsDataFormat = [...baseTimeColumns]
+const columnsDataFormat = [...baseTimeColumns, ['type', ['parse-enum', warehouseTypeEnum]]]
 const { maxHeight } = useMaxHeight({
   paginate: true
 })
@@ -138,9 +140,8 @@ const { CRUD, crud, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    requiredQuery: ['workshopId'],
-    sort: ['sort.asc']
-    // queryOnPresenterCreated: false
+    sort: ['sort.asc'],
+    queryOnPresenterCreated: false
   },
   tableRef
 )
@@ -156,19 +157,16 @@ CRUD.HOOK.handleRefresh = (crud, { data: { content }}) => {
 
 // 添加之后
 CRUD.HOOK.afterSubmit = () => {
-  store.dispatch('config/fetchWorkshopName')
   store.dispatch('config/fetchWarehouse')
 }
 
 // 批量添加之后
 CRUD.HOOK.afterBatchSubmit = () => {
-  store.dispatch('config/fetchWorkshopName')
   store.dispatch('config/fetchWarehouse')
 }
 
 // 删除后
 CRUD.HOOK.afterDelete = () => {
-  store.dispatch('config/fetchWorkshopName')
   store.dispatch('config/fetchWarehouse')
 }
 </script>

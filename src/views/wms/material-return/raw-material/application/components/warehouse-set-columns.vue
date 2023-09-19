@@ -1,12 +1,12 @@
 <template>
-  <el-table-column prop="workshopId" align="center" min-width="120px" label="车间">
+  <el-table-column prop="factoryId" align="center" min-width="120px" label="工厂">
     <template #default="{ row: { sourceRow: row }, $index }">
-      <workshop-select
-        v-model="row.workshopId"
-        placeholder="选择车间"
+      <factory-select
+        v-model="row.factoryId"
+        placeholder="选择工厂"
         only-one-default
         :show-extra="$index !== 0"
-        @change="handleWorkshopChange($event, $index, row)"
+        @change="handleFactoryChange($event, $index, row)"
       />
     </template>
   </el-table-column>
@@ -14,7 +14,7 @@
     <template #default="{ row: { sourceRow: row }, $index }">
       <warehouse-select
         v-model="row.warehouseId"
-        :workshop-id="getWorkshopVal($index)"
+        :factory-id="getFactoryVal($index)"
         :basic-class="row.basicClass"
         :show-extra="!warehouseDittoableIndex.includes($index)"
         placeholder="存储位置"
@@ -26,7 +26,7 @@
 <script setup>
 import { defineProps, computed, watchEffect, ref } from 'vue'
 
-import workshopSelect from '@/components-system/wms/workshop-select.vue'
+import factorySelect from '@/components-system/base/factory-select.vue'
 import warehouseSelect from '@/components-system/wms/warehouse-select.vue'
 import useDittoRealVal from '@/composables/form/use-ditto-real-val'
 import { isBlank } from '@/utils/data-type'
@@ -42,20 +42,20 @@ const currentList = ref([])
 watchEffect(() => { currentList.value = props.list })
 
 const {
-  getNotDittoArr: getWorkshopNotDittoArr,
-  initScopeList: initWorkshopScopeList,
-  handleValueChange: handleWorkshopChangeForValue,
-  getRealVal: getWorkshopVal
-} = useDittoRealVal('workshopId')
+  getNotDittoArr: getFactoryNotDittoArr,
+  initScopeList: initFactoryScopeList,
+  handleValueChange: handleFactoryChangeForValue,
+  getRealVal: getFactoryVal
+} = useDittoRealVal('factoryId')
 
 const warehouseDittoableIndex = computed(() => {
-  return getWorkshopNotDittoArr()
+  return getFactoryNotDittoArr()
 })
 
-watchEffect(() => initWorkshopScopeList(currentList.value || []))
+watchEffect(() => initFactoryScopeList(currentList.value || []))
 
-function handleWorkshopChange(val, index, row) {
-  handleWorkshopChangeForValue(val, index)
+function handleFactoryChange(val, index, row) {
+  handleFactoryChangeForValue(val, index)
   if (val !== -1) {
     row.warehouseId = undefined
   } else {

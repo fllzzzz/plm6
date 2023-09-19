@@ -37,7 +37,7 @@
 <script setup>
 import { inject } from 'vue'
 import { regHeader } from '@compos/use-crud'
-import workshopSelect from '@comp-base/workshop-select'
+import workshopSelect from '@comp-mes/workshop-select'
 import Panel from '@/components/Panel'
 
 const projectInfo = inject('projectInfo')

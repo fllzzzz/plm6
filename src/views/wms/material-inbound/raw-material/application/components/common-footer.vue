@@ -1,14 +1,6 @@
 <template>
   <div class="inbound-application-footer">
     <div class="total-box">
-      <template v-if="props.showContractTotal">
-        <div class="total-name">合同量</div>
-        <div class="total-item">{{ `${props.contractValue || 0} ${props.contractUnit || ''}` }}</div>
-      </template>
-      <template v-if="props.showInboundTotal">
-        <div class="total-name">已入库量</div>
-        <div class="total-item">{{ `${props.inboundValue || 0} ${props.inboundUnit || ''}` }}</div>
-      </template>
       <template v-if="props.showTotal">
         <div class="total-name">{{ props.totalName }}</div>
         <div class="total-item">{{ `${props.totalValue || 0} ${props.unit || ''}` }}</div>
@@ -58,30 +50,6 @@ const props = defineProps({
   totalValue: {
     type: [Number, String],
     default: 0
-  },
-  contractUnit: {
-    type: String,
-    default: ''
-  },
-  contractValue: {
-    type: [Number, String],
-    default: 0
-  },
-  showContractTotal: {
-    type: Boolean,
-    default: false
-  },
-  inboundUnit: {
-    type: String,
-    default: ''
-  },
-  inboundValue: {
-    type: [Number, String],
-    default: 0
-  },
-  showInboundTotal: {
-    type: Boolean,
-    default: false
   },
   showTotal: {
     type: Boolean,

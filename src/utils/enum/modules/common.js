@@ -14,13 +14,6 @@ const whetherEnum = {
 }
 constantize(whetherEnum)
 
-// 有无明细
-const hasDetailEnum = {
-  TRUE: { L: '有明细', K: 'TRUE', V: true, COLOR: '' },
-  FALSE: { L: '无明细', K: 'FALSE', V: false, COLOR: '' }
-}
-constantize(hasDetailEnum)
-
 // 是否打印
 const boolPrintedEnum = {
   FALSE: { L: '未打印', K: 'TRUE', V: false, COLOR: '' },
@@ -152,8 +145,7 @@ export {
   businessAuditStatusEnum, // 商务审核状态
   installationAuditStatusEnum, // 安装审核状态
   workshopTypeEnum, // 车间类型
-  operationTypeEnum, // 操作类型
-  hasDetailEnum
+  operationTypeEnum // 操作类型
 }
 
 export default {
@@ -172,7 +164,6 @@ export default {
   businessAuditStatusEnum, // 商务审核状态
   installationAuditStatusEnum, // 安装审核状态
   workshopTypeEnum, // 车间类型
-  operationTypeEnum, // 操作类型
-  hasDetailEnum
+  operationTypeEnum // 操作类型
 }
 

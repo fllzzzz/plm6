@@ -40,9 +40,9 @@
             </common-button>
           </div>
           <div class="setting-item">
-            <el-tag size="medium" effect="plain">【批量】设置车间</el-tag>
-            <workshop-select v-model="batch.workshopId" placeholder="可选择车间" clearable />
-            <common-button :disabled="!crud.selections.length" type="success" size="small" @click="handleBatchSetWorkshop">
+            <el-tag size="medium" effect="plain">【批量】设置工厂</el-tag>
+            <factory-select v-model="batch.factoryId" placeholder="可选择工厂" clearable />
+            <common-button :disabled="!crud.selections.length" type="success" size="small" @click="handleBatchSetFactory">
               设置
             </common-button>
           </div>
@@ -114,9 +114,9 @@
                 />
               </template>
             </el-table-column>
-            <el-table-column key="workshopId" prop="workshopId" label="车间" align="center" min-width="160">
+            <el-table-column key="factoryId" prop="factoryId" label="工厂" align="center" min-width="160">
               <template #default="{ row }">
-                <workshop-select v-model="row.workshopId" placeholder="可选择车间" clearable style="width: 100%" />
+                <factory-select v-model="row.factoryId" placeholder="可选择工厂" clearable style="width: 100%" />
               </template>
             </el-table-column>
             <el-table-column key="operate" :show-overflow-tooltip="true" prop="operate" label="操作" align="center" width="70">
@@ -143,7 +143,7 @@ import useTableValidate from '@compos/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import StoreOperation from '@crud/STORE.operation.vue'
 import materialSpecSelect from '@comp-cls/material-spec-select/index.vue'
-import workshopSelect from '@/components-system/wms/workshop-select.vue'
+import factorySelect from '@comp-base/factory-select.vue'
 
 // 未进行重复数据校验，目前由后端处理
 const tableRules = {}
@@ -153,7 +153,7 @@ const defaultForm = {
 
 const batch = reactive({
   minimumInventory: undefined,
-  workshopId: undefined
+  factoryId: undefined
 })
 const tableRef = ref()
 const formRef = ref()
@@ -201,7 +201,7 @@ crud.submitBatchFormFormat = async (form) => {
       unit: row.unitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit,
       unitPrecision: row.unitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision,
       unitType: row.unitType,
-      workshopId: row.workshopId
+      factoryId: row.factoryId
     }
   })
   await numFmtByUnitForList(formList, {
@@ -236,7 +236,7 @@ function rowInit(row) {
     accountingPrecision: row.classify.accountingPrecision, // 核算单位小数精度
     measurePrecision: row.classify.measurePrecision, // 计量单位小数精度
     minimumInventory: 0, // 最低库存数量
-    workshopId: undefined // 车间
+    factoryId: undefined // 工厂
   }
   if (isBlank(_row.measureUnit)) {
     _row.unitTypeDisabled.push(measureTypeEnum.MEASURE.V)
@@ -261,11 +261,11 @@ function handleBatchSetNumber() {
   }
 }
 
-// 批量设置车间
-function handleBatchSetWorkshop() {
+// 批量设置工厂
+function handleBatchSetFactory() {
   if (isNotBlank(crud.selections)) {
     crud.selections.forEach((v) => {
-      v.workshopId = batch.workshopId
+      v.factoryId = batch.factoryId
     })
   }
 }

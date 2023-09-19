@@ -13,13 +13,7 @@
         <div class="filter-right-box">
           <el-tooltip :disabled="addable" effect="light" content="请先选择采购合同编号" placement="left-start">
             <span>
-              <common-button
-                v-if="boolPartyA || noDetail"
-                class="filter-item"
-                type="success"
-                @click="materialSelectVisible = true"
-                :disabled="!addable"
-              >
+              <common-button class="filter-item" type="success" @click="materialSelectVisible = true" :disabled="!addable">
                 添加物料
               </common-button>
             </span>
@@ -27,15 +21,7 @@
         </div>
       </div>
       <el-form ref="formRef" :model="form">
-        <aux-mat-table
-          ref="tableRef"
-          :max-height="tableMaxHeight"
-          :bool-party-a="boolPartyA"
-          :bool-apply-purchase="boolApplyPurchase"
-          :fillableAmount="fillableAmount"
-          :basic-class="currentBasicClass"
-          :noDetail="noDetail"
-        />
+        <aux-mat-table ref="tableRef" :max-height="tableMaxHeight" :bool-party-a="boolPartyA" :fillableAmount="fillableAmount"/>
       </el-form>
     </common-wrapper>
     <common-drawer
@@ -50,7 +36,7 @@
         <material-table-spec-select
           v-if="addable"
           ref="matSpecRef"
-          v-model="form.auxMatList"
+          v-model="form.list"
           :visible="materialSelectVisible"
           :row-init-fn="rowInit"
           :max-height="specSelectMaxHeight"
@@ -74,9 +60,7 @@ import { defineProps, defineEmits, ref, watch, provide, nextTick, reactive, comp
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { orderSupplyTypeEnum, inboundFillWayEnum } from '@/utils/enum/modules/wms'
 import { isNotBlank, toFixed } from '@/utils/data-type'
-import { createUniqueString } from '@/utils/data-type/string'
 import { DP } from '@/settings/config'
-import { isBlank } from '@/utils/data-type'
 
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
@@ -113,7 +97,6 @@ const drawerRef = ref()
 const order = ref() // 订单信息
 const orderLoaded = ref(false) // 订单加载状态
 const boolPartyA = ref(false) // 是否“甲供”
-const noDetail = ref(false) // 采购合同是否有明细
 
 const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = matClsEnum.OTHER.V // 当前基础分类
@@ -121,16 +104,13 @@ const currentBasicClass = matClsEnum.OTHER.V // 当前基础分类
 const { inboundFillWayCfg } = useWmsConfig()
 // 显示金额相关信息（由采购填写的信息）
 const fillableAmount = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false)
-// const fillableAmount = computed(() => false)
-// 是否绑定申购
-const boolApplyPurchase = computed(() => Boolean(order.value?.applyPurchase?.length)) // 是否绑定申购
 
 const addable = computed(() => !!(currentBasicClass && order.value)) // 可添加的状态（选择了采购合同编号）
 const totalAmount = computed(() => {
   let amount = 0
   if (!boolPartyA.value) {
-    if (isNotBlank(form.auxMatList)) {
-      form.auxMatList.forEach((v) => {
+    if (isNotBlank(form.list)) {
+      form.list.forEach((v) => {
         if (isNotBlank(v.amount)) {
           amount += +v.amount
         }
@@ -144,29 +124,18 @@ provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 
 // 使用草稿/修改时，为数据设置监听
 const setFormCallback = (form) => {
-  form.auxMatList = form.auxMatList?.map((v) => reactive(v))
+  form.list = form.list.map((v) => reactive(v))
   const trigger = watch(
     tableRef,
     (ref) => {
       if (ref) {
-        nextTick(() => {
-          tableRef.value?.setSelect()
-        })
-        if (!boolPartyA.value) {
-          form.auxMatList.forEach((v) => {
-            tableRef.value.rowWatch(v)
-            if (!boolPartyA.value && !noDetail.value && form.selectObj?.[v.mergeId]?.isSelected) {
-              tableRef.value.toggleRowSelection(v, true)
-            }
-          })
-        }
         // 初始化选中数据，执行一次后取消当前监听
         const initSelectedTrigger = watch(
           matSpecRef,
           () => {
             if (matSpecRef.value) {
               matSpecRef.value.initSelected(
-                form.auxMatList.map((v) => {
+                form.list.map((v) => {
                   return { sn: v.sn, classifyId: v.classifyId }
                 })
               )
@@ -191,9 +160,10 @@ const { cu, form, FORM } = useForm(
   {
     title: '其它入库',
     formStore: !props.edit,
-    formStoreKey: 'WMS_INBOUND_APPLICATION_OTHER_MAT',
+    formStoreKey: 'WMS_INBOUND_APPLICATION_OTHER',
     permission: permission,
     defaultForm: defaultForm,
+    useDraftCallback: setFormCallback,
     clearDraftCallback: init,
     api: props.edit ? editInboundApplication : otherInboundApplication
   },
@@ -247,10 +217,7 @@ FORM.HOOK.beforeToEdit = async (crud, form) => {
   form.purchaseId = form.purchaseOrder?.id
   if (!form.logistics) form.logistics = {}
   // 设置监听等
-  if (boolPartyA.value) {
-    form.auxMatList = form.list
-    setFormCallback(form)
-  }
+  setFormCallback(form)
 }
 
 // 提交后清除校验结果
@@ -264,32 +231,7 @@ FORM.HOOK.afterSubmit = () => {
 // 表单校验
 function validate() {
   // 进入仓库级价格填写页面
-  const tableValidateRes = tableRef.value ? tableRef.value.validate() : true
-  if (tableValidateRes) {
-    const _list = []
-    form.auxMatList.forEach((v) => {
-      if (v.applyPurchase?.length) {
-        v.applyPurchase.forEach((a) => {
-          if (a.quantity || a.mete) {
-            _list.push({
-              ...v,
-              quantity: a.quantity,
-              projectId: a.project?.id,
-              uid: createUniqueString(),
-              mete: a.mete,
-              applyPurchaseId: a.applyPurchaseId,
-              purchaseDetailId: a.purchaseDetailId,
-              purchaseProjectDisabled: a.applyPurchaseId ? (!a.project?.id) : false
-            })
-          }
-        })
-      } else if (boolPartyA.value || noDetail.value || form.selectObj[v.mergeId]?.isSelected) {
-        _list.push(v)
-      }
-    })
-    form.list = _list
-  }
-  return tableValidateRes
+  return tableRef.value ? tableRef.value.validate() : true
 }
 
 // 行数据添加时初始化
@@ -298,61 +240,39 @@ function rowInit(row) {
 }
 
 // 订单变化
-async function handleOrderInfoChange(orderInfo) {
+function handleOrderInfoChange(orderInfo) {
   init()
   order.value = orderInfo
   cu.props.order = orderInfo
   boolPartyA.value = orderInfo?.supplyType === orderSupplyTypeEnum.PARTY_A.V
-  noDetail.value = isBlank(orderInfo?.details)
-  form.auxMatList = []
-  const trigger = watch(
-    matSpecRef,
-    () => {
-      if (matSpecRef.value) {
-        matSpecRef.value.clearByBasicClass(currentBasicClass)
-        nextTick(() => {
-          trigger()
-        })
-      }
-    },
-    { immediate: true }
-  )
   // 筛除当前订单未指定的其它科目
-  // if (orderInfo && isNotBlank(orderInfo.otherMaterialIds)) {
-  //   const filterList = form.auxMatList.filter((v) => {
-  //     for (const cid of orderInfo.otherMaterialIds) {
-  //       if (v.classifyFullPathId.includes(cid)) {
-  //         return true
-  //       }
-  //     }
-  //     return false
-  //   })
-  //   form.auxMatList = [...filterList]
-  //   const trigger = watch(
-  //     matSpecRef,
-  //     () => {
-  //       if (matSpecRef.value) {
-  //         matSpecRef.value.clear()
-  //         matSpecRef.value.initSelected(
-  //           filterList.map((v) => {
-  //             return { sn: v.sn, classifyId: v.classifyId }
-  //           })
-  //         )
-  //         nextTick(() => {
-  //           trigger()
-  //         })
-  //       }
-  //     },
-  //     { immediate: true }
-  //   )
-  // }
-  if (orderInfo?.details?.length) {
-    form.auxMatList = orderInfo.details.map((v) => {
-      v.uid = createUniqueString()
-      return v
+  if (orderInfo && isNotBlank(orderInfo.otherMaterialIds) && !orderInfo.otherMaterialIds.includes(0)) {
+    const filterList = form.list.filter((v) => {
+      for (const cid of orderInfo.otherMaterialIds) {
+        if (v.classifyFullPathId.includes(cid)) {
+          return true
+        }
+      }
+      return false
     })
-    // 设置监听等
-    setFormCallback(form)
+    form.list = [...filterList]
+    const trigger = watch(
+      matSpecRef,
+      () => {
+        if (matSpecRef.value) {
+          matSpecRef.value.clear()
+          matSpecRef.value.initSelected(
+            filterList.map((v) => {
+              return { sn: v.sn, classifyId: v.classifyId }
+            })
+          )
+          nextTick(() => {
+            trigger()
+          })
+        }
+      },
+      { immediate: true }
+    )
   }
   orderLoaded.value = true
 }
@@ -366,7 +286,7 @@ function init() {
 // 批量导入
 cu.props.import = (importList) => {
   if (!fillableAmount.value) {
-    importList.forEach((v) => {
+    importList.forEach(v => {
       v.amount = undefined
       v.unitPrice = undefined
     })
@@ -392,7 +312,7 @@ cu.props.import = (importList) => {
     throw new Error(`当前订单其它明细中不存在${unexistNameArr.map((v) => `“${v}”`).join('、')}等科目`)
   }
   // 截取新旧数组长度，对导入数据进行rowWatch监听
-  form.auxMatList.push.apply(form.auxMatList, importList)
+  form.list.push.apply(form.list, importList)
   // 初始化选中数据，执行一次后取消当前监听
   const initSelectedTrigger = watch(
     matSpecRef,

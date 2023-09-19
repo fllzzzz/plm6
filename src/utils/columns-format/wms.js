@@ -1,7 +1,7 @@
 export * from './common'
 import { reviewTimeColumns } from './common'
 import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
-import { matClsEnum } from '@enum-ms/classification'
+import { rawMatClsEnum } from '@enum-ms/classification'
 
 // 物料信息
 export const materialColumns = [
@@ -46,7 +46,7 @@ export const wmsReceiptColumns = [
   ...reviewTimeColumns,
   ['projects', ['parse-project', { onlyShortName: true }]],
   ['projectsFullName', 'parse-project', { source: 'projects' }],
-  ['basicClass', ['parse-enum', matClsEnum, { bit: true, split: ' | ' }]]
+  ['basicClass', ['parse-enum', rawMatClsEnum, { bit: true, split: ' | ' }]]
 ]
 
 // ['operableQuantity', 'to-fixed-field', 'measurePrecision'],

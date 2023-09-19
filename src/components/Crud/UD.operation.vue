@@ -36,8 +36,8 @@
         <common-button
           :loading="crud.dataStatus[data.id].delete === 2"
           :disabled="props.disabledDel"
-          :type="props.delType"
-          :icon="props.delIcon"
+          type="danger"
+          icon="el-icon-delete"
           size="mini"
           @click.stop="toDelete"
         />
@@ -91,14 +91,6 @@ const props = defineProps({
   detailIcon: {
     type: String,
     default: 'el-icon-view'
-  },
-  delType: {
-    type: String,
-    default: 'danger'
-  },
-  delIcon: {
-    type: String,
-    default: 'el-icon-delete'
   },
   delPrompt: {
     type: String,

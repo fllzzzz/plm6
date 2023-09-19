@@ -61,7 +61,6 @@
         <!-- <common-radio-button v-model="query.unitType" :options="unitTypeEnum.ENUM" default text-align="center" type="enum" size="mini" /> -->
       </template>
       <template #viewLeft>
-        <!-- <common-button :loading="submitLoading" type="primary" @click="manualSetting">手动月末加权</common-button> -->
         <export-button v-permission="permission.get" :params="query" :fn="exportSendAndReceiveStorageExcel" response-header-result>
           下载收发存报表（根据查询条件）
         </export-button>
@@ -69,16 +68,16 @@
     </crudOperation>
     <template v-if="showAmount">
       <el-row v-loading="crud.loading" :gutter="20" class="panel-group">
-        <el-col :span="6" class="card-panel-col" @click="showDetail(formTypeEnum.BEGIN_PERIOD.V)">
+        <el-col :span="6" class="card-panel-col">
           <Panel name="期初总额（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.beginPeriod || 0" :precision="DP.YUAN" />
         </el-col>
-        <el-col :span="6" class="card-panel-col" @click="showDetail(formTypeEnum.END_PERIOD.V)">
+        <el-col :span="6" class="card-panel-col">
           <Panel name="入库总额（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.inbound || 0" :precision="DP.YUAN" />
         </el-col>
-        <el-col :span="6" class="card-panel-col" @click="showDetail(formTypeEnum.INBOUND.V)">
+        <el-col :span="6" class="card-panel-col">
           <Panel name="出库总额（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.outbound || 0" :precision="DP.YUAN" />
         </el-col>
-        <el-col :span="6" class="card-panel-col" @click="showDetail(formTypeEnum.OUTBOUND.V)">
+        <el-col :span="6" class="card-panel-col">
           <Panel name="期末结存（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.endPeriod || 0" :precision="DP.YUAN" />
         </el-col>
       </el-row>
@@ -88,17 +87,15 @@
 
 <script setup>
 import { exportSendAndReceiveStorageExcel } from '@/api/wms/report/raw-material/statistics'
-// import { exportSendAndReceiveStorageExcel, monthWeighting } from '@/api/wms/report/raw-material/statistics'
-import { computed, inject, defineEmits, ref, defineExpose } from 'vue'
+import { computed, inject, ref, defineExpose } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { unitTypeEnum, orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { specFormat, specTip } from '@/utils/wms/spec-format'
 import checkPermission from '@/utils/system/check-permission'
-import { formTypeEnum } from '../enum'
-import { DP } from '@/settings/config'
 
+import { DP } from '@/settings/config'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -107,14 +104,13 @@ import Panel from '@/components/Panel'
 import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
 import ExportButton from '@comp-common/export-button/index.vue'
 
-const emit = defineEmits(['show-detail'])
 const permission = inject('permission')
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0)])
 
 const defaultQuery = {
   createTime: { value: `${new Date().getTime()}`, resetAble: false }, // 时间
   projectId: { value: undefined, resetAble: false }, // 原项目id
-  workshopId: { value: undefined, resetAble: false }, // 车间id
+  factoryId: { value: undefined, resetAble: false }, // 工厂id
   projectWarehouseType: undefined, // 仓库类型
   basicClass: { value: undefined, resetAble: false }, // 基础类型
   orderSupplyType: { value: undefined, resetAble: false }, // 订单供应类型
@@ -125,7 +121,6 @@ const { CRUD, crud, query } = regHeader(defaultQuery)
 
 const weightedType = ref()
 const totalAmount = ref({})
-// const submitLoading = ref(false)
 
 // 是否有显示金额权限
 const showAmount = computed(() => checkPermission(permission.showAmount))
@@ -134,18 +129,6 @@ function disabledDate(time) {
   return time > new Date()
 }
 
-// async function manualSetting() {
-//   submitLoading.value = true
-//   try {
-//     await monthWeighting()
-//     crud.notify('月末加权成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
-//     crud.toQuery()
-//     submitLoading.value = false
-//   } catch (e) {
-//     console.log('手动月末加权', e)
-//     submitLoading.value = false
-//   }
-// }
 // 加载后数据处理
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   const { weightedType: _weightedType, totalAmount: { beginPeriod = 0, endPeriod = 0, inbound = 0, outbound = 0 } = {}} = data
@@ -208,10 +191,6 @@ async function handleBasicClassChange(val) {
   crud.setColumns()
 }
 
-function showDetail(formType) {
-  emit('show-detail', formType)
-}
-
 defineExpose({
   weightedType
 })
@@ -234,10 +213,6 @@ defineExpose({
         font-size: 20px;
       }
     }
-  }
-
-  .card-panel-col {
-    cursor: pointer;
   }
 }
 </style>

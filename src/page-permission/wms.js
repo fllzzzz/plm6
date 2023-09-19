@@ -5,8 +5,6 @@ import { commonPM as SCM_COMMON_PM } from './supply-chain'
 export const commonPM = {
   // 采购合同详情
   purchaseOrderDetail: SCM_COMMON_PM.purchaseOrderDetail,
-  // 申购详情
-  requisitionsDetail: SCM_COMMON_PM.requisitionsDetail,
   // 原材料-备料详情
   rawMatPreparationReceiptDetail: ['wms_rawMat_preparation:detail'],
   // 原材料-入库单详情
@@ -44,9 +42,6 @@ export const steelInboundApplicationPM = ['wms_steelInbound_application:submit']
 
 // 入库办理/辅材入库办理
 export const auxMatInboundApplicationPM = ['wms_auxMatInbound_application:submit']
-
-// 入库办理/制成品入库办理
-export const manufInboundApplicationPM = ['wms_manufInbound_application:submit']
 
 // 入库办理/其它入库办理
 export const otherInboundApplicationPM = ['wms_otherInbound_application:submit']
@@ -423,7 +418,6 @@ export const materialFreezeRecordCPM = {
 export const receiptDetailCPM = {
   preparationReceiptDetail: commonPM.rawMatPreparationReceiptDetail, // 备料详情
   purchaseOrderDetail: commonPM.purchaseOrderDetail, // 订单详情
-  requisitionsDetail: commonPM.requisitionsDetail, // 订单详情
   inboundReceiptDetail: commonPM.rawMatInboundReceiptDetail, // 入库详情
   outboundReceiptDetail: commonPM.rawMatOutboundReceiptDetail, // 出库详情
   transferReceiptDetail: commonPM.rawMatTransferReceiptDetail, // 调拨详情

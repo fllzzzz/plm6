@@ -8,16 +8,7 @@
     row-key="uid"
   >
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-    <el-table-column prop="serialNumber" show-overflow-tooltip label="编号" align="center" fixed="left">
-      <template #default="{ row }">
-        <table-cell-tag
-          :show="row.requisitionMode === requisitionModeEnum.USE_INVENTORY.V"
-          :name="requisitionModeEnum.USE_INVENTORY.L"
-          color="#e6a23c"
-        />
-        <span>{{ row.serialNumber }}</span>
-      </template>
-    </el-table-column>
+    <el-table-column prop="serialNumber" label="编号" align="center" fixed="left" show-overflow-tooltip />
     <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
@@ -32,18 +23,18 @@
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="measureUnit" label="计量单位" align="center">
+    <el-table-column prop="measureUnit" label="计量单位" align="center" >
       <template #default="{ row }">
         <span v-empty-text>{{ row.measureUnit }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="quantity" label="数量" align="center">
+    <el-table-column prop="quantity" label="数量" align="center" >
       <template #default="{ row }">
         <common-input-number
           v-if="row.measureUnit"
           v-model="row.quantity"
           :min="0"
-          :max="getCanUseQuantity(row)"
+          :max="999999999"
           :controls="false"
           :step="1"
           :precision="row.measurePrecision"
@@ -53,12 +44,12 @@
         <span v-else v-empty-text />
       </template>
     </el-table-column>
-    <el-table-column prop="accountingUnit" label="核算单位" align="center">
+    <el-table-column prop="accountingUnit" label="核算单位" align="center" >
       <template #default="{ row }">
         <span v-empty-text>{{ row.accountingUnit }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="mete" label="核算量" align="center">
+    <el-table-column prop="mete" label="核算量" align="center" >
       <template #default="{ row }">
         <common-input-number
           v-model="row.mete"
@@ -73,21 +64,18 @@
       </template>
     </el-table-column>
 
-    <el-table-column prop="color" label="颜色" align="center">
+    <el-table-column prop="color" label="颜色" align="center" >
       <template #default="{ row }">
         <el-input v-model.trim="row.color" maxlength="20" size="mini" placeholder="颜色" />
       </template>
     </el-table-column>
-    <el-table-column prop="brand" label="品牌" align="center">
+    <el-table-column prop="brand" label="品牌" align="center" >
       <template #default="{ row }">
         <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
       </template>
     </el-table-column>
-    <el-table-column label="操作" width="140" align="center" fixed="right">
+    <el-table-column label="操作" width="70" align="center" fixed="right">
       <template #default="{ row, $index }">
-        <common-button type="primary" size="mini" v-if="form.type !== preparationTypeEnum.PUBLIC.V" @click="search(row, $index)">
-          查询
-        </common-button>
         <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sn, $index)" />
       </template>
     </el-table-column>
@@ -95,17 +83,13 @@
 </template>
 
 <script setup>
-import { defineExpose, defineEmits, inject, reactive } from 'vue'
+import { defineExpose, inject, reactive } from 'vue'
 import { createUniqueString } from '@/utils/data-type/string'
-import { requisitionModeEnum, preparationTypeEnum } from '@/utils/enum/modules/wms'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
 
-const emit = defineEmits(['search-inventory'])
-
-const useInventoryInfo = inject('useInventoryInfo') // 调用父组件useInventoryInfo
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { form } = regExtra() // 表单
 
@@ -132,7 +116,6 @@ function rowInit(row) {
   const _row = reactive({
     uid: createUniqueString(),
     sn: row.sn, // 该科目规格唯一编号
-    requisitionMode: requisitionModeEnum.PURCHASE.V,
     specificationLabels: row.specificationLabels, // 规格中文
     serialNumber: row.serialNumber, // 科目编号 - 规格
     classifyId: row.classify.id, // 科目id
@@ -151,23 +134,6 @@ function rowInit(row) {
     quantity: undefined // 数量
   })
   return _row
-}
-
-// 获取可使用数量
-function getCanUseQuantity(row) {
-  if (row.materialInventoryId && form.originInventoryInfo[row.materialInventoryId]) {
-    return (
-      form.originInventoryInfo[row.materialInventoryId].quantity -
-      form.originInventoryInfo[row.materialInventoryId].frozenQuantity -
-      useInventoryInfo.value[row.materialInventoryId] +
-      row.quantity
-    )
-  }
-  return 999999999
-}
-
-function search(row, index) {
-  emit('search-inventory', row, index)
 }
 
 // 删除行

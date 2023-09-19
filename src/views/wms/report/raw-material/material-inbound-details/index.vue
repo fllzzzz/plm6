@@ -34,10 +34,10 @@
       >
         <template #afterIndex>
           <el-table-column
-            v-if="columns.visible('inboundTime')"
-            key="inboundTime"
+            v-if="columns.visible('inboundReceipt.inboundTime')"
+            key="inboundReceipt.inboundTime"
             :show-overflow-tooltip="true"
-            prop="inboundTime"
+            prop="inboundReceipt.inboundTime"
             label="入库时间"
             align="center"
             width="125"
@@ -223,7 +223,7 @@ const columnsDataFormat = computed(() => {
     ['amount', ['to-thousand', DP.YUAN]],
     ['amountExcludingVAT', ['to-thousand', DP.YUAN]],
     ['inputVAT', ['to-thousand', DP.YUAN]],
-    ['inboundTime', 'parse-time'],
+    ['inboundReceipt.inboundTime', 'parse-time'],
     ['inboundReceipt.reviewTime', 'parse-time'],
     ['inboundReceipt.createTime', 'parse-time']
   ]
@@ -272,7 +272,6 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   data.content.forEach((row) => {
     if (!row.inboundReceipt) row.inboundReceipt = {}
   })
-  console.log(data.content)
   // 退货信息转换
   const rejectList = []
   data.content.forEach((row) => {

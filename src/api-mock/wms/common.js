@@ -16,7 +16,7 @@ const fetchInventoryNotify = {
             unitType: measureTypeEnum.MEASURE.V,
             classifyId: 204,
             specification: 'M26 * 65',
-            workshopId: 3
+            factoryId: 3
           }
         ],
         hasNextPage: false,

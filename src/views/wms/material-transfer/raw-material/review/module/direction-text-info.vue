@@ -5,7 +5,7 @@
         {{ props.transferReceipt.direction.project }}
       </span>
       <span class="public-ware-text" v-else>公共库</span>
-      <span v-if="props.transferReceipt.direction.workshop">（{{ props.transferReceipt.direction.workshop.name }}）</span>
+      <span v-if="props.transferReceipt.direction.factory">（{{ props.transferReceipt.direction.factory.name }}）</span>
     </template>
     <span v-else>-</span>
   </span>

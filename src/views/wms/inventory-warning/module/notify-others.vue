@@ -20,10 +20,10 @@
         return-source-data
         :show-empty-symbol="false"
         style="width: 100%"
-        row-key="workshopId"
+        row-key="factoryId"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="workshopName" label="车间名称" :show-overflow-tooltip="true" width="150" />
+        <el-table-column prop="factoryName" label="工厂名称" :show-overflow-tooltip="true" width="150" />
         <el-table-column prop="createTime" label="通知人" :show-overflow-tooltip="true" min-width="180">
           <template v-slot="scope">
             <user-dept-cascader
@@ -68,7 +68,7 @@ import { arr2obj } from '@/utils/convert/type'
 import checkPermission from '@/utils/system/check-permission'
 
 import useVisible from '@compos/use-visible'
-import useWorkshop from '@compos/store/use-workshops'
+import useFactory from '@compos/store/use-factories'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import deptCascader from '@comp-base/dept-cascader.vue'
 import { ElNotification } from 'element-plus'
@@ -91,7 +91,7 @@ const form = ref({
 const submitLoading = ref(false)
 const configLoading = ref(false)
 
-const { loaded, workshops } = useWorkshop(formInit)
+const { loaded, factories } = useFactory(formInit)
 
 const { visible, handleClose } = useVisible({ emit, props })
 
@@ -99,14 +99,14 @@ const { visible, handleClose } = useVisible({ emit, props })
 async function formInit() {
   try {
     form.value.list = []
-    if (isNotBlank(workshops.value)) {
+    if (isNotBlank(factories.value)) {
       configLoading.value = true
       const config = await fetchConf()
-      workshops.value.forEach((f) => {
+      factories.value.forEach((f) => {
         const conf = config[f.id] || {}
         form.value.list.push({
-          workshopId: f.id,
-          workshopName: f.name,
+          factoryId: f.id,
+          factoryName: f.name,
           userIds: conf.userIds || [],
           deptIds: conf.deptIds || []
         })
@@ -124,7 +124,7 @@ async function fetchConf() {
   let config = {}
   try {
     const { content } = await getInventoryNotifyConf()
-    config = arr2obj(content, 'workshopId')
+    config = arr2obj(content, 'factoryId')
   } catch (error) {
     console.log('配置信息', error)
   }

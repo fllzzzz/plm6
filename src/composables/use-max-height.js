@@ -134,6 +134,7 @@ function calcMaxHeight({ clientHRepMainH, mainBox, extraBox, wrapperBox, navbar,
   const height =
     mainHeight - navbarHeight - wrapperBoxHeight - extraBoxHeight - paginateHeight - realExtraHeight - horizontalScrollBarHeight - 1
   // console.log(height, extraBox, mainBoxHeight, mainHeight, navbarHeight, wrapperBoxHeight, extraBoxHeight, paginateHeight, realExtraHeight, horizontalScrollBarHeight)
+
   return height > realMiniHeight ? height : realMiniHeight
 }
 

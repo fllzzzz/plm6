@@ -2,22 +2,20 @@
   <div class="head-container">
     <div v-if="crud.searchToggle">
       <common-radio-button
-        type="enum"
-        v-model="query.basicClass"
-        :options="matClsEnum.ENUM"
-        :unshowVal="[matClsEnum.GAS.V]"
-        show-option-all
-        clearable
-        class="filter-item"
-        @change="crud.toQuery"
-      />
-      <common-radio-button
-        v-if="!(query.basicClass & MANUF_ENUM)"
         v-model="query.orderSupplyType"
         :options="orderSupplyTypeEnum.ENUM"
         show-option-all
         type="enumSL"
         size="small"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <common-radio-button
+        type="enum"
+        v-model="query.basicClass"
+        :options="rawMatClsEnum.ENUM"
+        show-option-all
+        clearable
         class="filter-item"
         @change="crud.toQuery"
       />
@@ -54,7 +52,6 @@
         class="filter-item"
         @change="crud.toQuery"
       />
-      <br />
       <warehouse-project-cascader
         v-model:projectId="query.projectId"
         v-model:projectWarehouseType="query.projectWarehouseType"
@@ -128,12 +125,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watchEffect } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { PICKER_OPTIONS_SHORTCUTS, STEEL_ENUM, MANUF_ENUM } from '@/settings/config'
+import { PICKER_OPTIONS_SHORTCUTS, STEEL_ENUM } from '@/settings/config'
 import { supplierTypeEnum } from '@enum-ms/supplier'
 import { reviewStatusEnum } from '@enum-ms/common'
-import { matClsEnum } from '@enum-ms/classification'
+import { rawMatClsEnum } from '@enum-ms/classification'
 import { orderSupplyTypeEnum, inspectionStatusEnum } from '@/utils/enum/modules/wms'
 
 import { regHeader } from '@compos/use-crud'
@@ -162,18 +159,9 @@ const defaultQuery = {
 
 const route = useRoute()
 const { crud, query } = regHeader(defaultQuery)
-
-watchEffect(() => {
-  if (query.basicClass & MANUF_ENUM) {
-    query.orderSupplyType = undefined
-  }
-})
-
 onMounted(() => {
   if (+route.params.basicClass === STEEL_ENUM) {
-    query.basicClass = matClsEnum.STEEL_PLATE.V
-  } else if (+route.params.basicClass === MANUF_ENUM) {
-    query.basicClass = matClsEnum.STRUC_MANUFACTURED.V
+    query.basicClass = rawMatClsEnum.STEEL_PLATE.V
   } else {
     query.basicClass = route.params.basicClass
   }

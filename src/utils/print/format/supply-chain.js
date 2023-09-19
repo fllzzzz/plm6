@@ -28,7 +28,7 @@ async function handleRequisitionsRecord({ header, table = [], footer, qrCode }) 
   })
   await numFmtByBasicClass(table)
   // 项目可能是多个，显示在表尾
-  const projectName = header?.project ? `${header?.project?.serialNumber} ${header?.project?.shortName}` : '-'
+  const projectName = (header?.project || []).map(v => `${v.serialNumber} ${v.shortName}`)?.join('、')
   return {
     header,
     table,

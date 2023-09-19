@@ -1,8 +1,8 @@
 <template>
-  <span v-if="fmStore" style="display: inline-block; margin-left: 6px">
-    <common-button size="mini" @click="handleSave" type="warning" plain>存为草稿</common-button>
-    <common-button size="mini" @click="handleClear" type="info" plain>清空</common-button>
-  </span>
+  <!-- <span style="display: inline-block;margin-left: 6px;"> -->
+  <common-button v-if="fmStore" size="mini" @click="handleSave" type="warning" plain>存为草稿</common-button>
+  <common-button v-if="fmStore" size="mini" @click="handleClear" type="info" plain>清空</common-button>
+  <!-- </span> -->
 </template>
 
 <script setup>

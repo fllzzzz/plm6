@@ -60,9 +60,9 @@ const get = {
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 调拨单号
             source: [
               {
-                workshop: {
+                factory: {
                   id: 1,
-                  name: '彩虹3号车间'
+                  name: '彩虹3号工厂'
                 },
                 warehouse: {
                   id: 1,
@@ -78,9 +78,9 @@ const get = {
                 shortName: '五一广场',
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               },
-              workshop: {
+              factory: {
                 id: 1,
-                name: '长江2号车间'
+                name: '长江2号工厂'
               },
               warehouse: {
                 id: 1,
@@ -119,9 +119,9 @@ const get = {
                   shortName: '长安街',
                   serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
                 },
-                workshop: {
+                factory: {
                   id: 1,
-                  name: '长江1号车间'
+                  name: '长江1号工厂'
                 },
                 warehouse: {
                   id: 1,
@@ -136,9 +136,9 @@ const get = {
                   shortName: '五一广场',
                   serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
                 },
-                workshop: {
+                factory: {
                   id: 1,
-                  name: '彩虹3号车间'
+                  name: '彩虹3号工厂'
                 },
                 warehouse: {
                   id: 1,
@@ -147,9 +147,9 @@ const get = {
               }
             ],
             direction: {
-              workshop: {
+              factory: {
                 id: 1,
-                name: '长江2号车间'
+                name: '长江2号工厂'
               },
               warehouse: {
                 id: 1,
@@ -172,9 +172,9 @@ const get = {
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 调拨单号
             source: [
               {
-                workshop: {
+                factory: {
                   id: 1,
-                  name: '长江1号车间'
+                  name: '长江1号工厂'
                 },
                 warehouse: {
                   id: 1,
@@ -190,9 +190,9 @@ const get = {
                 shortName: '你脸红个泡泡茶壶',
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               },
-              workshop: {
+              factory: {
                 id: 1,
-                name: '长江2号车间'
+                name: '长江2号工厂'
               },
               warehouse: {
                 id: 1,
@@ -222,9 +222,9 @@ const get = {
                   shortName: '长安街',
                   serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
                 },
-                workshop: {
+                factory: {
                   id: 1,
-                  name: '长江1号车间'
+                  name: '长江1号工厂'
                 },
                 warehouse: {
                   id: 1,
@@ -240,9 +240,9 @@ const get = {
                 shortName: '你脸红个泡泡茶壶',
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               },
-              workshop: {
+              factory: {
                 id: 1,
-                name: '长江2号车间'
+                name: '长江2号工厂'
               },
               warehouse: {
                 id: 1,
@@ -273,9 +273,9 @@ const get = {
                   shortName: '长安街',
                   serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
                 },
-                workshop: {
+                factory: {
                   id: 1,
-                  name: '长江1号车间'
+                  name: '长江1号工厂'
                 },
                 warehouse: {
                   id: 1,
@@ -291,9 +291,9 @@ const get = {
                 shortName: '你脸红个泡泡茶壶',
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               },
-              workshop: {
+              factory: {
                 id: 1,
-                name: '长江2号车间'
+                name: '长江2号工厂'
               },
               warehouse: {
                 id: 1,
@@ -324,9 +324,9 @@ const get = {
                   shortName: '长安街',
                   serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
                 },
-                workshop: {
+                factory: {
                   id: 1,
-                  name: '长江1号车间'
+                  name: '长江1号工厂'
                 },
                 warehouse: {
                   id: 1,
@@ -342,9 +342,9 @@ const get = {
                 shortName: '你脸红个泡泡茶壶',
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               },
-              workshop: {
+              factory: {
                 id: 1,
-                name: '长江2号车间'
+                name: '长江2号工厂'
               },
               warehouse: {
                 id: 1,
@@ -390,9 +390,9 @@ const detail_id1 = {
               shortName: '长安街',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            workshop: {
+            factory: {
               id: 1,
-              name: '长江1号车间'
+              name: '长江1号工厂'
             },
             warehouse: {
               id: 1,
@@ -407,9 +407,9 @@ const detail_id1 = {
               shortName: '五一广场',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            workshop: {
+            factory: {
               id: 1,
-              name: '彩虹3号车间'
+              name: '彩虹3号工厂'
             },
             warehouse: {
               id: 1,
@@ -418,9 +418,9 @@ const detail_id1 = {
           }
         ],
         direction: {
-          workshop: {
+          factory: {
             id: 1,
-            name: '长江2号车间'
+            name: '长江2号工厂'
           },
           warehouse: {
             id: 1,
@@ -451,7 +451,7 @@ const detail_id1 = {
               'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            workshopId: 1,
+            factoryId: 1,
             warehouse: {
               id: 1,
               name: '666号仓库'
@@ -476,7 +476,7 @@ const detail_id1 = {
               'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            workshopId: 1,
+            factoryId: 1,
             warehouse: {
               id: 1,
               name: '666号仓库'
@@ -520,9 +520,9 @@ const detail_id1 = {
                 shortName: '长安街',
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               },
-              workshop: {
+              factory: {
                 id: 1,
-                name: '一号车间',
+                name: '一号工厂',
                 shortName: '一工'
               },
               warehouse: {
@@ -567,9 +567,9 @@ const detail_id1 = {
                 shortName: '长安街',
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               },
-              workshop: {
+              factory: {
                 id: 2,
-                name: '二号车间',
+                name: '二号工厂',
                 shortName: '二工'
               },
               warehouse: {
@@ -601,9 +601,9 @@ const detail_id2 = {
         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 调拨单号
         source: [
           {
-            workshop: {
+            factory: {
               id: 1,
-              name: '长江1号车间'
+              name: '长江1号工厂'
             },
             warehouse: {
               id: 1,
@@ -619,9 +619,9 @@ const detail_id2 = {
             shortName: '你脸红个泡泡茶壶',
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
           },
-          workshop: {
+          factory: {
             id: 1,
-            name: '长江2号车间'
+            name: '长江2号工厂'
           },
           warehouse: {
             id: 1,
@@ -647,7 +647,7 @@ const detail_id2 = {
               'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            workshopId: 1,
+            factoryId: 1,
             warehouse: {
               id: 1,
               name: '666号仓库'
@@ -668,7 +668,7 @@ const detail_id2 = {
               'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            workshopId: 1,
+            factoryId: 1,
             warehouse: {
               id: 1,
               name: '666号仓库'
@@ -702,9 +702,9 @@ const detail_id3 = {
               shortName: '长安街',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            workshop: {
+            factory: {
               id: 1,
-              name: '长江1号车间'
+              name: '长江1号工厂'
             },
             warehouse: {
               id: 1,
@@ -720,9 +720,9 @@ const detail_id3 = {
             shortName: '你脸红个泡泡茶壶',
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
           },
-          workshop: {
+          factory: {
             id: 1,
-            name: '长江2号车间'
+            name: '长江2号工厂'
           },
           warehouse: {
             id: 1,
@@ -758,7 +758,7 @@ const detail_id3 = {
               'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            workshopId: 1,
+            factoryId: 1,
             warehouse: {
               id: 1,
               name: '666号仓库'
@@ -784,9 +784,9 @@ const detail_id4 = {
         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 调拨单号
         source: [
           {
-            workshop: {
+            factory: {
               id: 1,
-              name: '长江1号车间'
+              name: '长江1号工厂'
             },
             warehouse: {
               id: 1,
@@ -802,9 +802,9 @@ const detail_id4 = {
             shortName: '你脸红个泡泡茶壶',
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
           },
-          workshop: {
+          factory: {
             id: 1,
-            name: '长江2号车间'
+            name: '长江2号工厂'
           },
           warehouse: {
             id: 1,
@@ -834,7 +834,7 @@ const detail_id4 = {
               'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            workshopId: 1,
+            factoryId: 1,
             warehouse: {
               id: 1,
               name: '666号仓库'
@@ -863,9 +863,9 @@ const detail_id5 = {
         taxRate: 13,
         source: [
           {
-            workshop: {
+            factory: {
               id: 1,
-              name: '长江1号车间'
+              name: '长江1号工厂'
             },
             warehouse: {
               id: 1,
@@ -881,9 +881,9 @@ const detail_id5 = {
             shortName: '你脸红个泡泡茶壶',
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
           },
-          workshop: {
+          factory: {
             id: 1,
-            name: '长江2号车间'
+            name: '长江2号工厂'
           },
           warehouse: {
             id: 1,
@@ -915,7 +915,7 @@ const detail_id5 = {
               'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            workshopId: 1,
+            factoryId: 1,
             warehouse: {
               id: 1,
               name: '666号仓库'
@@ -942,9 +942,9 @@ const detail_id6 = {
         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 调拨单号
         source: [
           {
-            workshop: {
+            factory: {
               id: 1,
-              name: '彩虹3号车间'
+              name: '彩虹3号工厂'
             },
             warehouse: {
               id: 1,
@@ -960,9 +960,9 @@ const detail_id6 = {
             shortName: '五一广场',
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
           },
-          workshop: {
+          factory: {
             id: 1,
-            name: '长江2号车间'
+            name: '长江2号工厂'
           },
           warehouse: {
             id: 1,
@@ -1001,7 +1001,7 @@ const detail_id6 = {
               'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            workshopId: 1,
+            factoryId: 1,
             warehouse: {
               id: 1,
               name: '666号仓库'
@@ -1026,7 +1026,7 @@ const detail_id6 = {
               'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            workshopId: 1,
+            factoryId: 1,
             warehouse: {
               id: 1,
               name: '666号仓库'
