@@ -7,7 +7,7 @@ import { unitTypeEnum } from '../enum/modules/common'
 import { patternNumerical } from '../validate/pattern'
 import { getFullNum } from '../data-type/number'
 
-async function getBaseUnit() {
+export async function getBaseUnit() {
   const _unit = store.getters.baseUnit
   if (isNotBlank(_unit)) {
     return _unit

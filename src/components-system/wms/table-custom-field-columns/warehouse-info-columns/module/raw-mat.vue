@@ -38,15 +38,6 @@
     min-width="100"
   />
   <el-table-column
-    v-if="showWorkshop"
-    :key="`${field}.workshopName`"
-    :prop="`${field}.workshopName`"
-    show-overflow-tooltip
-    label="车间"
-    align="left"
-    min-width="100"
-  />
-  <el-table-column
     v-if="showWarehouse"
     :key="`${field}.warehouse`"
     :prop="`${field}.warehouse`"
@@ -57,9 +48,9 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <factory-table-cell-tag
-        v-if="props.showFactory"
-        :id="getInfo(row, 'factory') ? getInfo(row, 'factory.id') : getInfo(row, 'factoryId')"
+      <workshop-table-cell-tag
+        v-if="props.showWorkshop"
+        :id="getInfo(row, 'workshop') ? getInfo(row, 'workshop.id') : getInfo(row, 'workshopId')"
       />
       <span>{{ getInfo(row, 'warehouse') ? getInfo(row, 'warehouse.name') : getInfo(row, 'warehouse') }}</span>
     </template>
@@ -70,7 +61,7 @@
 import { defineProps, computed, inject } from 'vue'
 import { isBlank } from '@/utils/data-type'
 import { outboundRelationTypeEnum } from '@/utils/enum/modules/wms'
-import factoryTableCellTag from '@comp-base/factory-table-cell-tag.vue'
+import workshopTableCellTag from '@comp-base/workshop-table-cell-tag.vue'
 
 const props = defineProps({
   showProject: {
@@ -95,11 +86,6 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  showFactory: {
-    // 显示工厂
-    type: Boolean,
-    default: true
-  },
   columns: {
     // 用于crud组件的列显隐
     type: Object
@@ -121,5 +107,4 @@ const showWarehouse = computed(() => isBlank(props.columns) || props.columns.vis
 const showProject = computed(() => props.showProject && (isBlank(props.columns) || props.columns.visible(`${props.field}.project`)))
 const showMonomer = computed(() => props.showMonomer && (isBlank(props.columns) || props.columns.visible(`${props.field}.monomerName`)))
 const showArea = computed(() => props.showArea && (isBlank(props.columns) || props.columns.visible(`${props.field}.areaName`)))
-const showWorkshop = computed(() => props.showWorkshop && (isBlank(props.columns) || props.columns.visible(`${props.field}.workshopName`)))
 </script>

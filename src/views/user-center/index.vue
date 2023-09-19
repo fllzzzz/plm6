@@ -210,7 +210,7 @@ function doSubmit() {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss">
+<style rel="stylesheet/scss" lang="scss" scoped>
 .avatar {
   width: 120px;
   height: 120px;

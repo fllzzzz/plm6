@@ -20,7 +20,7 @@
         width="150"
       >
         <template #default="{ row }">
-          <factory-table-cell-tag :id="row.factoryId" />
+          <workshop-table-cell-tag :id="row.workshopId" />
           <span>{{ row.serialNumber }}</span>
         </template>
       </el-table-column>
@@ -75,7 +75,7 @@ import useCRUD from '@compos/use-crud'
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'
-import factoryTableCellTag from '@comp-base/factory-table-cell-tag.vue'
+import workshopTableCellTag from '@comp-base/workshop-table-cell-tag.vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 

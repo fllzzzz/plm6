@@ -53,7 +53,7 @@ import { regHeader } from '@compos/use-crud'
 import { componentTypeEnum } from '@enum-ms/mes'
 import { weightTypeEnum, workshopTypeEnum } from '@enum-ms/common'
 import rrOperation from '@crud/RR.operation'
-import workshopSelect from '@comp-mes/workshop-select'
+import workshopSelect from '@/components-system/base/workshop-select.vue'
 import productionLineSelect from '@comp-mes/production-line-select'
 
 const defaultQuery = {

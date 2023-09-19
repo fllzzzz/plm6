@@ -94,7 +94,7 @@ const defaultQuery = {
   returnTime: [], // [开始日期，结束日期]
   serialNumber: undefined, // 调整单号
   projectId: { value: undefined, resetAble: false }, // 项目id
-  factoryId: { value: undefined, resetAble: false }, // 工厂id
+  workshopId: { value: undefined, resetAble: false }, // 车间id
   basicClass: { value: undefined, resetAble: false }
 }
 

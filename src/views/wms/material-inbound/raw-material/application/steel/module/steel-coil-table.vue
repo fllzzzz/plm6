@@ -1,5 +1,6 @@
 <template>
   <common-table
+    ref="tableRef"
     v-bind="$attrs"
     :data="form.steelCoilList"
     :cell-class-name="wrongCellMask"
@@ -7,10 +8,13 @@
     :show-empty-symbol="false"
     return-source-data
     row-key="uid"
+    @select="selectTableChange"
+    @select-all="selectAllTableChange"
   >
+    <el-table-column v-if="!props.boolPartyA && !props.noDetail" type="selection" width="55" align="center" :selectable="selectable" />
     <el-expand-table-column :data="form.steelCoilList" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
       <template #default="{ row }">
-        <div class="mtb-10">
+        <div class="mtb-10" style="margin-left: 30px">
           <el-input
             v-model="row.remark"
             :rows="1"
@@ -22,18 +26,21 @@
             style="width: 400px"
           />
         </div>
+        <div v-if="isNotBlank(row.inboundList)" class="flex-rsc mtb-20" style="margin-left: 30px">
+          <inbound-info-table :stripe="false" :material="row" :basic-class="basicClass" :list="row.inboundList" style="width: 1600px" />
+        </div>
       </template>
     </el-expand-table-column>
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-    <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" />
-    <el-table-column prop="classifyName" sortable :sort-by="['serialNumber']" label="物料种类" align="center" fixed="left" width="120" show-overflow-tooltip>
+    <el-table-column prop="serialNumber" label="编号" align="center" min-width="110px" fixed="left" />
+    <el-table-column prop="classifyName" sortable :sort-by="['serialNumber']" label="物料种类" align="center" fixed="left" min-width="120" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
           <span v-empty-text="row.classifyName" />
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="specification" label="规格" align="center" width="160px" fixed="left" show-overflow-tooltip>
+    <el-table-column prop="specification" label="规格" align="center" min-width="160px" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.specificationLabels" placement="top">
           <span>{{ row.specification }}</span>
@@ -41,11 +48,12 @@
       </template>
     </el-table-column>
     <el-table-column
+      v-if="props.boolPartyA || props.noDetail"
       key="weighingTotalWeight"
       prop="weighingTotalWeight"
       align="center"
       :label="`总重 (${baseUnit.weight.unit})`"
-      width="135px"
+      min-width="135px"
     >
       <template #default="{ row }">
         <common-input-number
@@ -61,9 +69,47 @@
         />
       </template>
     </el-table-column>
-    <el-table-column prop="thickness" sortable align="center" width="100px" :label="`厚 (${baseUnit.thickness.unit})`">
+    <template v-if="!props.boolPartyA && !props.noDetail">
+      <el-table-column prop="purchaseMete" :label="`采购重量 (${baseUnit.weight.unit})`" align="right" min-width="120px">
+        <template #default="{ row }">
+          <span>
+            <el-tooltip effect="dark" content="已入库量" placement="top">
+              <span class="color-green">{{ row.inboundMete }}</span>
+            </el-tooltip>
+            / {{ row.purchaseMete }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        key="weighingTotalWeight"
+        prop="weighingTotalWeight"
+        align="center"
+        :label="`实收量 (${baseUnit.weight.unit})`"
+        min-width="135px"
+      >
+        <template #default="{ row }">
+          <common-input-number
+            v-if="form.selectObj?.[row.mergeId]?.isSelected"
+            v-model="row.weighingTotalWeight"
+            :min="0"
+            :max="999999999"
+            controls-position="right"
+            :controls="false"
+            :precision="baseUnit.weight.precision"
+            size="mini"
+            placeholder="实收量"
+            :class="{ 'over-weight-tip': row.hasOver }"
+            @change="handleWeightChange($event, row)"
+            @blur="handleOverMete(row)"
+          />
+          <span v-else>{{ row.weighingTotalWeight || '-' }}</span>
+        </template>
+      </el-table-column>
+    </template>
+    <el-table-column prop="thickness" sortable align="center" min-width="100px" :label="`厚 (${baseUnit.thickness.unit})`">
       <template #default="{ row }">
         <common-input-number
+          v-if="(props.boolPartyA || props.noDetail) || form.selectObj?.[row.mergeId]?.isSelected"
           v-model="row.thickness"
           :min="0"
           :max="999999"
@@ -73,11 +119,13 @@
           size="mini"
           placeholder="厚"
         />
+        <span v-else>{{ row.thickness }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="width" align="center" width="135px" :label="`宽 (${baseUnit.width.unit})`">
+    <el-table-column prop="width" align="center" min-width="135px" :label="`宽 (${baseUnit.width.unit})`">
       <template #default="{ row }">
         <common-input-number
+          v-if="(props.boolPartyA || props.noDetail) || form.selectObj?.[row.mergeId]?.isSelected"
           v-model="row.width"
           :min="0"
           :max="999999"
@@ -87,11 +135,13 @@
           size="mini"
           placeholder="宽"
         />
+        <span v-else>{{ row.width }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="length" align="center" width="135px" :label="`长 (${baseUnit.length.unit})`">
+    <el-table-column prop="length" align="center" min-width="135px" :label="`长 (${baseUnit.length.unit})`">
       <template #default="{ row }">
         <common-input-number
+          v-if="(props.boolPartyA || props.noDetail) || form.selectObj?.[row.mergeId]?.isSelected"
           v-model="row.length"
           :min="0"
           :max="999999999"
@@ -100,9 +150,10 @@
           size="mini"
           placeholder="长"
         />
+        <span v-else>{{ row.length }}</span>
       </template>
     </el-table-column>
-    <!-- <el-table-column prop="number" align="center" width="135px" :label="`数量 (${baseUnit.measure.unit})`">
+    <!-- <el-table-column prop="number" align="center" min-width="135px" :label="`数量 (${baseUnit.measure.unit})`">
       <template #default="{ row }">
         <common-input-number
           v-model="row.quantity"
@@ -117,26 +168,48 @@
         />
       </template>
     </el-table-column> -->
-    <el-table-column prop="color" label="颜色" align="center" width="140px">
+    <el-table-column prop="color" label="颜色" align="center" min-width="140px">
       <template #default="{ row }">
-        <el-input v-model.trim="row.color" maxlength="20" size="mini" placeholder="颜色" />
+        <el-input
+          v-if="(props.boolPartyA || props.noDetail) || ((!props.boolPartyA && !props.noDetail) && form.selectObj?.[row.mergeId]?.isSelected)"
+          v-model.trim="row.color"
+          maxlength="20"
+          size="mini"
+          placeholder="颜色"
+        />
+        <span v-else v-empty-text>{{ row.color }}</span>
       </template>
     </el-table-column>
 
     <!-- 金额设置 -->
-    <price-set-columns v-if="!props.boolPartyA && fillableAmount" />
+    <price-set-columns v-if="!props.boolPartyA && fillableAmount && noDetail" />
 
     <el-table-column prop="brand" label="品牌" align="center" min-width="100px">
       <template #default="{ row }">
-        <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
+        <el-input
+          v-if="(props.boolPartyA || props.noDetail) || ((!props.boolPartyA && !props.noDetail) && form.selectObj?.[row.mergeId]?.isSelected)"
+          v-model.trim="row.brand"
+          maxlength="60"
+          size="mini"
+          placeholder="品牌"
+        />
+        <span v-else v-empty-text>{{ row.brand }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="heatNoAndBatchNo" label="卷号" align="center" min-width="150px">
       <template #default="{ row }">
-        <el-input v-model.trim="row.heatNoAndBatchNo" size="mini" placeholder="卷号" maxlength="200" />
+        <el-input
+          v-if="(props.boolPartyA || props.noDetail) || ((!props.boolPartyA && !props.noDetail) && form.selectObj?.[row.mergeId]?.isSelected)"
+          v-model.trim="row.heatNoAndBatchNo"
+          size="mini"
+          placeholder="卷号"
+          maxlength="200"
+        />
+        <span v-else v-empty-text>{{ row.heatNoAndBatchNo }}</span>
       </template>
     </el-table-column>
-    <el-table-column label="操作" width="70" align="center" fixed="right">
+
+    <el-table-column v-if="props.boolPartyA || props.noDetail" label="操作" width="70" align="center" fixed="right">
       <template #default="{ row, $index }">
         <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sn, $index)" />
       </template>
@@ -152,12 +225,14 @@ import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
+import useOverReceive from '@/views/wms/material-inbound/raw-material/application/composables/use-over-receive.js'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSteelCoilLength } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 import { DP } from '@/settings/config'
 
+import inboundInfoTable from '@/views/wms/material-inbound/raw-material/components/inbound-info-table'
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
 
 const props = defineProps({
@@ -168,11 +243,17 @@ const props = defineProps({
   fillableAmount: {
     type: Boolean,
     default: false
+  },
+  noDetail: {
+    type: Boolean,
+    default: false
   }
 })
 
+const tableRef = ref()
 // 当前物料基础类型
 const basicClass = matClsEnum.STEEL_COIL.V
+const { handleOverMete } = useOverReceive({ meteField: 'weighingTotalWeight' })
 
 const rules = {
   classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
@@ -227,6 +308,31 @@ const expandRowKeys = ref([]) // 展开行key
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules, errorMsg: '请修正【钢卷清单】中标红的信息' }) // 表格校验
 
+function selectable(row, rowIndex) {
+  return !!row.canPurchaseQuantity || true
+}
+
+function selectTableChange(select, row) {
+  const boolSelect = Boolean(select.findIndex((v) => v.id === row.id) !== -1)
+  form.selectObj[row.mergeId].isSelected = boolSelect
+}
+
+function selectAllTableChange(select) {
+  const boolSelect = Boolean(select?.length)
+  form.steelCoilList.forEach((v) => {
+    form.selectObj[v.mergeId].isSelected = boolSelect
+  })
+}
+
+// 设置选择的回显
+function setSelect() {
+  form.steelCoilList.forEach((v) => {
+    if (form.selectObj?.[v.mergeId]?.isSelected) {
+      tableRef.value.toggleRowSelection(v, true)
+    }
+  })
+}
+
 // 行初始化
 function rowInit(row) {
   const _row = reactive({
@@ -270,6 +376,21 @@ function rowInit(row) {
 function rowWatch(row) {
   // watchEffect(() => calcTheoryLength(_row))
   // watchEffect(() => calcTotalLength(_row))
+  watch(
+    () => row,
+    () => {
+      if ((!props.boolPartyA && !props.noDetail) && form.selectObj?.[row.mergeId]?.isSelected) {
+        const _isSelected = form.selectObj[row.mergeId]?.isSelected
+        form.selectObj[row.mergeId] = {
+          ...form.selectObj[row.mergeId],
+          ...row,
+          mete: row.weighingTotalWeight,
+          isSelected: _isSelected
+        }
+      }
+    },
+    { deep: true }
+  )
   // 计算理论长度
   watch([() => row.weighingTotalWeight, () => row.width, () => row.thickness, baseUnit], () => calcTheoryLength(row))
   // 计算总长度
@@ -315,18 +436,27 @@ function delRow(sn, $index) {
 
 // 校验
 function validate() {
-  if (isBlank(form.steelCoilList)) return true
-  const { validResult, dealList } = tableValidate(form.steelCoilList)
-  form.steelCoilList = dealList
-  form.steelCoilList.forEach((row) => {
-    row.quantity = row.length
+  const _list = form.steelCoilList.filter((v) => {
+    if ((props.boolPartyA || props.noDetail) || form.selectObj[v.mergeId]?.isSelected) {
+      return true
+    } else {
+      return false
+    }
   })
+  if (isBlank(_list)) return true
+  const { validResult } = tableValidate(_list)
   return validResult
+}
+
+function toggleRowSelection(row, selected) {
+  tableRef?.value?.toggleRowSelection(row, selected)
 }
 
 defineExpose({
   rowInit,
   rowWatch,
-  validate
+  toggleRowSelection,
+  validate,
+  setSelect
 })
 </script>

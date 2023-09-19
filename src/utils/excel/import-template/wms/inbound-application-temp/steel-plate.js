@@ -1,10 +1,11 @@
 import store from '@/store/index'
-import { deepClone, isNotBlank } from '@/utils/data-type'
+import { deepClone, isNotBlank, toPrecision } from '@/utils/data-type'
 import { createUniqueString, trimStr } from '@/utils/data-type/string'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
 import { dataValidate } from '@/composables/form/use-table-validate'
 import { compareArray } from '@/utils/data-type/array'
+import { getBaseUnit } from '@/utils/wms/convert-unit'
 import { MAT_BASE_UNIT } from '@/settings/config'
 
 const baseUnit = MAT_BASE_UNIT[matClsEnum.STEEL_PLATE.V]
@@ -35,6 +36,8 @@ const sectionSteelSpecTmpl = {
   format: async (tableList) => {
     const validate = dataValidate(tableList, sectionSteelSpecTmpl.rules)
     if (!validate) return
+    // 获取基础单位
+    const baseUnit = await getBaseUnit()
     // 加载科目树
     if (!store.state.config.loaded.matClsTree) {
       await store.dispatch('config/fetchMatClsTree')
@@ -132,7 +135,7 @@ const sectionSteelSpecTmpl = {
 
         // 设置理论总重
         if (isNotBlank(row.theoryWeight) && row.quantity) {
-          row.theoryTotalWeight = row.theoryWeight * row.quantity
+          row.theoryTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit[matClsEnum.STEEL_PLATE.V].weight.precision)
         } else {
           row.theoryTotalWeight = undefined
         }

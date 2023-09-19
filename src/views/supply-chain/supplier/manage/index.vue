@@ -24,6 +24,14 @@
         min-width="150"
         label="供应商名称"
       />
+      <el-table-column
+        v-if="columns.visible('shortName')"
+        key="shortName"
+        :show-overflow-tooltip="true"
+        prop="shortName"
+        min-width="120"
+        label="供应商简称"
+      />
       <el-table-column v-if="columns.visible('area')" key="area" :show-overflow-tooltip="true" prop="area" label="地区" min-width="150" />
       <el-table-column
         v-if="columns.visible('supplierClassification')"
@@ -91,10 +99,9 @@ import mHeader from './module/header'
 import mForm from './module/form'
 import mDetail from './module/detail'
 import mBatchForm from './module/batch-form'
+import { ElMessageBox } from 'element-plus'
 
 const store = useStore()
-
-import { ElMessageBox } from 'element-plus'
 
 const optShow = {
   batchAdd: true,

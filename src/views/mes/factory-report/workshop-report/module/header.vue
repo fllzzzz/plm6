@@ -147,7 +147,7 @@ import { fullYearProduction, workshopEcharts, workshopProduction } from '@/api/m
 import { weightTypeEnum, workshopTypeEnum } from '@enum-ms/common'
 import { timeTypeEnum } from '@enum-ms/contract'
 import { mesFactoryReportPM as permission } from '@/page-permission/mes'
-import workshopSelect from '@comp-mes/workshop-select'
+import workshopSelect from '@/components-system/base/workshop-select.vue'
 import productionLineSelect from '@comp-mes/production-line-select'
 import projectCascader from '@comp-base/project-cascader'
 import crudOperation from '@crud/CRUD.operation'

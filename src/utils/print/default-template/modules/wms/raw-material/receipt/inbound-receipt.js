@@ -443,12 +443,12 @@ const wmsRmInboundReceipt = {
       },
       {
         show: false,
-        key: 'factory.name',
-        title: '工厂',
+        key: 'workshop.name',
+        title: '车间',
         source: dataSourceEnum.SYSTEM.V,
         align: alignEnum.LEFT.V,
         minWidth: 18,
-        type: typeEnum.FACTORY_NAME.K
+        type: typeEnum.WORKSHOP.K
       },
       {
         show: false,

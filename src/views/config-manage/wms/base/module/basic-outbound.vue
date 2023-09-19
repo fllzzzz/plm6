@@ -18,7 +18,7 @@
       </div>
     </template>
     <el-form v-loading="dataLoading" :disabled="formDisabled" :model="form" label-position="top" label-width="120px">
-      <el-form-item label="辅材入库到车间直接出库">
+      <!-- <el-form-item label="辅材入库到车间直接出库">
         <el-switch
           v-model="form.boolAuxMatToWorkShopWay"
           :active-value="whetherEnum.TRUE.V"
@@ -28,7 +28,7 @@
       </el-form-item>
        <el-form-item>
         <span class="form-item-tip">在辅材入库到类型为“车间”的仓库时，无需办理，直接出库。</span>
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item label="气体即入即出">
         <el-switch

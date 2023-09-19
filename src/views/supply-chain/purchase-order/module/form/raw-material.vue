@@ -1,25 +1,19 @@
 <template>
-  <common-drawer
-    ref="drawerRef"
-    :visible="dialogVisible"
-    :contentLoading="crud.editDetailLoading"
-    :before-close="crud.cancelCU"
-    :title="crud.status.title"
-    :show-close="true"
-    :size="hasAssocPreparation ? '100%' : '620px'"
-    :close-on-click-modal="false"
-    custom-class="purchase-order-raw-mat-form"
-  >
-    <template #titleRight>
-      <common-button :loading="crud.status.cu === CRUD.STATUS.PROCESSING" size="mini" type="primary" @click="crud.submitCU">
-        提 交
-      </common-button>
-      <store-operation v-if="crud.status.add > CRUD.STATUS.NORMAL" type="crud" />
-    </template>
-    <template #content>
+  <div>
+      <div style="display:flex;">
+        <div>
+          <slot name="chose"></slot>
+        </div>
+        <div style="flex:1;text-align:right;">
+          <common-button :loading="cu.status.edit === FORM.STATUS.PROCESSING" size="mini" type="primary" @click="submit">
+            提 交
+          </common-button>
+          <store-operation v-if="!props.edit" type="cu" />
+        </div>
+      </div>
       <div class="main-content">
         <el-form ref="formRef" :model="form" :rules="rules" size="small" label-position="right" label-width="110px">
-          <div class="form-content" :style="heightStyle">
+          <div class="form-content" :style="`height: ${maxHeight}px`">
             <div class="form-left">
               <div class="order-details">
                 <el-form-item class="el-form-item-1" label="采购合同编号" prop="serialNumber">
@@ -41,6 +35,7 @@
                       clearable
                       :disabled="form.boolUsed"
                       placeholder="请选择物料种类"
+                      :unshowOptions="[rawMatClsEnum.GAS.K]"
                       class="input-underline"
                       style="flex: auto"
                     />
@@ -304,23 +299,25 @@
           </div>
         </el-form>
       </div>
-    </template>
-  </common-drawer>
+    </div>
 </template>
 
 <script setup>
-import { ref, computed, nextTick, watchEffect } from 'vue'
-import { matClsEnum } from '@enum-ms/classification'
+import { add, edit } from '@/api/supply-chain/purchase-order'
+import { ref, computed, nextTick, watchEffect, defineProps, defineEmits, provide } from 'vue'
+import { matClsEnum, rawMatClsEnum } from '@enum-ms/classification'
 import { orderSupplyTypeEnum, baseMaterialTypeEnum, purchaseOrderPaymentModeEnum } from '@enum-ms/wms'
 import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 import { weightMeasurementModeEnum, invoiceTypeEnum } from '@enum-ms/finance'
 import { fileClassifyEnum } from '@enum-ms/file'
-import { isNotBlank, isBlank, deepClone } from '@/utils/data-type'
+import { deepClone } from '@/utils/data-type'
 import { clearObject } from '@/utils/data-type/object'
+import { DP } from '@/settings/config'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 
-import { regForm } from '@compos/use-crud'
+// import { regForm } from '@compos/use-crud'
+import useForm from '@/composables/form/use-form'
 import UnitSelect from '@comp-common/unit-select/index.vue'
 import ProjectCascader from '@comp-base/project-cascader.vue'
 import SupplierSelect from '@comp-base/supplier-select/index.vue'
@@ -330,8 +327,7 @@ import BasicClassSelect from '@/components-system/classification/basic-class-sel
 import InvoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
 import UploadList from '@comp/file-upload/UploadList.vue'
 import StoreOperation from '@crud/STORE.operation.vue'
-import useMaxHeight from '@/composables/use-max-height'
-import { DP } from '@/settings/config'
+// import useMaxHeight from '@/composables/use-max-height'
 
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
@@ -362,24 +358,70 @@ const defaultForm = {
   purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 订单类型
   remark: undefined, // 备注
   attachments: undefined, // 附件
-  attachmentIds: undefined // 附件ids
+  attachmentIds: undefined, // 附件ids
+  list: []
 }
+
+const emit = defineEmits('success')
 
 const formRef = ref() // 表单
 
-const { CRUD, crud, form } = regForm(defaultForm, formRef)
-const dialogVisible = computed(() => crud.status.cu > CRUD.STATUS.NORMAL)
+const props = defineProps({
+  edit: {
+    type: Boolean,
+    default: false
+  },
+  dialogVisible: {
+    type: Boolean,
+    default: false
+  },
+  detail: {
+    type: Object
+  },
+  maxHeight: {
+    type: Number,
+    default: 100
+  },
+  heightStyle: {
+    type: String,
+    default: ''
+  }
+})
+
+const { cu, form, FORM } = useForm(
+  {
+    title: '采购合同',
+    formStore: !props.edit,
+    formStoreKey: 'SUPPLY_CHAIN_PURCHASE_ORDER',
+    defaultForm: defaultForm,
+    useDraftCallback: setFormCallback,
+    clearDraftCallback: init,
+    api: props.edit ? edit : add
+  },
+  formRef,
+  props.detail
+)
+
+provide('cu', cu)
+
+function setFormCallback() {
+
+}
+
+function init() {
+
+}
 
 // 表格高度处理
-const { maxHeight, heightStyle } = useMaxHeight(
-  {
-    mainBox: '.purchase-order-raw-mat-form',
-    extraBox: ['.el-drawer__header'],
-    wrapperBox: ['.el-drawer__body'],
-    clientHRepMainH: true
-  },
-  dialogVisible
-)
+// const { maxHeight, heightStyle } = useMaxHeight(
+//   {
+//     mainBox: '.purchase-order-raw-mat-form',
+//     extraBox: ['.el-drawer__header'],
+//     wrapperBox: ['.el-drawer__body'],
+//     clientHRepMainH: true
+//   },
+//   props.dialogVisible
+// )
 
 // ------------------------- rules start -----------------------------------
 const validateInvoiceType = (rule, value, callback) => {
@@ -464,7 +506,7 @@ const otherMatRules = {
 
 // rules变更
 watchEffect(() => {
-  if (dialogVisible.value) {
+  if (props.dialogVisible) {
     const r = rules.value
     clearObject(r)
     Object.assign(r, baseRules)
@@ -518,32 +560,16 @@ const currentSortingPreparationClone = ref([])
 // ------------------------- 备料/分拣 end -----------------------------------
 
 // 初始化表单
-CRUD.HOOK.afterToAdd = () => {}
+FORM.HOOK.afterToAdd = () => {}
 
-CRUD.HOOK.beforeToCU = () => {
+FORM.HOOK.beforeToCU = () => {
   currentPreparationSN.value = undefined
   preparationListMap.value = new Map()
   mergePreparationList.value = []
 }
 
 // 加载处理
-CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
-  if (isNotBlank(form.projects)) {
-    form.projectIds = form.projects.map((v) => v.id)
-  }
-  if (isBlank(form.attachments)) {
-    form.attachments = []
-  }
-  // 是否选中所有辅材，0表示所有
-  form.isAllMaterial = form.auxMaterialIds?.includes(0)
-  // 是否选中所有其它科目，0表示所有
-  form.isAllOtherMaterial = form.otherMaterialIds?.includes(0)
-  // 是否甲供
-  form.boolPartyA = form.supplyType === orderSupplyTypeEnum.PARTY_A.V
-  // 签订主体id
-  form.branchCompanyId = form.branchCompany ? form.branchCompany.id : undefined
-  // 供应商id
-  form.supplierId = form.supplier ? form.supplier.id : undefined
+FORM.HOOK.beforeToEdit = async (crud, form) => {
   if (Array.isArray(form.preparationList) && form.preparationList.length > 0) {
     // 获取规格信息以及单位转换
     await setSpecInfoToList(form.preparationList)
@@ -581,12 +607,17 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
   }
 }
 
-CRUD.HOOK.beforeSubmit = (crud, form) => {
+FORM.HOOK.beforeSubmit = () => {
+  form.materialType = undefined
   if (!checkHasSortingEdit()) return false
 }
 
+FORM.HOOK.afterSubmit = () => {
+  emit('success')
+}
+
 // 表单提交数据清理
-crud.submitFormFormat = (form) => {
+cu.submitFormFormat = (form) => {
   form.attachmentIds = form.attachments ? form.attachments.map((v) => v.id) : undefined
   form.auxMaterialIds = form.isAllMaterial ? [0] : form.auxMaterialIds
   form.otherMaterialIds = form.isAllOtherMaterial ? [0] : form.otherMaterialIds
@@ -633,6 +664,14 @@ function saveSortingInfo() {
   sortingInfoMode.value = false
   // 将修改后的分拣信息 替代 原来的分拣信息
   preparationListMap.value.set(currentPreparationSN.value, currentSortingPreparationClone.value)
+}
+
+async function submit() {
+  try {
+    await cu.submit()
+  } catch (error) {
+    console.log('采购合同提交', error)
+  }
 }
 
 // “是否甲供”状态变更

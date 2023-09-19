@@ -49,7 +49,7 @@
         <!-- 单位及其数量 -->
         <material-unit-quantity-columns />
         <!-- 仓库信息 -->
-        <warehouse-info-columns show-project show-monomer show-area show-workshop show-transfer />
+        <warehouse-info-columns show-project show-monomer show-area show-workshop show-transfer showOutboundWorkshop />
         <el-table-column label="出库目的地" width="100px" prop="outboundAddress" align="center"/>
         <el-table-column key="recipient" label="领用人" width="100px" align="center">
           <template #default="{ row }">

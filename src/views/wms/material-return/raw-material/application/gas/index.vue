@@ -156,7 +156,7 @@ const tableRules = {
     { pattern: positiveNumPattern, message: '核算量必须大于0' }
   ],
   quantity: [{ validator: validateQuantity, message: '有计量单位，数量必须大于0' }],
-  factoryId: [{ required: true, message: '请选择工厂' }],
+  workshopId: [{ required: true, message: '请选择车间' }],
   warehouseId: [{ required: true, message: '请选择存储位置' }]
 }
 
@@ -225,7 +225,7 @@ function rowWatch(row) {
 function setRow(row, sourceRow) {
   row.mete = row.mete || sourceRow.mete
   row.quantity = row.quantity || sourceRow.quantity
-  row.factoryId = row.factoryId || sourceRow.factory?.id
+  row.workshopId = row.workshopId || sourceRow.workshop?.id
   row.warehouseId = row.warehouseId || sourceRow.warehouse?.id
 }
 

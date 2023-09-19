@@ -23,7 +23,7 @@ export function add(data) {
     module: 'wms',
     url: 'config/material/warehouse',
     method: 'post',
-    data
+    data: [data]
   })
 }
 
@@ -32,7 +32,7 @@ export function batchAdd(data) {
     module: 'wms',
     url: 'config/material/warehouse/batch',
     method: 'post',
-    data
+    data: data
   })
 }
 
@@ -61,6 +61,35 @@ export function del(ids) {
     url: 'config/material/warehouse',
     method: 'delete',
     data: ids
+  })
+}
+
+// 获取所有仓库车间名称
+export function getWorkshopNameAll(params) {
+  return request({
+    module: 'wms',
+    url: 'config/material/warehouse/ids',
+    method: 'get',
+    params
+  })
+}
+
+// 新增车间名称
+export function addWorkshop(data) {
+  return request({
+    module: 'wms',
+    url: 'config/material/warehouse/workshop/batch',
+    method: 'post',
+    data
+  })
+}
+
+export function delWorkshop(id) {
+  return request({
+    module: 'wms',
+    url: 'config/material/warehouse/workshop',
+    method: 'delete',
+    data: [id]
   })
 }
 

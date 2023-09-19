@@ -1,5 +1,6 @@
 <template>
   <common-table
+    ref="tableRef"
     v-bind="$attrs"
     :data="form.sectionSteelList"
     :cell-class-name="wrongCellMask"
@@ -7,10 +8,13 @@
     :show-empty-symbol="false"
     return-source-data
     row-key="uid"
+    @select="selectTableChange"
+    @select-all="selectAllTableChange"
   >
-    <el-expand-table-column :data="form.sectionSteelList" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
+    <el-table-column v-if="!props.boolPartyA && !props.noDetail" type="selection" width="55" align="center" :selectable="selectable" />
+    <el-expand-table-column :data="form.sectionSteelList" v-model:expand-row-keys="expandRowKeys" row-key="uid" >
       <template #default="{ row }">
-        <div class="mtb-10">
+        <div class="mtb-10" style="margin-left: 30px">
           <el-input
             v-model="row.remark"
             :rows="1"
@@ -22,27 +26,43 @@
             style="width: 400px"
           />
         </div>
+        <div v-if="isNotBlank(row.inboundList)" class="flex-rsc mtb-20" style="margin-left: 30px">
+          <inbound-info-table
+            :stripe="false"
+            :material="row"
+            :basic-class="basicClass"
+            :list="row.inboundList"
+            style="width: 1600px"
+          />
+        </div>
       </template>
     </el-expand-table-column>
-    <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-    <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" />
-    <el-table-column prop="classifyName" sortable :sort-by="['serialNumber']" label="物料种类" align="center" fixed="left" width="120" show-overflow-tooltip >
+    <el-table-column label="序号" type="index" align="center" width="60"  />
+    <el-table-column prop="serialNumber" label="编号" align="center" min-width="110px"  />
+    <el-table-column prop="classifyName" sortable :sort-by="['serialNumber']" label="物料种类" align="center"  min-width="120" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
           <span v-empty-text="row.classifyName" />
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="specification" label="规格" align="center" width="200px" fixed="left" show-overflow-tooltip>
+    <el-table-column prop="specification" label="规格" align="center" min-width="200px"  show-overflow-tooltip>
       <template #default="{ row }">
+        <el-icon-edit
+          v-if="form.selectObj?.[row.mergeId]?.isSelected && Boolean(currentCfg?.spec & basicClass) && !row.boolApplyPurchase"
+          class="el-icon"
+          style="color: #1881ef; vertical-align: middle; margin-right: 5px; cursor: pointer"
+          @click="handleClickEditSpec(row)"
+        />
         <el-tooltip :content="row.specificationLabels" placement="top">
           <span>{{ row.specification }}</span>
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="length" align="center" width="135px" :label="`定尺长度 (${baseUnit.length.unit})`">
+    <el-table-column prop="length" align="center" min-width="135px" :label="`定尺长度 (${baseUnit.length.unit})`">
       <template #default="{ row }">
         <common-input-number
+          v-if="(props.boolPartyA || props.noDetail) ||(form.selectObj?.[row.mergeId]?.isSelected && Boolean(currentCfg?.length & basicClass) && !row.boolApplyPurchase)"
           v-model="row.length"
           :max="999999"
           :controls="false"
@@ -51,74 +71,210 @@
           size="mini"
           placeholder="长"
         />
+        <span v-else>{{ row.length }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="quantity" align="center" width="135px" :label="`数量 (${baseUnit.measure.unit})`">
-      <template #default="{ row }">
-        <common-input-number
-          v-model="row.quantity"
-          :min="1"
-          :max="999999999"
-          controls-position="right"
-          :controls="false"
-          :step="5"
-          :precision="baseUnit.measure.precision"
-          size="mini"
-          placeholder="数量"
-        />
-      </template>
-    </el-table-column>
-    <el-table-column prop="totalLength" align="center" width="135px" :label="`总长度 (m)`" />
-    <el-table-column
-      key="weighingTotalWeight"
-      prop="weighingTotalWeight"
-      align="center"
-      :label="`总重 (${baseUnit.weight.unit})`"
-      width="135px"
-    >
-      <template #default="{ row }">
-        <el-tooltip
-          class="item"
-          effect="dark"
-          :content="`单位重量：${row.unitWeight} kg/m， 理论重量：${row.theoryTotalWeight} kg， ${overDiffTip}`"
-          :disabled="!row.hasOver"
-          placement="top"
-        >
+    <template v-if="props.boolPartyA || props.noDetail">
+      <el-table-column prop="quantity" align="center" min-width="135px" :label="`数量 (${baseUnit.measure.unit})`">
+        <template #default="{ row }">
           <common-input-number
-            v-model="row.weighingTotalWeight"
-            :min="0"
+            v-model="row.quantity"
+            :min="1"
             :max="999999999"
             controls-position="right"
             :controls="false"
-            :precision="baseUnit.weight.precision"
+            :step="5"
+            :precision="baseUnit.measure.precision"
             size="mini"
-            placeholder="重量"
-            :class="{ 'over-weight-tip': row.hasOver }"
-            @change="handleWeightChange(row)"
+            placeholder="数量"
           />
-        </el-tooltip>
-      </template>
-    </el-table-column>
+        </template>
+      </el-table-column>
+      <el-table-column prop="totalLength" align="center" min-width="135px" :label="`总长度 (m)`" />
+      <el-table-column
+        key="weighingTotalWeight"
+        prop="weighingTotalWeight"
+        align="center"
+        :label="`总重 (${baseUnit.weight.unit})`"
+        min-width="135px"
+      >
+        <template #default="{ row }">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="`单位重量：${row.unitWeight} kg/m， 理论重量：${row.theoryTotalWeight} kg， ${overDiffTip}`"
+            :disabled="!row.hasOver"
+            placement="top"
+          >
+            <common-input-number
+              v-model="row.weighingTotalWeight"
+              :min="0"
+              :max="999999999"
+              controls-position="right"
+              :controls="false"
+              :precision="baseUnit.weight.precision"
+              size="mini"
+              placeholder="重量"
+              :class="{ 'over-weight-tip': row.hasOver }"
+              @change="handleWeightChange(row)"
+            />
+          </el-tooltip>
+        </template>
+      </el-table-column>
+    </template>
+    <template v-else>
+      <el-table-column prop="purchaseQuantity" :label="`采购数量 (${baseUnit.measure.unit})`" align="right" min-width="100px">
+        <template #default="{ row }">
+          <span>
+            <el-tooltip effect="dark" content="已入库数量" placement="top">
+              <span class="color-green">{{ row.inboundQuantity }}</span>
+            </el-tooltip>
+            / {{ row.purchaseQuantity }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="purchaseMete" :label="`采购重量 (${baseUnit.weight.unit})`" align="right" min-width="110px">
+        <template #default="{ row }">
+          <span>
+            <el-tooltip effect="dark" content="已入库量" placement="top">
+              <span class="color-green">{{ row.inboundMete }}</span>
+            </el-tooltip>
+            / {{ row.purchaseMete }}
+          </span>
+        </template>
+      </el-table-column>
+    </template>
 
     <!-- 金额设置 -->
-    <price-set-columns v-if="!props.boolPartyA && fillableAmount" />
+    <price-set-columns v-if="!props.boolPartyA && fillableAmount && noDetail" />
 
     <el-table-column prop="brand" label="品牌" align="center" min-width="100px">
       <template #default="{ row }">
-        <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
+        <el-input
+          v-if="(props.boolPartyA || props.noDetail) || ((!props.boolPartyA && !props.noDetail) && form.selectObj?.[row.mergeId]?.isSelected)"
+          v-model.trim="row.brand"
+          maxlength="60"
+          size="mini"
+          placeholder="品牌"
+        />
+        <span v-else v-empty-text>{{ row.brand }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="heatNoAndBatchNo" label="炉批号" align="center" min-width="150px">
       <template #default="{ row }">
-        <el-input v-model.trim="row.heatNoAndBatchNo" size="mini" placeholder="炉批号" maxlength="200" />
+        <el-input
+          v-if="(props.boolPartyA || props.noDetail) || ((!props.boolPartyA && !props.noDetail) && form.selectObj?.[row.mergeId]?.isSelected)"
+          v-model.trim="row.heatNoAndBatchNo"
+          size="mini"
+          placeholder="炉批号"
+          maxlength="200"
+        />
+        <span v-else v-empty-text>{{ row.heatNoAndBatchNo }}</span>
       </template>
     </el-table-column>
-    <el-table-column label="操作" width="70" align="center" fixed="right">
+    <template v-if="!props.boolPartyA && !props.noDetail">
+      <inbound-quantity-column
+        :base-unit="baseUnit"
+        :current-cfg="currentCfg"
+        :basic-class="basicClass"
+        :form="form"
+        :handleOverQuantity="handleOverQuantity"
+      >
+        <template #editColumn="{ row }">
+          <el-table-column prop="specification" label="规格" align="center" min-width="200px"  show-overflow-tooltip>
+            <template #default="{ row: purRow }">
+              <el-icon-edit
+                v-if="form.selectObj?.[row.mergeId]?.isSelected && Boolean(currentCfg?.spec & basicClass)"
+                class="el-icon"
+                style="color: #1881ef; vertical-align: middle; margin-right: 5px; cursor: pointer"
+                @click="handleClickEditSpec(purRow)"
+              />
+              <el-tooltip :content="purRow.specificationLabels" placement="top">
+                <span>{{ purRow.specification }}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column prop="length" align="center" min-width="100px" :label="`定尺长度 (${baseUnit.length.unit})`">
+            <template #default="{ row: purRow }">
+              <common-input-number
+                v-if="(props.boolPartyA || props.noDetail) || (form.selectObj?.[row.mergeId]?.isSelected && Boolean(currentCfg?.length & basicClass))"
+                v-model="purRow.length"
+                :max="999999"
+                :controls="false"
+                :min="0"
+                :precision="baseUnit.length.precision"
+                size="mini"
+                placeholder="长"
+              />
+              <span v-else>{{ purRow.length }}</span>
+            </template>
+          </el-table-column>
+        </template>
+      </inbound-quantity-column>
+      <el-table-column prop="totalLength" align="center" min-width="135px" :label="`实收总长度 (m)`" />
+      <el-table-column prop="theoryTotalWeight" align="center" :label="`理论重量 (${baseUnit.weight.unit})`" min-width="100px" />
+      <el-table-column
+        key="weighingTotalWeight"
+        prop="weighingTotalWeight"
+        align="center"
+        :label="`实收量 (${baseUnit.weight.unit})`"
+        min-width="135px"
+      >
+        <template #default="{ row }">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="`单位重量：${row.unitWeight} kg/m， 理论重量：${row.theoryTotalWeight} kg， ${overDiffTip}`"
+            :disabled="!row.hasOver"
+            placement="top"
+          >
+            <common-input-number
+              v-if="form.selectObj?.[row.mergeId]?.isSelected"
+              v-model="row.weighingTotalWeight"
+              :min="0"
+              :max="999999999"
+              controls-position="right"
+              :controls="false"
+              :precision="baseUnit.weight.precision"
+              size="mini"
+              placeholder="实收量"
+              :class="{ 'over-weight-tip': row.hasOver }"
+              @change="handleWeightChange(row)"
+              @blur="handleOverMete(row)"
+            />
+            <span v-else>{{ row.weighingTotalWeight || '-' }}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+    </template>
+    <el-table-column v-if="props.boolPartyA || props.noDetail" label="操作" width="70" align="center" fixed="right">
       <template #default="{ row, $index }">
         <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sn, $index)" />
       </template>
     </el-table-column>
   </common-table>
+  <common-drawer
+    ref="drawerRef"
+    v-model="materialSelectVisible"
+    title="型材规格选择"
+    :show-close="true"
+    :size="900"
+    custom-class="material-spec-select"
+  >
+    <template #content>
+      <material-spec-select
+        ref="specRef"
+        v-model="editList"
+        :visible="materialSelectVisible"
+        :classifyId="editRow.classifyId"
+        :show-classify="false"
+        mode="selector"
+        :max-height="specSelectMaxHeight"
+        expand-query
+        @change="handleSpecChange"
+      />
+    </template>
+  </common-drawer>
 </template>
 
 <script setup>
@@ -127,9 +283,11 @@ import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 
 import { regExtra } from '@/composables/form/use-form'
+import useEditSectionSpec from '@compos/wms/use-edit-section-spec'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
+import useOverReceive from '@/views/wms/material-inbound/raw-material/application/composables/use-over-receive.js'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSectionSteelTotalLength, calcSectionSteelWeight } from '@/utils/wms/measurement-calc'
@@ -137,6 +295,9 @@ import { positiveNumPattern } from '@/utils/validate/pattern'
 import { DP } from '@/settings/config'
 
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
+import inboundInfoTable from '@/views/wms/material-inbound/raw-material/components/inbound-info-table'
+import inboundQuantityColumn from '@/views/wms/material-inbound/raw-material/application/components/inbound-quantity-column'
+import materialSpecSelect from '@comp-cls/material-spec-select/index.vue'
 
 const props = defineProps({
   boolPartyA: {
@@ -146,18 +307,27 @@ const props = defineProps({
   fillableAmount: {
     type: Boolean,
     default: false
+  },
+  noDetail: {
+    type: Boolean,
+    default: false
   }
 })
 
 // 当前物料基础类型
 const basicClass = matClsEnum.SECTION_STEEL.V
 
+const tableRef = ref()
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 const { form } = regExtra() // 表单
 const expandRowKeys = ref([]) // 展开行key
 
-const { overDiffTip, weightOverDiff, diffSubmitValidate } = useWeightOverDiff(baseUnit) // 过磅重量超出理论重量处理
+const { overDiffTip, weightOverDiff, diffSubmitValidate, currentCfg } = useWeightOverDiff(baseUnit) // 过磅重量超出理论重量处理
+const { handleOverQuantity, handleOverMete } = useOverReceive({ meteField: 'weighingTotalWeight' })
+
+const { specSelectMaxHeight, specRef, drawerRef, editRow, editList, materialSelectVisible, handleClickEditSpec, handleSpecChange } =
+  useEditSectionSpec()
 
 // 校验规则
 const rules = {
@@ -204,6 +374,31 @@ const tableRules = computed(() => {
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules, errorMsg: '请修正【型材清单】中标红的信息' }) // 表格校验
 
+function selectable(row, rowIndex) {
+  return !!row.canPurchaseQuantity || true
+}
+
+function selectTableChange(select, row) {
+  const boolSelect = Boolean(select.findIndex((v) => v.id === row.id) !== -1)
+  form.selectObj[row.mergeId].isSelected = boolSelect
+}
+
+function selectAllTableChange(select) {
+  const boolSelect = Boolean(select?.length)
+  form.sectionSteelList.forEach((v) => {
+    form.selectObj[v.mergeId].isSelected = boolSelect
+  })
+}
+
+// 设置选择的回显
+function setSelect() {
+  form.sectionSteelList.forEach((v) => {
+    if (form.selectObj?.[v.mergeId]?.isSelected) {
+      tableRef.value.toggleRowSelection(v, true)
+    }
+  })
+}
+
 // 行初始化
 function rowInit(row) {
   const _row = reactive({
@@ -247,57 +442,119 @@ function rowWatch(row) {
   // watchEffect(() => calcTheoryWeight(_row))
   // watchEffect(() => calcTotalWeight(_row))
   // watchEffect(() => calcTotalLength(_row))
-  watchEffect(() => weightOverDiff(row))
-  // 计算单件理论重量
-  watch([() => row.length, () => row.unitWeight, baseUnit], () => calcTheoryWeight(row))
-  // 计算总重
-  watch([() => row.theoryWeight, () => row.quantity], () => {
-    calcTotalWeight(row)
-    handleWeightChange(row)
+  watchEffect(() => {
+    weightOverDiff(row)
+    if (row.needFirstCalcTheoryWeight) {
+      if ((props.boolPartyA || props.noDetail) || (form.selectObj?.[row.mergeId]?.isSelected && !row.boolApplyPurchase)) {
+        calcTheoryWeight(row)
+        calcTotalWeight(row)
+      }
+      if (row.boolApplyPurchase && form.selectObj?.[row.mergeId]?.isSelected) {
+        row?.applyPurchase.map(v => {
+          if (isNotBlank(v.length) && isNotBlank(v.quantity)) {
+            v.totalLength = calcSectionSteelTotalLength({
+              length: v.length, // 长度
+              quantity: v.quantity // 数量
+            })
+          } else {
+            v.totalLength = undefined
+          }
+        })
+        row.theoryTotalWeight = row?.applyPurchase?.reduce((a, b) => a + (b.theoryTotalWeight || 0), 0)
+        row.totalLength = row?.applyPurchase?.reduce((a, b) => a + (b.totalLength || 0), 0)
+      }
+      row.needFirstCalcTheoryWeight = false
+    }
   })
+  watch(
+    [() => row.boolApplyPurchase, () => row?.applyPurchase],
+    () => {
+      if (row.boolApplyPurchase && form.selectObj?.[row.mergeId]?.isSelected) {
+        row.quantity = row?.applyPurchase?.reduce((a, b) => a + (b.quantity || 0), 0)
+        row.theoryTotalWeight = row?.applyPurchase?.reduce((a, b) => a + (b.theoryTotalWeight || 0), 0)
+        row.totalLength = row?.applyPurchase?.reduce((a, b) => a + (b.totalLength || 0), 0)
+      }
+    },
+    { deep: true }
+  )
+  watch(
+    () => row,
+    () => {
+      if (!props.boolPartyA && !props.noDetail && form.selectObj?.[row.mergeId]?.isSelected) {
+        const _isSelected = form.selectObj[row.mergeId]?.isSelected
+        form.selectObj[row.mergeId] = {
+          ...form.selectObj[row.mergeId],
+          ...row,
+          mete: row.weighingTotalWeight,
+          isSelected: _isSelected
+        }
+      }
+    },
+    { deep: true }
+  )
+  if (!row.boolApplyPurchase) {
+    // 计算单件理论重量
+    watch([() => row.length, () => row.unitWeight, baseUnit], () => calcTheoryWeight(row))
+    // 计算总重
+    watch([() => row.theoryWeight, () => row.quantity], () => {
+      calcTotalWeight(row)
+    })
+  }
+  watch(
+    () => row.weighingTotalWeight,
+    () => {
+      handleWeightChange(row)
+    }
+  )
   // 计算总长度
-  watch([() => row.length, () => row.quantity], () => { calcTotalLength(row) })
+  watch([() => row.length, () => row.quantity], () => {
+    calcTotalLength(row)
+  })
 }
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
 // 计算单件重量
 async function calcTheoryWeight(row) {
-  row.theoryWeight = await calcSectionSteelWeight(
-    {
-      length: row.length, // 长度
-      unitWeight: row.unitWeight // 单位重量
-    }
-  )
+  row.theoryWeight = await calcSectionSteelWeight({
+    length: row.length, // 长度
+    unitWeight: row.unitWeight // 单位重量
+  })
 }
 
 // 计算总长
 function calcTotalLength(row) {
-  if (isNotBlank(row.length) && row.quantity) {
-    row.totalLength = calcSectionSteelTotalLength(
-      {
+  if ((props.boolPartyA || props.noDetail) || (form.selectObj?.[row.mergeId]?.isSelected && !row.boolApplyPurchase)) {
+    if (isNotBlank(row.length) && row.quantity) {
+      row.totalLength = calcSectionSteelTotalLength({
         length: row.length, // 长度
         quantity: row.quantity // 数量
-      }
-    )
-  } else {
-    row.totalLength = undefined
+      })
+    } else {
+      row.totalLength = undefined
+    }
   }
 }
 
 // 计算总重
 function calcTotalWeight(row) {
   if (isNotBlank(row.theoryWeight) && row.quantity) {
-    row.theoryTotalWeight = row.theoryWeight * row.quantity
-    row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity)
+    row.theoryTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
+    if (props.boolPartyA || props.noDetail) {
+      row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
+    }
+    console.log(row.weighingTotalWeight)
   } else {
     row.theoryTotalWeight = undefined
-    row.weighingTotalWeight = undefined
+    if (props.boolPartyA || props.noDetail) {
+      row.weighingTotalWeight = undefined
+    }
   }
 }
 
 // 处理重量变化
 function handleWeightChange(row) {
   if (isNotBlank(row.unitPrice) && isNotBlank(row.weighingTotalWeight)) {
+    console.log(row.unitPrice, row.weighingTotalWeight)
     row.amount = toPrecision(row.weighingTotalWeight * row.unitPrice, DP.YUAN)
   }
 }
@@ -313,15 +570,28 @@ function delRow(sn, $index) {
 
 // 校验
 function validate() {
-  if (isBlank(form.sectionSteelList)) return true
-  const { validResult, dealList } = tableValidate(form.sectionSteelList)
-  form.sectionSteelList = dealList
+  const _list = form.sectionSteelList.filter((v) => {
+    if ((props.boolPartyA || props.noDetail) || form.selectObj[v.mergeId]?.isSelected) {
+      return true
+    } else {
+      return false
+    }
+  })
+  if (isBlank(_list)) return true
+  const { validResult } = tableValidate(_list)
+  // form.sectionSteelList = dealList
   return validResult
+}
+
+function toggleRowSelection(row, selected) {
+  tableRef?.value?.toggleRowSelection(row, selected)
 }
 
 defineExpose({
   rowInit,
   rowWatch,
-  validate
+  toggleRowSelection,
+  validate,
+  setSelect
 })
 </script>

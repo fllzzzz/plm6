@@ -15,7 +15,7 @@ const getMaterialIW = {
             id: 1,
             classifyId: 204,
             // 'serialNumber': /[0-9]{10}/,
-            factory: { id: 3, name: '1号工厂' },
+            workshop: { id: 3, name: '1号车间' },
             // 'fullClassifyName': '紧固件>高强螺栓>大六角',
             // 'classifyName': '大六角',
             specification: 'M26 * 65',
@@ -30,7 +30,7 @@ const getMaterialIW = {
             id: 2,
             classifyId: 204,
             // 'serialNumber': /[0-9]{10}/,
-            // factory: undefined,
+            // workshop: undefined,
             // 'fullClassifyName': '紧固件>螺母',
             // 'classifyName': '螺母',
             specification: 'M26 * 70',
@@ -112,7 +112,7 @@ const getInventoryNotifyConf = {
       data: {
         content: [
           {
-            factoryId: 3,
+            workshopId: 3,
             userIds: [23, 36, 52],
             deptIds: [22]
           }

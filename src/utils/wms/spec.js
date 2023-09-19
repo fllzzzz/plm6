@@ -2,9 +2,9 @@ import store from '@/store'
 import { isBlank, isNotBlank } from '../data-type'
 import { uniqueArr } from '../data-type/array'
 import { measureTypeEnum } from '../enum/modules/wms'
-import { rawMatClsEnum } from '@enum-ms/classification'
+import { matClsEnum } from '@enum-ms/classification'
 import { specFormat } from './spec-format'
-import { STEEL_ENUM } from '@/settings/config'
+import { STEEL_ENUM, MANUF_ENUM } from '@/settings/config'
 
 /**
  * 为列表设置规格
@@ -19,6 +19,12 @@ export async function setSpecInfoToList(list, { multipleSpec = false, prefix } =
     _list = _list.map(item => item[prefix])
   }
   try {
+    // 处理制成品
+    const _manufList = _list.filter(v => v.basicClass & MANUF_ENUM)
+    _manufList.forEach(row => {
+      setManufSpecInfoForData(row)
+    })
+
     // 所有的promise
     const allPromise = []
     // 单个promise
@@ -112,14 +118,24 @@ export function setSpecInfoForData(data, info, multipleSpec = false) {
     data.outboundUnit = data.outboundUnitType === measureTypeEnum.MEASURE.V ? data.measureUnit : data.accountingUnit // 出库单位
     data.outboundUnitPrecision = data.outboundUnitType === measureTypeEnum.MEASURE.V ? data.measurePrecision : data.accountingPrecision // 出库单位精度
 
-    data.rejectUnitType = data.basicClass === rawMatClsEnum.STEEL_COIL.V ? measureTypeEnum.ACCOUNTING.V : data.outboundUnitType // 退库方式
+    data.rejectUnitType = data.basicClass === matClsEnum.STEEL_COIL.V ? measureTypeEnum.ACCOUNTING.V : data.outboundUnitType // 退库方式
     data.rejectUnit = data.rejectUnitType === measureTypeEnum.MEASURE.V ? data.measureUnit : data.accountingUnit // 退库单位
     data.rejectUnitPrecision = data.rejectUnitType === measureTypeEnum.MEASURE.V ? data.measurePrecision : data.accountingPrecision // 退库单位精度
     // data.specification = info.spec // 规格
     data.specKV = info.specKV // 规格KV格式（例：key: 材质id ， val: 'Q235B'）
     data.specNameKV = info.specNameKV // 规格KV格式 （例：key: 材质 ， val: 'Q235B'）
-    if (data.basicClass === rawMatClsEnum.SECTION_STEEL.V) {
+    if (data.basicClass === matClsEnum.SECTION_STEEL.V) {
       data.unitWeight = info.unitWeight // 单位重量 kg/m
     }
   }
+}
+
+// 制成品设置规格
+export function setManufSpecInfoForData(data) {
+  const baseUnit = store.state.wms.baseUnit[data.basicClass]
+  data.specMerge = specFormat(data) // 处理规格
+  data.measureUnit = baseUnit.measure.unit // 计量单位
+  data.measurePrecision = baseUnit.measure.precision // 计量单位小数精度
+  data.accountingUnit = baseUnit.accounting.unit // 核算单位
+  data.accountingPrecision = baseUnit.accounting.precision // 核算单位小数精度
 }

@@ -86,7 +86,7 @@ import { workshopTypeEnum } from '@enum-ms/common'
 import { regHeader } from '@compos/use-crud'
 import { schedulingDataPM as permission } from '@/page-permission/mes'
 // import { parseTime } from '@/utils/date'
-import workshopSelect from '@comp-mes/workshop-select'
+import workshopSelect from '@/components-system/base/workshop-select.vue'
 import Panel from '@/components/Panel'
 import moment from 'moment'
 

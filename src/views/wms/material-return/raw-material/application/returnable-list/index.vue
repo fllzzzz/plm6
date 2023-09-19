@@ -47,7 +47,7 @@
         </el-table-column>
       </template>
       <!-- 仓库信息 -->
-      <warehouse-info-columns :columns="columns" show-project show-monomer show-area />
+      <warehouse-info-columns :columns="columns" show-project show-monomer show-area showOutboundWorkshop />
       <el-table-column
         v-if="columns.visible('outboundSN')"
         key="outboundSN"
@@ -100,6 +100,7 @@ import crudApi from '@/api/wms/material-return/raw-material/returnable-list'
 import { rawMaterialReturnableListPM as permission } from '@/page-permission/wms'
 import { computed, defineEmits, defineProps, defineExpose, provide, reactive, ref, watchEffect } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
+import { STEEL_ENUM, MANUF_ENUM } from '@/settings/config'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { calcTheoryWeight } from '@/utils/wms/measurement-calc'
@@ -108,7 +109,6 @@ import { specFormat } from '@/utils/wms/spec-format'
 import { toFixed } from '@/utils/data-type'
 import { MIN_UNIT } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
-import { STEEL_ENUM } from '@/settings/config'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -221,7 +221,7 @@ const basicClass = computed(() => {
 watchEffect(() => calcReturnInfo())
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
-  const meteKey = props.basicClass & STEEL_ENUM ? ['mete', 'returnableMete'] : ['mete', 'returnableMete', 'singleReturnableMete', 'singleMete']
+  const meteKey = (props.basicClass & STEEL_ENUM || props.basicClass & MANUF_ENUM) ? ['mete', 'returnableMete'] : ['mete', 'returnableMete', 'singleReturnableMete', 'singleMete']
   await setSpecInfoToList(data.content)
   data.content = await numFmtByBasicClass(
     data.content,
@@ -245,7 +245,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
       row.totalLength = row.length * row.quantity
       row.sourceReturnableLength = row.returnableLength
     }
-    if (props.basicClass & STEEL_ENUM) {
+    if (props.basicClass & STEEL_ENUM || props.basicClass & MANUF_ENUM) {
       row.singleMete = convertUnits(row.singleMete, MIN_UNIT.WEIGHT, curMatBaseUnit.value.weight?.unit, 5)
       row.singleReturnableMete = convertUnits(row.singleReturnableMete, MIN_UNIT.WEIGHT, curMatBaseUnit.value.weight?.unit, 5)
     }
@@ -269,7 +269,7 @@ function handleAddReturn(row) {
     measurePrecision: row.measurePrecision // 计量单位小数精度
   })
   if (selectList.length > 0) {
-    newData.factoryId = -1 // 工厂 同上
+    newData.workshopId = -1 // 车间 同上
     newData.warehouseId = -1 // 仓库 同上
   }
   // setBasicInfoForData(row, newData)

@@ -30,7 +30,7 @@
             <el-form-item label="单体" prop="monomerId" label-width="55px">
               <common-select
                 v-model="form.monomerId"
-                :options="form.projectId && projectMap?.[form.projectId]?.children || []"
+                :options="(form.projectId && projectMap?.[form.projectId]?.children) || []"
                 :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
                 class="input-underline"
                 clearable
@@ -42,7 +42,7 @@
             <el-form-item label="区域" prop="areaId" label-width="55px">
               <common-select
                 v-model="form.areaId"
-                :options="form.monomerId && monomerMap?.[form.monomerId]?.children || []"
+                :options="(form.monomerId && monomerMap?.[form.monomerId]?.children) || []"
                 :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
                 class="input-underline"
                 clearable
@@ -52,9 +52,9 @@
               />
             </el-form-item>
           </template>
-            <el-form-item v-else label="项目" prop="projectId" label-width="55px">
-              <span v-parse-project="{ project: currentProject }" v-empty-text style="display: inline-block; min-width: 150px" />
-            </el-form-item>
+          <el-form-item v-else label="项目" prop="projectId" label-width="55px">
+            <span v-parse-project="{ project: currentProject }" v-empty-text style="display: inline-block; min-width: 150px" />
+          </el-form-item>
         </template>
         <el-form-item label="出库目的地" prop="outboundAddress" label-width="95px">
           <common-radio v-model="form.outboundAddress" :options="outboundDestinationTypeEnum.ENUM" type="enum" size="small" />
@@ -111,13 +111,13 @@
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" :show-batch-no="false" />
         <warehouse-info-columns />
-        <el-table-column label="车间" width="170px" align="center" fixed="right">
+        <el-table-column label="车间" width="170px" align="center" fixed="right" prop="workshopId">
           <template #default="{ row: { sourceRow: row }, $index }">
             <workshop-select
               v-model="row.workshopId"
-              :factory-id="row.factory?.id"
-              :show-extra="$index !== 0"
+              :type="warehouseTypeEnum.WORKSHOP.V"
               placeholder="可选择车间"
+              :show-extra="$index !== 0"
               style="width: 100%"
               clearable
             />
@@ -166,6 +166,7 @@ import { isBlank } from '@/utils/data-type'
 import { numFmtByUnitForList } from '@/utils/wms/convert-unit'
 import { materialOperateColumns } from '@/utils/columns-format/wms'
 import { getProjectInfo } from '@/utils/project'
+import { warehouseTypeEnum } from '@enum-ms/wms'
 
 import useTableValidate from '@compos/form/use-table-validate'
 import useVisible from '@compos/use-visible'
@@ -180,7 +181,7 @@ import materialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import materialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import workshopSelect from '@/components-system/base/workshop-select.vue'
+import workshopSelect from '@/components-system/wms/workshop-select.vue'
 import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['success', 'update:visible'])
@@ -212,6 +213,15 @@ const { projectMap, monomerMap } = useProjectTree()
 const steelRules = {
   projectId: [{ required: true, message: '请选择出库项目', trigger: 'change' }]
 }
+const tableRules = {
+  workshopId: [{ required: true, message: '请选择出库车间', trigger: 'change' }]
+}
+const ditto = new Map([
+  ['workshopId', -1]
+])
+
+// 表格校验
+const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, errorMsg: '请选择出库车间', ditto })
 
 // 校验
 const rules = computed(() => {
@@ -223,15 +233,6 @@ const rules = computed(() => {
   }
   return _rules
 })
-
-const tableRules = {
-}
-const ditto = new Map([
-  ['workshopId', -1]
-])
-
-// 表格校验
-const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })
 
 // 表单ref
 const formRef = ref()

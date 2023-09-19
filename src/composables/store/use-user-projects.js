@@ -1,5 +1,6 @@
 import { computed, watch } from 'vue'
 import { useStore } from 'vuex'
+import { allPT } from '@/settings/config'
 
 // 获取项目
 const useUserProjects = (loadedCallBack) => {
@@ -27,6 +28,7 @@ const useUserProjects = (loadedCallBack) => {
 
   return {
     loaded,
+    projectsAll: computed(() => store.state.project.userProjectsMap?.[allPT] || []),
     projects: computed(() => store.state.project.userProjects),
     processProjects: computed(() => store.state.project.userProcessProjects),
     projectsCascade: computed(() => store.state.project.userProjectsCascade),

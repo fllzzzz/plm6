@@ -598,8 +598,10 @@ export const bridgeCuttingConfigPM = {
 
 // WMS-配置管理/基础配置
 export const configWmsBasicForPM = {
-  // basicInboundGet: ['config_wms_basicInbound:get'], // 查看 基础入库配置信息
-  // basicInboundEdit: ['config_wms_basicInbound:edit'], // 编辑 基础入库配置信息
+  basicInboundGet: ['config_wms_basicInbound:get'], // 查看 基础入库配置信息
+  basicInboundEdit: ['config_wms_basicInbound:edit'], // 编辑 基础入库配置信息
+  basicPurchaseGet: ['config_wms_basicPurchase:get'], // 查看 基础采购配置信息
+  basicPurchaseEdit: ['config_wms_basicPurchase:edit'], // 编辑 基础采购配置信息
   reportCenterGet: ['config_wms_reportCenter:get'], // 查看 报表中心下载配置信息
   reportCenterEdit: ['config_wms_reportCenter:edit'], // 编辑 报表中心下载配置信息
   steelInboundGet: ['config_wms_steelInbound:get'], // 查看 钢材入库配置信息
@@ -617,7 +619,7 @@ export const configWmsBasicForPM = {
 }
 
 // WMS-配置管理/仓库设置
-export const configWmsFactoryWarehousePM = {
+export const configWmsWorkshopWarehousePM = {
   get: ['config_wms_factory_warehouse:get'], // 查看 工厂仓库设置
   add: ['config_wms_factory_warehouse:add'], // 添加 工厂仓库设置
   edit: ['config_wms_factory_warehouse:edit'], // 编辑 工厂仓库设置
@@ -670,6 +672,12 @@ export const memberConfigPM = {
 // ########################################################################
 
 // --------------------------- 审批管理 start --------------------------
+
+// 审批管理/基础配置
+export const configProcessBasicPM = {
+  approvalConfigGet: ['company_process_approval_config:get'], // 查看 审批配置
+  approvalConfigEdit: ['company_process_approval_config:edit'] // 编辑 审批配置
+}
 
 // 审批管理/公司审批流程
 export const companyProcessConfigPM = {

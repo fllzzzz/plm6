@@ -18,6 +18,9 @@ export const STAINLESS_STEEL_DENSITY = 7.93
 // 钢材的val
 export const STEEL_ENUM = matClsEnum.STEEL_PLATE.V | matClsEnum.SECTION_STEEL.V | matClsEnum.STEEL_COIL.V
 
+// 制成品的val
+export const MANUF_ENUM = matClsEnum.STRUC_MANUFACTURED.V | matClsEnum.ENCL_MANUFACTURED.V
+
 // 产品类型对应默认计价方式
 export const wageQuotaTypeMap = {
   [processMaterialListTypeEnum.ARTIFACT.V]: wageQuotaTypeEnum.WEIGHT.V | wageQuotaTypeEnum.LENGTH.V | wageQuotaTypeEnum.QUANTITY.V | wageQuotaTypeEnum.AREA.V,
@@ -68,6 +71,16 @@ MAT_BASE_UNIT[STEEL_ENUM] = {
   weight: { unit: 'kg', precision: 0 },
   length: { unit: 'mm', precision: 0 },
   width: { unit: 'mm', precision: 0 }
+}
+
+MAT_BASE_UNIT[matClsEnum.STRUC_MANUFACTURED.V] = {
+  measure: { unit: '件', precision: 0 },
+  accounting: { unit: 'kg', precision: 3 }
+}
+
+MAT_BASE_UNIT[matClsEnum.ENCL_MANUFACTURED.V] = {
+  measure: { unit: '张', precision: 0 },
+  accounting: { unit: 'm', precision: 3 }
 }
 
 // 钢材单位

@@ -16,10 +16,14 @@ import { mapGetters } from '@/store/lib'
 import { deepClone, isBlank } from '@/utils/data-type'
 import { outboundDestinationTypeEnum } from '@/utils/enum/modules/wms'
 
+import useWorkshopName from '@compos/store/use-workshop-name'
+
 import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
 import commonFormItem from '../components/common-form-item.vue'
 import commonMaterialInfo from '../components/common-material-info.vue'
 import { numFmtByUnit } from '@/utils/wms/convert-unit'
+
+const { mesWorkShopName } = useWorkshopName()
 
 const props = defineProps({
   basicClass: {
@@ -47,7 +51,8 @@ const validateQuantity = (rule, value, callback) => {
 
 const rules = ref({
   quantity: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
-  remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }]
+  remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }],
+  workshopId: [{ required: true, message: '请选择出库车间', trigger: 'change' }]
 })
 
 const formRef = ref()
@@ -80,7 +85,7 @@ function formInit(data) {
     materialId: data.id, // 物料id
     monomerId: data?.monomerId, // 单体id
     areaId: data?.areaId, // 区域id
-    factoryId: data.factory?.id, // 车间id
+    workshopId: mesWorkShopName.value?.findIndex(v => v.id === data.workshop?.id) > -1 ? data.workshop?.id : undefined, // 车间id
     outboundUnit: data.outboundUnit, // 出库单位
     outboundUnitPrecision: data.outboundUnitPrecision, // 出库单位精度
     outboundAddress: outboundDestinationTypeEnum.FACTORY.V, // 出库目的地

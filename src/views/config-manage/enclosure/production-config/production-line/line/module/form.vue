@@ -86,7 +86,7 @@ import { workshopTypeEnum } from '@enum-ms/common'
 
 import { regForm } from '@compos/use-crud'
 import factorySelect from '@comp-base/factory-select.vue'
-import workshopSelect from '@comp-mes/workshop-select'
+import workshopSelect from '@/components-system/base/workshop-select.vue'
 
 const formRef = ref()
 

@@ -64,8 +64,8 @@
 import { inject } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import { boolPrintedEnum, workshopTypeEnum } from '@enum-ms/common'
+import workshopSelect from '@/components-system/base/workshop-select.vue'
 import { mesMachinePartOrderTypeEnum } from '@enum-ms/mes'
-import workshopSelect from '@comp-mes/workshop-select'
 import crudOperation from '@crud/CRUD.operation'
 
 const defaultQuery = {

@@ -49,11 +49,12 @@
         <template v-if="showAmount">
           <amount-info-columns v-if="!boolPartyA" />
         </template>
-        <el-table-column prop="requisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
+        <!-- <el-table-column prop="requisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip /> -->
         <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
         <el-table-column prop="monomerName" label="单体" align="left" min-width="120px" show-overflow-tooltip />
         <el-table-column prop="areaName" label="区域" align="left" min-width="120px" show-overflow-tooltip />
-        <warehouse-info-columns />
+        <warehouse-info-columns v-if="!boolManuf" />
+        <el-table-column v-else prop="workshop.name" label="车间" align="left" min-width="120px" show-overflow-tooltip />
       </common-table>
     </template>
   </common-drawer>
@@ -62,6 +63,7 @@
 <script setup>
 import { inject, computed, ref } from 'vue'
 import { orderSupplyTypeEnum, inboundFillWayEnum } from '@enum-ms/wms'
+import { materialPurchaseClsEnum } from '@/utils/enum/modules/classification'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
@@ -127,15 +129,15 @@ const { maxHeight } = useMaxHeight(
 const order = computed(() => detail.purchaseOrder || {})
 
 // 显示金额相关信息（（统一为入库填写，取消后台配置）
-// const fillableAmount = ref(false)
 const fillableAmount = computed(() =>
   inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false
 )
 
 // 显示金额
-const showAmount = computed(() => checkPermission(permission.showAmount) || fillableAmount.value)
+const showAmount = computed(() => checkPermission(permission.showAmount) && fillableAmount.value)
 // 是否甲供订单
 const boolPartyA = computed(() => order.value?.supplyType === orderSupplyTypeEnum.PARTY_A.V)
+const boolManuf = computed(() => detail.basicClass & materialPurchaseClsEnum.MANUFACTURED.V)
 // 标题
 const drawerTitle = computed(() =>
   crud.detailLoading ? `入库单` : `入库单：${detail.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : '无供应商'} ）`

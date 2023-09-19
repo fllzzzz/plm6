@@ -2,8 +2,8 @@ import { constantize } from '../base'
 
 // 入库填写方式（金额及工厂在什么阶段填写）
 const inboundFillWayEnum = {
-  APPLICATION: { L: '入库提交时填写', K: 'APPLICATION', V: 1 << 0 },
-  REVIEWING: { L: '入库审核时填写', K: 'REVIEWING', V: 1 << 1 }
+  APPLICATION: { L: '入库提交时显示', K: 'APPLICATION', V: 1 << 0 },
+  REVIEWING: { L: '入库审核时显示', K: 'REVIEWING', V: 1 << 1 }
 }
 constantize(inboundFillWayEnum)
 
@@ -42,13 +42,6 @@ const unitTypeEnum = {
   OUTBOUND: { L: '出库单位', K: 'OUTBOUND', V: 3 }
 }
 constantize(unitTypeEnum)
-
-// 仓库类型
-const warehouseTypeEnum = {
-  NORMAL: { L: '普通', K: 'NORMAL', V: 1 << 0 },
-  WORKSHOP: { L: '车间', K: 'WORKSHOP', V: 1 << 1 }
-}
-constantize(warehouseTypeEnum)
 
 // 项目仓库类型
 const projectWarehouseTypeEnum = {
@@ -137,10 +130,17 @@ constantize(borrowReturnStatusEnum)
 const preparationTypeEnum = {
   PROJECT: { L: '项目备料', K: 'PROJECT', V: 1 << 0 },
   // PARTY_A: { L: '项目甲供备料', K: 'PARTY_A', V: 1 << 1 },
-  PUBLIC: { L: '公共备料', K: 'PROJECT', V: 1 << 2 },
-  MANUFACTURED: { L: '外协加工', K: 'PROJECT', V: 1 << 3 }
+  PUBLIC: { L: '公共备料', K: 'PROJECT', V: 1 << 2 }
+  // MANUFACTURED: { L: '外协加工', K: 'PROJECT', V: 1 << 3 }
 }
 constantize(preparationTypeEnum)
+
+// 材料申购方式
+const requisitionModeEnum = {
+  PURCHASE: { L: '采购', K: 'PURCHASE', V: 1 << 0 },
+  USE_INVENTORY: { L: '利用库存', K: 'USE_INVENTORY', V: 1 << 1 }
+}
+constantize(requisitionModeEnum)
 
 // 基础材料类型/采购类型
 const baseMaterialTypeEnum = {
@@ -168,6 +168,7 @@ constantize(receiptTypeEnum)
 // 冻结类型
 const materialFreezeTypeEnum = {
   PREPARATION: receiptTypeEnum.PREPARATION,
+  REQUISITIONS: receiptTypeEnum.REQUISITIONS,
   OUTBOUND_APPLY: { L: '出库', K: 'OUTBOUND_APPLY', V: receiptTypeEnum.OUTBOUND_APPLY.V, DOC: '出库申请单' },
   TRANSFER: receiptTypeEnum.TRANSFER,
   REJECTED: receiptTypeEnum.REJECTED,
@@ -206,6 +207,14 @@ const purchaseStatusEnum = {
 }
 constantize(purchaseStatusEnum)
 
+// (申购单采购状态)
+const requisitionStatusEnum = {
+  NOT_STARTED: { L: '未开始', K: 'NOT_STARTED', V: 1 << 0, T: '' },
+  PARTIALLY_COMPLETED: { L: '部分采购', K: 'PARTIALLY_COMPLETED', V: 1 << 1, T: 'warning' },
+  COMPLETED: { L: '已采购', K: 'COMPLETED', V: 1 << 2, T: 'success' }
+}
+constantize(requisitionStatusEnum)
+
 // 物料退货状态
 const materialRejectStatusEnum = {
   ALL: { L: '全部退货', K: 'ALL', V: 1 << 3, COLOR: '#f56c6c' },
@@ -242,6 +251,12 @@ const inspectionDetailStatusEnum = {
 }
 constantize(inspectionDetailStatusEnum)
 
+// 配置仓库类型
+const warehouseTypeEnum = {
+  WORKSHOP: { L: '车间', K: 'WORKSHOP', V: 1 << 0 },
+  NORMAL: { L: '普通', K: 'NORMAL', V: 1 << 1 }
+}
+constantize(warehouseTypeEnum)
 // 出库目的地类型
 const outboundDestinationTypeEnum = {
   FACTORY: { L: '工厂', K: 'FACTORY', V: 1 },
@@ -255,7 +270,6 @@ export {
   inboundFillWayEnum,
   measureTypeEnum,
   unitTypeEnum,
-  warehouseTypeEnum,
   projectWarehouseTypeEnum,
   materialIsWholeEnum,
   materialOutboundModeEnum,
@@ -265,8 +279,10 @@ export {
   borrowReturnStatusEnum,
   outboundRelationTypeEnum,
   preparationTypeEnum,
+  requisitionModeEnum,
   baseMaterialTypeEnum,
   purchaseStatusEnum,
+  requisitionStatusEnum,
   purchaseOrderPaymentModeEnum,
   materialFreezeTypeEnum,
   pickUpModeEnum,
@@ -279,6 +295,7 @@ export {
   inspectionDetailStatusEnum,
   materialWeightingWayEnum,
   materialLabelPrintTypeEnum,
+  warehouseTypeEnum,
   outboundDestinationTypeEnum,
   returnAuditEnum
 }
@@ -289,7 +306,6 @@ export default {
   inboundFillWayEnum,
   measureTypeEnum,
   unitTypeEnum,
-  warehouseTypeEnum,
   projectWarehouseTypeEnum,
   materialIsWholeEnum,
   materialOutboundModeEnum,
@@ -299,8 +315,10 @@ export default {
   borrowReturnStatusEnum,
   outboundRelationTypeEnum,
   preparationTypeEnum,
+  requisitionModeEnum,
   baseMaterialTypeEnum,
   purchaseStatusEnum,
+  requisitionStatusEnum,
   purchaseOrderPaymentModeEnum,
   materialFreezeTypeEnum,
   pickUpModeEnum,
@@ -313,6 +331,7 @@ export default {
   inspectionDetailStatusEnum,
   materialWeightingWayEnum,
   materialLabelPrintTypeEnum,
+  warehouseTypeEnum,
   outboundDestinationTypeEnum,
   returnAuditEnum
 }

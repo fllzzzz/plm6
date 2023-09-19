@@ -1,8 +1,22 @@
 <template>
   <div class="head-container">
-    <factory-tabs v-model="query.factoryId" @tab-click="handleTabClick" />
-    <template v-if="query.factoryId">
-      <crud-operation :disabled="!query.factoryId">
+    <el-tabs v-if="isNotBlank(workshopName)" v-model="query.workshopId" tab-position="top" @tab-click="tabClick">
+      <el-tab-pane v-for="item in workshopName" :key="item.id" :label="item.name" :name="`${item.id}`" />
+    </el-tabs>
+    <el-tag v-else type="danger" style="margin:15px 0">* 请先添加仓库名称</el-tag>
+      <!-- <common-radio-button
+        v-model="query.workshopId"
+        :options="workshopName"
+        showOptionAll
+        type="other"
+        :data-structure="{ key: 'id', label: 'name', value: 'id' }"
+        class="filter-item"
+        @change="workshopNameChange"
+      /> -->
+      <crud-operation :disabled="!query.workshopId">
+        <template #optLeft>
+          <common-button icon="el-icon-plus" type="success" class="filter-item" size="mini" @click="workshopVisible=true">仓库名称</common-button>
+        </template>
         <template #viewLeft>
           <common-radio-button
             v-model="query.enabled"
@@ -14,25 +28,47 @@
           />
         </template>
       </crud-operation>
-    </template>
+      <workshopList v-model="workshopVisible" />
   </div>
 </template>
 
 <script setup>
-import { enabledEnum } from '@enum-ms/common'
+import { ref, watch } from 'vue'
+import useWorkshopName from '@compos/store/use-workshop-name'
 
+import { enabledEnum } from '@enum-ms/common'
+import { isNotBlank } from '@data-type/index'
+import { warehouseTypeEnum } from '@enum-ms/wms'
 import { regHeader } from '@compos/use-crud'
-import FactoryTabs from '@comp-base/factory-tabs.vue'
 import CrudOperation from '@crud/CRUD.operation.vue'
+import workshopList from './workshop-list'
+
 const defaultQuery = {
-  factoryId: undefined, // 工厂
+  workshopId: undefined, // 车间
   enabled: undefined // 使用状态
 }
 
 const { crud, query } = regHeader(defaultQuery)
 
-function handleTabClick(data) {
-  crud.props.factory = data
+const workshopVisible = ref(false)
+
+const { workshopName } = useWorkshopName()
+
+watch(
+  () => workshopName.value,
+  (val) => {
+    if (val && val.length) {
+      crud.query.workshopId = (crud.query.workshopId || workshopName.value[0]?.id) ? (crud.query.workshopId || workshopName.value[0]?.id) + '' : undefined
+      crud.query.warehouseType = isNotBlank(workshopName.value[0]) ? (workshopName.value[0].workshopId ? warehouseTypeEnum.WORKSHOP.V : warehouseTypeEnum.NORMAL.V) : undefined
+      crud.toQuery()
+    }
+  },
+  { immediate: true, deep: true }
+)
+
+function tabClick() {
+  const findVal = workshopName.value.find(v => v.id === Number(crud.query.workshopId)) || {}
+  crud.query.warehouseType = isNotBlank(findVal) ? (findVal.workshopId ? warehouseTypeEnum.WORKSHOP.V : warehouseTypeEnum.NORMAL.V) : undefined
   crud.toQuery()
 }
 </script>

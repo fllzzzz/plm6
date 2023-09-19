@@ -3,11 +3,11 @@
     <el-row :gutter="20">
       <el-col :xs="24" :sm="24" :md="12" :lg="8">
         <!-- 入库基础 -->
-        <basic-inbound v-if="checkPermission (permission.basicInboundGet)" class="card" />
+        <basic-inbound v-if="checkPermission(permission.basicInboundGet)" class="card" />
+        <!-- 采购基础 -->
+        <basic-purchase v-if="checkPermission(permission.basicPurchaseGet)" class="card" />
         <!-- 钢板入库 -->
-        <steel-inbound v-if="checkPermission(permission.steelInboundGet)" class="card" />
-        <!-- 报表中心 -->
-        <report-center v-if="checkPermission(permission.reportCenterGet)" class="card" />
+        <!-- <steel-inbound v-if="checkPermission(permission.steelInboundGet)" class="card" /> -->
       </el-col>
       <el-col :xs="24" :sm="24" :md="12" :lg="8">
         <!-- 出库基础-->
@@ -20,6 +20,8 @@
       <el-col :xs="24" :sm="24" :md="12" :lg="8">
         <!-- 甲供归还 -->
         <party-a-borrow-return v-if="checkPermission(permission.partyABorrowReturnGet)" class="card" />
+        <!-- 报表中心 -->
+        <report-center v-if="checkPermission(permission.reportCenterGet)" class="card" />
          <!-- 退库审核 -->
         <basic-return v-if="checkPermission(permission.basicReturnGet)" class="card" />
       </el-col>
@@ -33,7 +35,8 @@ import { provide } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 
 import BasicInbound from './module/basic-inbound.vue'
-import SteelInbound from './module/steel-inbound.vue'
+import BasicPurchase from './module/basic-purchase.vue'
+// import SteelInbound from './module/steel-inbound.vue'
 import BasicOutbound from './module/basic-outbound.vue'
 import ReportCenter from './module/report-center.vue'
 // import BasicReject from './module/basic-reject.vue'
