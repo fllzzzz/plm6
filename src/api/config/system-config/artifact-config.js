@@ -36,4 +36,14 @@ export function del(ids) {
   })
 }
 
+// 构件特征定义修改审核
+export function audit(data) {
+  return request({
+    module: 'contract',
+    url: 'system/structure-classification/auditUpdate',
+    method: 'put',
+    data
+  })
+}
+
 export default { get, add, edit, del }

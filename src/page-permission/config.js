@@ -163,7 +163,9 @@ export const configMesBasePM = {
   appTaskReportGet: ['app_task_report:get'], // 查看app任务上报重量显示
   appTaskReportEdit: ['app_task_report:edit'], // 编辑app任务上报重量显示
   machinePartSchedulingGet: ['machine_part_scheduling:get'], // 查看零件排产车间、产线、生产组显示
-  machinePartSchedulingEdit: ['machine_part_scheduling:edit'] // 编辑零件排产车间、产线、生产组显示
+  machinePartSchedulingEdit: ['machine_part_scheduling:edit'], // 编辑零件排产车间、产线、生产组显示
+  machinePartStructureGet: ['machine_part_structure:get'], // 查看构件部件特征定义审核配置
+  machinePartStructureEdit: ['machine_part_structure:edit'] // 编辑查看构件部件特征定义审核配置
 }
 
 // MES-公共配置/变更原因
@@ -193,7 +195,8 @@ export const artifactConfigPM = {
   get: ['artifact_config:get'], // 构件特征定义列表
   add: ['artifact_config:add'], // 添加构件特征定义
   edit: ['artifact_config:edit'], // 修改构件特征定义
-  del: ['artifact_config:del'] // 删除构件特征定义
+  del: ['artifact_config:del'], // 删除构件特征定义
+  audit: ['artifact_config:audit']
 }
 
 // 建钢-生产配置/部件特征定义
@@ -201,7 +204,8 @@ export const machinePartConfigPM = {
   get: ['machine_part_config:get'], // 部件特征定义列表
   add: ['machine_part_config:add'], // 添加部件特征定义
   edit: ['machine_part_config:edit'], // 修改部件特征定义
-  del: ['machine_part_config:del'] // 删除部件特征定义
+  del: ['machine_part_config:del'], // 删除部件特征定义
+  audit: ['machine_part_config:audit']
 }
 
 // 建钢-生产配置/零件特征定义
