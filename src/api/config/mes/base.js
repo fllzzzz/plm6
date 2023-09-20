@@ -262,3 +262,22 @@ export function setInfo({ type }) {
     method: 'put'
   })
 }
+
+// 获取构件部件特征定义审批配置
+export function getAuditConfig() {
+  return request({
+    module: 'config',
+    url: `getFeatureDefinitionConfig`,
+    method: 'get'
+  })
+}
+
+// 更改构件部件特征定义审批配置
+export function setAuditConfig(data) {
+  return request({
+    module: 'config',
+    url: `setFeatureDefinitionConfig`,
+    method: 'put',
+    data
+  })
+}

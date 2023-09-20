@@ -209,10 +209,10 @@
       </el-table-column>
       <!--编辑与删除-->
       <el-table-column
-        v-if="checkPermission([...permission.del, ...permission.edit])"
+        v-if="checkPermission([...permission.del, ...permission.edit,...permission.audit])"
         label="操作"
         width="130px"
-        align="center"
+        align="left"
         fixed="right"
       >
         <template v-slot="scope">
@@ -221,29 +221,34 @@
             :key="item.id"
             :class="index === scope.row.structureClassificationList.length - 1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'"
           >
-            <common-button size="mini" @click="openForm(item, 'edit')" icon="el-icon-edit" type="primary" v-permission="permission.edit" />
-            <el-popconfirm
-              confirm-button-text="确定"
-              cancel-button-text="取消"
-              icon-color="red"
-              title="确定删除吗?"
-              @confirm="handleDelete(item, k)"
-              v-if="checkPermission(permission.del)"
-            >
-              <template #reference>
-                <common-button size="small" class="el-icon-delete" type="danger" />
-              </template>
-            </el-popconfirm>
+            <span v-if="item.auditStatus!==1">
+              <common-button size="mini" @click="openForm(item, 'edit')" icon="el-icon-edit" type="primary" v-permission="permission.edit" />
+              <el-popconfirm
+                confirm-button-text="确定"
+                cancel-button-text="取消"
+                icon-color="red"
+                title="确定删除吗?"
+                @confirm="handleDelete(item, k)"
+                v-if="checkPermission(permission.del)"
+              >
+                <template #reference>
+                  <common-button size="small" class="el-icon-delete" type="danger" />
+                </template>
+              </el-popconfirm>
+            </span>
+            <common-button v-if="item.auditStatus===1 && checkPermission(permission.audit)" type="success" size="small" @click="detailInfo=item;auditVisible=true">审核</common-button>
           </div>
         </template>
       </el-table-column>
     </common-table>
     <mForm v-model="formVisible" :detailInfo="detailInfo" :showType="showType" @success="fetchList" />
+    <audit-form v-model="auditVisible" :detailInfo="detailInfo" @success="fetchList" />
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/config/system-config/artifact-config'
+import { getAuditConfig } from '@/api/config/mes/base'
 import { ref } from 'vue'
 import { ElNotification } from 'element-plus'
 import { mapGetters } from '@/store/lib'
@@ -260,6 +265,7 @@ import {
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import mForm from './module/form'
+import auditForm from './module/audit-form'
 
 const tableRef = ref()
 const list = ref([])
@@ -270,6 +276,8 @@ const showType = ref('add')
 const productionLineTypeEnum = ref()
 const traditionArr = ref([])
 const intellectArr = ref([])
+const isAudit = ref(false)
+const auditVisible = ref(false)
 
 const { hasIntelligent } = mapGetters('hasIntelligent')
 
@@ -301,6 +309,17 @@ function spanMethod({ row, column, rowIndex, columnIndex }) {
       rowspan: row.rowSpan || 0,
       colspan: 1
     }
+  }
+}
+
+fetchAuditConfig()
+
+async function fetchAuditConfig() {
+  try {
+    const data = await getAuditConfig()
+    isAudit.value = data?.auditType
+  } catch (error) {
+    console.log('获取特征定义审批配置', error)
   }
 }
 
