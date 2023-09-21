@@ -61,6 +61,14 @@
         :productType="packType"
         needConvert
       />
+      <monomer-select-area-select
+        v-if="packType !== packTypeEnum.STRUCTURE.V && packType !== packTypeEnum.MACHINE_PART.V"
+        :project-id="globalProjectId"
+        v-model:areaId="areaId"
+        v-model:monomerId="monomerId"
+        areaClearable
+        clearable
+      />
       <area-tabs
         v-if="packType === packTypeEnum.ENCLOSURE.V && areaInfo.length"
         class="filter-item"
@@ -127,6 +135,7 @@ import { mapGetters } from '@/store/lib'
 import { isBlank, isNotBlank } from '@data-type/index'
 import { packTypeEnum, packWorkshopTypeEnum } from '@enum-ms/ship-manage'
 import { manualPackPM as permission } from '@/page-permission/ship-manage'
+import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 
 import useMaxHeight from '@compos/use-max-height'
 // import factorySelect from '@comp-base/factory-select'
@@ -259,6 +268,10 @@ watch(
   { immediate: true, deep: true }
 )
 
+watch([monomerId, areaId], () => {
+  mainRef?.value?.refresh()
+})
+
 async function fetWorkshop() {
   if (packType.value === packTypeEnum.AUXILIARY_MATERIAL.V) return
   try {
@@ -365,10 +378,15 @@ function addIn(row, packTypeK) {
   packData[packTypeK][row.id] = { ...row }
 }
 
+// const fetchData = (val) => {
+//   console.log(val)
+//   monomerId.value = val?.monomerId
+// }
+
 function fetchMonomerAndArea(val) {
   monomerId.value = val?.monomerId
   areaId.value = val?.areaId
-  mainRef?.value?.refresh()
+  // mainRef?.value?.refresh()
 }
 
 function tabClick(val) {
@@ -385,7 +403,7 @@ function tabClick(val) {
 
 <style lang="scss" scoped>
 .manual-pack-wrapper {
-  >.head-container {
+  > .head-container {
     margin-bottom: 0;
   }
   .app-container {
