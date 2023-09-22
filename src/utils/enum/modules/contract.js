@@ -430,6 +430,12 @@ const isEnclosureContainEnum = {
 }
 constantize(isEnclosureContainEnum)
 
+const priceEditModeEnum = {
+  AUDIT: { L: '提交即审核', K: 'AUDIT', V: 1 },
+  SAVE: { L: '提交即保存', K: 'SAVE', V: 2 }
+}
+constantize(priceEditModeEnum)
+
 export {
   projectStatusEnum, // 项目状态
   projectTypeEnum, // 项目类型
@@ -479,7 +485,8 @@ export {
   amortizationTypeEnum, // 摊销类型
   projectReimbursementTypeEnum, // 项目报销类型
   structureTypeEnum,
-  isEnclosureContainEnum
+  isEnclosureContainEnum,
+  priceEditModeEnum
 }
 
 export default {
@@ -531,5 +538,6 @@ export default {
   amortizationTypeEnum, // 摊销类型
   projectReimbursementTypeEnum, // 项目报销类型
   structureTypeEnum,
-  isEnclosureContainEnum
+  isEnclosureContainEnum,
+  priceEditModeEnum
 }

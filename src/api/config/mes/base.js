@@ -280,3 +280,22 @@ export function setAuditConfig(data) {
     data
   })
 }
+
+// 获取构件部件特征定义审批配置
+export function getPriceConfig() {
+  return request({
+    module: 'config',
+    url: `getPriceEditMode`,
+    method: 'get'
+  })
+}
+
+// 更改构件部件特征定义审批配置
+export function setPriceConfig(data) {
+  return request({
+    module: 'config',
+    url: `editPriceEditMode`,
+    method: 'post',
+    data
+  })
+}

@@ -39,6 +39,9 @@
           type="warning"
           class="filter-item"
         />
+        <el-badge v-if="checkPermission(crud.permission.log) && priceEditMode===priceEditModeEnum.SAVE.V" :value="saveCount" :hidden="saveCount <= 0">
+          <common-button type="success" size="mini" @click="handleLog">保存记录</common-button>
+        </el-badge>
       </template>
       <template #viewLeft>
         <span v-if="checkPermission(crud.permission.cost) && query.monomerId">
@@ -82,7 +85,7 @@ import { ref, watch, nextTick, inject, computed, defineExpose, defineProps, defi
 
 import checkPermission from '@/utils/system/check-permission'
 import { contractSaleTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
-import { enclosureSettlementTypeEnum } from '@enum-ms/contract'
+import { enclosureSettlementTypeEnum, priceEditModeEnum } from '@enum-ms/contract'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -91,7 +94,9 @@ import mPreview from '../../preview'
 
 const projectId = inject('projectId')
 const enclosurePlanId = inject('enclosurePlanId')
-const emit = defineEmits(['checkSubmit'])
+const saveCount = inject('saveCount')
+const priceEditMode = inject('priceEditMode')
+const emit = defineEmits(['checkSubmit', 'showVisible'])
 const props = defineProps({
   showAble: {
     type: Boolean,
@@ -146,8 +151,8 @@ const monomerCost = ref({ ...costData })
 
 const defaultQuery = {
   name: undefined,
-  plateType: undefined,
-  monomerId: { value: undefined, resetAble: false }
+  plateType: undefined
+  // monomerId: { value: undefined, resetAble: false }
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
 
@@ -210,6 +215,9 @@ function handleSuccess() {
   crud.toQuery()
 }
 
+function handleLog() {
+  emit('showVisible')
+}
 defineExpose({
   modifying
 })

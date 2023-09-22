@@ -5,6 +5,7 @@
         <overweightSMSRecipient v-permission="permission.overweightSMSRecipientGet" style="margin-bottom: 20px" />
         <safeAmount v-permission="permission.safeAmountFactorGet" style="margin-bottom: 20px" />
         <steelBindConfig v-permission="permission.steelBindConfigGet" style="margin-bottom: 20px" />
+        <price-manage-config v-permission="permission.machinePartStructureGet"/>
         <!-- <installationAudit v-permission="permission.installationAuditGet" style="margin-top: 20px" /> -->
         <!-- <driverFillConfig v-permission="permission.driverFillConfigGet" style="margin-bottom: 20px" /> -->
       </el-col>
@@ -21,7 +22,7 @@
       <el-col :xs="24" :sm="24" :md="24" :lg="8">
         <carModelConfig v-permission="permission.carModelConfigGet" style="margin-bottom: 20px" />
         <machine-part-scheduling-config v-permission="permission.machinePartSchedulingGet" style="margin-bottom: 20px" />
-        <structure-audit-config v-permission="permission.machinePartStructureGet"/>
+        <structure-audit-config v-permission="permission.contractPriceConfigGet"/>
       </el-col>
     </el-row>
   </div>
@@ -45,6 +46,7 @@ import steelBindConfig from './component/steel-bind-config.vue'
 import appTaskReport from './component/app-task-report.vue'
 import machinePartSchedulingConfig from './component/machine-part-scheduling-config.vue'
 import structureAuditConfig from './component/structure-audit-config'
+import priceManageConfig from './component/price-manage-config'
 
 provide('permission', permission)
 
