@@ -34,6 +34,7 @@ import { ref, computed, onMounted, inject } from 'vue'
 import { ElRadioGroup } from 'element-plus'
 import { isObjectValueEqual } from '@data-type/object'
 import { deepClone } from '@/utils/data-type'
+import checkPermission from '@/utils/system/check-permission'
 
 import { ElNotification } from 'element-plus'
 
@@ -57,6 +58,9 @@ onMounted(() => {
 })
 
 async function fetchData() {
+  if (!checkPermission(permission.machinePartStructureGet)) {
+    return
+  }
   dataLoading.value = true
   try {
     const data = await getAuditConfig()
