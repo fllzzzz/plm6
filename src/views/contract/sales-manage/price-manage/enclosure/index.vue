@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--工具栏-->
-    <mHeader ref="headerRef" v-bind="$attrs" @checkSubmit="checkModifyData" :showAble="showAble" :submitList="submitList" />
+    <mHeader ref="headerRef" v-bind="$attrs" @checkSubmit="checkModifyData" :showAble="showAble" :submitList="submitList" @showVisible="showVisible" />
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -166,7 +166,7 @@
 
 <script setup>
 import crudApi from '@/api/contract/sales-manage/price-manage/enclosure'
-import { ref, defineExpose, defineProps } from 'vue'
+import { ref, defineExpose, defineProps, defineEmits } from 'vue'
 
 import { priceManagePM as permission } from '@/page-permission/contract'
 import { DP } from '@/settings/config'
@@ -195,6 +195,8 @@ const optShow = {
   del: false,
   download: false
 }
+
+const emit = defineEmits(['showLog'])
 
 const tableRef = ref()
 const headerRef = ref()
@@ -234,6 +236,10 @@ function selectable(row) {
 }
 
 const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })
+
+function showVisible() {
+  emit('showLog')
+}
 
 function selectionChange(val) {
   crud.selectionChangeHandler(val)

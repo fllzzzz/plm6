@@ -157,7 +157,9 @@ export const configMesBasePM = {
   machinePartSchedulingGet: ['machine_part_scheduling:get'], // 查看零件排产车间、产线、生产组显示
   machinePartSchedulingEdit: ['machine_part_scheduling:edit'], // 编辑零件排产车间、产线、生产组显示
   machinePartStructureGet: ['machine_part_structure:get'], // 查看构件部件特征定义审核配置
-  machinePartStructureEdit: ['machine_part_structure:edit'] // 编辑查看构件部件特征定义审核配置
+  machinePartStructureEdit: ['machine_part_structure:edit'], // 编辑查看构件部件特征定义审核配置
+  contractPriceConfigGet: ['contract_price_config:get'], // 查看价格录入办理方式
+  contractPriceConfigEdit: ['contract_price_config:edit'] // 编辑价格录入办理方式
 }
 
 // MES-公共配置/变更原因

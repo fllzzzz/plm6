@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--工具栏-->
-    <mHeader ref="headerRef" v-bind="$attrs" @checkSubmit="checkModifyData" :showAble="showAble" :submitList="submitList" />
+    <mHeader ref="headerRef" v-bind="$attrs" @checkSubmit="checkModifyData" :showAble="showAble" :submitList="submitList" @showVisible="showVisible" />
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -77,7 +77,7 @@
 
 <script setup>
 import crudApi from '@/api/contract/sales-manage/price-manage/auxiliary-material'
-import { ref, defineExpose } from 'vue'
+import { ref, defineExpose, defineEmits } from 'vue'
 import { priceManagePM as permission } from '@/page-permission/contract'
 import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 
@@ -100,6 +100,8 @@ const optShow = {
   del: false,
   download: false
 }
+
+const emit = defineEmits(['showLog'])
 
 const tableRef = ref()
 const headerRef = ref()
@@ -133,6 +135,10 @@ const tableRules = {
 const ditto = new Map([
   ['unitPrice', '同上']
 ])
+
+function showVisible() {
+  emit('showLog')
+}
 
 function selectable(row) {
   return row.status !== 1

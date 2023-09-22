@@ -6,27 +6,54 @@
         v-model="query.monomerId"
         :project-id="props.projectId"
         class="filter-item"
-        :default="false"
-        clearable
+        default
         @change="crud.toQuery"
         @getCurrentInfo="handleCurrent"
         @getAreaInfo="getAreaInfo"
       />
-      <common-select
-        v-model="query.areaId"
-        :options="areaInfo"
-        type="other"
-        :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+      <template v-if="areaInfo && areaInfo.length>0">
+        <common-select
+          v-model="query.areaId"
+          :options="areaInfo"
+          type="other"
+          :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+          size="small"
+          placeholder="请选择区域"
+          class="filter-item"
+          style="width:200px;"
+          @change="areaChange"
+        />
+      </template>
+      <template>
+        <span style="font-size:12px;color:red;margin-left:10px;">*当前单体下未创建区域</span>
+      </template>
+      <el-input
+        v-model="query.name"
         size="small"
-        clearable
-        placeholder="请选择区域"
+        placeholder="名称"
+        style="width: 170px; margin-left: 0"
         class="filter-item"
-        style="width:200px;"
-        @change="areaChange"
+        clearable
+      />
+      <el-input
+        v-model="query.specification"
+        size="small"
+        placeholder="规格"
+        style="width: 170px"
+        class="filter-item"
+        clearable
+      />
+      <el-input
+        v-model="query.remark"
+        size="small"
+        placeholder="备注"
+        style="width: 170px"
+        class="filter-item"
+        clearable
       />
       <rrOperation />
     </div>
-    <crudOperation>
+    <crudOperation :disabled="!query.areaId">
        <template #optRight>
         <upload-btn
           v-if="crud.query.projectId && checkPermission(crud.permission.import)"
@@ -36,6 +63,7 @@
           btn-type="primary"
           btn-size="mini"
           class="filter-item"
+          :disabled="!query.areaId"
           @success="crud.toQuery()"
         />
         <export-button :fn="downloadStandardPart" class="filter-item" v-permission="crud.permission.templateDownload">
@@ -61,9 +89,12 @@ import ExportButton from '@comp-common/export-button/index.vue'
 const defaultQuery = {
   // classifyName: '',
   // serialNumber: '',
-  monomerId: undefined,
-  areaId: undefined,
-  projectId: { value: undefined, resetAble: false }
+  monomerId: { value: undefined, resetAble: false },
+  areaId: { value: undefined, resetAble: false },
+  projectId: { value: undefined, resetAble: false },
+  name: undefined,
+  specification: undefined,
+  remark: undefined
 }
 
 const monomerSelectRef = ref()
@@ -99,6 +130,7 @@ watch(
 
 function handleCurrent(val) {
   emit('currentChange', val)
+  crud.toQuery()
 }
 
 function areaChange(val) {
@@ -109,5 +141,7 @@ function areaChange(val) {
 
 function getAreaInfo(val) {
   areaInfo.value = val || []
+  query.areaId = areaInfo.value[0]?.id
+  areaChange(query.areaId)
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--工具栏-->
-    <mHeader ref="headerRef" v-bind="$attrs" @checkSubmit="checkModifyData" :showAble="showAble" :submitList="submitList"/>
+    <mHeader ref="headerRef" v-bind="$attrs" @checkSubmit="checkModifyData" :showAble="showAble" :submitList="submitList" @showVisible="showVisible"/>
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -142,7 +142,7 @@
 
 <script setup>
 import crudApi from '@/api/contract/sales-manage/price-manage/structure'
-import { ref, defineExpose } from 'vue'
+import { ref, defineExpose, defineEmits } from 'vue'
 import { priceManagePM as permission } from '@/page-permission/contract'
 
 import { ElMessage } from 'element-plus'
@@ -173,6 +173,7 @@ const headerRef = ref()
 const detailInfo = ref({})
 const showAble = ref(false)
 const submitList = ref([])
+const emit = defineEmits(['showLog'])
 const { crud, columns } = useCRUD(
   {
     title: '结构价格',
@@ -234,6 +235,10 @@ async function checkModifyData(val) {
 function openDetail(row) {
   detailInfo.value = row
   crud.toDetail(row)
+}
+
+function showVisible() {
+  emit('showLog')
 }
 
 // 价格变动

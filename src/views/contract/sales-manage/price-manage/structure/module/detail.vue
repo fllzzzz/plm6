@@ -80,11 +80,11 @@ function edit(row) {
 // 刷新页面
 function refreshData() {
   crud.toDetail(props.detailInfo)
+  emit('refresh')
 }
 
 // 关闭
 function handleClose() {
   crud.cancelDetail()
-  emit('refresh')
 }
 </script>
