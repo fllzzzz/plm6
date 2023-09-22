@@ -299,3 +299,12 @@ export function setPriceConfig(data) {
     data
   })
 }
+
+// 获取公用构件部件特征定义审批配置
+export function getPriceConfigPublic() {
+  return request({
+    module: 'config',
+    url: `getPriceEditMode/public`,
+    method: 'get'
+  })
+}
