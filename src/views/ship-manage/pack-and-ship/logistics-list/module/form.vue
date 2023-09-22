@@ -76,6 +76,7 @@
               <el-input-number
                 v-model="form.price"
                 :max="999999999999"
+                :min="0"
                 :precision="decimalPrecision.shipment"
                 :step="100"
                 :controls="false"
@@ -147,6 +148,7 @@ import crudApi, { getLog } from '@/api/ship-manage/pack-and-ship/logistics-list'
 import { defineProps, defineEmits, ref, watch, nextTick } from 'vue'
 import { ElNotification } from 'element-plus'
 
+import { isNotBlank } from '@data-type/index'
 import { DP } from '@/settings/config'
 import { toFixed } from '@/utils/data-type'
 import { logisticsPriceTypeEnum, deliveryStatusEnum, freightChangeTypeEnum } from '@enum-ms/mes'
@@ -190,8 +192,8 @@ const defaultForm = {
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 
 const validatePrice = (rule, value, callback) => {
-  if (!value) {
-    callback(new Error('必填且大于0'))
+  if (!isNotBlank(value)) {
+    callback(new Error('价格必填'))
   } else if (form.value.priceType === props.detailInfo.priceType && value === props.detailInfo.supplier?.price) {
     callback(new Error('价格未变动'))
   }
