@@ -110,7 +110,7 @@
 
 <script setup>
 import { cost, priceModifyCount, saveNum } from '@/api/contract/sales-manage/price-manage/common'
-import { getPriceConfig } from '@/api/config/mes/base'
+import { getPriceConfigPublic as getPriceConfig } from '@/api/config/mes/base'
 import { allProjectPlan } from '@/api/enclosure/enclosure-plan/area'
 import { ref, computed, onMounted, provide } from 'vue'
 import { mapGetters } from '@/store/lib'
