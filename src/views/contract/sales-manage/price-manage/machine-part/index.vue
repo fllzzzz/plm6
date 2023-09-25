@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--工具栏-->
-    <mHeader ref="headerRef" v-bind="$attrs" @checkSubmit="checkModifyData" :showAble="showAble" :submitList="submitList" />
+    <mHeader ref="headerRef" v-bind="$attrs" @checkSubmit="checkModifyData" :showAble="showAble" :submitList="submitList" @showVisible="showVisible" />
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -71,7 +71,7 @@
 
 <script setup>
 import crudApi from '@/api/contract/sales-manage/price-manage/machine-part'
-import { ref, defineExpose } from 'vue'
+import { ref, defineExpose, defineEmits } from 'vue'
 import { priceManagePM as permission } from '@/page-permission/contract'
 import { pricingMannerEnum } from '@enum-ms/contract'
 import { ElMessage } from 'element-plus'
@@ -95,6 +95,8 @@ const optShow = {
   download: false
 }
 
+const emit = defineEmits(['showLog'])
+
 const tableRef = ref()
 const headerRef = ref()
 const showAble = ref(false)
@@ -116,6 +118,9 @@ const { maxHeight } = useMaxHeight({
   paginate: true,
   extraHeight: 100
 })
+function showVisible() {
+  emit('showLog')
+}
 
 function selectable(row) {
   return row.status !== 1

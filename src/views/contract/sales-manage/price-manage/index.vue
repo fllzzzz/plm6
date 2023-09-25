@@ -10,7 +10,7 @@
             type="enumSL"
             size="small"
             class="filter-item"
-            @change="()=>{if(productType===contractSaleTypeEnum.AUXILIARY_MATERIAL.V){monomerId=undefined;areaId=undefined}}"
+            @change="(val)=>{if(val===contractSaleTypeEnum.ENCLOSURE.V){monomerId=undefined;areaId=undefined}else if(val===contractSaleTypeEnum.AUXILIARY_MATERIAL.V){monomerId=undefined;areaId=undefined;category=undefined;enclosurePlanId=undefined}else{category=undefined;enclosurePlanId=undefined};fetchSaveCount();}"
           />
           <template v-if="productType!==contractSaleTypeEnum.AUXILIARY_MATERIAL.V && productType!==contractSaleTypeEnum.ENCLOSURE.V">
             <monomer-select
@@ -32,7 +32,7 @@
               placeholder="请选择区域"
               class="filter-item"
               style="width:200px;"
-              @change="fetchCost"
+              @change="costNumChange"
             />
           </template>
           <template v-if="productType===contractSaleTypeEnum.ENCLOSURE.V">
@@ -54,7 +54,7 @@
               placeholder="请选择围护计划"
               class="filter-item"
               style="width:200px;"
-              @change="fetchCost"
+              @change="costNumChange"
             />
           </template>
         </div>
@@ -78,7 +78,9 @@
         </el-row>
       </div>
     </div>
-    <component :is="currentView" ref="domRef" @refresh-count="fetchModifyCount" :category="category" />
+    <component :is="currentView" ref="domRef" @refresh-count="successFetchNum" :category="category" @showLog="showLog"/>
+    <!-- 提交记录 -->
+    <submitLog v-model="submitVisible" :projectId="projectId" :type="productType" :monomerId="monomerId" :areaId="areaId" :category="category" :enclosurePlanId="enclosurePlanId" :projectType="currentProjectVal?.projectType" @refresh-count="successFetchNum" @success="refreshData()"/>
     <!-- 商务变更记录 -->
     <common-drawer
       append-to-body
@@ -100,7 +102,8 @@
 </template>
 
 <script setup>
-import { cost, priceModifyCount } from '@/api/contract/sales-manage/price-manage/common'
+import { cost, priceModifyCount, saveNum } from '@/api/contract/sales-manage/price-manage/common'
+import { getPriceConfigPublic as getPriceConfig } from '@/api/config/mes/base'
 import { allProjectPlan } from '@/api/enclosure/enclosure-plan/area'
 import { ref, computed, provide, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
@@ -124,6 +127,7 @@ import box from './box'
 // import projectVisaSelect from '@comp-base/project-visa-select'
 import Panel from '@/components/Panel'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
+import submitLog from './submit-log'
 
 const { decimalPrecision } = useDecimalPrecision()
 
@@ -164,6 +168,10 @@ const enclosureAreaInfo = ref([])
 const enclosurePlanId = ref()
 const category = ref()
 const typeOption = ref([])
+const priceEditMode = ref()
+const submitVisible = ref(false)
+const saveCount = ref()
+
 const techOptions = [
   {
     name: '压型彩板',
@@ -244,6 +252,8 @@ provide('projectId', projectId)
 provide('modifyVisible', modifyVisible)
 provide('enclosurePlanId', enclosurePlanId)
 provide('globalProject', globalProject)
+provide('priceEditMode', priceEditMode)
+provide('saveCount', saveCount)
 
 // 产品类型
 const productEnum = computed(() => {
@@ -272,6 +282,22 @@ function handleMonomerChange() {
   fetchCost()
 }
 
+function successFetchNum() {
+  fetchModifyCount()
+  fetchSaveCount()
+}
+
+fetchSubmitConfig()
+
+async function fetchSubmitConfig() {
+  try {
+    const data = await getPriceConfig()
+    priceEditMode.value = data?.priceEditMode
+  } catch (error) {
+    console.log('获取特征定义审批配置', error)
+  }
+}
+
 function projectChange(val) {
   currentProjectVal.value = val
   typeOption.value = []
@@ -288,6 +314,7 @@ function projectChange(val) {
       getAllProjectPlan()
     }
   }
+  fetchSaveCount()
 }
 
 function categoryChange(val) {
@@ -298,6 +325,10 @@ function categoryChange(val) {
   }
 }
 
+function costNumChange() {
+  fetchSaveCount()
+  fetchCost()
+}
 async function getAllProjectPlan() {
   try {
     const data = await allProjectPlan(currentProjectVal.value.id) || []
@@ -313,14 +344,38 @@ async function getAllProjectPlan() {
 
 function getAreaInfo(val) {
   fetchCost()
+  fetchSaveCount()
   areaInfo.value = val
 }
+
+// 获取提交记录数量
+const fetchSaveCount = debounce(async function () {
+  if (!checkPermission(permission.list)) return
+  try {
+    saveCount.value = await saveNum({
+      areaId: areaId.value,
+      category: category.value,
+      enclosurePlanId: enclosurePlanId.value,
+      monomerId: monomerId.value,
+      projectId: projectId.value,
+      projectType: currentProjectVal.value?.projectType,
+      type: productType.value
+    })
+  } catch (error) {
+    console.log('提交记录待提交数量', error)
+  }
+}, 100, false)
 
 // 刷新数据
 function refreshData() {
   handleProjectChange()
   domRef.value.refresh()
 }
+
+function showLog() {
+  submitVisible.value = true
+}
+
 </script>
 
 <style lang="scss" scoped>

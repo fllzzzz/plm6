@@ -372,6 +372,15 @@ const artifactTypeEnum = {
 }
 constantize(artifactTypeEnum)
 
+// 特征定义变更类型
+const changeTypeEnum = {
+  ADD: { L: '新增', K: 'ADD', V: 1 << 0, COLOR: '#67c23a', TAG: 'success' },
+  MODIFY: { L: '修改', K: 'MODIFY', V: 1 << 2, COLOR: '#409eff', TAG: '' },
+  SAME: { L: '未修改', K: 'SAME', V: 1 << 3, COLOR: '#909399', TAG: 'info' },
+  DELETE: { L: '删除', K: ' DELETE', V: 1 << 1, COLOR: '#f56c6c', TAG: 'danger' }
+}
+constantize(changeTypeEnum)
+
 // 次构件类型
 const smallArtifactClassEnum = {
   OTHER: { L: '其他', K: 'OTHER', V: 1 << 0 },
@@ -705,7 +714,8 @@ export {
   productionKanbanTypeEnum,
   steelOutBoundRecordTypeEnum,
   contractSaleTypeEnum,
-  machinePartSchedulingTypeEnum
+  machinePartSchedulingTypeEnum,
+  changeTypeEnum
 }
 
 export default {
@@ -785,5 +795,6 @@ export default {
   productionKanbanTypeEnum,
   steelOutBoundRecordTypeEnum,
   contractSaleTypeEnum,
-  machinePartSchedulingTypeEnum
+  machinePartSchedulingTypeEnum,
+  changeTypeEnum
 }

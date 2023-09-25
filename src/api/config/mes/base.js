@@ -262,3 +262,50 @@ export function setInfo({ type }) {
     method: 'put'
   })
 }
+
+// 获取构件部件特征定义审批配置
+export function getAuditConfig() {
+  return request({
+    module: 'config',
+    url: `getFeatureDefinitionConfig`,
+    method: 'get'
+  })
+}
+
+// 更改构件部件特征定义审批配置
+export function setAuditConfig(data) {
+  return request({
+    module: 'config',
+    url: `setFeatureDefinitionConfig`,
+    method: 'put',
+    data
+  })
+}
+
+// 获取构件部件特征定义审批配置
+export function getPriceConfig() {
+  return request({
+    module: 'config',
+    url: `getPriceEditMode`,
+    method: 'get'
+  })
+}
+
+// 更改构件部件特征定义审批配置
+export function setPriceConfig(data) {
+  return request({
+    module: 'config',
+    url: `editPriceEditMode`,
+    method: 'post',
+    data
+  })
+}
+
+// 获取公用构件部件特征定义审批配置
+export function getPriceConfigPublic() {
+  return request({
+    module: 'config',
+    url: `getPriceEditMode/public`,
+    method: 'get'
+  })
+}

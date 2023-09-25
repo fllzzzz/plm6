@@ -379,6 +379,12 @@ const isEnclosureContainEnum = {
 }
 constantize(isEnclosureContainEnum)
 
+const priceEditModeEnum = {
+  AUDIT: { L: '提交即审核', K: 'AUDIT', V: 1 },
+  SAVE: { L: '提交即保存', K: 'SAVE', V: 2 }
+}
+constantize(priceEditModeEnum)
+
 export {
   projectStatusEnum, // 项目状态
   projectTypeEnum, // 项目类型
@@ -423,7 +429,8 @@ export {
   managementSalaryTypeEnum,
   mainAuxiliaryTypeEnum,
   structureTypeEnum,
-  isEnclosureContainEnum
+  isEnclosureContainEnum,
+  priceEditModeEnum
 }
 
 export default {
@@ -470,5 +477,6 @@ export default {
   managementSalaryTypeEnum, // 不同人员类型工资
   mainAuxiliaryTypeEnum,
   structureTypeEnum,
-  isEnclosureContainEnum
+  isEnclosureContainEnum,
+  priceEditModeEnum
 }

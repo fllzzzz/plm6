@@ -2,7 +2,7 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <mHeader ref="headerRef" @getDetail="handleDetail" />
+      <mHeader ref="headerRef" @getDetail="handleDetail" @changeUnit="changeUnit" />
     </div>
     <!--表格渲染-->
     <common-table
@@ -181,7 +181,7 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <label-dlg v-model:visible="labelVisible" :label-data="currentLabel" />
+    <label-dlg v-model:visible="labelVisible" :label-data="currentLabel" :unitType="unitType" />
     <m-detail
       v-model:visible="detailVisible"
       :detail-info="packageInfo"
@@ -261,6 +261,7 @@ const detailVisible = ref(false)
 const printedRecordId = ref()
 const currentLabel = ref({})
 const packageInfo = ref({})
+const unitType = ref()
 
 CRUD.HOOK.beforeToQuery = () => {
   crud.query.projectType = currentProjectType.value
@@ -273,6 +274,11 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     v.materialTypeNames = packTypeEnum.VL[v.productType]
     return v
   })
+}
+
+// 单位转换
+const changeUnit = (v) => {
+  unitType.value = v
 }
 
 // 查看详情

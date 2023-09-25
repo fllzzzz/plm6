@@ -219,7 +219,8 @@ export const priceManagePM = {
   save: ['sale_price_manage:edit'], // 录入价格
   list: ['sale_price_manage:modify'], // 变更列表
   audit: ['sale_price_manage:audit'], // 变更审核
-  print: ['sale_price_manage:print'] // 结构围护配套件打印
+  print: ['sale_price_manage:print'], // 结构围护配套件打印
+  log: ['sale_price_manage:log'] // 保存记录列表
 }
 
 // 销售管理/订单跟踪

@@ -291,7 +291,7 @@ const { crud, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    invisibleColumns: ['haveCollectionAmount', 'collectionMode', 'collectionReason', 'collectionDepositBank', 'collectionBankAccount', 'paymentBankAccount', 'paymentDepositBank', 'auditorName', 'auditTime'],
+    invisibleColumns: ['haveCollectionAmount', 'collectionMode', 'collectionReason', 'collectionDepositBank', 'paymentBankAccount', 'paymentDepositBank', 'auditorName', 'auditTime'],
     hasPagination: true
   },
   tableRef

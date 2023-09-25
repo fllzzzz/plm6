@@ -38,6 +38,9 @@
           type="warning"
           class="filter-item"
         />
+        <el-badge v-if="checkPermission(crud.permission.log) && priceEditMode===priceEditModeEnum.SAVE.V" :value="saveCount" :hidden="saveCount <= 0">
+          <common-button type="success" size="mini" @click="handleLog">保存记录</common-button>
+        </el-badge>
       </template>
       <template #viewLeft>
         <span v-if="checkPermission(crud.permission.cost) && query.monomerId">
@@ -70,7 +73,7 @@ import { ref, watch, nextTick, inject, computed, defineExpose, defineEmits, defi
 import checkPermission from '@/utils/system/check-permission'
 import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { convertUnits } from '@/utils/convert/unit'
-import { pricingMannerEnum } from '@enum-ms/contract'
+import { pricingMannerEnum, priceEditModeEnum } from '@enum-ms/contract'
 import { DP } from '@/settings/config'
 import { isNotBlank } from '@data-type/index'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
@@ -85,7 +88,9 @@ const { decimalPrecision } = useDecimalPrecision()
 const projectId = inject('projectId')
 const monomerId = inject('monomerId')
 const areaId = inject('areaId')
-const emit = defineEmits(['checkSubmit'])
+const saveCount = inject('saveCount')
+const priceEditMode = inject('priceEditMode')
+const emit = defineEmits(['checkSubmit', 'showVisible'])
 const props = defineProps({
   showAble: {
     type: Boolean,
@@ -208,6 +213,10 @@ function confirmModifying() {
 function handleSuccess() {
   modifying.value = false
   crud.toQuery()
+}
+
+function handleLog() {
+  emit('showVisible')
 }
 
 defineExpose({

@@ -57,6 +57,9 @@
           type="warning"
           class="filter-item"
         />
+        <el-badge v-if="checkPermission(crud.permission.log) && priceEditMode===priceEditModeEnum.SAVE.V" :value="saveCount" :hidden="saveCount <= 0">
+          <common-button type="success" size="mini" @click="handleLog">保存记录</common-button>
+        </el-badge>
       </template>
       <!-- <template #viewLeft>
         <span v-if="checkPermission(crud.permission.cost) && query.projectId">
@@ -84,6 +87,7 @@ import { ref, watch, nextTick, inject, computed, defineExpose, defineProps, defi
 import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 import checkPermission from '@/utils/system/check-permission'
 import { contractSaleTypeEnum } from '@enum-ms/mes'
+import { priceEditModeEnum } from '@enum-ms/contract'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -91,7 +95,9 @@ import rrOperation from '@crud/RR.operation'
 import mPreview from '../../preview'
 
 const projectId = inject('projectId')
-const emit = defineEmits(['checkSubmit'])
+const saveCount = inject('saveCount')
+const priceEditMode = inject('priceEditMode')
+const emit = defineEmits(['checkSubmit', 'showVisible'])
 // const monomerId = inject('monomerId')
 
 const props = defineProps({
@@ -194,6 +200,10 @@ function handelModifying(status, reset = false) {
 function handleSuccess() {
   modifying.value = false
   crud.toQuery()
+}
+
+function handleLog() {
+  emit('showVisible')
 }
 
 defineExpose({
