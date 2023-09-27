@@ -53,7 +53,7 @@ async function printArtifact({ productType, labelType, component, manufacturerNa
   try {
     LODOP = await getLODOP()
     LODOP.SET_PRINT_PAGESIZE(1, 1030, 680, '1') /* 纸张大小*/
-    LODOP.ADD_PRINT_HTM('2mm', '3mm', '98mm', '68mm', strHtml)
+    LODOP.ADD_PRINT_HTM('0.5mm', '3mm', '98mm', '68mm', strHtml)
     LODOP.ADD_PRINT_BARCODE('40mm', '72mm', '28mm', '28mm', 'QRCode', qrCode)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 7)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeErrorLevel', 'M')
