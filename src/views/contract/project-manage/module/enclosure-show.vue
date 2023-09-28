@@ -1,7 +1,7 @@
 <template>
   <!--  <div v-if="tableData[typeEnum.SANDWICH_BOARD.V].length || tableData[typeEnum.PRESSED_COLOR_BOARD.V].length || tableData[typeEnum.FLOOR_BOARD.V].length">-->
   <div>
-    <el-radio-group v-model="boardType" size="small" class="filter-item" @change="typeChange">
+    <el-radio-group v-model="boardType" size="small" class="filter-item" @change="typeChange" style="margin-bottom:10px;">
       <el-radio-button
         v-for="item in TechnologyTypeEnum.ENUM"
         :key="item.V"
@@ -16,7 +16,6 @@
       :is="currentView"
       :table-data="tableData[boardType]"
       :is-show="true"
-      style="margin-top:20px;"
     />
   </div>
 </template>

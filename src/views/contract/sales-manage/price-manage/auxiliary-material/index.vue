@@ -115,7 +115,7 @@ const { crud, columns } = useCRUD(
     permission: { ...permission },
     crudApi: { ...crudApi },
     optShow: { ...optShow },
-    requiredQuery: ['projectId']
+    requiredQuery: ['projectId', 'relationType']
   },
   tableRef
 )
