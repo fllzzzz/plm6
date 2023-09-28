@@ -136,7 +136,12 @@
             showDownload
             v-model:files="detail.files"
             style="padding-bottom: 20px"
-          />
+          >
+          <template #applicant>
+              <el-table-column label="上传人" align="center" min-width="60" :show-overflow-tooltip="true" prop="createUserName">
+              </el-table-column>
+            </template>
+        </upload-list>
           <el-input
             v-if="props.status === reviewStatusEnum.UNREVIEWED.V"
             v-model="detail.attachmentRemark"

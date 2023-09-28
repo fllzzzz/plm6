@@ -74,6 +74,13 @@ const TechnologyTypeAllEnum = {
 constantize(TechnologyTypeAllEnum)
 
 // 业务类型
+const standardPartPriceSearchEnum = {
+  STRUCTURE: { L: '结构配套件', K: 'STRUCTURE', V: 1 << 1 },
+  ENCLOSURE: { L: '围护配套件', K: 'ENCLOSURE', V: 1 << 2 }
+}
+constantize(standardPartPriceSearchEnum)
+
+// 业务类型
 const businessTypeEnum = {
   MACHINING: { L: '加工承揽', K: 'MACHINING', V: 1 },
   INSTALLATION: { L: '项目承包', K: 'INSTALLATION', V: 2 }
@@ -486,7 +493,8 @@ export {
   projectReimbursementTypeEnum, // 项目报销类型
   structureTypeEnum,
   isEnclosureContainEnum,
-  priceEditModeEnum
+  priceEditModeEnum,
+  standardPartPriceSearchEnum
 }
 
 export default {
@@ -539,5 +547,6 @@ export default {
   projectReimbursementTypeEnum, // 项目报销类型
   structureTypeEnum,
   isEnclosureContainEnum,
-  priceEditModeEnum
+  priceEditModeEnum,
+  standardPartPriceSearchEnum
 }
