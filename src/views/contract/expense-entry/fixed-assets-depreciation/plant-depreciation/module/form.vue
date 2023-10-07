@@ -27,8 +27,8 @@
             v-show-thousand
             v-model="form.originalValue"
             style="width: 270px"
-            placeholder="输入初始价值 单位元"
-            controls-position="right"
+            placeholder="输入原值 单位：元"
+            :controls="false"
             :min="0"
             :max="9999999999"
           />
@@ -38,7 +38,7 @@
             v-model="form.depreciationYear"
             style="width: 270px"
             placeholder="输入折旧年限"
-            controls-position="right"
+            :controls="false"
             :precision="1"
             :step="0.1"
             :min="0"
@@ -46,13 +46,14 @@
             @change="yearChange"
           />
         </el-form-item>
-        <el-form-item label="净残值率（%）" prop="residualValueRate">
-          <el-input-number
+        <el-form-item label="净残值率（%）：" prop="residualValueRate">
+          <el-input
             v-model="form.residualValueRate"
             style="width: 270px"
             placeholder="输入净残值率"
-            controls-position="right"
+            type="number"
             :precision="2"
+            maxlength="4"
             :min="0"
             :max="100"
           />
@@ -138,11 +139,21 @@ const validateQuantity = (rule, value, callback) => {
   callback()
 }
 
+const validateRateQuantity = (rule, value, callback) => {
+  if (!value) {
+    callback(new Error('填写数据必须大于0'))
+  }
+  if (value > 100) {
+    callback(new Error('填写数据必须小于100'))
+  }
+  callback()
+}
+
 const rules = {
   name: [{ required: true, message: '请输入厂房名称', trigger: 'blur' }],
   originalValue: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   depreciationYear: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
-  residualValueRate: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
+  residualValueRate: [{ required: true, validator: validateRateQuantity, trigger: 'blur' }],
   startDate: [{ required: true, message: '请选择折旧开始日期', trigger: 'blur' }],
   endDate: [{ required: true, message: '请选择折旧结束日期', trigger: 'blur' }]
 }
@@ -190,19 +201,26 @@ function endChange(val) {
 
 // 编辑之前
 CRUD.HOOK.beforeToEdit = (crud, form) => {
-  form.residualValueRate = form.residualValueRate * 100
+  form.residualValueRate = (form.residualValueRate * 100)?.toFixed(2)
 }
 
 // 提交前
 CRUD.HOOK.beforeSubmit = async () => {
   const valid = await formRef.value.validate()
   if (!valid) return false
-  form.residualValueRate = form.residualValueRate / 100
+  form.residualValueRate = (form.residualValueRate / 100)?.toFixed(4)
 }
 </script>
 
 <style lang="scss" scoped>
 .hint {
   color: #999;
+  }
+:deep(.el-input--small .el-input__inner) {
+  text-align: center;
+}
+
+:deep(.el-input__inner){
+  line-height: 1px!important;
 }
 </style>
