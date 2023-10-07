@@ -5,27 +5,29 @@
         v-model="query.category"
         :options="typeOption"
         :type="'other'"
-        default
+        showOptionAll
         :dataStructure="{ key: 'no', label: 'name', value: 'no' }"
         class="filter-item"
         @change="categoryChange"
       />
-      <template v-if="isNotBlank(areaInfo)">
-        <common-select
-          v-model="query.enclosurePlanId"
-          :options="areaInfo"
-          type="other"
-          :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
-          size="small"
-          clearable
-          placeholder="请选择围护计划"
-          class="filter-item"
-          style="width:200px;"
-          @change="crud.toQuery"
-        />
-      </template>
-      <template v-else>
-        <span style="font-size:12px;color:red;margin-left:10px;">*当前项目下未创建计划</span>
+      <template v-if="query.category">
+        <template v-if="isNotBlank(areaInfo)">
+          <common-select
+            v-model="query.enclosurePlanId"
+            :options="areaInfo"
+            type="other"
+            :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+            size="small"
+            clearable
+            placeholder="请选择围护计划"
+            class="filter-item"
+            style="width:200px;"
+            @change="crud.toQuery"
+          />
+        </template>
+        <template v-else>
+          <span style="font-size:12px;color:red;margin-left:10px;">*当前项目下未创建计划</span>
+        </template>
       </template>
     </div>
     <crudOperation :disabled="!query.enclosurePlanId">
@@ -98,6 +100,7 @@ watch(
     if (val) {
       crud.query.projectId = props.projectId
       query.enclosurePlanId = undefined
+      query.category = undefined
       getAllProjectPlan()
       crud.toQuery()
     }
@@ -112,9 +115,10 @@ async function getAllProjectPlan() {
       originAreaInfo.value = data
       emit('enclosurePlan', originAreaInfo.value)
       areaInfo.value = data.filter(v => v.category === crud.query.category) || []
-      if (areaInfo.value && areaInfo.value.length > 0) {
-        query.enclosurePlanId = areaInfo.value[0].id
-      }
+      query.enclosurePlanId = undefined
+      // if (areaInfo.value && areaInfo.value.length > 0) {
+      //   query.enclosurePlanId = areaInfo.value[0].id
+      // }
       crud.toQuery()
     } catch (e) {
       console.log('获取项目所有计划', e)
@@ -125,9 +129,9 @@ async function getAllProjectPlan() {
 function categoryChange(val) {
   query.enclosurePlanId = undefined
   areaInfo.value = originAreaInfo.value.filter(v => v.category === crud.query.category) || []
-  if (areaInfo.value && areaInfo.value.length > 0) {
-    query.enclosurePlanId = areaInfo.value[0].id
-  }
+  // if (areaInfo.value && areaInfo.value.length > 0) {
+  //   query.enclosurePlanId = areaInfo.value[0].id
+  // }
   crud.toQuery()
 }
 </script>
