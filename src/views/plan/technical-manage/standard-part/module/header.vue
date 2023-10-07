@@ -130,6 +130,7 @@ watch(
       crud.query.projectId = props.projectId
       query.monomerId = undefined
       query.areaId = undefined
+      areaInfo.value = []
       crud.toQuery()
     }
   },
