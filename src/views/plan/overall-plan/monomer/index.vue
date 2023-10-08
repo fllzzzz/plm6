@@ -173,7 +173,7 @@
             <template v-if="scope.row.monomerDetailList.length > 0">
               <div v-for="(k,i) in scope.row.monomerDetailList" :key="k.type">
                 <div :class="i===scope.row.monomerDetailList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
-                  {{ globalProject.startDate && k.date?dateDifference(globalProject.startDate,k.date):'-' }}
+                  {{ scope.row.startDate && k.date?dateDifference(scope.row.startDate,k.date):'-' }}
                 </div>
               </div>
             </template>
