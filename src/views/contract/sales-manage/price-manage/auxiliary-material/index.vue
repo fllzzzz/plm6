@@ -51,21 +51,21 @@
             :step="1"
             :min="0"
             :max="99999999"
-            :precision="decimalPrecision.contract"
+            :precision="decimalPrecision.contract===2?3:decimalPrecision.contract"
             :placeholder="crud.selections.findIndex(v=>v.id===row.id) === 0 ? '' : (row.unitPrice || '')"
             size="small"
             style="width: 100%"
             @change="handlePrice(row)"
           />
           <template v-else>
-            <span :class="row.status === 1 ? 'tc-danger' : ''">{{ row.unitPrice!=='同上'?toThousand(row.unitPrice):'-' }}</span>
+            <span :class="row.status === 1 ? 'tc-danger' : ''">{{ row.unitPrice!=='同上'?toThousand(row.unitPrice,(decimalPrecision.contract===2?3:decimalPrecision.contract)):'-' }}</span>
           </template>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额">
         <template #default="{ row }">
           <span :class="row.status === 1 ? 'tc-danger' : ''" >
-            <span>{{row.totalPrice?toThousand(row.totalPrice,decimalPrecision.contract):'-'}}</span>
+            <span>{{row.totalPrice?toThousand(row.totalPrice,(decimalPrecision.contract===2?3:decimalPrecision.contract)):'-'}}</span>
           </span>
         </template>
       </el-table-column>
