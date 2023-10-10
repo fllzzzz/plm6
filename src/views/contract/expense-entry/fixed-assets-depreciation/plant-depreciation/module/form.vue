@@ -24,11 +24,11 @@
         </el-form-item>
         <el-form-item label="原值（元）：" prop="originalValue">
           <el-input-number
-            v-show-thousand
             v-model="form.originalValue"
             style="width: 270px"
             placeholder="输入原值 单位：元"
             :controls="false"
+            :precision="decimalPrecision.contract"
             :min="0"
             :max="9999999999"
           />
@@ -163,6 +163,12 @@ CRUD.HOOK.beforeToEdit = (crud, form) => {
   form.residualValueRate = (form.residualValueRate * 100)?.toFixed(2)
 }
 
+// 新增之前
+CRUD.HOOK.beforeToAdd = (crud, form) => {
+  form.originalValue = undefined
+  form.name = undefined
+}
+
 // 处理刷新数据
 CRUD.HOOK.beforeToQuery = async () => {}
 
@@ -182,7 +188,7 @@ CRUD.HOOK.beforeSubmit = async () => {
   text-align: center;
 }
 
-:deep(.el-input__inner){
-  line-height: 1px!important;
+:deep(.el-input__inner) {
+  line-height: 1px !important;
 }
 </style>

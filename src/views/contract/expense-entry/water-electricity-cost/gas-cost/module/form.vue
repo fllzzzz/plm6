@@ -61,11 +61,11 @@
         </el-form-item>
         <el-form-item label="费用总额（元）：" prop="totalAmount">
           <el-input-number
-            v-show-thousand
             v-model="form.totalAmount"
             style="width: 270px"
             placeholder="输入费用总额"
             controls-position="right"
+            :precision="decimalPrecision.contract"
             :min="0"
             :max="9999999999"
           />
@@ -80,6 +80,9 @@ import { ref, defineProps, computed } from 'vue'
 // import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { regForm } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const prop = defineProps({
   query: {

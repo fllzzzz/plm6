@@ -75,11 +75,11 @@
         </el-form-item>
         <el-form-item label="报销费用（元）：" prop="reimburseAmount">
           <el-input-number
-            v-show-thousand
             v-model="form.reimburseAmount"
             style="width: 270px"
             placeholder="输入报销费用"
             controls-position="right"
+            :precision="decimalPrecision.contract"
             :min="0"
             :max="9999999999"
           />
@@ -106,6 +106,9 @@ import { regForm } from '@compos/use-crud'
 // import useDict from '@compos/store/use-dict'
 import userSelect from '@comp-common/user-select'
 import projectCascader from '@comp-base/project-cascader.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const expenseList = inject('expenseList')
 const subjectList = ref([])
