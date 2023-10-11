@@ -12,11 +12,11 @@
       <span>颜色：{{ component.color }}</span>
       <span>品牌：{{ component.brand }}</span>
     </div>
-    <span class="subtitle"> 使用部位 </span>
+    <!-- <span class="subtitle"> 使用部位 </span>
     <div class="info">
       <span>项目：{{ component.project?.shortName }}</span>
       <span v-if="showMonomer">单体：{{ component.monomer?.name }}</span>
-      <!-- <span v-if="showArea">区域：{{ component.area?.name }}</span> -->
+      <span v-if="showArea">区域：{{ component.area?.name }}</span>
     </div>
     <template v-if="showProductionLine">
       <span class="subtitle"> 生产信息 </span>
@@ -25,10 +25,10 @@
           <span>工厂：{{ component.factory?.name }}</span>
           <span>生产线：{{ component.productionLine?.name }}</span>
         </template>
-        <!-- <span v-if="manufacturerName">制造商：{{ manufacturerName  }}</span> -->
-        <!-- <span>任务数量：{{ component.taskQuantity  }}</span> -->
+        <span v-if="manufacturerName">制造商：{{ manufacturerName  }}</span>
+        <span>任务数量：{{ component.taskQuantity  }}</span>
       </div>
-    </template>
+    </template> -->
   </div>
 </template>
 
@@ -53,8 +53,8 @@ const component = ref({
 const id = route.query.id
 const factoryId = route.query.factoryId
 const taskId = route.query.taskId
-const showProductionLine = ref(Boolean(+route.query.sl))
-const showMonomer = ref(Boolean(+route.query.sm))
+// const showProductionLine = ref(Boolean(+route.query.sl))
+// const showMonomer = ref(Boolean(+route.query.sm))
 const params = {
   id,
   factoryId,

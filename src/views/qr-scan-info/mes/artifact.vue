@@ -15,7 +15,7 @@
       <span v-if="printWeightTypeEnum.NONE.V !== weightType">重量：{{ component.weight }}{{ component.weight ? ' kg' : '' }}</span>
       <span>面积：{{ component.surfaceArea }}{{ component.surfaceArea ? ' ㎡' : '' }}</span>
     </div>
-    <span class="subtitle"> 使用部位 </span>
+    <!-- <span class="subtitle"> 使用部位 </span>
     <div class="info">
       <span>项目：{{ component.project?.shortName }}</span>
       <span v-if="showMonomer">单体：{{ component.monomer?.name }}</span>
@@ -28,10 +28,10 @@
           <span>工厂：{{ component.factory?.name }}</span>
           <span>生产线：{{ component.productionLine?.name }}</span>
         </template>
-        <!-- <span v-if="manufacturerName">制造商：{{ manufacturerName  }}</span> -->
-        <!-- <span>任务数量：{{ component.taskQuantity  }}</span> -->
+        <span v-if="manufacturerName">制造商：{{ manufacturerName  }}</span>
+        <span>任务数量：{{ component.taskQuantity  }}</span>
       </div>
-    </template>
+    </template> -->
   </div>
 </template>
 
@@ -68,9 +68,9 @@ const id = route.query.id
 const factoryId = route.query.factoryId
 const taskId = route.query.taskId
 const weightType = ref(+route.query.wt)
-const showProductionLine = ref(Boolean(+route.query.sl))
-const showArea = ref(Boolean(+route.query.sa))
-const showMonomer = ref(Boolean(+route.query.sm))
+// const showProductionLine = ref(Boolean(+route.query.sl))
+// const showArea = ref(Boolean(+route.query.sa))
+// const showMonomer = ref(Boolean(+route.query.sm))
 const params = {
   id,
   factoryId,
