@@ -24,13 +24,24 @@
         </el-form-item>
         <el-form-item label="初始价值（元）" prop="originalValue">
           <el-input-number
-            v-show-thousand
             v-model="form.originalValue"
             style="width: 270px"
-            placeholder="输入原值 单位：元"
-            :controls="false"
+            placeholder="输入初始价值 单位元"
+            controls-position="right"
+            :precision="decimalPrecision.contract"
             :min="0"
             :max="9999999999"
+          />
+        </el-form-item>
+        <el-form-item label="净残值率（%）" prop="residualValueRate">
+          <el-input-number
+            v-model="form.residualValueRate"
+            style="width: 270px"
+            placeholder="输入净残值率"
+            controls-position="right"
+            :precision="2"
+            :min="0"
+            :max="100"
           />
         </el-form-item>
         <el-form-item label="折旧年限" prop="depreciationYear">
@@ -38,24 +49,12 @@
             v-model="form.depreciationYear"
             style="width: 270px"
             placeholder="输入折旧年限"
-            :controls="false"
+            controls-position="right"
             :precision="1"
-            :step="0.1"
+            :step="1"
             :min="0"
             :max="1000"
             @change="yearChange"
-          />
-        </el-form-item>
-        <el-form-item label="净残值率（%）：" prop="residualValueRate">
-          <el-input
-            v-model="form.residualValueRate"
-            style="width: 270px"
-            placeholder="输入净残值率"
-            type="number"
-            :precision="2"
-            maxlength="4"
-            :min="0"
-            :max="100"
           />
         </el-form-item>
         <el-form-item label="折旧开始日期" prop="startDate">
@@ -68,6 +67,7 @@
             :clearable="false"
             placeholder="选择折旧开始日期"
             style="width: 270px"
+            @change="startChange"
           />
         </el-form-item>
         <el-form-item label="折旧结束日期" prop="endDate">
@@ -110,7 +110,7 @@
 import { ref, computed } from 'vue'
 
 import { depreciationTypeEnum } from '@enum-ms/contract'
-import { isBlank, toFixed } from '@/utils/data-type'
+import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 
 import { regForm } from '@compos/use-crud'
 import moment from 'moment'
@@ -186,22 +186,69 @@ const monthValueDepreciationAmount = computed(() => {
     : ''
 })
 
-function yearChange(val) {
-  if (val) {
-    const timestamp = moment(+form.startDate).add(val, 'years').valueOf() // 获取xx年后的时间戳
+// 修改开始时间
+function modifyStartTime() {
+  if (form.depreciationYear !== undefined && isNotBlank(form.endDate)) {
+    // 修改开始时间
+    const timestamp = moment(+form.endDate).add(-form.depreciationYear, 'years').valueOf() // 获取xx年前的时间戳
+    const startDate = moment(timestamp).startOf('day') // 获取当天 0 点的时间
+    form.startDate = `${startDate.valueOf()}`
+  }
+}
+
+// 修改结束时间
+function modifyEndTime() {
+  if (form.depreciationYear !== undefined && isNotBlank(form.startDate)) {
+    // 修改结束时间
+    const timestamp = moment(+form.startDate).add(form.depreciationYear, 'years').valueOf() // 获取xx年后的时间戳
     const endOfDay = moment(timestamp).endOf('day') // 获取当天 24 点的时间
     form.endDate = `${endOfDay.valueOf()}`
   }
 }
 
+// 修改折旧年限
+function modifyYear() {
+  if (isNotBlank(form.startDate) && isNotBlank(form.endDate)) {
+    const duration = moment.duration(form.endDate - form.startDate) // 计算时间差
+    form.depreciationYear = +toFixed(duration.asYears(), 1) // 将时间差换算成年份
+  }
+}
+
+function yearChange(val) {
+  if (val !== undefined) {
+    if (isNotBlank(form.startDate)) {
+      modifyEndTime()
+    } else if (isNotBlank(form.endDate)) {
+      modifyStartTime()
+    }
+  }
+}
+
+function startChange(val) {
+  if (val !== null) {
+    if (isNotBlank(form.endDate)) {
+      modifyYear()
+    } else if (form.depreciationYear !== undefined) {
+      modifyEndTime()
+    }
+  }
+}
+
 function endChange(val) {
-  const duration = moment.duration(form.endDate - form.startDate)// 计算时间差
-  form.depreciationYear = toFixed(duration.asYears(), 1) // 将时间差换算成年份
+  if (val !== null) {
+    if (isNotBlank(form.startDate)) {
+      modifyYear()
+    } else if (form.depreciationYear !== undefined) {
+      modifyEndTime()
+    }
+  }
 }
 
 // 编辑之前
 CRUD.HOOK.beforeToEdit = (crud, form) => {
-  form.residualValueRate = (form.residualValueRate * 100)?.toFixed(2)
+  form.residualValueRate = +(form.residualValueRate * 100)?.toFixed(2)
+  form.startDate = String(form.startDate)
+  form.endDate = String(form.endDate)
 }
 
 // 提交前
@@ -215,12 +262,5 @@ CRUD.HOOK.beforeSubmit = async () => {
 <style lang="scss" scoped>
 .hint {
   color: #999;
-  }
-:deep(.el-input--small .el-input__inner) {
-  text-align: center;
-}
-
-:deep(.el-input__inner){
-  line-height: 1px!important;
 }
 </style>

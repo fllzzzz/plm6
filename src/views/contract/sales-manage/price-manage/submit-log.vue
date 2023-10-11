@@ -81,12 +81,12 @@
         </el-table-column>
         <el-table-column key="unitPrice" prop="unitPrice" show-overflow-tooltip label="综合单价" align="center" min-width="120">
           <template #default="{ row }">
-            <span style="color:red;">{{ row.unitPrice!=='同上'?toThousand(row.unitPrice):'-' }}</span>
+            <span style="color:red;">{{ row.unitPrice!=='同上'?toThousand(row.unitPrice,(decimalPrecision.contract === 2 ? 3 : decimalPrecision.contract)):'-' }}</span>
           </template>
         </el-table-column>
         <el-table-column key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额">
           <template #default="{ row }">
-            <span style="color:red;" v-thousand="{val:row.totalPrice ||0, dp:decimalPrecision.contract}" />
+            <span style="color:red;" v-thousand="{val:row.totalPrice ||0, dp:(decimalPrecision.contract === 2 ? 3 : decimalPrecision.contract)}" />
           </template>
         </el-table-column>
         <el-table-column label="操作" width="100px" align="center" fixed="right">

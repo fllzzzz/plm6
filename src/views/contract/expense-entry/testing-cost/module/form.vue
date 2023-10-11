@@ -39,7 +39,15 @@
           />
         </el-form-item>
         <el-form-item label="费用：" prop="feeAmount">
-          <el-input ref="saveTagInput" v-model="form.feeAmount" placeholder="输入费用 单位（元）" style="width: 270px" />
+           <el-input-number
+            v-model="form.feeAmount"
+            style="width: 270px"
+            placeholder="输入费用 单位（元）"
+            :controls="false"
+            :precision="decimalPrecision.contract"
+            :min="0"
+            :max="9999999999"
+          />
         </el-form-item>
         <el-form-item label="附件：" prop="attachments">
           <upload-btn
@@ -75,6 +83,9 @@ import ExportButton from '@comp-common/export-button/index.vue'
 import projectCascader from '@comp-base/project-cascader.vue'
 
 import useVisible from '@compos/use-visible'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['update:visible', 'refresh', 'success'])
 const props = defineProps({

@@ -67,8 +67,12 @@
         key="reimburseAmount"
         prop="reimburseAmount"
         :show-overflow-tooltip="true"
-        label="报销金额"
-      />
+        label="报销金额（元）"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.reimburseAmount?.toFixed(decimalPrecision.contract) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('project')"
         align="center"
@@ -185,6 +189,9 @@ import udOperation from '@crud/UD.operation'
 import mHeader from './module/header.vue'
 import mForm from './module/form.vue'
 import mDetail from './module/detail.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: true,

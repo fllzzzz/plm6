@@ -788,6 +788,10 @@ function uploadSuccess() {
 
 function getPlate() {
   plateOption.value = crud.query.category !== TechnologyTypeAllEnum.BENDING.V ? totalTechInfo.value[crud.query.category] : []
+  // 建钢时plateOption的值是undefined，滞后修改
+  console.log(plateOption.value)
+  console.log(totalTechInfo.value[crud.query.category])
+  console.log(crud.query.category)
 }
 async function getTechInfo() {
   try {
@@ -838,7 +842,7 @@ function getTotalData(row) {
   }
   if (crud.query.category === TechnologyTypeAllEnum.BENDING.V || crud.query.category === TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V) {
     if (row.length && row.quantity && row.unfoldedWidth) {
-      row.totalArea = (row.unfoldedWidth * row.length * row.quantity) / 1000000
+      row.totalArea = (row.width * row.length * row.quantity) / 1000000
     }
   } else {
     if (row.length && row.quantity && row.width) {
