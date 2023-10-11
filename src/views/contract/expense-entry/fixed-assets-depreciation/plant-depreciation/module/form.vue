@@ -24,11 +24,11 @@
         </el-form-item>
         <el-form-item label="初始价值（元）" prop="originalValue">
           <el-input-number
-            v-show-thousand
             v-model="form.originalValue"
             style="width: 270px"
             placeholder="输入初始价值 单位元"
             controls-position="right"
+            :precision="decimalPrecision.contract"
             :min="0"
             :max="9999999999"
           />
@@ -140,11 +140,21 @@ const validateQuantity = (rule, value, callback) => {
   callback()
 }
 
+const validateRateQuantity = (rule, value, callback) => {
+  if (!value) {
+    callback(new Error('填写数据必须大于0'))
+  }
+  if (value > 100) {
+    callback(new Error('填写数据必须小于100'))
+  }
+  callback()
+}
+
 const rules = {
   name: [{ required: true, message: '请输入厂房名称', trigger: 'blur' }],
   originalValue: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   depreciationYear: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
-  residualValueRate: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
+  residualValueRate: [{ required: true, validator: validateRateQuantity, trigger: 'blur' }],
   startDate: [{ required: true, message: '请选择折旧开始日期', trigger: 'blur' }],
   endDate: [{ required: true, message: '请选择折旧结束日期', trigger: 'blur' }]
 }
@@ -237,14 +247,14 @@ function endChange(val) {
 
 // 编辑之前
 CRUD.HOOK.beforeToEdit = (crud, form) => {
-  form.residualValueRate = form.residualValueRate * 100
+  form.residualValueRate = (form.residualValueRate * 100)?.toFixed(2)
 }
 
 // 提交前
 CRUD.HOOK.beforeSubmit = async () => {
   const valid = await formRef.value.validate()
   if (!valid) return false
-  form.residualValueRate = form.residualValueRate / 100
+  form.residualValueRate = (form.residualValueRate / 100)?.toFixed(4)
 }
 </script>
 

@@ -73,6 +73,7 @@
   </div>
   <crudOperation>
     <template #optRight>
+      <common-radio-button class="filter-item" :options="unitOptions" :dataStructure="{label: 'label', key: 'value', value: 'value'}" v-model="unitValue" @change="unitChange" />
       <el-popover placement="bottom-start" width="400" trigger="click">
         <el-form ref="form" :model="printConfig">
           <!-- <el-form-item label="制造商名称">
@@ -123,7 +124,7 @@
 <script setup>
 import { detail } from '@/api/ship-manage/pack-and-ship/pack-list'
 import { packageRecordAdd } from '@/api/mes/label-print/print-record'
-import { inject, reactive, defineExpose, computed, defineEmits } from 'vue'
+import { inject, reactive, defineExpose, computed, defineEmits, ref } from 'vue'
 import { mapGetters } from '@/store/lib'
 import moment from 'moment'
 
@@ -140,7 +141,20 @@ import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import { ElMessage } from 'element-plus'
 
-const emit = defineEmits(['getDetail'])
+const unitOptions = ref([
+  {
+    label: '核算单位',
+    value: 1
+  },
+  {
+    label: '计量单位',
+    value: 2
+  }
+])
+
+const unitValue = ref(1)
+
+const emit = defineEmits(['getDetail', 'changeUnit'])
 const permission = inject('permission')
 const { user } = mapGetters(['user'])
 const defaultQuery = {
@@ -169,6 +183,11 @@ const printParams = computed(() => {
   }
   return undefined
 })
+
+const unitChange = (v) => {
+  unitValue.value = v
+  emit('changeUnit', v)
+}
 
 function handleBeforePrint() {
   if (!isNotBlank(printParams.value)) {
@@ -310,7 +329,8 @@ async function getLabelInfo(row) {
     auxList: _auxList,
     productType: row.productType,
     project: row.project,
-    companyName: printConfig.manufacturerName
+    companyName: printConfig.manufacturerName,
+    unitValue: unitValue.value
   }
   // 生产线信息
   return {

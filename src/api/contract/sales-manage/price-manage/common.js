@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 /**
- * 保存商务价格
+ * 保存后商务价格
  * @param {Number} type | required 产品类型
  * @param {Number} monomerId | required 单体id
  * @param {String} remark  备注
@@ -82,3 +82,42 @@ export function priceModifyDetail(id) {
   })
 }
 
+// 价格提交记录列表
+export function getTempPrice(params) {
+  return request({
+    module: 'contract',
+    url: 'business/tempPrice',
+    method: 'get',
+    params
+  })
+}
+
+// 删除价格提交记录
+export function deleteTempPrice(ids) {
+  return request({
+    module: 'contract',
+    url: 'business/tempPrice',
+    method: 'delete',
+    data: ids
+  })
+}
+
+// 记录提交审核
+export function saveTempPrice(data) {
+  return request({
+    module: 'contract',
+    url: 'business/tempPrice/commitCheck',
+    method: 'post',
+    data
+  })
+}
+
+// 获取待提交数量
+export function saveNum(params) {
+  return request({
+    module: 'contract',
+    url: 'business/tempPrice/count',
+    method: 'get',
+    params
+  })
+}

@@ -10,7 +10,7 @@
       :data="crud.data"
       row-key="rowId"
       style="width: 100%"
-      :max-height="maxHeight"
+      :max-height="maxHeight-80"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column v-if="columns.visible('project')" show-overflow-tooltip key="project" prop="project" label="项目" min-width="140" />
@@ -36,7 +36,7 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <mDetail :detail-info="detailInfo" @success="crud.refresh" />
+    <mDetail :detail-info="detailInfo" @success="handleSuccess" />
   </div>
 </template>
 
@@ -91,12 +91,15 @@ watch(
   (val) => {
     if (val) {
       crud.toQuery()
-    } else {
-      emit('refresh-data')
     }
   },
   { immediate: true }
 )
+
+function handleSuccess() {
+  crud.refresh()
+  emit('refresh-data')
+}
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.el-drawer__header'],

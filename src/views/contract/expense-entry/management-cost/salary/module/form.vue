@@ -45,11 +45,11 @@
         </el-form-item>
         <el-form-item label="工资总额（元）：" prop="totalWage">
           <el-input-number
-            v-show-thousand
             v-model="form.totalWage"
             style="width: 270px"
             placeholder="输入工资总额"
             controls-position="right"
+            :precision="decimalPrecision.contract"
             :min="0"
             :max="9999999999"
           />
@@ -74,6 +74,9 @@ import { regForm } from '@compos/use-crud'
 import { fileClassifyEnum } from '@enum-ms/file'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import ExportButton from '@comp-common/export-button/index.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const prop = defineProps({
   query: {

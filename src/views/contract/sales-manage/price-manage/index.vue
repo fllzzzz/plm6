@@ -18,13 +18,23 @@
             type="enumSL"
             size="small"
             class="filter-item"
-            @change="()=>{if(productType===contractSaleTypeEnum.AUXILIARY_MATERIAL.V){monomerId=undefined;areaId=undefined}}"
+            @change="(val)=>{if(val===contractSaleTypeEnum.ENCLOSURE.V){monomerId=undefined;areaId=undefined;relationType=undefined}else if(val===contractSaleTypeEnum.AUXILIARY_MATERIAL.V){monomerId=undefined;areaId=undefined;category=undefined;relationType=standardPartPriceSearchEnum.STRUCTURE.V;enclosurePlanId=undefined}else{category=undefined;enclosurePlanId=undefined;relationType=undefined;};fetchSaveCount();}"
           />
-          <template v-if="productType!==contractSaleTypeEnum.AUXILIARY_MATERIAL.V && productType!==contractSaleTypeEnum.ENCLOSURE.V">
+          <common-radio-button
+            v-if="productType===contractSaleTypeEnum.AUXILIARY_MATERIAL.V"
+            v-model="relationType"
+            :options="standardPartPriceSearchEnum.ENUM"
+            type="enum"
+            size="small"
+            class="filter-item"
+            @change="(val)=>{if(val===standardPartPriceSearchEnum.ENCLOSURE.V){monomerId=undefined;areaId=undefined}else{category=undefined;enclosurePlanId=undefined};fetchSaveCount()}"
+          />
+          <template v-if="((relationType && relationType!==standardPartPriceSearchEnum.ENCLOSURE.V) && productType!==contractSaleTypeEnum.ENCLOSURE.V) || productType!==contractSaleTypeEnum.ENCLOSURE.V && productType!==contractSaleTypeEnum.AUXILIARY_MATERIAL.V">
             <monomer-select
               v-model="monomerId"
               :project-id="projectId"
               class="filter-item"
+              :default="relationType?false:true"
               clearable
               @change="handleMonomerChange"
               @getAreaInfo="getAreaInfo"
@@ -39,10 +49,10 @@
               placeholder="请选择区域"
               class="filter-item"
               style="width:200px;"
-              @change="fetchCost"
+              @change="costNumChange"
             />
           </template>
-          <template v-if="productType===contractSaleTypeEnum.ENCLOSURE.V">
+          <template v-if="productType===contractSaleTypeEnum.ENCLOSURE.V || relationType===standardPartPriceSearchEnum.ENCLOSURE.V">
             <common-radio-button
               v-model="category"
               :options="typeOption"
@@ -61,7 +71,7 @@
               placeholder="请选择围护计划"
               class="filter-item"
               style="width:200px;"
-              @change="fetchCost"
+              @change="costNumChange"
             />
           </template>
         </div>
@@ -85,7 +95,20 @@
         </el-row>
       </div>
     </div>
-    <component :is="currentView" ref="domRef" @refresh-count="fetchModifyCount" :category="category" />
+    <component :is="currentView" ref="domRef" @refresh-count="successFetchNum" :category="category" @showLog="showLog"/>
+    <!-- 提交记录 -->
+    <submitLog
+    v-model="submitVisible"
+    :projectId="projectId"
+    :type="productType"
+    :monomerId="monomerId"
+    :areaId="areaId"
+    :category="category"
+    :enclosurePlanId="enclosurePlanId"
+    :projectType="currentProjectVal?.projectType"
+    :relationType="relationType"
+    @refresh-count="successFetchNum"
+    @success="refreshData()"/>
     <!-- 商务变更记录 -->
     <common-drawer
       append-to-body
@@ -107,13 +130,14 @@
 </template>
 
 <script setup>
-import { cost, priceModifyCount } from '@/api/contract/sales-manage/price-manage/common'
+import { cost, priceModifyCount, saveNum } from '@/api/contract/sales-manage/price-manage/common'
+import { getPriceConfigPublic as getPriceConfig } from '@/api/config/mes/base'
 import { allProjectPlan } from '@/api/enclosure/enclosure-plan/area'
 import { ref, computed, onMounted, provide } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { priceManagePM as permission } from '@/page-permission/contract'
 
-import { TechnologyTypeAllEnum } from '@enum-ms/contract'
+import { TechnologyTypeAllEnum, standardPartPriceSearchEnum } from '@enum-ms/contract'
 import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { debounce } from '@/utils'
 import { isBlank } from '@data-type/index'
@@ -129,6 +153,7 @@ import modifyRecord from './price-modify-list/index'
 import projectVisaSelect from '@comp-base/project-visa-select'
 import Panel from '@/components/Panel'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
+import submitLog from './submit-log'
 
 const { decimalPrecision } = useDecimalPrecision()
 
@@ -166,6 +191,11 @@ const enclosureAreaInfo = ref([])
 const enclosurePlanId = ref()
 const category = ref()
 const typeOption = ref([])
+const priceEditMode = ref()
+const submitVisible = ref(false)
+const saveCount = ref()
+const relationType = ref()
+
 const techOptions = [
   {
     name: '压型彩板',
@@ -199,6 +229,10 @@ provide('areaId', areaId)
 provide('projectId', projectId)
 provide('modifyVisible', modifyVisible)
 provide('enclosurePlanId', enclosurePlanId)
+provide('priceEditMode', priceEditMode)
+provide('saveCount', saveCount)
+provide('relationType', relationType)
+provide('category', category)
 
 onMounted(() => {
   handleProjectChange()
@@ -213,6 +247,22 @@ function handleProjectChange() {
 // 单体变动
 function handleMonomerChange() {
   fetchCost()
+}
+
+function successFetchNum() {
+  fetchModifyCount()
+  fetchSaveCount()
+}
+
+fetchSubmitConfig()
+
+async function fetchSubmitConfig() {
+  try {
+    const data = await getPriceConfig()
+    priceEditMode.value = data?.priceEditMode
+  } catch (error) {
+    console.log('获取特征定义审批配置', error)
+  }
 }
 
 function projectChange(val) {
@@ -231,14 +281,21 @@ function projectChange(val) {
       getAllProjectPlan()
     }
   }
+  fetchSaveCount()
 }
 
 function categoryChange(val) {
   enclosurePlanId.value = undefined
   enclosureAreaInfo.value = allEnclosureAreaInfo.value.filter(v => v.category === category.value) || []
-  if (enclosureAreaInfo.value && enclosureAreaInfo.value.length > 0) {
+  if (enclosureAreaInfo.value && enclosureAreaInfo.value.length > 0 && !relationType.value) {
     enclosurePlanId.value = enclosureAreaInfo.value[0].id
   }
+  fetchSaveCount()
+}
+
+function costNumChange() {
+  fetchSaveCount()
+  fetchCost()
 }
 
 async function getAllProjectPlan() {
@@ -256,6 +313,7 @@ async function getAllProjectPlan() {
 
 function getAreaInfo(val) {
   fetchCost()
+  fetchSaveCount()
   areaInfo.value = val
 }
 // 获取项目造价
@@ -294,11 +352,64 @@ const fetchModifyCount = debounce(async function () {
   }
 }, 100, false)
 
+// 获取提交记录数量
+const fetchSaveCount = debounce(async function () {
+  if (!checkPermission(permission.list)) return
+  try {
+    let countParams = {}
+    switch (productType.value) {
+      case contractSaleTypeEnum.ENCLOSURE.V:
+        countParams = {
+          category: category.value,
+          enclosurePlanId: enclosurePlanId.value,
+          projectId: projectId.value,
+          projectType: currentProjectVal.value?.projectType,
+          type: productType.value
+        }
+        break
+      case contractSaleTypeEnum.AUXILIARY_MATERIAL.V:
+        countParams = relationType.value === standardPartPriceSearchEnum.STRUCTURE.V ? {
+          areaId: areaId.value,
+          monomerId: monomerId.value,
+          projectId: projectId.value,
+          projectType: currentProjectVal.value?.projectType,
+          relationType: relationType.value,
+          type: productType.value
+        } : {
+          category: category.value,
+          enclosurePlanId: enclosurePlanId.value,
+          projectId: projectId.value,
+          projectType: currentProjectVal.value?.projectType,
+          relationType: relationType.value,
+          type: productType.value
+        }
+        break
+      default:
+        countParams = {
+          areaId: areaId.value,
+          monomerId: monomerId.value,
+          projectId: projectId.value,
+          projectType: currentProjectVal.value?.projectType,
+          type: productType.value
+        }
+        break
+    }
+    saveCount.value = await saveNum(countParams)
+  } catch (error) {
+    console.log('提交记录待提交数量', error)
+  }
+}, 100, false)
+
 // 刷新数据
 function refreshData() {
   handleProjectChange()
   domRef.value.refresh()
 }
+
+function showLog() {
+  submitVisible.value = true
+}
+
 </script>
 
 <style lang="scss" scoped>

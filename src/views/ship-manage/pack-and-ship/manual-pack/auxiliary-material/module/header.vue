@@ -30,13 +30,13 @@
           @keyup.enter="crud.toQuery"
         />
         <el-input
-          v-model="query.material"
-          size="small"
-          placeholder="输入材质搜索"
-          style="width: 170px"
-          class="filter-item"
-          clearable
-          @keyup.enter="crud.toQuery"
+        v-model="query.material"
+        size="small"
+        placeholder="输入材质搜索"
+        style="width: 170px"
+        class="filter-item"
+        clearable
+        @keyup.enter="crud.toQuery"
         />
         <rrOperation />
       </div>

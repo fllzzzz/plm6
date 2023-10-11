@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--工具栏-->
-    <mHeader ref="headerRef" v-bind="$attrs" @checkSubmit="checkModifyData" :showAble="showAble" :submitList="submitList" />
+    <mHeader ref="headerRef" v-bind="$attrs" @checkSubmit="checkModifyData" :showAble="showAble" :submitList="submitList" @showVisible="showVisible" />
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -31,10 +31,10 @@
         align="center"
         min-width="120"
       />
-      <el-table-column v-if="columns.visible('accountingUnit')" prop="accountingUnit" :show-overflow-tooltip="true" label="核算单位" align="center" min-width="100" />
-      <el-table-column v-if="columns.visible('mete')" prop="mete" :show-overflow-tooltip="true" label="核算量" align="center" min-width="100" />
       <el-table-column v-if="columns.visible('measureUnit')" :show-overflow-tooltip="true" prop="measureUnit" label="单位" align="center" />
       <el-table-column v-if="columns.visible('quantity')" :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" />
+      <el-table-column v-if="columns.visible('accountingUnit')" prop="accountingUnit" :show-overflow-tooltip="true" label="核算单位" align="center" min-width="100" />
+      <el-table-column v-if="columns.visible('mete')" prop="mete" :show-overflow-tooltip="true" label="核算量" align="center" min-width="100" />
       <el-table-column
         v-if="columns.visible('unitPrice')"
         key="unitPrice"
@@ -51,21 +51,21 @@
             :step="1"
             :min="0"
             :max="99999999"
-            :precision="decimalPrecision.contract"
+            :precision="decimalPrecision.contract===2?3:decimalPrecision.contract"
             :placeholder="crud.selections.findIndex(v=>v.id===row.id) === 0 ? '' : (row.unitPrice || '')"
             size="small"
             style="width: 100%"
             @change="handlePrice(row)"
           />
           <template v-else>
-            <span :class="row.status === 1 ? 'tc-danger' : ''">{{ row.unitPrice!=='同上'?toThousand(row.unitPrice):'-' }}</span>
+            <span :class="row.status === 1 ? 'tc-danger' : ''">{{ row.unitPrice!=='同上'?toThousand(row.unitPrice,(decimalPrecision.contract===2?3:decimalPrecision.contract)):'-' }}</span>
           </template>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额">
         <template #default="{ row }">
           <span :class="row.status === 1 ? 'tc-danger' : ''" >
-            <span>{{row.totalPrice?toThousand(row.totalPrice,decimalPrecision.contract):'-'}}</span>
+            <span>{{row.totalPrice?toThousand(row.totalPrice,(decimalPrecision.contract===2?3:decimalPrecision.contract)):'-'}}</span>
           </span>
         </template>
       </el-table-column>
@@ -77,7 +77,7 @@
 
 <script setup>
 import crudApi from '@/api/contract/sales-manage/price-manage/auxiliary-material'
-import { ref, defineExpose } from 'vue'
+import { ref, defineExpose, defineEmits } from 'vue'
 import { priceManagePM as permission } from '@/page-permission/contract'
 import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 
@@ -101,6 +101,8 @@ const optShow = {
   download: false
 }
 
+const emit = defineEmits(['showLog'])
+
 const tableRef = ref()
 const headerRef = ref()
 const showAble = ref(false)
@@ -113,7 +115,7 @@ const { crud, columns } = useCRUD(
     permission: { ...permission },
     crudApi: { ...crudApi },
     optShow: { ...optShow },
-    requiredQuery: ['projectId']
+    requiredQuery: ['projectId', 'relationType']
   },
   tableRef
 )
@@ -133,6 +135,10 @@ const tableRules = {
 const ditto = new Map([
   ['unitPrice', '同上']
 ])
+
+function showVisible() {
+  emit('showLog')
+}
 
 function selectable(row) {
   return row.status !== 1

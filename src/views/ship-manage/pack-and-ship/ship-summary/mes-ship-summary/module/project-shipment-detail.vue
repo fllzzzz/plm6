@@ -133,6 +133,16 @@
         <el-table-column key="cargoQuantity" prop="cargoQuantity" label="已发运" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="unCargoQuantity" prop="unCargoQuantity" label="未发运" align="center" :show-overflow-tooltip="true" />
       </common-table>
+      <!-- 分页组件 -->
+      <el-pagination
+        v-show="category === mesShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V"
+        :total="total"
+        :current-page="queryPage.pageNumber"
+        :page-size="queryPage.pageSize"
+        layout="total, prev, pager, next, sizes"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </div>
     <component
       :is="showComponent"
@@ -161,6 +171,7 @@ import { weightTypeEnum } from '@enum-ms/common'
 import { convertUnits } from '@/utils/convert/unit'
 import { mesShipStatisticsTypeEnum } from '@enum-ms/ship-manage'
 import monomerSelect from '@/components-system/plan/monomer-select'
+import usePagination from '@compos/use-pagination'
 import mDetail from './detail.vue'
 import detailDrawer from './detail-drawer.vue'
 
@@ -183,6 +194,8 @@ const props = defineProps({
     type: Number
   }
 })
+
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchAuxMat })
 
 const category = ref(mesShipStatisticsTypeEnum.STRUCTURE.V)
 const list = ref([])
@@ -258,13 +271,15 @@ async function fetchSummary() {
 
 async function fetchAuxMat() {
   try {
-    const { content } = await auxInboundDetail({
+    const { content, totalElements } = await auxInboundDetail({
       projectId: props.currentRow.projectId,
       workshopId: props.workshopId,
       relationType: mesShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V,
-      ...query.value
+      ...query.value,
+      ...queryPage
     })
     list.value = content || []
+    setTotalPage(totalElements)
   } catch (e) {
     console.log('获取配套件详情失败')
   }

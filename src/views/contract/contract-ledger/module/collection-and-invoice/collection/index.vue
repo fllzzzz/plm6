@@ -122,6 +122,18 @@
           <div v-else>{{ scope.row.collectionDepositBank }}</div>
         </template>
       </el-table-column>
+      <el-table-column key="collectionBankAccount" prop="collectionBankAccount" :show-overflow-tooltip="true" label="银行卡号" align="center" min-width="120">
+        <template v-slot="scope">
+          <el-input
+            v-if="scope.row.isModify"
+            v-model.trim="scope.row.collectionBankAccount"
+            placeholder="银行卡号"
+            style="width:100%;"
+            maxlength="50"
+          />
+          <div v-else>{{ scope.row.collectionBankAccount }}</div>
+        </template>
+      </el-table-column>
       <el-table-column key="paymentUnit" prop="paymentUnit" label="付款单位" align="center" min-width="120" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <el-input
@@ -199,10 +211,10 @@
               @confirm="rowCancel(scope.row,scope.$index)"
             >
               <template #reference>
-                <common-button type="primary" size="mini">取消</common-button>
+                <common-button type="info" plain size="mini">取消</common-button>
               </template>
             </el-popconfirm>
-            <common-button type="info" plain size="mini" @click="rowSubmit(scope.row)">保存</common-button>
+            <common-button type="primary" size="mini" @click="rowSubmit(scope.row)">保存</common-button>
           </template>
         </template>
       </el-table-column>
@@ -279,7 +291,7 @@ const { crud, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    invisibleColumns: ['haveCollectionAmount', 'collectionMode', 'collectionReason', 'collectionDepositBank', 'collectionBankAccount', 'paymentBankAccount', 'paymentDepositBank', 'auditorName', 'auditTime'],
+    invisibleColumns: ['haveCollectionAmount', 'collectionMode', 'collectionReason', 'collectionDepositBank', 'paymentBankAccount', 'paymentDepositBank', 'auditorName', 'auditTime'],
     hasPagination: true
   },
   tableRef
@@ -506,6 +518,13 @@ $font-size: 1.5em;
   ::v-deep(.el-select .el-input__inner){
     padding-left:2px;
     padding-right:5px;
+  }
+  ::v-deep(.el-input--small .el-input__inner){
+    padding-left:2px;
+    padding-right:2px;
+  }
+  ::v-deep(.el-date-editor .el-input__inner){
+    padding-left:30px;
   }
   ::v-deep(.el-input-number .el-input__inner, .el-input__inner) {
     text-align: left;

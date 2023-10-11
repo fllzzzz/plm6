@@ -52,11 +52,11 @@
         </el-form-item>
         <el-form-item :label="`${costTypeEnum.VL[crud.query.type]}（元）`" prop="totalAmount">
           <el-input-number
-            v-show-thousand
             v-model="form.totalAmount"
             style="width: 270px"
             :placeholder="`请输入${costTypeEnum.VL[crud.query.type]}`"
             controls-position="right"
+            :precision="decimalPrecision.contract"
             :min="0"
             :max="9999999999"
           />
@@ -71,8 +71,10 @@ import { getDate } from '@/api/contract/expense-entry/water-electricity-cost'
 import { ref, computed } from 'vue'
 
 import { costTypeEnum } from '@enum-ms/contract'
-
 import { regForm } from '@compos/use-crud'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 // 是否是编辑状态
 const isEdit = computed(() => {

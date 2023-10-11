@@ -353,7 +353,7 @@ function timeChange(value, k) {
 
 function totalTime(k) {
   const startDate = k.deepVal?.startDate || k.processVal?.startDate || k.deliveryVal?.startDate || k.installVal?.startDate || undefined
-  const endDate = k.deliveryVal?.startDate || k.installVal?.endDate || k.processVal?.endDate || k.deepVal?.endDate || undefined
+  const endDate = k.installVal?.endDate || k.deliveryVal?.endDate || k.processVal?.endDate || k.deepVal?.endDate || undefined
   if (startDate && endDate) {
     k.totalDays = dateDifference(startDate, endDate)
   }
@@ -440,6 +440,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
       })
     }
   })
+  console.log(showData)
   data.data.content = showData || []
 }
 
