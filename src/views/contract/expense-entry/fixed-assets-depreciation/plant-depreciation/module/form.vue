@@ -247,7 +247,9 @@ function endChange(val) {
 
 // 编辑之前
 CRUD.HOOK.beforeToEdit = (crud, form) => {
-  form.residualValueRate = (form.residualValueRate * 100)?.toFixed(2)
+  form.residualValueRate = +(form.residualValueRate * 100)?.toFixed(2)
+  form.startDate = String(form.startDate)
+  form.endDate = String(form.endDate)
 }
 
 // 提交前

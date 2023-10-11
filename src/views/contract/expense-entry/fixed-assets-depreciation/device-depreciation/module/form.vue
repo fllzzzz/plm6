@@ -244,14 +244,16 @@ function endChange(val) {
 
 // 编辑之前
 CRUD.HOOK.beforeToEdit = (crud, form) => {
-  form.residualValueRate = form.residualValueRate * 100
+  form.residualValueRate = +(form.residualValueRate * 100)?.toFixed(2)
+  form.startDate = String(form.startDate)
+  form.endDate = String(form.endDate)
 }
 
 // 提交前
 CRUD.HOOK.beforeSubmit = async () => {
   const valid = await formRef.value.validate()
   if (!valid) return false
-  form.residualValueRate = form.residualValueRate / 100
+  form.residualValueRate = (form.residualValueRate / 100)?.toFixed(4)
 }
 </script>
 
