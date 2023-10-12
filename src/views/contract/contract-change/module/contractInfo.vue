@@ -16,7 +16,7 @@
           {{ auditStatus==auditTypeEnum.REJECT.V?'已驳回':(auditStatus==auditTypeEnum.PASS.V?'已通过':'审核中') }}
         </el-tag>
         <span style="position:absolute;right:20px;">
-          <template v-if="auditStatus">
+          <template v-if="auditStatus && visible">
             <common-button v-if="auditStatus==auditTypeEnum.AUDITING.V && showType==='audit'" size="small" type="info" @click="passConfirm(auditTypeEnum.REJECT.V)">驳回</common-button>
             <common-button v-if="auditStatus==auditTypeEnum.AUDITING.V && showType==='audit'" size="small" type="success" @click="passConfirm(auditTypeEnum.PASS.V)">通过</common-button>
           </template>
@@ -27,16 +27,16 @@
     <template #content>
       <el-tabs v-model="activeName">
         <el-tab-pane label="基础信息" name="baseInfo">
-          <base-info ref="baseRef" class="tab-content" :detail="detailContractInfo"/>
+          <base-info ref="baseRef" class="tab-content" :detail="detailContractInfo" :originContractInfo="originContractInfo"/>
         </el-tab-pane>
         <el-tab-pane label="商务信息" name="businessInfo">
-          <business-info ref="businessRef" class="tab-content" :detail="detailContractInfo"/>
+          <business-info ref="businessRef" class="tab-content" :detail="detailContractInfo" :originContractInfo="originContractInfo"/>
         </el-tab-pane>
         <el-tab-pane label="客户信息" name="customerInfo">
-          <customer-info ref="customerRef" class="tab-content" :detail="detailContractInfo"/>
+          <customer-info ref="customerRef" class="tab-content" :detail="detailContractInfo" :originContractInfo="originContractInfo"/>
         </el-tab-pane>
         <el-tab-pane label="项目成员" name="memberInfo">
-          <members ref="memberRef" :checkedList="detailContractInfo.userlist"/>
+          <members ref="memberRef" :checkedList="detailContractInfo.userlist" :detail="detailContractInfo" :originContractInfo="originContractInfo" />
         </el-tab-pane>
       </el-tabs>
     </template>
@@ -79,10 +79,13 @@ const activeName = ref('baseInfo')
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
 const detailContractInfo = ref({})
+const originContractInfo = ref({})
 watch(
   () => visible.value,
   (val) => {
     if (val) {
+      detailContractInfo.value = {}
+      originContractInfo.value = {}
       if (props.detailInfo.id) {
         getInfo(props.detailInfo.id)
       }
@@ -94,7 +97,15 @@ watch(
 
 async function getInfo(id) {
   try {
-    detailContractInfo.value = await getChangeInfo({ changeId: id })
+    const { projectDto, projectTempDto } = await getChangeInfo({ changeId: id })
+    projectDto.projectContentName = projectDto.projectContentList.map(v => v.name)?.join('、')
+    projectTempDto.projectContentName = projectTempDto.projectContentList.map(v => v.name)?.join('、')
+    projectDto.relationUserId = projectDto.relationUserList?.map(v => v.id)?.join('、')
+    projectTempDto.relationUserId = projectTempDto.relationUserList?.map(v => v.id)?.join('、')
+    projectDto.relationUserName = projectDto.relationUserList?.map(v => v.name)?.join('、')
+    projectTempDto.relationUserName = projectTempDto.relationUserList?.map(v => v.name)?.join('、')
+    detailContractInfo.value = projectTempDto
+    originContractInfo.value = projectDto
     detailContractInfo.value.enclosureInfo = {
       [TechnologyTypeEnum.STRUCTURE.V]: detailContractInfo.value.structureList || [],
       [TechnologyTypeEnum.PROFILED_PLATE.V]: detailContractInfo.value.profiledPlateList || [],
@@ -102,7 +113,15 @@ async function getInfo(id) {
       [TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V]: detailContractInfo.value.pressureBearingPlateList || [],
       [TechnologyTypeEnum.SANDWICH_BOARD.V]: detailContractInfo.value.sandwichBoardList || []
     }
+    originContractInfo.value.enclosureInfo = {
+      [TechnologyTypeEnum.STRUCTURE.V]: originContractInfo.value.structureList || [],
+      [TechnologyTypeEnum.PROFILED_PLATE.V]: originContractInfo.value.profiledPlateList || [],
+      [TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V]: originContractInfo.value.trussFloorPlateList || [],
+      [TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V]: originContractInfo.value.pressureBearingPlateList || [],
+      [TechnologyTypeEnum.SANDWICH_BOARD.V]: originContractInfo.value.sandwichBoardList || []
+    }
     detailContractInfo.value.userlist = detailContractInfo.value.relationUserIds ? detailContractInfo.value.relationUserIds.split(',') : []
+    originContractInfo.value.userlist = originContractInfo.value.relationUserIds ? originContractInfo.value.relationUserIds.split(',') : []
   } catch (e) {
     console.log('获取变更信息', e)
   }
