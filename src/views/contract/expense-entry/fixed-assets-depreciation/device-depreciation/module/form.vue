@@ -35,11 +35,11 @@
         </el-form-item>
         <el-form-item label="单台初始价值（元）" prop="originalValue">
           <el-input-number
-            v-show-thousand
             v-model="form.originalValue"
             style="width: 270px"
             placeholder="输入单台初始价值 单位元"
             controls-position="right"
+            :precision="decimalPrecision.contract"
             :min="0"
             :max="9999999999"
           />
@@ -124,6 +124,9 @@ import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 
 import { regForm } from '@compos/use-crud'
 import moment from 'moment'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const formRef = ref()
 
@@ -166,7 +169,7 @@ const annualDepreciationRate = computed(() => {
 const annualDepreciationAmount = computed(() => {
   // 初始价值*（（1-净残值）/ 使用年限）
   return form.num && form.originalValue && form.residualValueRate && form.depreciationYear
-    ? (form.num * form.originalValue * ((100 - form.residualValueRate) / 100 / form.depreciationYear)).toFixed(2)
+    ? (form.num * form.originalValue * ((100 - form.residualValueRate) / 100 / form.depreciationYear)).toFixed(decimalPrecision.value.contract)
     : ''
 })
 
@@ -180,7 +183,7 @@ const monthValueDepreciationRate = computed(() => {
 const monthValueDepreciationAmount = computed(() => {
   // 初始价值*（（1-净残值）/ 使用年限 / 12）
   return form.num * form.originalValue && form.residualValueRate && form.depreciationYear
-    ? (form.num * form.originalValue * ((100 - form.residualValueRate) / 100 / form.depreciationYear / 12)).toFixed(2)
+    ? (form.num * form.originalValue * ((100 - form.residualValueRate) / 100 / form.depreciationYear / 12)).toFixed(decimalPrecision.value.contract)
     : ''
 })
 
@@ -247,6 +250,9 @@ CRUD.HOOK.beforeToEdit = (crud, form) => {
   form.residualValueRate = +(form.residualValueRate * 100)?.toFixed(2)
   form.startDate = String(form.startDate)
   form.endDate = String(form.endDate)
+  if (isBlank(form.totalDepreciationAmount)) {
+    form.totalDepreciationAmount = undefined
+  }
 }
 
 // 提交前
