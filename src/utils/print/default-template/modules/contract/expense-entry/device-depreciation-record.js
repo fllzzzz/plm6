@@ -201,13 +201,14 @@ const contractDeviceDepreciationRecord = {
       { show: true, key: 'name', title: '设备名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.OTHER.K },
       { show: true, key: 'num', title: '数量(台)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.QUANTITY.K, sum: true },
       { show: true, key: 'originalValue', title: '初始价值', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: DP.YUAN, unit: amountUnitEnum.YUAN.V }, sum: true },
+      { show: true, key: 'totalDepreciationAmount', title: '累计折旧额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: DP.YUAN, unit: amountUnitEnum.YUAN.V }, sum: true },
       { show: true, key: 'depreciationYear', title: '折旧年限', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 1 }},
       { show: true, key: 'yearDepreciationRate', title: '年折旧率', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.RATE.K, format: { precision: 2 }},
       { show: true, key: 'yearDepreciationAmount', title: '年折旧额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: DP.YUAN, unit: amountUnitEnum.YUAN.V }, sum: true },
       { show: true, key: 'monthDepreciationRate', title: '月折旧率', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.RATE.K, format: { precision: 2 }},
       { show: true, key: 'monthDepreciationAmount', title: '月折旧额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: DP.YUAN, unit: amountUnitEnum.YUAN.V }, sum: true },
       { show: false, key: 'startDepreciation', title: '是否开始折旧', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'whetherEnum', key: 'L' }},
-      { show: true, key: 'boolStatus', title: '状态', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'enabledEnum', key: 'L' }}
+      { show: true, key: 'boolStatus', title: '状态', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 12, type: typeEnum.ENUM.K, format: { enum: 'enabledEnum', key: 'L' }}
     ]
   }
 }

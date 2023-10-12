@@ -44,6 +44,17 @@
             :max="9999999999"
           />
         </el-form-item>
+        <el-form-item label="累计折旧额（元）" prop="totalDepreciationAmount">
+          <el-input-number
+            v-model="form.totalDepreciationAmount"
+            style="width: 270px"
+            placeholder="输入累计折旧额 单位元"
+            controls-position="right"
+            :precision="decimalPrecision.contract"
+            :min="0"
+            :max="9999999999"
+          />
+        </el-form-item>
         <el-form-item label="净残值率（%）" prop="residualValueRate">
           <el-input-number
             v-model="form.residualValueRate"
@@ -135,6 +146,7 @@ const defaultForm = {
   name: undefined,
   num: undefined,
   originalValue: undefined,
+  totalDepreciationAmount: undefined,
   depreciationYear: undefined,
   startDate: `${moment().startOf('day').valueOf()}`,
   residualValueRate: undefined

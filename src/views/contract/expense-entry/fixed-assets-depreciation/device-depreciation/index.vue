@@ -36,6 +36,14 @@
         label="单台初始价值"
       />
       <el-table-column
+        v-if="columns.visible('totalDepreciationAmount')"
+        align="center"
+        key="totalDepreciationAmount"
+        prop="totalDepreciationAmount"
+        :show-overflow-tooltip="true"
+        label="累计折旧额"
+      />
+      <el-table-column
         v-if="columns.visible('depreciationYear')"
         align="center"
         key="depreciationYear"
