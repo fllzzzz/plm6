@@ -96,8 +96,8 @@ const { maxHeight } = useMaxHeight({ extraBox: '.el-drawer__header', wrapperBox:
 const list = ref([])
 const dataFormat = computed(() => {
   return [
-    ['oldUnitPrice', ['to-thousand', decimalPrecision.value.contract]],
-    ['newUnitPrice', ['to-thousand', decimalPrecision.value.contract]]
+    ['oldUnitPrice', ['to-thousand', (decimalPrecision.value.contract === 2 ? 3 : decimalPrecision.value.contract)]],
+    ['newUnitPrice', ['to-thousand', (decimalPrecision.value.contract === 2 ? 3 : decimalPrecision.value.contract)]]
   ]
 })
 const { crud, detail, CRUD } = regDetail()
