@@ -19,7 +19,7 @@
               :params="getParams(row, $index)"
               :fn="props.downloadFn"
             />
-            <common-button v-if="(row.name.indexOf('.pdf')>-1 || row.name.indexOf('.png')>-1 || row.name.indexOf('.jpg')>-1 || row.name.indexOf('.jpeg')>-1) && props.showView" icon="el-icon-view" size="mini" @click="attachmentView(row)" />
+            <common-button v-if="props.showView" icon="el-icon-view" size="mini" @click="attachmentView(row)" />
           </template>
         </el-table-column>
       </common-table>
@@ -174,9 +174,11 @@ watchEffect(() => {
 })
 
 // 预览附件
-function attachmentView(item) {
-  currentId.value = item.id
-  pdfShow.value = true
+function attachmentView(row) {
+  if (row.name.indexOf('.pdf') > -1 || row.name.indexOf('.png') > -1 || row.name.indexOf('.jpg') > -1 || row.name.indexOf('.jpeg') > -1) {
+    currentId.value = row.id
+    pdfShow.value = true
+  }
 }
 
 function getParams(row, index) {
