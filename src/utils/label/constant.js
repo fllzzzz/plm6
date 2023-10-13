@@ -71,7 +71,7 @@ const ARTIFACT_SIMPLE_L_HTML = function ({ component = defComponent, printConfig
   <div class="artifact-label">
     <table class="artifact-table">
       <tr>
-        <td colspan="2" style="font-size: 60px; font-weight: 600;">${emptyTextFormatter(component.serialNumber)}</td>
+        <td colspan="2" style="font-size: 40px; font-weight: 600;">${emptyTextFormatter(component.serialNumber)}</td>
       </tr>
       <tr>
         <td style="width:66.66%">

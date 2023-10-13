@@ -64,6 +64,10 @@
                     taskTypeEnum: crud.query.taskTypeEnum,
                     groupsId: crud.query.groupsId,
                     teamId: crud.query.teamId,
+                    projectId: crud.query.projectId,
+                    monomerId: crud.query.monomerId,
+                    areaId: crud.query.areaId,
+                    serialNumber: crud.query.serialNumber,
                   }"
                   size="mini"
                   type="warning"
@@ -74,41 +78,121 @@
             </crudOperation>
           </div>
           <!--表格渲染-->
-          <common-table
-            ref="tableRef"
-            v-loading="crud.loading"
-            :data="crud.data"
-            :empty-text="crud.emptyText"
-            :dataFormat="dataFormat"
-            :max-height="maxHeight - 50"
-            :show-empty-symbol="false"
-            style="width: 100%"
-          >
-            <el-table-column label="序号" type="index" align="center" width="70" />
-            <el-table-column v-if="columns.visible('project')" :show-overflow-tooltip="true" label="项目" type="project" align="center" min-width="120">
-              <template #default="{ row }">
-                <span>{{ row.project?.serialNumber }}-{{ row.project?.name }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column v-if="columns.visible('monomer.name')" :show-overflow-tooltip="true" prop="monomer.name" label="单体" align="center">
-              <template #default="{ row }">
-                <span>{{ row.monomer ? row.monomer?.name : '/' }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column v-if="columns.visible('area.name')" :show-overflow-tooltip="true" prop="area.name" label="区域" align="center">
-              <template #default="{ row }">
-                <span>{{ row.area ? row.area?.name : '/' }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column v-if="columns.visible('serialNumber')" :show-overflow-tooltip="true" prop="serialNumber" label="编号" min-width="80px" align="center" />
-            <el-table-column v-if="columns.visible('specification')" :show-overflow-tooltip="true" prop="specification" label="规格" min-width="80px" align="center" />
-            <el-table-column v-if="columns.visible('length')" :show-overflow-tooltip="true" prop="length" label="长度" align="center" />
-            <el-table-column v-if="columns.visible('quantity')" :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" />
-            <el-table-column v-if="columns.visible('netWeight')" :show-overflow-tooltip="true" prop="netWeight" label="单净重（kg）" align="center" />
-            <el-table-column v-if="columns.visible('grossWeight')" :show-overflow-tooltip="true" prop="grossWeight" label="单毛重（kg）" align="center" />
-          </common-table>
-          <!--分页组件-->
-          <pagination />
+          <div>
+            <div class="head-container">
+              <project-cascader v-model="projectId" clearable class="filter-item" style="width: 300px" @change="crud.toQuery" />
+              <monomer-select-area-select
+                v-model:monomerId="monomerId"
+                v-model:areaId="areaId"
+                needConvert
+                clearable
+                :project-id="projectId"
+                class="filter-item"
+                @change="crud.toQuery"
+              />
+              <el-input
+                v-model.trim="serialNumber"
+                size="small"
+                placeholder="输入编号搜索"
+                style="width: 170px"
+                class="filter-item"
+                clearable
+                @keyup.enter="crud.toQuery"
+              />
+              <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="crud.toQuery">
+                搜索
+              </common-button>
+              <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
+                重置
+              </common-button>
+            </div>
+            <common-table
+              ref="tableRef"
+              v-loading="crud.loading"
+              :data="crud.data"
+              :empty-text="crud.emptyText"
+              :dataFormat="dataFormat"
+              :max-height="maxHeight - 100"
+              :show-empty-symbol="false"
+              style="width: 100%"
+            >
+              <el-table-column label="序号" type="index" align="center" width="70" />
+              <el-table-column
+                v-if="columns.visible('project')"
+                :show-overflow-tooltip="true"
+                label="项目"
+                type="project"
+                align="center"
+                min-width="120"
+              >
+                <template #default="{ row }">
+                  <span>{{ row.project?.serialNumber }}-{{ row.project?.name }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                v-if="columns.visible('monomer.name')"
+                :show-overflow-tooltip="true"
+                prop="monomer.name"
+                label="单体"
+                align="center"
+              >
+                <template #default="{ row }">
+                  <span>{{ row.monomer ? row.monomer?.name : '/' }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                v-if="columns.visible('area.name')"
+                :show-overflow-tooltip="true"
+                prop="area.name"
+                label="区域"
+                align="center"
+              >
+                <template #default="{ row }">
+                  <span>{{ row.area ? row.area?.name : '/' }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                v-if="columns.visible('serialNumber')"
+                :show-overflow-tooltip="true"
+                prop="serialNumber"
+                label="编号"
+                min-width="80px"
+                align="center"
+              />
+              <el-table-column
+                v-if="columns.visible('specification')"
+                :show-overflow-tooltip="true"
+                prop="specification"
+                label="规格"
+                min-width="80px"
+                align="center"
+              />
+              <el-table-column v-if="columns.visible('length')" :show-overflow-tooltip="true" prop="length" label="长度" align="center" />
+              <el-table-column
+                v-if="columns.visible('quantity')"
+                :show-overflow-tooltip="true"
+                prop="quantity"
+                label="数量"
+                align="center"
+              />
+              <el-table-column
+                v-if="columns.visible('netWeight')"
+                :show-overflow-tooltip="true"
+                prop="netWeight"
+                label="单净重（kg）"
+                align="center"
+              />
+              <el-table-column
+                v-if="columns.visible('grossWeight')"
+                :show-overflow-tooltip="true"
+                prop="grossWeight"
+                label="单毛重（kg）"
+                align="center"
+              />
+            </common-table>
+            <!--分页组件-->
+            <pagination />
+          </div>
         </template>
       </div>
     </div>
@@ -127,6 +211,9 @@ import { workshopTypeEnum } from '@enum-ms/common'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
+import rrOperation from '@crud/RR.operation'
+import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
+import projectCascader from '@comp-base/project-cascader.vue'
 import pagination from '@crud/Pagination'
 import processList from './module/process-list.vue'
 
@@ -165,6 +252,11 @@ const processType = ref()
 const processData = ref([])
 const tableData = ref([])
 const loading = ref(false)
+
+const projectId = ref()
+const monomerId = ref()
+const areaId = ref()
+const serialNumber = ref()
 
 provide('tableData', tableData)
 provide('loading', loading)
@@ -225,6 +317,15 @@ async function handleDateChange(val) {
   }
   fetchProcess()
   fetchProcessList()
+  crud.query.groupsId = undefined
+  projectId.value = undefined
+}
+
+CRUD.HOOK.beforeToQuery = () => {
+  crud.query.projectId = projectId.value
+  crud.query.monomerId = monomerId.value
+  crud.query.areaId = areaId.value
+  crud.query.serialNumber = serialNumber.value
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
@@ -242,6 +343,15 @@ function handleNestingTaskClick(val) {
   crud.query.startDate = startDate.value
   crud.query.endDate = endDate.value
   info.value = val
+  crud.toQuery()
+}
+
+// 重置
+function resetQuery() {
+  projectId.value = undefined
+  monomerId.value = undefined
+  areaId.value = undefined
+  serialNumber.value = undefined
   crud.toQuery()
 }
 </script>
