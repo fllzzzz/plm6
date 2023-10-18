@@ -68,11 +68,7 @@
         prop="reimburseAmount"
         :show-overflow-tooltip="true"
         label="报销金额（元）"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.reimburseAmount?.toFixed(decimalPrecision.contract) }}</span>
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('project')"
         align="center"
@@ -206,7 +202,7 @@ const detailVisible = ref(false)
 const rowDetail = ref()
 
 const columnsDataFormat = ref([
-  ['reimburseAmount', 'to-thousand'],
+  ['reimburseAmount', ['to-thousand', decimalPrecision.contract]],
   ['createTime', ['parse-time', '{y}-{m}-{d} {h}:{i}:{s}']],
   ['reimburseDate', ['parse-time', '{y}-{m}-{d}']],
   ['approvalDate', ['parse-time', '{y}-{m}-{d}']],
