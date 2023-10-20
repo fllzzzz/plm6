@@ -35,13 +35,23 @@ const whiteList = [
   specialPath.QR_SCAN_AUXILIARY_MATERIAL
 ]
 
+const qrScanList = [
+  specialPath.QR_SCAN_ARTIFACT_TASK,
+  specialPath.QR_SCAN_ENCLOSURE_TASK,
+  specialPath.QR_SCAN_AUXILIARY_MATERIAL
+]
+
 // 全局路由守卫
 router.beforeEach(async (to, from, next) => {
   // 触发加载进度条
   NProgress.start()
 
   // 设置页面标题（用于浏览器标签名称展示）
-  document.title = getPageTitle(to.meta.title)
+  if (qrScanList.includes(to.path)) {
+    document.title = to.meta.title
+  } else {
+    document.title = getPageTitle(to.meta.title)
+  }
 
   // 从缓存中获取请求地址及用户token
   const requestUrl = getRequestUrl()

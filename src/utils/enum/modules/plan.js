@@ -136,8 +136,8 @@ constantize(paintTypeEnum)
 const importTypeEnum = {
   UNIVERSAL: { L: '通用模板', K: 'UNIVERSAL', V: 1 << 0 },
   NET_WEIGHT: { L: '单重(净重)', K: 'NET_WEIGHT', V: 1 << 1 },
-  UNIT_WEIGHT_ACTUAL: { L: '单重(实际)', K: 'UNIT_WEIGHT_ACTUAL', V: 1 << 2 },
-  UNIT_WEIGHT_WEIGHTED: { L: '单重(加3%)', K: 'UNIT_WEIGHT_WEIGHTED', V: 1 << 3 }
+  UNIT_WEIGHT_ACTUAL: { L: '单重(实际)', K: 'UNIT_WEIGHT_ACTUAL', V: 1 << 2 }
+  // UNIT_WEIGHT_WEIGHTED: { L: '单重(加3%)', K: 'UNIT_WEIGHT_WEIGHTED', V: 1 << 3 }
   // UNIT_WEIGHT_ADD: { L: '经典模板-L+30单重', K: 'UNIT_WEIGHT_ADD', V: 1 << 4 }
 }
 constantize(importTypeEnum)
