@@ -36,7 +36,13 @@
           :show-overflow-tooltip="true"
         >
           <template #default="{ row }">
-            <span :class="row.type === 2 && row.projectName !== '合计' ? 'tc-success' : ''">{{ row.projectName }}</span>
+            <el-tooltip v-if="row.projectName === '实际完成'" class="item" effect="dark" :content="`实际完成包含以往月份排产的任务在当月完成`" placement="top-start">
+              <div style="display: inline-block">
+                <span :class="row.type === 2 && row.projectName !== '合计' ? 'tc-success' : ''">{{ row.projectName }}</span>
+               <i class="el-icon-info" />
+              </div>
+            </el-tooltip>
+            <span v-else :class="row.type === 2 && row.projectName !== '合计' ? 'tc-success' : ''">{{ row.projectName }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -75,7 +81,9 @@
           :show-overflow-tooltip="true"
         >
           <template #default="{ row }">
-            <span>{{ (row.completeTotalNetWeight / 1000).toFixed(2) || 0 }}</span>
+            <span>
+              {{ (row.completeTotalNetWeight / 1000).toFixed(2) || 0 }}
+            </span>
           </template>
         </el-table-column>
         <el-table-column
