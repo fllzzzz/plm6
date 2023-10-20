@@ -322,7 +322,7 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, provide } from 'vue'
 import crudApi from '@/api/contract/fortune-report/fortune-report'
 
 import { fortuneReportPM as permission } from '@/page-permission/contract'
@@ -330,10 +330,12 @@ import { businessTypeEnum, projectTypeEnum, projectStatusEnum } from '@enum-ms/c
 import { costAscriptionEnum } from '@enum-ms/config'
 import checkPermission from '@/utils/system/check-permission'
 import { toFixed } from '@data-type'
+import { settlementStatusEnum } from '@enum-ms/finance'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'
+import useProjectTree from '@compos/store/use-project-tree'
 import mHeader from './module/header.vue'
 import costPageDialog from './cost-page-dialog/index'
 import invoiceRecord from './module/invoice-record'
@@ -351,6 +353,10 @@ const optShow = {
   del: false,
   download: false
 }
+
+const { projectTree } = useProjectTree()
+
+provide('projectTree', projectTree)
 
 const tableRef = ref()
 const invoiceVisible = ref(false)
@@ -424,10 +430,17 @@ function openDetail(type, row) {
   detailRow.value = row
 }
 
-CRUD.HOOK.handleRefresh = (crud, { data }) => {
-  data.content = data.content?.map((v) => {
+CRUD.HOOK.handleRefresh = (crud, res) => {
+  projectTree.value = projectTree.value.map(p => {
+    p.serialNumberName = p.serialNumber + ' ' + p.name
+    return p
+  })
+  res.data.content = res.data.content?.map(v => {
     if (v.grossProfitRate) {
       v.grossProfitRate = toFixed(v.grossProfitRate * 100, 2)
+    }
+    if (v.settlementStatus === settlementStatusEnum.SETTLED.V) {
+      v.status = projectStatusEnum.SETTLED.V
     }
     v.unpaidAmount = v.contractAmount - v.collectionAmount
     v.collectionRate = toFixed((v.collectionAmount / v.contractAmount) * 100, 2)

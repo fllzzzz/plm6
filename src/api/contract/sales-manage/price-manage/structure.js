@@ -68,4 +68,16 @@ export function businessList(params) {
   })
 }
 
+/**
+ * 构件计价详情下载
+ * @param {*} monomerId 单体id
+ */
+export function structureDetailDownload(params) {
+  return request({
+    url: `/api/business/artifact/download/${params.businessId}`,
+    responseType: 'blob',
+    method: 'get'
+  })
+}
+
 export default { get, detail }
