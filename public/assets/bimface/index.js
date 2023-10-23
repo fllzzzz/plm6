@@ -114,11 +114,13 @@ function initBimfaceApp({ viewToken }) {
   }
   return new Promise(function (resolve, reject) {
     getBimfaceSDKLoader(host[mode].SDKLoaderPath).then(function (response) {
+      console.log(response,'ff');
       var BimfaceLoaderConfig = new BimfaceSDKLoaderConfig();
       BimfaceLoaderConfig = Object.assign({}, BimfaceLoaderConfig, params, {
         build:"Debug",
         staticHost: host[mode].staticHost
       });
+      console.log(BimfaceLoaderConfig,'BimfaceLoaderConfig');
       if(mode === 'portal'){
         BimfaceLoaderConfig.build = 'Release';
       }
@@ -130,6 +132,8 @@ function initBimfaceApp({ viewToken }) {
       if (!BimfaceLoaderConfig.viewToken) {
         BimfaceLoaderConfig.viewToken = viewToken
       }
+
+      BimfaceLoaderConfig.version = '3.6.260';
 
       if (BimfaceLoaderConfig.viewToken || BimfaceLoaderConfig.resourcePath || BimfaceLoaderConfig.path || BimfaceLoaderConfig.dataPath) {
         BimfaceSDKLoader.load(BimfaceLoaderConfig, function (data) {
