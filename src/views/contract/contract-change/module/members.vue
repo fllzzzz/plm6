@@ -1,6 +1,10 @@
 <template>
   <div>
     <div class="user-tree tree-container" :loading="treeLoading">
+      <template v-if="!judgeSameValue(originContractInfo?.relationUserId,detail?.relationUserId)">
+        <div style="font-size:13px;color:#666;">修改前：<span>{{originContractInfo?.relationUserName}}</span></div>
+        <div style="font-size:13px;color:red;">修改后：<span>{{detail?.relationUserName}}</span></div>
+      </template>
       <el-tree
         ref="tree"
         class="filter-tree"
@@ -21,6 +25,7 @@
 import { ref, defineProps, computed, watch } from 'vue'
 import useUserDeptTree from '@compos/store/use-user-dept-tree'
 import { isNotBlank } from '@data-type/index'
+import { judgeSameValue } from '@/views/contract/info/judgeSameValue'
 
 const props = defineProps({
   projectId: {
@@ -34,6 +39,14 @@ const props = defineProps({
   checkedList: {
     type: Array,
     default: () => []
+  },
+  detail: {
+    type: Object,
+    default: () => {}
+  },
+  originContractInfo: {
+    type: Object,
+    default: () => {}
   }
 })
 const { userDeptTree } = useUserDeptTree()

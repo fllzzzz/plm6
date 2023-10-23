@@ -10,7 +10,11 @@
     custom-class="standard-part"
   >
     <template #titleAfter>
-     <div>项目:<span>{{globalProject.serialNumber}}</span><span style="margin-left:5px;">{{globalProject.shortName}}</span></div>
+     <div>
+        项目:<span>{{globalProject.serialNumber}}</span><span style="margin:0 5px;">{{globalProject.shortName}}</span>
+        <el-tag style="margin-right:5px;">{{TechnologyTypeAllEnum.VL[crud.query.category]}}</el-tag>
+        <el-tag type="success">计划：{{currentPlan.name}}</el-tag>
+      </div>
     </template>
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
@@ -152,10 +156,11 @@
 </template>
 
 <script setup>
-import { inject, ref } from 'vue'
+import { inject, ref, defineProps, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { regForm } from '@compos/use-crud'
 
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 import useMaxHeight from '@compos/use-max-height'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -166,6 +171,22 @@ const globalProject = inject('globalProject')
 
 const formRef = ref()
 const drawerRef = ref()
+
+const props = defineProps({
+  projectId: {
+    type: [Number, String],
+    default: undefined
+  },
+  enclosurePlan: {
+    type: Array,
+    default: undefined
+  }
+})
+
+const currentPlan = computed(() => {
+  const findVal = props.enclosurePlan.find(v => v.id === crud.query.enclosurePlanId) || {}
+  return findVal
+})
 
 const defaultForm = {
   // areaId: 0,
@@ -233,13 +254,9 @@ function addRow() {
 
 CRUD.HOOK.beforeToCU = () => {
   form.projectId = crud.query.projectId
-  // form.monomerId = crud.query.monomerId
-  // form.areaId = crud.query.areaId
+  form.category = crud.query.category
+  form.enclosurePlanId = crud.query.enclosurePlanId
 }
-
-// function weightChange(row) {
-//   row.totalWeight = (row.quantity && row.weight) ? row.quantity * row.weight : 0
-// }
 
 CRUD.HOOK.beforeSubmit = (crud, form) => {
   if (crud.form.standardPartList.length <= 0) {

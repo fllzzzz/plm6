@@ -52,7 +52,7 @@
         <print-table
           v-permission="crud.permission.print"
           api-key="contractAuxiliaryMaterialPrice"
-          :params="{ projectId: query.projectId }"
+          :params="{ ...query }"
           size="mini"
           type="warning"
           class="filter-item"
@@ -87,7 +87,7 @@ import { ref, watch, nextTick, inject, computed, defineExpose, defineProps, defi
 import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 import checkPermission from '@/utils/system/check-permission'
 import { contractSaleTypeEnum } from '@enum-ms/mes'
-import { priceEditModeEnum } from '@enum-ms/contract'
+import { priceEditModeEnum, standardPartPriceSearchEnum } from '@enum-ms/contract'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -97,8 +97,12 @@ import mPreview from '../../preview'
 const projectId = inject('projectId')
 const saveCount = inject('saveCount')
 const priceEditMode = inject('priceEditMode')
+const relationType = inject('relationType')
 const emit = defineEmits(['checkSubmit', 'showVisible'])
-// const monomerId = inject('monomerId')
+const monomerId = inject('monomerId')
+const areaId = inject('areaId')
+const enclosurePlanId = inject('enclosurePlanId')
+const category = inject('category')
 
 const props = defineProps({
   showAble: {
@@ -113,10 +117,23 @@ const props = defineProps({
 
 // 预览参数
 const previewParams = computed(() => {
-  return {
-    // monomerId: query.monomerId,
-    projectId: query.projectId,
-    type: contractSaleTypeEnum.AUXILIARY_MATERIAL.V
+  switch (relationType) {
+    case standardPartPriceSearchEnum.STRUCTURE.V:
+      return {
+        monomerId: query.monomerId,
+        areaId: query.areaId,
+        relationType: query.relationType,
+        projectId: query.projectId,
+        type: contractSaleTypeEnum.AUXILIARY_MATERIAL.V
+      }
+    default:
+      return {
+        category: query.category,
+        enclosurePlanId: query.enclosurePlanId,
+        relationType: query.relationType,
+        projectId: query.projectId,
+        type: contractSaleTypeEnum.AUXILIARY_MATERIAL.V
+      }
   }
 })
 
@@ -126,6 +143,68 @@ watch(
     nextTick(() => {
       crud.query.projectId = val
       // costInit()
+      crud.toQuery()
+    })
+  },
+  { immediate: true }
+)
+
+watch(
+  relationType,
+  (val) => {
+    nextTick(() => {
+      crud.query.relationType = val
+      if (relationType === standardPartPriceSearchEnum.STRUCTURE.V) {
+        crud.query.monomerId = monomerId
+        crud.query.areaId = areaId
+      } else {
+        crud.query.category = category
+        crud.query.enclosurePlanId = enclosurePlanId
+      }
+      crud.toQuery()
+    })
+  },
+  { immediate: true }
+)
+
+watch(
+  enclosurePlanId,
+  (val) => {
+    nextTick(() => {
+      crud.query.enclosurePlanId = val
+      crud.toQuery()
+    })
+  },
+  { immediate: true }
+)
+
+watch(
+  monomerId,
+  (val) => {
+    nextTick(() => {
+      crud.query.monomerId = val
+      crud.toQuery()
+    })
+  },
+  { immediate: true }
+)
+
+watch(
+  areaId,
+  (val) => {
+    nextTick(() => {
+      crud.query.areaId = val
+      crud.toQuery()
+    })
+  },
+  { immediate: true }
+)
+
+watch(
+  category,
+  (val) => {
+    nextTick(() => {
+      crud.query.category = val
       crud.toQuery()
     })
   },

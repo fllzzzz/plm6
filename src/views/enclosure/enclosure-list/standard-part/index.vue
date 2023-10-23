@@ -3,7 +3,7 @@
     <template v-if="pageShow">
       <!--工具栏-->
       <div class="head-container">
-        <mHeader :project-id="globalProjectId" />
+        <mHeader :project-id="globalProjectId" :typeOption="typeOption" @enclosurePlan="enclosurePlanChange"/>
       </div>
       <!--表格渲染-->
       <common-table
@@ -202,7 +202,7 @@
       </common-table>
       <!--分页组件-->
       <pagination />
-      <mForm />
+      <mForm :enclosurePlan="enclosurePlan" />
     </template>
     <template v-else>
       <span style="color:red;font-size:13px;">当前项目内容没有包含围护制品，请到合同管理中进行配置</span>
@@ -245,6 +245,7 @@ const originRow = ref({})
 
 const typeOption = ref([])
 const pageShow = ref(false)
+const enclosurePlan = ref([])
 const techOptions = [
   {
     name: '压型彩板',
@@ -341,6 +342,10 @@ const tableRules = {
   specification: [{ required: true, message: '请输入规格', trigger: 'blur' }],
   measureUnit: [{ required: true, message: '请输入单位', trigger: 'blur' }],
   quantity: [{ required: true, message: '请输入数量', trigger: 'change' }]
+}
+
+function enclosurePlanChange(val) {
+  enclosurePlan.value = val
 }
 
 function wrongCellMask({ row, column }) {

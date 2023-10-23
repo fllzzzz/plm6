@@ -44,7 +44,7 @@
       </el-table-column>
       <el-table-column prop="unitPrice" key="unitPrice" label="单价" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.unitPrice }}</span>
+          <span>{{ toThousand(scope.row.unitPrice,decimalPrecision.contract) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="amount" key="amount" label="总价" align="center">

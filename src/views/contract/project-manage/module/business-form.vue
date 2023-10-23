@@ -210,7 +210,7 @@
         </div>
       </div>
       <el-divider v-if="form.projectType!==projectTypeEnum.BRIDGE.V"><span class="title">技术交底</span></el-divider>
-      <div style="text-align: right; margin-right: 20px" v-if="form.projectType!==projectTypeEnum.BRIDGE.V">
+      <div style="text-align: right; margin-right: 20px;" v-if="form.projectType!==projectTypeEnum.BRIDGE.V">
         <common-button style="margin-left: 20px" type="success" size="small" :disabled="!(showItem && showItem.length > 0)" @click="handleAddEnclosure">添加</common-button>
       </div>
       <enclosure-show :table-data="form.enclosureInfo" :show-item="showItem" @clickChange="typeChange"  v-if="showItem && showItem.length > 0"/>

@@ -15,6 +15,7 @@
     <component
       :is="currentView"
       :table-data="tableData[boardType]"
+      :origin-data="originData[boardType]"
       :is-show="true"
     />
   </div>
@@ -47,6 +48,18 @@ const props = defineProps({
     type: Array,
     default: () => {
       return []
+    }
+  },
+  originData: {
+    type: Object,
+    default: () => {
+      return {
+        [TechnologyTypeEnum.STRUCTURE.V]: [],
+        [TechnologyTypeEnum.PROFILED_PLATE.V]: [],
+        [TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V]: [],
+        [TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V]: [],
+        [TechnologyTypeEnum.SANDWICH_BOARD.V]: []
+      }
     }
   }
 })

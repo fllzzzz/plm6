@@ -33,7 +33,18 @@
           />
         </el-form-item>
         <el-form-item label="项目：" prop="projectId">
-          <project-cascader v-model="form.projectId" clearable class="filter-item" style="width: 270px" placeholder="选择项目 非必选" />
+          <!-- <project-cascader v-model="form.projectId" :projectType="'allPT'" clearable class="filter-item" style="width: 270px" placeholder="选择项目 非必选" /> -->
+           <common-select
+            v-model="form.projectId"
+            :options="projectTree"
+            type="other"
+            :data-structure="{ key: 'id', label: 'serialNumberName', value: 'id' }"
+            class="filter-item"
+            clearable
+            filterable
+            style="width: 270px"
+            placeholder="选择项目 非必选"
+          />
         </el-form-item>
         <el-form-item label="报销人：" prop="reimburseUserId">
           <user-select
@@ -75,11 +86,11 @@
         </el-form-item>
         <el-form-item label="报销费用（元）：" prop="reimburseAmount">
           <el-input-number
-            v-show-thousand
             v-model="form.reimburseAmount"
             style="width: 270px"
             placeholder="输入报销费用"
             controls-position="right"
+            :precision="decimalPrecision.contract"
             :min="0"
             :max="9999999999"
           />
@@ -105,7 +116,12 @@ import { ref, inject } from 'vue'
 import { regForm } from '@compos/use-crud'
 // import useDict from '@compos/store/use-dict'
 import userSelect from '@comp-common/user-select'
-import projectCascader from '@comp-base/project-cascader.vue'
+// import projectCascader from '@comp-base/project-cascader.vue'
+import useProjectTree from '@compos/store/use-project-tree'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
+const { projectTree } = useProjectTree()
 
 const expenseList = inject('expenseList')
 const subjectList = ref([])
@@ -137,7 +153,12 @@ function handleChange(val) {
 // 刷新数据
 CRUD.HOOK.beforeToQuery = async (crud, form) => {}
 // 新增之前
-CRUD.HOOK.beforeToAdd = async (crud, form) => {}
+CRUD.HOOK.beforeToAdd = async (crud, form) => {
+  projectTree.value = projectTree.value.map(p => {
+    p.serialNumberName = p.serialNumber + ' ' + p.name
+    return p
+  })
+}
 
 // 编辑之后
 CRUD.HOOK.afterToEdit = async (crud, form) => {}
@@ -145,6 +166,10 @@ CRUD.HOOK.afterToEdit = async (crud, form) => {}
 // 编辑之前
 CRUD.HOOK.beforeToEdit = async () => {
   handleChange()
+  projectTree.value = projectTree.value.map(p => {
+    p.serialNumberName = p.serialNumber + ' ' + p.name
+    return p
+  })
   form.projectId = form.project?.id
 }
 

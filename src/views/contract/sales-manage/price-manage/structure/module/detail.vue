@@ -9,7 +9,17 @@
     size="70%"
   >
     <template #titleAfter>
-      <el-tag type="warning" size="medium" effect="plain">综合单价：<span>{{ props.detailInfo.originUnitPrice }}</span></el-tag>
+      <el-tag type="warning" size="medium" effect="plain">综合单价：<span>{{ props.detailInfo.originUnitPrice==='同上'?'-':props.detailInfo.originUnitPrice }}</span></el-tag>
+    </template>
+    <template #titleRight>
+      <export-button
+          v-if="checkPermission(crud.permission.print)"
+          :fn="structureDetailDownload"
+          :params="{businessId:props.detailInfo.id}"
+          :disabled="list.length === 0"
+        >
+          下载
+        </export-button>
     </template>
     <template #content>
       <common-table :data="list" row-key="rowId" v-loading="crud.detailLoading" :max-height="maxHeight">
@@ -35,7 +45,9 @@
 
 <script setup>
 import { ref, defineProps, defineEmits } from 'vue'
+import { structureDetailDownload } from '@/api/contract/sales-manage/price-manage/structure'
 
+import ExportButton from '@comp-common/export-button/index.vue'
 import checkPermission from '@/utils/system/check-permission'
 
 import { regDetail } from '@compos/use-crud'

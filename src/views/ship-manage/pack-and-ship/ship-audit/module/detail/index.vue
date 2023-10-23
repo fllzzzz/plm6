@@ -236,7 +236,7 @@ const list = computed(() => {
         auxiliaryMaterialList.value.map((v) => {
           v.showQuantity = v[props.quantityFelid]
           v.fullClassName = `${v.firstName}/${v.secondName}/${v.thirdName}`
-          v.totalPrice = v.unitPrice * v.showQuantity || 0
+          v.totalPrice = v.unitPrice * v.shipMete || 0
           return v
         })
       )

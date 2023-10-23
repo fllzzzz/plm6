@@ -81,12 +81,12 @@
         </el-table-column>
         <el-table-column key="unitPrice" prop="unitPrice" show-overflow-tooltip label="综合单价" align="center" min-width="120">
           <template #default="{ row }">
-            <span style="color:red;">{{ row.unitPrice!=='同上'?toThousand(row.unitPrice):'-' }}</span>
+            <span style="color:red;">{{ row.unitPrice!=='同上'?toThousand(row.unitPrice,(decimalPrecision.contract === 2 ? 3 : decimalPrecision.contract)):'-' }}</span>
           </template>
         </el-table-column>
         <el-table-column key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额">
           <template #default="{ row }">
-            <span style="color:red;" v-thousand="{val:row.totalPrice ||0, dp:decimalPrecision.contract}" />
+            <span style="color:red;" v-thousand="{val:row.totalPrice ||0, dp:(decimalPrecision.contract === 2 ? 3 : decimalPrecision.contract)}" />
           </template>
         </el-table-column>
         <el-table-column label="操作" width="100px" align="center" fixed="right">
@@ -121,7 +121,7 @@ import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { convertUnits } from '@/utils/convert/unit'
 import { DP } from '@/settings/config'
 import { toThousand } from '@/utils/data-type/number'
-import { TechnologyTypeAllEnum, pricingMannerEnum, enclosureSettlementTypeEnum } from '@enum-ms/contract'
+import { TechnologyTypeAllEnum, pricingMannerEnum, enclosureSettlementTypeEnum, standardPartPriceSearchEnum } from '@enum-ms/contract'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
 import useMaxHeight from '@compos/use-max-height'
 
@@ -158,6 +158,10 @@ const props = defineProps({
     default: undefined
   },
   type: {
+    type: [Number, String],
+    default: undefined
+  },
+  relationType: {
     type: [Number, String],
     default: undefined
   }
@@ -212,6 +216,10 @@ const previewParams = computed(() => {
     case contractSaleTypeEnum.AUXILIARY_MATERIAL.V:
       return (
         {
+          category: props.category,
+          enclosurePlanId: props.enclosurePlanId,
+          relationType: props.relationType,
+          areaId: props.areaId,
           monomerId: props.monomerId,
           type: props.type
         }
@@ -271,15 +279,57 @@ async function fetchList() {
   }
   tableLoading.value = true
   try {
-    const params = {
-      areaId: props.areaId,
-      category: props.category,
-      enclosurePlanId: props.enclosurePlanId,
-      monomerId: props.monomerId,
-      projectId: props.projectId,
-      projectType: props.projectType,
-      type: props.type,
-      ...queryPage
+    let params = {}
+    switch (props.type) {
+      case contractSaleTypeEnum.MACHINE_PART.V:
+        params = {
+          areaId: props.areaId,
+          monomerId: props.monomerId,
+          projectId: props.projectId,
+          projectType: props.projectType,
+          type: props.type,
+          ...queryPage
+        }
+        break
+      case contractSaleTypeEnum.ENCLOSURE.V:
+        params = {
+          category: props.category,
+          enclosurePlanId: props.enclosurePlanId,
+          projectId: props.projectId,
+          projectType: props.projectType,
+          type: props.type,
+          ...queryPage
+        }
+        break
+      case contractSaleTypeEnum.AUXILIARY_MATERIAL.V:
+        params = props.relationType === standardPartPriceSearchEnum.STRUCTURE.V ? {
+          areaId: props.areaId,
+          monomerId: props.monomerId,
+          projectId: props.projectId,
+          projectType: props.projectType,
+          relationType: props.relationType,
+          type: props.type,
+          ...queryPage
+        } : {
+          category: props.category,
+          enclosurePlanId: props.enclosurePlanId,
+          projectId: props.projectId,
+          projectType: props.projectType,
+          relationType: props.relationType,
+          type: props.type,
+          ...queryPage
+        }
+        break
+      default:
+        params = {
+          areaId: props.areaId,
+          monomerId: props.monomerId,
+          projectId: props.projectId,
+          projectType: props.projectType,
+          type: props.type,
+          ...queryPage
+        }
+        break
     }
     const { content = [], totalElements } = await getTempPrice(params)
     content.map(v => {
