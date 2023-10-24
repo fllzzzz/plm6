@@ -147,7 +147,7 @@
               :precision="3"
               :step="0.001"
               :min="0"
-              :max="99999"
+              :max="9999999"
             />
             <span v-else>{{ row.mete }}</span>
           </template>
