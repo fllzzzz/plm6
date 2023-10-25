@@ -86,6 +86,9 @@ const props = defineProps({
   },
   processType: {
     type: Number
+  },
+  serialNumber: {
+    type: String
   }
 })
 
@@ -99,7 +102,7 @@ const { maxHeight } = useMaxHeight(
 
 const taskOrderPrintKey = 'mesDrillProductionTaskOrder'
 const commonParams = computed(() => {
-  return { cutId: props.detailData.id, processType: props.processType }
+  return { cutId: props.detailData.id, processType: props.processType, serialNumber: props.serialNumber }
 })
 const { separateLoading, separateOrderInfo, fetchSeparateOrder } = useGetSeparateOrder(commonParams)
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook })

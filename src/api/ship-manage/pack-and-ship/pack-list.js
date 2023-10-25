@@ -21,6 +21,16 @@ export function get(params) {
   })
 }
 
+// 桥梁
+export function getBridge(params) {
+  return request({
+    module: 'bridge',
+    url: 'package/page',
+    method: 'get',
+    params
+  })
+}
+
 /**
  * 打包详情
  * @param {number} id|required 包id
@@ -37,9 +47,34 @@ export function detail(id) {
  * 打包详情
  * @param {number} id|required 包id
  */
+export function detailBridge(id) {
+  return request({
+    module: 'bridge',
+    url: `package/${id}`,
+    method: 'get'
+  })
+}
+
+/**
+ * 打包详情
+ * @param {number} id|required 包id
+ */
 export function del(id) {
   return request({
     module: 'mes',
+    url: 'package',
+    method: 'delete',
+    data: { ids: [id] }
+  })
+}
+
+/**
+ * 打包详情
+ * @param {number} id|required 包id
+ */
+export function delBridge(id) {
+  return request({
+    module: 'bridge',
     url: 'package',
     method: 'delete',
     data: { ids: [id] }

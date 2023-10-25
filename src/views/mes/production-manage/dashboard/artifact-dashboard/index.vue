@@ -84,13 +84,13 @@
 
 <script setup>
 import { productDashboard as get, productSpec } from '@/api/mes/production-manage/dashboard/common'
-import { artifactDetail, assembleDetail, baseAssembleDetail, machinePartDetail } from '@/api/mes/production-manage/dashboard/artifact'
-import { ref } from 'vue'
 
+import { artifactDetail, assembleDetail, baseAssembleDetail, machinePartDetail } from '@/api/mes/production-manage/dashboard/artifact'
+import { ref, watch, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { componentTypeEnum, structureOrderTypeEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'
 import { artifactProductionDashboardPM as permission } from '@/page-permission/mes'
-
 import useDashboardIndex from '@compos/mes/dashboard/use-dashboard-index'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -104,6 +104,7 @@ const optShow = {
   download: false
 }
 
+const route = useRoute()
 const detailRow = ref({})
 const detailVisible = ref(false)
 const scrollBoxRef = ref()
@@ -120,9 +121,26 @@ const { crud, CRUD } = useCRUD(
   },
   tableRef
 )
+
+const routeParams = computed(() => {
+  return route.params
+})
 const { maxHeight } = useMaxHeight({ paginate: false })
 
 const { boxStyle, load, boardList } = useDashboardIndex({ headRef, scrollBoxRef, crud, CRUD, beforeRefreshHook })
+
+watch(
+  () => routeParams.value,
+  (val) => {
+    if (val) {
+      crud.query.projectId = Number(val?.projectId)
+      crud.query.monomerId = val?.monomerId
+      crud.query.areaId = val?.areaId
+      crud.query.productType = Number(val?.productType) || undefined
+    }
+  },
+  { immediate: true, deep: true }
+)
 
 async function getDetail(item) {
   switch (crud.query.productType) {
@@ -139,6 +157,10 @@ async function getDetail(item) {
       break
   }
 }
+
+// const matchColor = computed(() => {
+//   return '#b3e19d'
+// })
 
 const specList = ref([])
 const specLoading = ref(false)
@@ -169,7 +191,7 @@ async function fetchSpec() {
   }
 }
 
-function beforeRefreshHook() {
+async function beforeRefreshHook() {
   if (crud.query.productType & componentTypeEnum.MACHINE_PART.V && !isSpecQuery.value) {
     fetchSpec()
   }
