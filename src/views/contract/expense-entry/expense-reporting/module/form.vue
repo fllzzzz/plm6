@@ -82,7 +82,7 @@
             placeholder="输入报销费用"
             controls-position="right"
             :precision="decimalPrecision.contract"
-            :min="0"
+            :min="-9999999999"
             :max="9999999999"
           />
         </el-form-item>
