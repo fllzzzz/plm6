@@ -17,6 +17,7 @@ const invoiceRecord = contract.invoiceLedger
 const invoiceLedger = contract.invoiceLedger
 const exportTaxRebateList = contract.exportTaxRebate
 const arrearsList = contract.arrearsList
+const contractBoxPrice = contract.contractBoxPrice
 const contractStructurePrice = contract.structurePrice
 const contractEnclosurePrice = contract.enclosurePrice
 const contractAuxiliaryMaterialPrice = contract.auxiliaryMaterialPrice
@@ -133,14 +134,22 @@ const mesStructureTeamWageDetail = mes.teamWageDetail
 const mesEnclosureTeamWageDetail = mes.teamWageDetail
 
 const mesPackingList = mes.packingList
+const mesBridgePackingList = mes.bridgePackingList
 const enclosurePackingList = mes.enclosurePackingList
 const mesShipmentSummary = mes.shipmentSummary
+const mesBridgeShipmentSummary = mes.bridgeShipmentSummary
 const mesShipmentDetail = mes.shipmentDetail
+const mesBridgeShipmentDetail = mes.bridgeShipmentDetail
 const mesReceiptStatusSummary = mes.receiptStatusSummary
 const mesShippingList = mes.shippingList
+const mesBridgeReceiptStatusSummary = mes.mesBridgeReceiptStatusSummary
+const mesBridgeShippingList = mes.mesBridgeShippingList
 const mesShipmentAudit = mes.shipmentAudit
 const mesShipmentAuditOverWeight = mes.shipmentAuditOverWeight
+const mesBridgeShipmentAudit = mes.mesBridgeShipmentAudit
+const mesBridgeShipmentAuditOverWeight = mes.mesBridgeShipmentAuditOverWeight
 const mesLogisticsSummary = mes.logisticsSummary
+const mesBridgeLogisticsSummary = mes.bridgeLogisticsSummary
 
 const mesWarehouseStateStructure = mes.warehouseStateStructure
 const mesWarehouseStateEnclosure = mes.warehouseStateEnclosure
@@ -160,7 +169,9 @@ const mesWorkOrderTrackingList = mes.workOrderTrackingList
 const mesWipStatisticsList = mes.wipStatisticsLis
 const mesProcessStatisticsList = mes.processStatisticsList
 const mesTaskStatisticsList = mes.taskStatisticsList
+const mesUpsStatisticsList = mes.upsStatisticsList
 const mesOutBoundStatisticsList = mes.outBoundStatisticsList
+const mesBackBoundStatisticsList = mes.backBoundStatisticsList
 
 const mesFactoryWorkshopReport = mes.factoryWorkshopReport
 const mesGroupsReport = mes.groupsReport
@@ -168,6 +179,8 @@ const mesProductionStatisticsReport = mes.productionStatisticsReport
 
 const mesStudSleeveStatisticsList = mes.studSleeveStatisticsList
 const mesProjectShipDetail = mes.mesProjectShipDetail
+const mesProjectShipDetailDirect = mes.mesProjectShipDetailDirect
+const bridgeProjectDetail = mes.bridgeProjectShipDetail
 const enclosureProjectShipDetail = mes.enclosureProjectShipDetail
 const mesShipMeteDetail = mes.mesShipMeteDetail
 const mesShipTaskMeteDetail = mes.mesShipTaskMeteDetail
@@ -175,27 +188,68 @@ const mesShipInboundMeteDetail = mes.mesShipInboundMeteDetail
 const mesShipTotalMeteDetail = mes.mesShipTotalMeteDetail
 const mesShipMonthMeteDetail = mes.mesShipMonthMeteDetail
 const mesShipStockMeteDetail = mes.mesShipStockMeteDetail
+const mesShipMeteDetailDirect = mes.mesShipMeteDetailDirect
+const mesShipTaskMeteDetailDirect = mes.mesShipMeteDetailDirect
+const mesShipInboundMeteDetailDirect = mes.mesShipMeteDetailDirect
+const mesShipTotalMeteDetailDirect = mes.mesShipMeteDetailDirect
+const mesShipMonthMeteDetailDirect = mes.mesShipMeteDetailDirect
+const mesShipStockMeteDetailDirect = mes.mesShipMeteDetailDirect
+const mesShipTrainMeteDetailDirect = mes.mesShipMeteDetailDirect
+
+const bridgeShipMeteDetail = mes.bridgeShipMeteDetail
+const bridgeShipTaskMeteDetail = mes.bridgeShipTaskMeteDetail
+const bridgeShipInboundMeteDetail = mes.bridgeShipInboundMeteDetail
+const bridgeShipTotalMeteDetail = mes.bridgeShipTotalMeteDetail
+const bridgeShipMonthMeteDetail = mes.bridgeShipMonthMeteDetail
+const bridgeShipStockMeteDetail = mes.bridgeShipStockMeteDetail
+const mesShipTrainMeteDetail = mes.mesShipTrainMeteDetail
+const bridgeShipMeteDetailDirect = mes.bridgeShipMeteDetailDirect
+const bridgeShipTaskMeteDetailDirect = mes.bridgeShipMeteDetailDirect
+const bridgeShipInboundMeteDetailDirect = mes.bridgeShipMeteDetailDirect
+const bridgeShipTotalMeteDetailDirect = mes.bridgeShipMeteDetailDirect
+const bridgeShipMonthMeteDetailDirect = mes.bridgeShipMeteDetailDirect
+const bridgeShipStockMeteDetailDirect = mes.bridgeShipMeteDetailDirect
 const enclosureShipMeteDetail = mes.enclosureShipMeteDetail
 const enclosureShipTaskMeteDetail = mes.enclosureShipTaskMeteDetail
 const enclosureShipInboundMeteDetail = mes.enclosureShipInboundMeteDetail
 const enclosureShipTotalMeteDetail = mes.enclosureShipTotalMeteDetail
 const enclosureShipMonthMeteDetail = mes.enclosureShipMonthMeteDetail
 const enclosureShipStockMeteDetail = mes.enclosureShipStockMeteDetail
-const mesShipTrainMeteDetail = mes.mesShipTrainMeteDetail
 const mesAuxMatDetail = mes.mesAuxMatDetail
+const bridgeAuxMatDetail = mes.bridgeAuxMatDetail
 const enclosureAuxMatDetail = mes.enclosureAuxMatDetail
 const mesProductSendReceiveStorage = mes.productSendReceiveStorage
+const mesDirectProductSendReceiveStorage = mes.productSendReceiveStorage
+const boxProductSendReceiveStorage = mes.boxProductSendReceiveStorage
+const boxProductSendReceiveStorageDirect = mes.boxProductSendReceiveStorage
 const enclosureProductSendReceiveStorage = mes.enclosureProductSendReceiveStorage
 const productSendReceiveStorageDetail = mes.productSendReceiveStorageDetail
+const boxProductSendReceiveStorageDetail = mes.boxProductSendReceiveStorageDetail
+const structureFinishedStartDetail = mes.structureFinishedGoodsInventoryDetail
+const structureFinishedEndtDetail = mes.structureFinishedGoodsInventoryDetail
+const structureFinishedInDetail = mes.structureFinishedGoodsInventoryDetail
+const structureFinishedOutDetail = mes.structureFinishedGoodsInventoryDetail
 const enclosureProductSendReceiveStorageDetail = mes.enclosureProductSendReceiveStorageDetail
 const mesBeginningInventoryDetail = mes.mesBeginningInventoryDetail
 const mesEndInventoryDetail = mes.mesEndInventoryDetail
 const mesInboundInventoryDetail = mes.mesInboundInventoryDetail
+const sectionProductStartDetail = mes.sectionProductInventoryDetail
+const sectionProductEndDetail = mes.sectionProductInventoryDetail
+const sectionProductInDetail = mes.sectionProductInventoryDetail
+const sectionProductOutDetail = mes.sectionProductInventoryDetail
 const mesOutboundInventoryDetail = mes.mesOutboundInventoryDetail
+const boxBeginningInventoryDetail = mes.boxBeginningInventoryDetail
+const boxEndInventoryDetail = mes.boxEndInventoryDetail
+const boxInboundInventoryDetail = mes.boxInboundInventoryDetail
+const boxOutboundInventoryDetail = mes.boxOutboundInventoryDetail
 const enclosureBeginningInventoryDetail = mes.enclosureBeginningInventoryDetail
 const enclosureEndInventoryDetail = mes.enclosureEndInventoryDetail
 const enclosureInboundInventoryDetail = mes.enclosureInboundInventoryDetail
 const enclosureOutboundInventoryDetail = mes.enclosureOutboundInventoryDetail
+const enclosureTotalBeginningInventoryDetail = mes.enclosureTotalBeginningInventoryDetail
+const enclosureTotalEndInventoryDetail = mes.enclosureTotalEndInventoryDetail
+const enclosureTotalInboundInventoryDetail = mes.enclosureTotalInboundInventoryDetail
+const enclosureTotalOutboundInventoryDetail = mes.enclosureTotalOutboundInventoryDetail
 const mesMainMaterialTrack = mes.mainMaterialTrackSummary
 const mesMainMaterialTrackUseRecord = mes.mainMaterialTrackUseRecord
 const mesMainMaterialTrackStock = mes.mainMaterialTrackStock
@@ -261,8 +315,10 @@ const bridgeFactoryWorkshopReport = bridge.factoryWorkshopReport
 
 const bridgeStudSleeveStatisticsList = bridge.studSleeveStatisticsList
 const bridgeProjectShipDetail = bridge.bridgeProjectShipDetail
+const bridgeProjectShipDetailDirect = bridge.bridgeProjectShipDetailDirect
 const bridgeProductSendReceiveStorage = bridge.productSendReceiveStorage
 const bridgeProductSendReceiveStorageDetail = bridge.productSendReceiveStorageDetail
+const bridgestructureFinishedGoodsInventoryDetail = bridge.structureFinishedGoodsInventoryDetail
 const boxSummary = bridge.boxSummary // 分段清单汇总
 const cellSummary = bridge.cellSummary // 单元清单汇总
 const partSummary = bridge.partSummary // 零件清单汇总
@@ -308,6 +364,7 @@ export default {
   supplierPaymentLedger, // 原材料采购台账
   supplierInvoiceLedger, // 供应商收票台账
 
+  contractBoxPrice, // 分段制品计价表
   contractStructurePrice, // 结构计价表
   contractEnclosurePrice, // 围护计价表
   contractAuxiliaryMaterialPrice, // 配套件计价表
@@ -421,14 +478,22 @@ export default {
   mesEnclosureTeamWageDetail, // 围护班组工资详情
 
   mesPackingList, // 打包清单
+  mesBridgePackingList, // 桥梁打包清单
   enclosurePackingList, // 围护打包清单
   mesShipmentSummary, // 发运汇总
+  mesBridgeShipmentSummary, // 桥梁发运汇总
   mesShipmentDetail, // 发运详情
+  mesBridgeShipmentDetail, // 桥梁发运详情
   mesReceiptStatusSummary, // 收货状态汇总
   mesShippingList, // 发货清单
+  mesBridgeReceiptStatusSummary, // 桥梁收货状态汇总
+  mesBridgeShippingList, // 桥梁发货清单
   mesShipmentAudit, // 发运审核
   mesShipmentAuditOverWeight, // 过磅详情
+  mesBridgeShipmentAudit, // 发运审核
+  mesBridgeShipmentAuditOverWeight, // 过磅详情
   mesLogisticsSummary, // 物流汇总
+  mesBridgeLogisticsSummary, // 桥梁物流汇总
 
   mesWarehouseStateStructure, // 结构出入库状态
   mesWarehouseStateEnclosure, // 围护出入库状态
@@ -448,7 +513,9 @@ export default {
   mesWipStatisticsList, // 在制品统计打印
   mesProcessStatisticsList, // 在制品统计工序详情打印
   mesTaskStatisticsList, // 在制品排产记录详情
+  mesUpsStatisticsList, // 制成品记录详情
   mesOutBoundStatisticsList, // 在制品出库记录详情
+  mesBackBoundStatisticsList, // 在制品退库记录详情
 
   mesFactoryWorkshopReport, // 车间报表清单详情
   mesGroupsReport, // 班组报表清单详情
@@ -457,14 +524,35 @@ export default {
   mesStudSleeveStatisticsList, // 栓钉套筒统计清单详情
 
   mesProjectShipDetail, // 发运管理项目发运详情
+  mesProjectShipDetailDirect, // 发运管理项目直发件发运详情
+  bridgeProjectDetail, // 发运管理桥梁项目发运详情
   enclosureProjectShipDetail, // 发运管理围护项目发运详情
   mesShipMeteDetail, // 发运统计/清单总量详情
-  mesShipTaskMeteDetail, // 发运统计/任务总量详情
+  mesShipTaskMeteDetail, // 发运统计/建钢任务总量详情
   mesShipInboundMeteDetail, // 发运统计/入库量详情
   mesShipTotalMeteDetail, // 发运统计/累计发运详情
   mesShipMonthMeteDetail, // 发运统计/本月发运详情
   mesShipStockMeteDetail, // 发运统计/库存详情
-  enclosureShipMeteDetail, // 发运统计/清单总量详情
+  mesShipMeteDetailDirect, // 发运统计/直发件清单总量详情
+  mesShipTaskMeteDetailDirect, // 发运统计/直发件建钢任务总量详情
+  mesShipInboundMeteDetailDirect, // 发运统计/直发件入库量详情
+  mesShipTotalMeteDetailDirect, // 发运统计/直发件累计发运详情
+  mesShipMonthMeteDetailDirect, // 发运统计/直发件本月发运详情
+  mesShipStockMeteDetailDirect, // 发运统计/直发件库存详情
+  mesShipTrainMeteDetailDirect, // 发运统计/直发件累计车次详情
+  bridgeShipMeteDetail, // 发运统计/桥梁清单总量详情
+  bridgeShipTaskMeteDetail, // 发运统计/任务总量详情
+  bridgeShipInboundMeteDetail, // 发运统计/入库量详情
+  bridgeShipTotalMeteDetail, // 发运统计/累计发运详情
+  bridgeShipMonthMeteDetail, // 发运统计/本月发运详情
+  bridgeShipStockMeteDetail, // 发运统计/库存详情
+  bridgeShipMeteDetailDirect, // 发运统计/桥梁直发件清单总量详情
+  bridgeShipTaskMeteDetailDirect, // 发运统计/直发件任务总量详情
+  bridgeShipInboundMeteDetailDirect, // 发运统计/直发件入库量详情
+  bridgeShipTotalMeteDetailDirect, // 发运统计/直发件累计发运详情
+  bridgeShipMonthMeteDetailDirect, // 发运统计/直发件本月发运详情
+  bridgeShipStockMeteDetailDirect, // 发运统计/直发件库存详情
+  enclosureShipMeteDetail, // 发运统计/围护清单总量详情
   enclosureShipTaskMeteDetail, // 发运统计/任务总量详情
   enclosureShipInboundMeteDetail, // 发运统计/入库量详情
   enclosureShipTotalMeteDetail, // 发运统计/累计发运详情
@@ -472,20 +560,40 @@ export default {
   enclosureShipStockMeteDetail, // 发运统计/库存详情
   mesShipTrainMeteDetail, // 发运统计/累计车次详情
   mesAuxMatDetail, // 发运统计/配套件详情
+  bridgeAuxMatDetail, // 发运统计/桥梁配套件
   enclosureAuxMatDetail, // 发运统计/围护配套件详情
   mesProductSendReceiveStorage, // 发运管理制成品入发存
+  mesDirectProductSendReceiveStorage, // 发运管理直发件制成品入发存
+  boxProductSendReceiveStorage, // 分段制品入发存
+  boxProductSendReceiveStorageDirect, // 直发件制品入发存
   enclosureProductSendReceiveStorage, // 围护制品入发存
   productSendReceiveStorageDetail, // 发运管理制成品入发存详情
+  boxProductSendReceiveStorageDetail, // 分段制品入发存详情
+  structureFinishedStartDetail, // 结构制品期初库存详情(总)
+  structureFinishedEndtDetail, // 结构制品期末库存详情(总)
+  structureFinishedInDetail, // 结构制品入库库存详情(总)
+  structureFinishedOutDetail, // 结构制品出库库存详情(总)
   enclosureProductSendReceiveStorageDetail, // 发运管理围护制成品入发存详情
   mesBeginningInventoryDetail, // 期初库存
   mesEndInventoryDetail, // 期末库存
   mesInboundInventoryDetail, // 入库量
   mesOutboundInventoryDetail, // 出库量
+  boxBeginningInventoryDetail, // 分段期初库存
+  boxEndInventoryDetail, // 期末库存
+  boxInboundInventoryDetail, // 入库量
+  boxOutboundInventoryDetail, // 出库量
+  sectionProductStartDetail, // 分段期初库存详情(总)
+  sectionProductEndDetail, // 分段期末库存详情(总)
+  sectionProductInDetail, // 分段入库库存详情(总)
+  sectionProductOutDetail, // 分段出库库存详情(总)
   enclosureBeginningInventoryDetail, // 围护期初库存
   enclosureEndInventoryDetail, // 围护期末库存
   enclosureInboundInventoryDetail, // 围护入库量
   enclosureOutboundInventoryDetail, // 围护出库量
-
+  enclosureTotalInboundInventoryDetail, // 围护制品入库库存
+  enclosureTotalBeginningInventoryDetail, // 围护制品期初库存
+  enclosureTotalOutboundInventoryDetail, // 围护制品出库库存
+  enclosureTotalEndInventoryDetail, // 围护制品期末库存
   // bridge
   bridgeSchedulingDetail, // 工单详情
   bridgeProductionTaskOrder, // 工单管理：构件生产任务单
@@ -548,8 +656,10 @@ export default {
   bridgeStudSleeveStatisticsList, // 栓钉套筒统计清单详情
 
   bridgeProjectShipDetail, // 发运管理项目发运详情
+  bridgeProjectShipDetailDirect, // 发运管理项目直发件发运详情
   bridgeProductSendReceiveStorage, // 发运管理制成品入发存
   bridgeProductSendReceiveStorageDetail, // 发运管理制成品入发存详情
+  bridgestructureFinishedGoodsInventoryDetail, // 发运管理制成品库存详情
   boxSummary, // 分段清单汇总
   cellSummary, // 单元清单汇总
   partSummary, // 零件清单汇总

@@ -101,7 +101,7 @@
           </el-table-column>
           <el-table-column prop="mete" label="核算量" align="center" min-width="80">
             <template v-slot="scope">
-              <common-input-number v-model="scope.row.mete" type="text" placeholder="核算量" style="width: 100%" :min="0" :step="0.001" :precision="3" :max="99999" :controls="false" />
+              <common-input-number v-model="scope.row.mete" type="text" placeholder="核算量" style="width: 100%" :min="0" :step="0.001" :precision="3" :max="9999999" :controls="false" />
             </template>
           </el-table-column>
           <!-- <el-table-column label="单重(kg)" prop="weight" align="center">

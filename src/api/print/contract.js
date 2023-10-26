@@ -289,7 +289,7 @@ export function saleOrderTracking(params) {
 }
 
 /**
- * 发运跟踪
+ * 建刚发运跟踪
  */
 export function shipmentTracking(params) {
   return request({
@@ -547,6 +547,15 @@ export function materialCostRecord(params) {
   })
 }
 
+// 销售管理 分段制品计价表
+export function contractBoxPrice(params) {
+  return request({
+    url: '/api/business/bridge-box/print',
+    method: 'get',
+    params
+  })
+}
+
 export default {
   contractLedger, // 合同台账（合同登记表）
   collectionLedger, // 收款记录
@@ -600,5 +609,6 @@ export default {
   fortuneReportList, // 业财报表
   productLogisticsPaymentLedger, // 制成品物流台账
   materialLogisticsRecord, // 原材料物流记录详情
-  subcontractPaymentLedger // 分包订单付款台账
+  subcontractPaymentLedger, // 分包订单付款台账
+  contractBoxPrice // 分段制品计价表
 }

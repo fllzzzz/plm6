@@ -55,6 +55,7 @@ const mesStructureProjectSummary = mes.projectSummary
 const mesEnclosureProjectSummary = mes.projectSummary
 
 const productSendReceiveStorageDetail = mes.projectConfig
+const structureFinishedGoodsInventoryDetail = mes.projectConfig
 const enclosureProductSendReceiveStorageDetail = mes.projectConfig
 
 const mesWageSummary = mes.wageProducedMete
@@ -76,6 +77,7 @@ const auxiliaryMaterialList = wms.dataFormat // 业财报表辅材费清单
 // const gasRecord = wms.dataFormat // 合同管理/费用录入/气体统计
 const conMainMaterialList = wms.dataFormat // 合同管理/业财报表主材费
 const mesOutBoundStatisticsList = wms.dataFormat // 任务跟踪/在制品出库记录详情
+const mesBackBoundStatisticsList = wms.dataFormat // 任务跟踪/在制品退库记录详情
 
 // 围护MES
 const enclosureTaskTrackingDetail = enclosure.handleProductionStatus // 围护生产跟踪详情
@@ -121,6 +123,7 @@ export default {
   mesStructureProjectSummary,
   mesEnclosureProjectSummary,
   productSendReceiveStorageDetail,
+  structureFinishedGoodsInventoryDetail,
   enclosureProductSendReceiveStorageDetail,
   mesStructureProductionStatistics,
   mesStructureProductionStatisticsIn,
@@ -145,6 +148,7 @@ export default {
   // gasRecord, // 合同管理/费用录入/气体统计
   conMainMaterialList, // 合同管理/业财报表主材费
   mesOutBoundStatisticsList, // 任务跟踪/在制品出库记录详情
+  mesBackBoundStatisticsList, // 任务跟踪/在制品退库记录详情
 
   // 围护MES
   enclosureTaskTrackingDetail, // 生产跟踪详情
