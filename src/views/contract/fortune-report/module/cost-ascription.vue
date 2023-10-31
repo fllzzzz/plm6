@@ -64,6 +64,8 @@
               <el-table-column key="reimburseUserName" prop="reimburseUserName" show-overflow-tooltip label="报销人" align="center" />
               <el-table-column key="expenseSubjectName" prop="expenseSubjectName" show-overflow-tooltip label="报销科目" align="center" />
               <el-table-column key="reimburseAmount" prop="reimburseAmount" show-overflow-tooltip label="报销金额" align="center" />
+              <el-table-column key="payee" prop="payee" show-overflow-tooltip label="收款单位" align="center" />
+              <el-table-column key="remark" prop="remark" show-overflow-tooltip label="备注" align="center" />
               <el-table-column key="writtenByName" prop="writtenByName" show-overflow-tooltip label="填报人" align="center" />
             </common-table>
             <!--分页组件-->
