@@ -135,9 +135,9 @@ const selectedParentIds = computed(() => {
 
 // 列表
 const tableList = computed(() => {
-  const list = props.data.filter(
+  const list = props.data?.filter(
     (v) => selectedParentIds.value.includes(v.parent.id) && v.name.includes(search.name) && v.serialNumber.includes(search.serialNumber)
-  )
+  ) || []
   // 校验选中行是否依然被选中，未选中则取消
   whetherContainsCheckRow(list)
   return list
