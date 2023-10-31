@@ -10,7 +10,7 @@
   >
     <template #titleRight>
       <common-button size="mini" type="success" @click="handleClose"> 上一步【构件排产预览】 </common-button>
-      <common-button v-permission="permission.assembleSave" size="mini" :loading="taskLoading" type="primary" @click="toTaskIssue">
+      <common-button v-permission="permission.assembleSave" size="mini"  type="primary" @click="toTaskIssue">
         任务下发
       </common-button>
     </template>
@@ -146,6 +146,21 @@
       </handle-surplus-assemble-dialog>
     </template>
   </common-drawer>
+  <common-dialog title="工单命名" v-model="orderVisible" width="400px">
+    <template #titleRight>
+      <common-button :loading="taskLoading" type="primary" size="mini" @click="toTaskIssue">确认下发</common-button>
+    </template>
+    <el-form ref="formRef" :model="form" :rules="formRules">
+      <el-form-item label="工单命名" prop="orderName">
+        <el-input
+          v-model="form.orderName"
+          placeholder="请输入工单命名"
+          class="input-underline"
+          style="width: 250px"
+        />
+      </el-form-item>
+    </el-form>
+  </common-dialog>
 </template>
 
 <script setup>
@@ -212,6 +227,19 @@ const curGroupsId = ref()
 const originAssembleSchedulingList = ref([])
 const surplusAssembleList = ref([])
 const surplusAssembleVisible = ref(false)
+
+// 工单命名
+const orderVisible = ref(false)
+const formRef = ref(null)
+const form = ref({
+  orderName: ''
+})
+const formRules = ref({
+  orderName: [
+    { required: true, message: '请输入工单命名', trigger: 'blur' },
+    { max: 10, message: '不大于10个字符', trigger: 'blur' }
+  ]
+})
 
 const tableData = computed(() => tagObj.value[curGroupsId.value]?.assembleList || [])
 const otherData = computed(() => tagObj.value[curGroupsId.value]?.otherList || [])
@@ -501,60 +529,66 @@ async function toTaskIssue() {
   //   return
   // }
   try {
-    taskLoading.value = true
-    saveTaskParams.value = {}
-    let _artifact = []
-    let _assemble = []
-    let flag = true
-    for (const item in tagObj.value) {
+    if (!orderVisible.value) {
+      saveTaskParams.value = {}
+      let _artifact = []
+      let _assemble = []
+      let flag = true
+      for (const item in tagObj.value) {
       // 显示的组才需要验证
-      const _curList = tagObj.value[item]?.assembleList
-      if (showTagGroupIds.value.includes(Number(item)) && _curList?.length) {
-        const { validResult, dealList } = tableValidate(_curList)
-        if (validResult) {
-          const copyDealList = deepClone(dealList)
-          cleanUpData(copyDealList)
-          const _list = copyDealList.map((v) => {
-            return {
-              askCompleteTime: v.askCompleteTime,
-              boolStructuralEnum: v.boolStructuralEnum,
-              groupsId: v.groupsId,
-              productId: v.productId,
-              projectId: v.projectId,
-              quantity: v.needSchedulingQuantity,
-              boolTypesettinglEnum: v.boolTypesettinglEnum,
-              typesettingAssembleTypeEnum: v.typesettingAssembleTypeEnum,
-              boolSectionSteel: v.boolSectionSteel,
-              boolProcess: v.boolProcess
-            }
-          })
-          _artifact = _artifact.concat(tagObj.value[item].ids)
-          _assemble = _assemble.concat(_list)
+        const _curList = tagObj.value[item]?.assembleList
+        if (showTagGroupIds.value.includes(Number(item)) && _curList?.length) {
+          const { validResult, dealList } = tableValidate(_curList)
+          if (validResult) {
+            const copyDealList = deepClone(dealList)
+            cleanUpData(copyDealList)
+            const _list = copyDealList.map((v) => {
+              return {
+                askCompleteTime: v.askCompleteTime,
+                boolStructuralEnum: v.boolStructuralEnum,
+                groupsId: v.groupsId,
+                productId: v.productId,
+                projectId: v.projectId,
+                quantity: v.needSchedulingQuantity,
+                boolTypesettinglEnum: v.boolTypesettinglEnum,
+                typesettingAssembleTypeEnum: v.typesettingAssembleTypeEnum,
+                boolSectionSteel: v.boolSectionSteel,
+                boolProcess: v.boolProcess
+              }
+            })
+            _artifact = _artifact.concat(tagObj.value[item].ids)
+            _assemble = _assemble.concat(_list)
+          } else {
+            curGroupsId.value = tagObj.value[item].groupsId
+            flag = false
+            break
+          }
         } else {
-          curGroupsId.value = tagObj.value[item].groupsId
-          flag = false
-          break
+          _artifact = _artifact.concat(tagObj.value[item].ids)
         }
-      } else {
-        _artifact = _artifact.concat(tagObj.value[item].ids)
+        if (tagObj.value[item]?.unshowList && tagObj.value[item]?.unshowList?.length) {
+          _assemble = _assemble.concat(tagObj.value[item]?.unshowList)
+        }
       }
-      if (tagObj.value[item]?.unshowList && tagObj.value[item]?.unshowList?.length) {
-        _assemble = _assemble.concat(tagObj.value[item]?.unshowList)
+      if (!flag) {
+        return
       }
-    }
-    if (!flag) {
+      saveTaskParams.value = {
+        artifactSchedulingList: _artifact,
+        assembleDetailList: _assemble,
+        productionLineTypeEnum: props.productionLineTypeEnum
+      }
+      console.log(saveTaskParams.value, 'saveTaskParams.value')
+      if (surplusAssembleList.value.length && !surplusAssembleVisible.value) {
+        surplusAssembleVisible.value = true
+        return
+      }
+      orderVisible.value = true
       return
     }
-    saveTaskParams.value = {
-      artifactSchedulingList: _artifact,
-      assembleDetailList: _assemble,
-      productionLineTypeEnum: props.productionLineTypeEnum
-    }
-    console.log(saveTaskParams.value, 'saveTaskParams.value')
-    if (surplusAssembleList.value.length && !surplusAssembleVisible.value) {
-      surplusAssembleVisible.value = true
-      return
-    }
+    if (!(await formRef.value.validate()) && orderVisible.value) return
+    saveTaskParams.value.inputOrderNumber = form.value.orderName
+    taskLoading.value = true
     await saveTask(saveTaskParams.value)
     ElNotification({
       title: '任务下发成功',
@@ -562,6 +596,7 @@ async function toTaskIssue() {
       duration: 2500
     })
     emit('task-issue-success')
+    orderVisible.value = false
     handleClose()
   } catch (error) {
     console.log('任务下发报错', error)
