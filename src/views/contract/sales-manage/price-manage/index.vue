@@ -224,7 +224,7 @@ const techOptions = [
 
 // 获取项目造价
 const fetchCost = debounce(async function () {
-  if (!checkPermission(permission.cost) || isBlank(projectId.value) || productType.value === contractSaleTypeEnum.ENCLOSURE.V) {
+  if (!checkPermission(permission.cost) || isBlank(projectId.value) || productType.value === contractSaleTypeEnum.ENCLOSURE.V || !productType.value) {
     projectCost.value = 0
     monomerCost.value = 0
     areaCost.value = 0
@@ -235,7 +235,8 @@ const fetchCost = debounce(async function () {
     const params = {
       projectId: projectId.value,
       monomerId: monomerId.value,
-      areaId: areaId.value
+      areaId: areaId.value,
+      type: productType.value
     }
     const { monomerPrice, projectPrice, areaPrice } = await cost(params)
     projectCost.value = projectPrice || 0
@@ -255,6 +256,54 @@ const fetchModifyCount = debounce(async function () {
     modifyCount.value = await priceModifyCount()
   } catch (error) {
     console.log('变更记录未审核数量', error)
+  }
+}, 100, false)
+
+// 获取提交记录数量
+const fetchSaveCount = debounce(async function () {
+  if (!checkPermission(permission.list)) return
+  try {
+    let countParams = {}
+    switch (productType.value) {
+      case contractSaleTypeEnum.ENCLOSURE.V:
+        countParams = {
+          category: category.value,
+          enclosurePlanId: enclosurePlanId.value,
+          projectId: projectId.value,
+          projectType: currentProjectVal.value?.projectType,
+          type: productType.value
+        }
+        break
+      case contractSaleTypeEnum.AUXILIARY_MATERIAL.V:
+        countParams = relationType.value === standardPartPriceSearchEnum.STRUCTURE.V ? {
+          areaId: areaId.value,
+          monomerId: monomerId.value,
+          projectId: projectId.value,
+          projectType: currentProjectVal.value?.projectType,
+          relationType: relationType.value,
+          type: productType.value
+        } : {
+          category: category.value,
+          enclosurePlanId: enclosurePlanId.value,
+          projectId: projectId.value,
+          projectType: currentProjectVal.value?.projectType,
+          relationType: relationType.value,
+          type: productType.value
+        }
+        break
+      default:
+        countParams = {
+          areaId: areaId.value,
+          monomerId: monomerId.value,
+          projectId: projectId.value,
+          projectType: currentProjectVal.value?.projectType,
+          type: productType.value
+        }
+        break
+    }
+    saveCount.value = await saveNum(countParams)
+  } catch (error) {
+    console.log('提交记录待提交数量', error)
   }
 }, 100, false)
 
@@ -373,54 +422,6 @@ function getAreaInfo(val) {
   fetchSaveCount()
   areaInfo.value = val
 }
-
-// 获取提交记录数量
-const fetchSaveCount = debounce(async function () {
-  if (!checkPermission(permission.list)) return
-  try {
-    let countParams = {}
-    switch (productType.value) {
-      case contractSaleTypeEnum.ENCLOSURE.V:
-        countParams = {
-          category: category.value,
-          enclosurePlanId: enclosurePlanId.value,
-          projectId: projectId.value,
-          projectType: currentProjectVal.value?.projectType,
-          type: productType.value
-        }
-        break
-      case contractSaleTypeEnum.AUXILIARY_MATERIAL.V:
-        countParams = relationType.value === standardPartPriceSearchEnum.STRUCTURE.V ? {
-          areaId: areaId.value,
-          monomerId: monomerId.value,
-          projectId: projectId.value,
-          projectType: currentProjectVal.value?.projectType,
-          relationType: relationType.value,
-          type: productType.value
-        } : {
-          category: category.value,
-          enclosurePlanId: enclosurePlanId.value,
-          projectId: projectId.value,
-          projectType: currentProjectVal.value?.projectType,
-          relationType: relationType.value,
-          type: productType.value
-        }
-        break
-      default:
-        countParams = {
-          areaId: areaId.value,
-          monomerId: monomerId.value,
-          projectId: projectId.value,
-          projectType: currentProjectVal.value?.projectType,
-          type: productType.value
-        }
-        break
-    }
-    saveCount.value = await saveNum(countParams)
-  } catch (error) {
-    console.log('提交记录待提交数量', error)
-  }
-}, 100, false)
 
 // 刷新数据
 function refreshData() {

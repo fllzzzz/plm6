@@ -21,12 +21,12 @@ export function save(data) {
  * @param {*} projectId 必填，项目id
  * @param {*} monomerId 选填，单体id
  */
-export function cost({ projectId, monomerId, areaId }) {
+export function cost({ projectId, monomerId, areaId, type }) {
   return request({
     module: 'contract',
     url: 'business/summary',
     method: 'get',
-    params: { projectId, monomerId, areaId }
+    params: { projectId, monomerId, areaId, type }
   })
 }
 
