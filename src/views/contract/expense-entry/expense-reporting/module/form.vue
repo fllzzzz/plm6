@@ -28,6 +28,7 @@
             type="other"
             :data-structure="{ key: 'id', label: 'serialNumberName', value: 'id' }"
             class="filter-item"
+            :disabled="!form.expenseTypeId || form.costAscriptionEnum === costAscriptionEnum.INDIRECT_COSTS.V"
             clearable
             filterable
             style="width: 270px"
