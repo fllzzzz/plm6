@@ -14,6 +14,14 @@ export function get(params) {
     params
   })
 }
+export function getBridge(params) {
+  return request({
+    module: 'bridge',
+    url: 'cargo/review',
+    method: 'get',
+    params
+  })
+}
 
 /**
  * 发运审核详情
@@ -22,6 +30,17 @@ export function get(params) {
 export function detail(id) {
   return request({
     module: 'mes',
+    url: `cargo/review/${id}`,
+    method: 'get'
+  })
+}
+/**
+ * 桥梁发运审核详情
+ * @param {number} id
+ */
+export function detailBridge(id) {
+  return request({
+    module: 'bridge',
     url: `cargo/review/${id}`,
     method: 'get'
   })
@@ -35,6 +54,14 @@ export function detail(id) {
 export function audit({ id, status }) {
   return request({
     module: 'mes',
+    url: 'cargo/review',
+    method: 'put',
+    data: { id, status }
+  })
+}
+export function auditDetail({ id, status }) {
+  return request({
+    module: 'bridge',
     url: 'cargo/review',
     method: 'put',
     data: { id, status }

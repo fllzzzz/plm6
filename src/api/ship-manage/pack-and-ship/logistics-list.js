@@ -14,6 +14,14 @@ export function get(params) {
     params
   })
 }
+// 桥梁
+export function getBridge(params) {
+  return request({
+    url: '/api/mes/bridge/cargo/logistics',
+    method: 'get',
+    params
+  })
+}
 
 export function edit(id, data) {
   return request({
@@ -24,10 +32,27 @@ export function edit(id, data) {
   })
 }
 
+export function editBridge(id, data) {
+  return request({
+    module: 'bridge',
+    url: `cargo/${id}/change`,
+    method: 'put',
+    data
+  })
+}
+
 // 获取装车修改详情
 export function getLog(id) {
   return request({
     module: 'mes',
+    url: `cargo/${id}/change/log`,
+    method: 'get'
+  })
+}
+
+export function getLogBridge(id) {
+  return request({
+    module: 'bridge',
     url: `cargo/${id}/change/log`,
     method: 'get'
   })

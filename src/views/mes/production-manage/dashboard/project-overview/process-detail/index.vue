@@ -99,7 +99,11 @@
           <span>{{ row.area ? row.area?.name : '/' }}</span>
         </template>
       </el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" align="center" />
+      <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" align="center">
+        <template #default="{ row }">
+          <span @click.stop="showBoard(row)" style="cursor: pointer" class="tc-primary">{{ row.serialNumber }}</span>
+        </template>
+      </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" align="center" />
       <el-table-column :show-overflow-tooltip="true" prop="material" label="材质" align="center" />
       <el-table-column :show-overflow-tooltip="true" prop="quantity" label="任务数" align="center" />
@@ -154,6 +158,8 @@
 import { getProcessDetail } from '@/api/mes/production-manage/dashboard/project-overview'
 import { defineProps, defineEmits, ref, watch, computed, inject } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import { weightTypeEnum, workshopTypeEnum } from '@enum-ms/common'
 import { taskTrackingSchedulingStatusEnum, componentTypeEnum } from '@enum-ms/mes'
 import { mesProjectOverviewPM as permission } from '@/page-permission/mes'
@@ -165,6 +171,8 @@ import productionLineSelect from '@comp-mes/production-line-select'
 import workshopSelect from '@comp-mes/workshop-select'
 // import detailDrawer from './detail-drawer.vue'
 
+const store = useStore()
+const router = useRouter()
 const emit = defineEmits(['update:visible'])
 const processDetailData = ref([])
 // const drawerVisible = ref(false)
@@ -282,6 +290,14 @@ function resetQuery() {
   serialNumber.value = undefined
   status.value = undefined
   processDetailGet()
+}
+
+// 点击编号跳转对应编号看板
+function showBoard(row) {
+  store.dispatch('project/setProjectId', props.projectId)
+  router.push({
+    name: 'MesProductionDashboardArtifactDashboard', params: { serialNumber: row.serialNumber, monomerId: row.monomer?.id, areaId: row.area?.id, id: row.id, projectId: props.projectId, productType: props.detailData.productType }
+  })
 }
 
 // // 点击完成数显示详情

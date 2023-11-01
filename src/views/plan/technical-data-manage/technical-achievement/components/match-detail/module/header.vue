@@ -22,9 +22,6 @@
       <rrOperation/>
     </div>
     <crudOperation>
-      <template #optLeft>
-        <export-button class="filter-item" :fn="fileMatchingDetailsDownload" :params="{...query}" v-if="query.productType === 2" v-permission="permission.download">下载</export-button>
-      </template>
       <template #viewLeft>
         <el-tag v-if="props.tip" class="filter-item" size="medium" effect="plain">{{ props.tip }}</el-tag>
       </template>
@@ -34,10 +31,8 @@
 
 <script setup>
 import { defineProps } from 'vue'
-import ExportButton from '@comp-common/export-button/index.vue'
+
 import { regHeader } from '@compos/use-crud'
-import { fileMatchingDetailsDownload } from '@/api/plan/technical-data-manage/technical-achievement'
-import { drawingFileListPM as permission } from '@/page-permission/plan'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import useProjectTree from '@compos/store/use-project-tree'
@@ -64,6 +59,5 @@ CRUD.HOOK.beforeResetQuery = () => {
   crud.toQuery()
   return false
 }
-console.log(query)
 
 </script>

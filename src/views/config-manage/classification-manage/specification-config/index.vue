@@ -129,10 +129,18 @@ async function formatTree() {
   }
 }
 
-// 菜单过滤
-function filterDeptNode(value, data) {
+// 菜单过滤,保留子节点
+function filterDeptNode(value, data, node) {
   if (!value) return true
-  return data.name.includes(value) || data.serialNumber.includes(value)
+  let parentNode = node.parent
+  let labels = [data.name, data.serialNumber]
+  let level = 1
+  while (level < node.level) {
+    labels = [...labels, parentNode?.data?.name, parentNode?.data?.serialNumber]
+    parentNode = parentNode.parent
+    level++
+  }
+  return labels.some(label => label.indexOf(value) !== -1)
 }
 
 // 切换清单

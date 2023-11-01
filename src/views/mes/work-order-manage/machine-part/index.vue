@@ -162,6 +162,7 @@
         :process-type="crud.query.processType"
         v-model:visible="cuttingDrawerVisible"
         :cutting-detail-data="cuttingDetailData"
+        :serialNumber="crud.query.serialNumber"
         @refresh="crud.toQuery"
       />
     </div>

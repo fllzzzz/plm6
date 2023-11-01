@@ -24,6 +24,15 @@ export function get(params) {
     params
   })
 }
+// 桥梁
+export function getBridge(params) {
+  return request({
+    module: 'bridge',
+    url: 'cargo/ship',
+    method: 'get',
+    params
+  })
+}
 
 /**
  * 发运记录-发运量汇总
@@ -37,11 +46,33 @@ export function getSummaryShipMete(params) {
   })
 }
 /**
+ * 桥梁发运记录-发运量汇总
+ */
+export function getBridgeSummaryShipMete(params) {
+  return request({
+    module: 'bridge',
+    url: 'cargo/ship/summary',
+    method: 'get',
+    params
+  })
+}
+/**
  * 当年/当月发运记录汇总
  */
 export function getSummaryMonthMete(params) {
   return request({
     module: 'mes',
+    url: 'cargo/yearAndMonth/summary',
+    method: 'get',
+    params
+  })
+}
+/**
+ * 桥梁：当年/当月发运记录汇总
+ */
+export function getBridgeSummaryMonthMete(params) {
+  return request({
+    module: 'bridge',
     url: 'cargo/yearAndMonth/summary',
     method: 'get',
     params
@@ -80,6 +111,17 @@ export function downloadLogistics(params) {
 export function detail(id) {
   return request({
     module: 'mes',
+    url: `cargo/ship/${id}`,
+    method: 'get'
+  })
+}
+/**
+ * 桥梁发运记录详情
+ * @param {number} id
+ */
+export function detailBridge(id) {
+  return request({
+    module: 'bridge',
     url: `cargo/ship/${id}`,
     method: 'get'
   })

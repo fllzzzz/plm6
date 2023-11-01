@@ -153,7 +153,6 @@ export const drawingFileListPM = {
   get: ['plan_drawing_file:get'], // 列表
   del: ['plan_drawing_file:del'], // 删除
   detail: ['plan_drawing_file:detail'], // 详情
-  download: ['plan_drawing_file:download'], // 下载
   import: ['plan_drawing_file:import'] // 导入
 }
 

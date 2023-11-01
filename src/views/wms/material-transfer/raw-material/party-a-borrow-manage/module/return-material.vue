@@ -2,7 +2,7 @@
   <common-dialog
     title="归还办理"
     v-model="dialogVisible"
-    width="1800px"
+    width="90%"
     :before-close="handleClose"
     :show-close="true"
     custom-class="wms-borrow-return-handling"

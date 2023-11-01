@@ -2,8 +2,22 @@
   <div v-show="crud.searchToggle">
     <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
     <component-radio-button
+      v-if="typeVal !== packEnum.BOX.V"
       v-model="query.productType"
       :options="packTypeEnum.ENUM"
+      :unshowVal="query.projectId ? unValOptions : []"
+      default
+      type="enum"
+      size="small"
+      class="filter-item"
+      @change="crud.toQuery"
+    />
+    <component-radio-button
+      v-if="typeVal === packEnum.BOX.V"
+      v-model="query.productType"
+      :options="bridgePackTypeEnum.ENUM"
+      :disabledVal="[bridgePackTypeEnum.AUXILIARY_MATERIAL.V]"
+      default
       type="enum"
       size="small"
       class="filter-item"
@@ -28,7 +42,7 @@
       end-placeholder="结束日期"
       size="small"
       class="filter-item"
-      style="width: 370px"
+      style="width: 330px"
       clearable
       :shortcuts="PICKER_OPTIONS_SHORTCUTS"
       @change="handleDateChange"
@@ -99,7 +113,10 @@
       }}</el-tag>
       <print-table
         v-permission="permission.printPackList"
-        :api-key="crud.query.productType !== packTypeEnum.ENCLOSURE.V ? 'mesPackingList' : 'enclosurePackingList'"
+        :api-key="
+          (crud.query.projectType === projectTypeEnum.ENCLOSURE.V ? 'enclosurePackingList' : crud,
+          query.projectType === projectTypeEnum.BRIDGE.V ? 'mesBridgePackingList' : 'mesPackingList')
+        "
         :params="printParams"
         :before-print="handleBeforePrint"
         size="mini"
@@ -122,13 +139,15 @@
 </template>
 
 <script setup>
-import { detail } from '@/api/ship-manage/pack-and-ship/pack-list'
-import { packageRecordAdd } from '@/api/mes/label-print/print-record'
-import { inject, reactive, defineExpose, computed, defineEmits, ref } from 'vue'
+import { detail, detailBridge } from '@/api/ship-manage/pack-and-ship/pack-list'
+import { packageRecordAdd, packageBridgeRecordAdd } from '@/api/mes/label-print/print-record'
+import { ref, inject, reactive, defineExpose, computed, defineEmits, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 import moment from 'moment'
-
+import { projectTypeEnum } from '@enum-ms/contract'
 import { packTypeEnum } from '@enum-ms/mes'
+import { packEnum } from '@enum-ms/ship-manage'
+import { bridgePackTypeEnum } from '@enum-ms/bridge'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { printPackageLabel } from '@/utils/print/index'
 import { QR_SCAN_F_TYPE, QR_SCAN_TYPE } from '@/settings/config'
@@ -141,6 +160,9 @@ import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import { ElMessage } from 'element-plus'
 
+const typeVal = ref()
+const unitValue = ref(1)
+const emit = defineEmits(['getDetail', 'changeUnit'])
 const unitOptions = ref([
   {
     label: '核算单位',
@@ -152,11 +174,8 @@ const unitOptions = ref([
   }
 ])
 
-const unitValue = ref(1)
-
-const emit = defineEmits(['getDetail', 'changeUnit'])
 const permission = inject('permission')
-const { user } = mapGetters(['user'])
+const { user, globalProject } = mapGetters(['user', 'globalProject'])
 const defaultQuery = {
   serialNumber: undefined,
   userName: undefined,
@@ -165,7 +184,6 @@ const defaultQuery = {
   remark: void 0,
   productSerialNumber: undefined,
   materialTypeArr: { value: undefined, resetAble: false },
-  productType: packTypeEnum.STRUCTURE.V,
   projectId: { value: undefined, resetAble: false }
 }
 const { crud, query } = regHeader(defaultQuery)
@@ -196,6 +214,29 @@ function handleBeforePrint() {
   }
 }
 
+watch(
+  () => globalProject.value,
+  (val) => {
+    query.productType = undefined
+    typeVal.value = undefined
+    typeVal.value = globalProject.value?.productCategory
+  },
+  { immediate: true }
+)
+
+const unValOptions = computed(() => {
+  switch (typeVal.value) {
+    case packTypeEnum.STRUCTURE.V:
+      return [packTypeEnum.ENCLOSURE.V]
+    case packTypeEnum.ENCLOSURE.V:
+      return [packTypeEnum.STRUCTURE.V, packTypeEnum.MACHINE_PART.v]
+    case packTypeEnum.STRUCTURE.V + packTypeEnum.ENCLOSURE.V:
+      return []
+    default:
+      return []
+  }
+})
+
 const { batchPrint, print } = usePrintLabel({
   getPrintTotalNumber: () => computed(() => printConfig.copies).value,
   getLabelInfo: getLabelInfo,
@@ -203,7 +244,7 @@ const { batchPrint, print } = usePrintLabel({
   getLoadingTextFunc: (row) => `${row.serialNumber}`,
   printLabelFunc: printPackageLabel,
   needAddPrintRecord: true,
-  addPrintRecordReq: packageRecordAdd
+  addPrintRecordReq: crud.query.projectType === projectTypeEnum.BRIDGE.V ? packageBridgeRecordAdd : packageRecordAdd
 })
 
 const detailStore = inject('detailStore')
@@ -222,8 +263,9 @@ async function getLabelInfo(row) {
   try {
     if (detailStore[row.id]) {
       _data = detailStore[row.id]
+      console.log(_data, '_data')
     } else {
-      _data = await detail(row.id)
+      _data = crud.query.projectType === projectTypeEnum.BRIDGE.V ? await detailBridge(row.id) : await detail(row.id)
       emit('getDetail', row.id, _data)
     }
     const auxList = _data[dataField[packTypeEnum.AUXILIARY_MATERIAL.V]]

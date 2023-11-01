@@ -358,6 +358,13 @@ export async function numFmtByUnit(data, { unit, precision = 0, fields, toSmalle
   numFmtBySysUnit(data, { unit: unitCfg.get(unit), precision, fields, toSmallest, showUnit, toNum })
 }
 
+// 根据单位进行数据转换 单条数据 转换
+export async function numFmtByUnitReturn(data, { unit, precision = 0, fields, toSmallest = false, showUnit = false, toNum = false } = {}) {
+  const unitCfg = await getUnit()
+  await numFmtBySysUnit(data, { unit: unitCfg.get(unit), precision, fields, toSmallest, showUnit, toNum })
+  return data
+}
+
 // 根据单位装换
 // unit : 转换后的unit
 export function numFmtBySysUnit(data, { unit, precision = 0, fields, toSmallest = false, showUnit = false, toNum = false } = {}) {

@@ -10,9 +10,8 @@
       style="width: 100%"
       :max-height="maxHeight"
       @sort-change="crud.handleSortChange"
-       @selection-change="crud.selectionChangeHandler"
+      @selection-change="crud.selectionChangeHandler"
     >
-
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
@@ -158,7 +157,12 @@
         </template>
       </el-table-column>
       <!--详情与下载-->
-      <el-table-column v-if="checkPermission([...permission.detail, ...permission.audit, ...permission.download])" label="操作" width="130px" align="center">
+      <el-table-column
+        v-if="checkPermission([...permission.detail, ...permission.audit, ...permission.download])"
+        label="操作"
+        width="130px"
+        align="center"
+      >
         <template v-slot="scope">
           <common-button
             v-if="scope.row.checkStatus === shipAuditStatusEnum.CHECKED.V && checkPermission(permission.detail)"
@@ -168,40 +172,58 @@
           >
             查看
           </common-button>
-          <common-button v-if="scope.row.checkStatus === shipAuditStatusEnum.UNCHECKED.V && checkPermission(permission.audit)" type="primary" size="mini" @click.stop="showDetail(scope.row)"> 审核 </common-button>
+          <common-button
+            v-if="scope.row.checkStatus === shipAuditStatusEnum.UNCHECKED.V && checkPermission(permission.audit)"
+            type="primary"
+            size="mini"
+            @click.stop="showDetail(scope.row)"
+          >
+            审核
+          </common-button>
           <!-- 下载 -->
-          <export-button v-permission="permission.download" :params="{id: scope.row.id}" size="mini" :fn="crud.crudApi.download"/>
+          <export-button v-permission="permission.download" :params="{ id: scope.row.id }" size="mini" :fn="crud.crudApi.download" />
         </template>
       </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
-    <m-detail v-model:visible="detailVisible" :detail-info="shipInfo" title="发运审核" :detailFunc="detail">
+    <m-detail
+      v-model:visible="detailVisible"
+      :detail-info="shipInfo"
+      title="发运审核"
+      :detailFunc="crud.query.projectType === projectTypeEnum.BRIDGE.V ? detailBridge : detail"
+    >
       <template #titleRight>
-      <template v-if="shipInfo.checkStatus === shipAuditStatusEnum.UNCHECKED.V">
-        <template v-if="checkPermission([...permission.audit])">
-          <common-button type="primary" :loading="loading.passLoading" size="mini" @click="auditIt(shipAuditEnum.PASS, 'passLoading')">
-            同意发运
-          </common-button>
-          <common-button type="danger" :loading="loading.noPassLoading" size="mini" @click="auditIt(shipAuditEnum.NO_PASS, 'noPassLoading')">
-            不同意发运
-          </common-button>
+        <template v-if="shipInfo.checkStatus === shipAuditStatusEnum.UNCHECKED.V">
+          <template v-if="checkPermission([...permission.audit])">
+            <common-button type="primary" :loading="loading.passLoading" size="mini" @click="auditIt(shipAuditEnum.PASS, 'passLoading')">
+              同意发运
+            </common-button>
+            <common-button
+              type="danger"
+              :loading="loading.noPassLoading"
+              size="mini"
+              @click="auditIt(shipAuditEnum.NO_PASS, 'noPassLoading')"
+            >
+              不同意发运
+            </common-button>
+          </template>
         </template>
-      </template>
-      <template v-else>
-        <!-- 下载 -->
-        <export-button v-permission="permission.download" :params="{id: shipInfo.id}" size="mini" :fn="crud.crudApi.download">
-          下载发运详情
-        </export-button>
-      </template>
+        <template v-else>
+          <!-- 下载 -->
+          <export-button v-permission="permission.download" :params="{ id: shipInfo.id }" size="mini" :fn="crud.crudApi.download">
+            下载发运详情
+          </export-button>
+        </template>
       </template>
     </m-detail>
   </div>
 </template>
 
 <script setup>
-import crudApi, { detail, audit } from '@/api/ship-manage/pack-and-ship/ship-audit'
-import { ref, provide, reactive } from 'vue'
+import { get, getBridge, detail, detailBridge, audit, auditDetail, download as mesDownload } from '@/api/ship-manage/pack-and-ship/ship-audit'
+import { download as bridgeDownload } from '@/api/bridge/bridge-pack-and-ship/ship-audit'
+import { ref, provide, reactive, watch } from 'vue'
 import { ElNotification } from 'element-plus'
 
 import { shipAuditPM as permission } from '@/page-permission/ship-manage'
@@ -212,7 +234,8 @@ import EO from '@enum'
 // import { convertUnits } from '@/utils/convert/unit'
 import { projectNameFormatter } from '@/utils/project'
 import checkPermission from '@/utils/system/check-permission'
-
+import { mapGetters } from '@/store/lib'
+import { projectTypeEnum } from '@enum-ms/contract'
 import ExportButton from '@comp-common/export-button/index.vue'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -234,15 +257,29 @@ const optShow = {
 }
 
 const tableRef = ref()
-const { crud, columns } = useCRUD(
+
+const { currentProjectType } = mapGetters(['currentProjectType'])
+const { crud, CRUD, columns } = useCRUD(
   {
     title: '发运审核',
     sort: ['auditTime.desc'],
     permission: { ...permission },
-    crudApi: { ...crudApi },
+    crudApi: { get },
     optShow: { ...optShow }
   },
   tableRef
+)
+
+watch(
+  () => currentProjectType.value,
+  (val) => {
+    if (val === projectTypeEnum.BRIDGE.V) {
+      crud.crudApi.download = bridgeDownload
+    } else {
+      crud.crudApi.download = mesDownload
+    }
+  },
+  { immediate: true }
 )
 
 provide('permission', permission)
@@ -255,6 +292,11 @@ const loading = reactive({
   noPassLoading: false
 })
 
+CRUD.HOOK.beforeToQuery = () => {
+  crud.query.projectType = currentProjectType.value
+  crud.crudApi.get = crud.query.projectType === projectTypeEnum.BRIDGE.V ? getBridge : get
+}
+
 function showDetail(row) {
   shipInfo.value = row
   detailVisible.value = true
@@ -263,10 +305,15 @@ function showDetail(row) {
 async function auditIt(status, loadingLabel) {
   try {
     loading[loadingLabel] = true
-    await audit({
-      id: shipInfo.value.id,
-      status: status.V
-    })
+    crud.query.projectType === projectTypeEnum.BRIDGE.V
+      ? await auditDetail({
+        id: shipInfo.value.id,
+        status: status.V
+      })
+      : await audit({
+        id: shipInfo.value.id,
+        status: status.V
+      })
     ElNotification({ title: '审核成功', message: `${status.L}发运`, type: 'success', duration: 2500 })
     detailVisible.value = false
     crud.toQuery()
