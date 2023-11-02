@@ -43,7 +43,7 @@
         />
       </div>
       <el-descriptions
-        v-show="category === mesShipStatisticsTypeEnum.STRUCTURE.V"
+        v-show="category === mesShipStatisticsTypeEnum.STRUCTURE.V || category === mesShipStatisticsTypeEnum.DIRECT.V"
         v-loading="summaryLoading"
         :data="summaryData"
         direction="vertical"
@@ -60,11 +60,12 @@
           }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="任务总量（吨）">
-          <span class="tc-primary" style="cursor: pointer" @click="openDetail('ASSIGNMENT')">{{
+          <span class="tc-primary" style="cursor: pointer" @click="openDetail('ASSIGNMENT')" v-if="category === mesShipStatisticsTypeEnum.STRUCTURE.V">{{
             props.weightStatus === weightTypeEnum.NET.V
               ? convertUnits(summaryData?.schedulingMete || 0, 'kg', 't', 2)
               : convertUnits(summaryData?.schedulingGrossMete || 0, 'kg', 't', 2)
           }}</span>
+          <span v-else>-</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="入库量（吨）">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('STORAGE')">{{
@@ -160,19 +161,21 @@
       :workshopId="props.workshopId"
       :projectId="props.currentRow.projectId"
       :detail-data="props.currentRow"
+      :category="category"
     />
   </div>
 </template>
 
 <script setup>
 import { ref, defineProps, watch, nextTick, computed } from 'vue'
-import { projectSummary, auxInboundDetail } from '@/api/ship-manage/pack-and-ship/ship-summary'
+import { projectSummary, structureDirectSummary, auxInboundDetail } from '@/api/ship-manage/pack-and-ship/ship-summary'
 import { weightTypeEnum } from '@enum-ms/common'
 import { convertUnits } from '@/utils/convert/unit'
 import { mesShipStatisticsTypeEnum } from '@enum-ms/ship-manage'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import usePagination from '@compos/use-pagination'
 import mDetail from './detail.vue'
+import directDetail from './direct-detail'
 import detailDrawer from './detail-drawer.vue'
 
 const props = defineProps({
@@ -212,7 +215,7 @@ const detailVisible = ref(false)
 const drawerVisible = ref(false)
 
 const showComponent = computed(() => {
-  return mDetail
+  return category.value === mesShipStatisticsTypeEnum.STRUCTURE.V ? mDetail : directDetail
 })
 
 watch(
@@ -240,6 +243,8 @@ watch(
   (val) => {
     if (val === mesShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V) {
       fetchAuxMat()
+    } else {
+      fetchSummary()
     }
   }
 )
@@ -256,11 +261,13 @@ async function fetchSummary() {
     return
   }
   try {
-    const data = await projectSummary({
+    const param = {
       projectId: props.currentRow.projectId,
       ...query.value,
       workshopId: props.workshopId
-    })
+    }
+    const api = category.value === mesShipStatisticsTypeEnum.STRUCTURE.V ? projectSummary : structureDirectSummary
+    const data = await api(param)
     summaryData.value = data || {}
   } catch (err) {
     console.log('获取项目发运数据汇总', err)

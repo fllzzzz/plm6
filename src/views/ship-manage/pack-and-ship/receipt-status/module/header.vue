@@ -26,8 +26,21 @@
         "
       />
       <component-radio-button
+        v-if="typeVal !== packEnum.BOX.V"
         v-model="query.productType"
         :options="packTypeEnum.ENUM"
+        :unshowVal="query.projectId ? unValOptions : []"
+        showOptionAll
+        type="enum"
+        size="small"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <component-radio-button
+        v-if="typeVal === packEnum.BOX.V"
+        v-model="query.productType"
+        :options="bridgePackTypeEnum.ENUM"
+        :disabledVal="[bridgePackTypeEnum.AUXILIARY_MATERIAL.V]"
         showOptionAll
         type="enum"
         size="small"
@@ -195,20 +208,24 @@
 </template>
 
 <script setup>
-import { inject, onMounted, ref, computed } from 'vue'
+import { inject, onMounted, ref, computed, watch } from 'vue'
 import moment from 'moment'
-
+import { projectTypeEnum } from '@enum-ms/contract'
 import { packTypeEnum, receiptStatusEnum, deliveryReceiptStatusEnum, searchDateTypeEnum } from '@enum-ms/mes'
+import { packEnum } from '@enum-ms/ship-manage'
+import { bridgePackTypeEnum } from '@enum-ms/bridge'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { isNotBlank } from '@data-type/index'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import checkPermission from '@/utils/system/check-permission'
-
+import { mapGetters } from '@/store/lib'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import { ElMessage } from 'element-plus'
 
+const typeVal = ref()
+const { globalProject } = mapGetters(['globalProject'])
 const defaultQuery = {
   serialNumber: undefined,
   licensePlate: undefined,
@@ -229,20 +246,48 @@ const permission = inject('permission')
 const currentKey = ref()
 const apiKey = ref([])
 
+watch(
+  () => globalProject.value,
+  (val) => {
+    query.productType = undefined
+    typeVal.value = undefined
+    typeVal.value = globalProject.value?.productCategory
+  },
+  { immediate: true }
+)
+
+const unValOptions = computed(() => {
+  switch (typeVal.value) {
+    case packTypeEnum.STRUCTURE.V:
+      return [packTypeEnum.ENCLOSURE.V]
+    case packTypeEnum.ENCLOSURE.V:
+      return [packTypeEnum.STRUCTURE.V, packTypeEnum.MACHINE_PART.V]
+    case packTypeEnum.STRUCTURE.V + packTypeEnum.ENCLOSURE.V:
+      return []
+    default:
+      return []
+  }
+})
+
 onMounted(() => {
   if (checkPermission(permission.print)) {
-    apiKey.value.push('mesReceiptStatusSummary')
+    crud.query.projectType === projectTypeEnum.BRIDGE.V
+      ? apiKey.value.push('mesBridgeReceiptStatusSummary')
+      : apiKey.value.push('mesReceiptStatusSummary')
   }
   if (checkPermission(permission.detailPrint)) {
-    apiKey.value.push('mesShippingList')
+    crud.query.projectType === projectTypeEnum.BRIDGE.V ? apiKey.value.push('mesBridgeShippingList') : apiKey.value.push('mesShippingList')
   }
 })
 
 const printParams = computed(() => {
-  if (currentKey.value === 'mesReceiptStatusSummary') {
+  if (currentKey.value === 'mesReceiptStatusSummary' || currentKey.value === 'mesBridgeReceiptStatusSummary') {
     return { ...query }
   }
-  if (currentKey.value === 'mesShippingList' && isNotBlank(crud.selections)) {
+  if (
+    (currentKey.value === 'mesShippingList' && isNotBlank(crud.selections)) ||
+    (currentKey.value === 'mesBridgeShippingList' && isNotBlank(crud.selections))
+  ) {
     return crud.selections.map((row) => {
       return row.id
     })
@@ -251,7 +296,10 @@ const printParams = computed(() => {
 })
 
 function handleBeforePrint() {
-  if (currentKey.value === 'mesShippingList' && !isNotBlank(printParams.value)) {
+  if (
+    (currentKey.value === 'mesShippingList' && !isNotBlank(printParams.value)) ||
+    (currentKey.value === 'mesBridgeShippingList' && !isNotBlank(printParams.value))
+  ) {
     ElMessage.warning('至少选择一条需要打印的发运信息')
     return false
   }

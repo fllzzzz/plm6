@@ -10,6 +10,15 @@ export function packingList(id) {
     method: 'get'
   })
 }
+/**
+ * 打包清单
+ */
+export function bridgePackingList(id) {
+  return request({
+    url: `api/mes/bridge/package/${id}/print`,
+    method: 'get'
+  })
+}
 
 /**
  * 打包清单：围护
@@ -31,6 +40,16 @@ export function shipmentSummary(params) {
     params
   })
 }
+/**
+ * 发运汇总
+ */
+export function bridgeShipmentSummary(params) {
+  return request({
+    url: `api/mes/bridge/cargo/ship/print`,
+    method: 'get',
+    params
+  })
+}
 
 /**
    * 发运详情
@@ -38,6 +57,15 @@ export function shipmentSummary(params) {
 export function shipmentDetail(id) {
   return request({
     url: `api/mes/building/cargo/ship/${id}/print`,
+    method: 'get'
+  })
+}
+/**
+   * 发运详情
+   */
+export function bridgeShipmentDetail(id) {
+  return request({
+    url: `api/mes/bridge/cargo/ship/${id}/print`,
     method: 'get'
   })
 }
@@ -54,11 +82,31 @@ export function receiptStatusSummary(params) {
 }
 
 /**
+ * 收货状态汇总
+ */
+export function mesBridgeReceiptStatusSummary(params) {
+  return request({
+    url: `api/mes/bridge/cargo/receipt/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
  * 发运详情
  */
 export function shippingList(id) {
   return request({
     url: `api/mes/building/cargo/receipt/${id}/print`,
+    method: 'get'
+  })
+}
+/**
+ * 发运详情
+ */
+export function mesBridgeShippingList(id) {
+  return request({
+    url: `api/mes/bridge/cargo/receipt/${id}/print`,
     method: 'get'
   })
 }
@@ -83,6 +131,26 @@ export function shipmentAuditOverWeight(id) {
     method: 'get'
   })
 }
+/**
+ * 发运审核
+ */
+export function mesBridgeShipmentAudit(params) {
+  return request({
+    url: `api/mes/bridge/cargo/review/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 过磅详情
+ */
+export function mesBridgeShipmentAuditOverWeight(id) {
+  return request({
+    url: `api/mes/bridge/cargo/receipt/${id}/print`,
+    method: 'get'
+  })
+}
 
 /**
  * 物流汇总
@@ -90,6 +158,16 @@ export function shipmentAuditOverWeight(id) {
 export function logisticsSummary(params) {
   return request({
     url: `api/mes/building/cargo/logistics/print`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 桥梁物流汇总
+ */
+export function bridgeLogisticsSummary(params) {
+  return request({
+    url: `api/mes/bridge/cargo/logistics/print`,
     method: 'get',
     params
   })
@@ -144,7 +222,7 @@ export function warehouseStateReport(params) {
  */
 export function mesBeginningInventoryDetail(params) {
   return request({
-    url: `/api/mes/building/warehouse/print/finish-product/artifact`,
+    url: `/api/mes/bridge/warehouse/print/finish-product/box`,
     method: 'get',
     params
   })
@@ -175,6 +253,56 @@ export function mesInboundInventoryDetail(params) {
 export function mesOutboundInventoryDetail(params) {
   return request({
     url: `/api/mes/building/warehouse/print/finish-product/artifact`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 入发存报表/分段期初库存
+ */
+export function boxBeginningInventoryDetail(params) {
+  return request({
+    url: `/api/mes/bridge/warehouse/print/finish-product/box`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 入发存报表/分段期末库存
+ */
+export function boxEndInventoryDetail(params) {
+  return request({
+    url: `/api/mes/bridge/warehouse/print/finish-product/box`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 入发存报表/分段入库量
+ */
+export function boxInboundInventoryDetail(params) {
+  return request({
+    url: `/api/mes/bridge/warehouse/print/finish-product/box`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 入发存报表/分段出库量
+ */
+export function boxOutboundInventoryDetail(params) {
+  return request({
+    url: `/api/mes/bridge/warehouse/print/finish-product/box`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 入发存报表/分段制品库存详情打印
+ */
+export function sectionProductInventoryDetail(params) {
+  return request({
+    url: '/api/mes/bridge/warehouse/print/finish-product/box',
     method: 'get',
     params
   })
@@ -213,6 +341,42 @@ export function enclosureInboundInventoryDetail(params) {
  * 围护入发存报表/出库量
  */
 export function enclosureOutboundInventoryDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/print/finish-product/enclosure`,
+    method: 'get',
+    params
+  })
+}
+
+// 围护制品期初库存详情
+export function enclosureTotalBeginningInventoryDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/print/finish-product/enclosure`,
+    method: 'get',
+    params
+  })
+}
+
+// 围护制品入库库存详情
+export function enclosureTotalInboundInventoryDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/print/finish-product/enclosure`,
+    method: 'get',
+    params
+  })
+}
+
+// 围护制品出库库存详情
+export function enclosureTotalOutboundInventoryDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/print/finish-product/enclosure`,
+    method: 'get',
+    params
+  })
+}
+
+// 围护制品期末库存详情
+export function enclosureTotalEndInventoryDetail(params) {
   return request({
     url: `/api/mes/building/warehouse/print/finish-product/enclosure`,
     method: 'get',
@@ -585,6 +749,33 @@ export function mesProjectShipDetail(params) {
   })
 }
 
+// 发运管理-项目直发件发运详情
+export function mesProjectShipDetailDirect(params) {
+  return request({
+    url: `/api/mes/building/cargo/project/cargoList/directShipment/details/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-桥梁项目发运详情
+export function bridgeProjectShipDetail(params) {
+  return request({
+    url: `/api/mes/bridge/cargo/project/cargoList/details/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-项目发运详情
+export function bridgeProjectShipDetailDirect(params) {
+  return request({
+    url: `/api/mes/bridge/cargo/project/cargoList/directShipment/details/print`,
+    method: 'get',
+    params
+  })
+}
+
 // 发运管理-围护项目发运详情
 export function enclosureProjectShipDetail(params) {
   return request({
@@ -598,6 +789,15 @@ export function enclosureProjectShipDetail(params) {
 export function mesShipMeteDetail(params) {
   return request({
     url: `api/mes/building/cargo/project/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-直发件清单总量详情
+export function mesShipMeteDetailDirect(params) {
+  return request({
+    url: `/api/mes/building/cargo/project/detail/directShipment/type/print`,
     method: 'get',
     params
   })
@@ -647,6 +847,69 @@ export function mesShipStockMeteDetail(params) {
     params
   })
 }
+// 发运管理-发运统计-桥梁清单总量详情
+export function bridgeShipMeteDetail(params) {
+  return request({
+    url: `api/mes/bridge/cargo/project/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-桥梁直发件清单总量详情
+export function bridgeShipMeteDetailDirect(params) {
+  return request({
+    url: `/api/mes/bridge/cargo/project/directShipment/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-桥梁任务总量详情
+export function bridgeShipTaskMeteDetail(params) {
+  return request({
+    url: `api/mes/bridge/cargo/project/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-桥梁入库量详情
+export function bridgeShipInboundMeteDetail(params) {
+  return request({
+    url: `api/mes/bridge/cargo/project/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-桥梁累计发运详情
+export function bridgeShipTotalMeteDetail(params) {
+  return request({
+    url: `api/mes/bridge/cargo/project/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-桥梁本月发运发运详情
+export function bridgeShipMonthMeteDetail(params) {
+  return request({
+    url: `api/mes/bridge/cargo/project/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-桥梁库存详情
+export function bridgeShipStockMeteDetail(params) {
+  return request({
+    url: `api/mes/bridge/cargo/project/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
 // 发运管理-围护发运统计-清单总量详情
 export function enclosureShipMeteDetail(params) {
   return request({
@@ -714,6 +977,14 @@ export function mesShipTrainMeteDetail(params) {
 export function mesAuxMatDetail(params) {
   return request({
     url: `/api/mes/building/cargo/project/cargoList/details/auxiliary/print`,
+    method: 'get',
+    params
+  })
+}
+// 发运管理-发运统计-桥梁配套制品详情打印
+export function bridgeAuxMatDetail(params) {
+  return request({
+    url: `/api/mes/bridge/cargo/project/cargoList/details/auxiliary/print`,
     method: 'get',
     params
   })
@@ -797,28 +1068,44 @@ export function wipStatisticsLis(params) {
   })
 }
 
-// 任务跟踪-工序详情报表详情
+// 生产统计-工序详情报表详情
 export function processStatisticsList(params) {
   return request({
-    url: `/api/mes/building/task/process/project/progressing/process/print`,
+    url: `/api/mes/building/task/process/produce/statistics/process/print`,
     method: 'get',
     params
   })
 }
 
-// 任务跟踪-排产记录详情报表详情
+// 生产统计-任务记录详情报表详情
 export function taskStatisticsList(params) {
   return request({
-    url: `/api/mes/building/task/process/project/progressing/task/print`,
+    url: `/api/mes/building/task/process/produce/statistics/task/print`,
     method: 'get',
     params
   })
 }
 
-// 任务跟踪-在制品出库记录报表详情
+// 生产统计-在制品报表详情
+export function upsStatisticsList(params) {
+  return request({
+    url: '/api/mes/building/task/process/produce/statistics/finish/print',
+    method: 'get',
+    params
+  })
+}
+// 生产统计-钢材出库报表详情
 export function outBoundStatisticsList(params) {
   return request({
-    url: `/api/mes/building/task/process/project/progressing/outBound/print`,
+    url: '/api/mes/building/task/process/produce/statistics/outBound/print',
+    method: 'get',
+    params
+  })
+}
+// 生产统计-钢材退库报表详情
+export function backBoundStatisticsList(params) {
+  return request({
+    url: '/api/mes/building/task/process/produce/statistics/outBound/print',
     method: 'get',
     params
   })
@@ -869,10 +1156,37 @@ export function productSendReceiveStorageDetail(params) {
   })
 }
 
+// 制成品库存详情
+export function structureFinishedGoodsInventoryDetail(params) {
+  return request({
+    url: `api/mes/building/warehouse/print/finish-product/artifact`,
+    method: 'get',
+    params
+  })
+}
+
 // 围护制成品入发存详情
 export function enclosureProductSendReceiveStorageDetail(params) {
   return request({
     url: `/api/mes/building/warehouse/finish-product/detail/enclosure/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 分段制成品入发存详情
+export function boxProductSendReceiveStorage(params) {
+  return request({
+    url: `/api/mes/bridge/warehouse/finish-product/detail/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 分段制成品入发存详情
+export function boxProductSendReceiveStorageDetail(params) {
+  return request({
+    url: `/api/mes/bridge/warehouse/finish-product/detail/print`,
     method: 'get',
     params
   })
@@ -963,14 +1277,22 @@ export default {
 
   // 打包与发运
   packingList, // 打包清单
+  bridgePackingList, // 桥梁打包清单
   enclosurePackingList, // 围护打包清单
   shipmentSummary, // 发运汇总
+  bridgeShipmentSummary, // 桥梁发运汇总
   shipmentDetail, // 发运详情
+  bridgeShipmentDetail, // 桥梁发运详情
   receiptStatusSummary, // 收货状态汇总
   shippingList, // 发货清单
+  mesBridgeReceiptStatusSummary, // 收货状态汇总
+  mesBridgeShippingList, // 发货清单
   shipmentAudit, // 发运审核
   shipmentAuditOverWeight, // 过磅详情
+  mesBridgeShipmentAudit, // 发运审核
+  mesBridgeShipmentAuditOverWeight, // 过磅详情
   logisticsSummary, // 物流汇总
+  bridgeLogisticsSummary, // 桥梁物流汇总
 
   // 制成品管理
   warehouseStateStructure, // 结构出入库状态
@@ -980,10 +1302,18 @@ export default {
   mesEndInventoryDetail, // 期末库存
   mesInboundInventoryDetail, // 入库量
   mesOutboundInventoryDetail, // 出库量
+  boxBeginningInventoryDetail, // 分段期初库存
+  boxEndInventoryDetail, // 期末库存
+  boxInboundInventoryDetail, // 入库量
+  boxOutboundInventoryDetail, // 出库量
   enclosureBeginningInventoryDetail, // 围护期初库存
   enclosureEndInventoryDetail, // 围护期末库存
   enclosureInboundInventoryDetail, // 围护入库量
   enclosureOutboundInventoryDetail, // 围护出库量
+  enclosureTotalInboundInventoryDetail, // 围护入库库存详情
+  enclosureTotalBeginningInventoryDetail, // 围护期初库存详情
+  enclosureTotalOutboundInventoryDetail, // 围护出库库存详情
+  enclosureTotalEndInventoryDetail, // 围护期末库存详情
 
   // 生产订单
   artifactClassList, // 构件分类清单明细
@@ -996,13 +1326,24 @@ export default {
 
   // 发运管理
   mesProjectShipDetail, // 项目发运详情
+  mesProjectShipDetailDirect, // 项目直发件发运详情
+  bridgeProjectShipDetail, // 桥梁项目发运详情
+  bridgeProjectShipDetailDirect, // 项目直发件发运详情
   enclosureProjectShipDetail, // 围护项目发运详情
+  mesShipMeteDetailDirect, // 直发件清单总量详情
   mesShipMeteDetail, // 清单总量详情
   mesShipTaskMeteDetail, // 任务总量详情
   mesShipInboundMeteDetail, // 入库量详情
   mesShipTotalMeteDetail, // 累计发运详情
   mesShipMonthMeteDetail, // 本月发运详情
   mesShipStockMeteDetail, // 库存
+  bridgeShipMeteDetail, // 桥梁清单总量详情
+  bridgeShipMeteDetailDirect, // 桥梁直发件清单总量详情
+  bridgeShipTaskMeteDetail, // 桥梁任务总量详情
+  bridgeShipInboundMeteDetail, // 桥梁入库量详情
+  bridgeShipTotalMeteDetail, // 桥梁累计发运详情
+  bridgeShipMonthMeteDetail, // 桥梁本月发运详情
+  bridgeShipStockMeteDetail, // 桥梁库存
   enclosureShipMeteDetail, // 围护清单总量详情
   enclosureShipTaskMeteDetail, // 围护任务总量详情
   enclosureShipInboundMeteDetail, // 围护入库量详情
@@ -1011,6 +1352,7 @@ export default {
   enclosureShipStockMeteDetail, // 围护库存
   mesShipTrainMeteDetail, // 累计车次
   mesAuxMatDetail, // 配套件详情
+  bridgeAuxMatDetail, // 桥梁配套件
   enclosureAuxMatDetail, // 围护配套件详情
 
   // 工厂报表-车间报表
@@ -1026,13 +1368,19 @@ export default {
   wipStatisticsLis, // 在制品统计
   processStatisticsList, // 在制品工序详情统计
   taskStatisticsList, // 在制品排产记录详情
+  upsStatisticsList, // 制成品详情
   outBoundStatisticsList, // 在制品出库统计详情
+  backBoundStatisticsList, // 在制品退库库统计详情
 
   // 发运管理
   productSendReceiveStorage, // 制成品入发存
+  boxProductSendReceiveStorage, // 分段制品入发存
   enclosureProductSendReceiveStorage, // 围护制品入发存
   productSendReceiveStorageDetail, // 制成品入发存详情
+  boxProductSendReceiveStorageDetail, // 分段制成品入发存
   enclosureProductSendReceiveStorageDetail, // 围护制成品入发存详情
+  sectionProductInventoryDetail, // 分段制品库存详情
+  structureFinishedGoodsInventoryDetail, // 制成品库存详情
 
   // 项目报表
   mainMaterialTrackSummary, // 主材跟踪汇总

@@ -3,17 +3,9 @@
     <div class="head-container">
       <div class="filter-container">
         <div class="filter-left-box">
-          <project-visa-select
-            v-model="projectId"
-            :default-id="globalProjectId"
-            class="filter-item"
-            style="width: 300px"
-            placeholder="可选择项目搜索"
-            @projectChange="projectChange"
-          />
           <common-radio-button
             v-model="productType"
-            :options="contractSaleTypeEnumArr"
+            :options="productEnum"
             default
             type="enumSL"
             size="small"
@@ -40,6 +32,7 @@
               @getAreaInfo="getAreaInfo"
             />
             <common-select
+              v-if="globalProject?.projectType !== projectTypeEnum.BRIDGE.V"
               v-model="areaId"
               :options="areaInfo"
               type="other"
@@ -89,7 +82,7 @@
           <el-col :span="8">
             <Panel name="单体造价（元）" text-color="#626262" num-color="#1890ff" :end-val="monomerCost || 0" :precision="decimalPrecision.contract" />
           </el-col>
-          <el-col :span="8">
+          <el-col :span="globalProject?.projectType === projectTypeEnum.BRIDGE.V?12:8" v-if="globalProject?.projectType !== projectTypeEnum.BRIDGE.V">
             <Panel name="选定区域造价（元）" text-color="#626262" num-color="#1890ff" :end-val="areaCost || 0" :precision="decimalPrecision.contract" />
           </el-col>
         </el-row>
@@ -133,12 +126,13 @@
 import { cost, priceModifyCount, saveNum } from '@/api/contract/sales-manage/price-manage/common'
 import { getPriceConfigPublic as getPriceConfig } from '@/api/config/mes/base'
 import { allProjectPlan } from '@/api/enclosure/enclosure-plan/area'
-import { ref, computed, onMounted, provide } from 'vue'
+import { ref, computed, provide, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { priceManagePM as permission } from '@/page-permission/contract'
 
-import { TechnologyTypeAllEnum, standardPartPriceSearchEnum } from '@enum-ms/contract'
+import { TechnologyTypeAllEnum, standardPartPriceSearchEnum, projectTypeEnum } from '@enum-ms/contract'
 import { contractSaleTypeEnum } from '@enum-ms/mes'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { debounce } from '@/utils'
 import { isBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
@@ -150,7 +144,8 @@ import enclosure from './enclosure'
 import auxiliaryMaterial from './auxiliary-material'
 import machinePart from './machine-part'
 import modifyRecord from './price-modify-list/index'
-import projectVisaSelect from '@comp-base/project-visa-select'
+import box from './box'
+// import projectVisaSelect from '@comp-base/project-visa-select'
 import Panel from '@/components/Panel'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
 import submitLog from './submit-log'
@@ -159,6 +154,9 @@ const { decimalPrecision } = useDecimalPrecision()
 
 // 当前显示组件
 const currentView = computed(() => {
+  if (globalProject.value?.projectType === projectTypeEnum.BRIDGE.V) {
+    return box
+  }
   switch (productType.value) {
     case contractSaleTypeEnum.ENCLOSURE.V:
       return enclosure
@@ -171,7 +169,7 @@ const currentView = computed(() => {
   }
 })
 
-const { globalProjectId, contractSaleTypeEnumArr } = mapGetters(['globalProjectId', 'contractSaleTypeEnumArr'])
+const { globalProject, globalProjectId, contractSaleTypeEnumArr } = mapGetters(['globalProject', 'globalProjectId', 'contractSaleTypeEnumArr'])
 
 const domRef = ref()
 const projectId = ref()
@@ -224,19 +222,127 @@ const techOptions = [
   }
 ]
 
+// 获取项目造价
+const fetchCost = debounce(async function () {
+  if (!checkPermission(permission.cost) || isBlank(projectId.value) || productType.value === contractSaleTypeEnum.ENCLOSURE.V || !productType.value) {
+    projectCost.value = 0
+    monomerCost.value = 0
+    areaCost.value = 0
+    return
+  }
+  try {
+    costLoading.value = true
+    const params = {
+      projectId: projectId.value,
+      monomerId: monomerId.value,
+      areaId: areaId.value,
+      type: productType.value
+    }
+    const { monomerPrice, projectPrice, areaPrice } = await cost(params)
+    projectCost.value = projectPrice || 0
+    monomerCost.value = monomerPrice || 0
+    areaCost.value = areaPrice || 0
+  } catch (error) {
+    console.log(error)
+  } finally {
+    costLoading.value = false
+  }
+}, 100, false)
+
+// 获取待审核数量
+const fetchModifyCount = debounce(async function () {
+  if (!checkPermission(permission.list)) return
+  try {
+    modifyCount.value = await priceModifyCount()
+  } catch (error) {
+    console.log('变更记录未审核数量', error)
+  }
+}, 100, false)
+
+// 获取提交记录数量
+const fetchSaveCount = debounce(async function () {
+  if (!checkPermission(permission.list)) return
+  try {
+    let countParams = {}
+    switch (productType.value) {
+      case contractSaleTypeEnum.ENCLOSURE.V:
+        countParams = {
+          category: category.value,
+          enclosurePlanId: enclosurePlanId.value,
+          projectId: projectId.value,
+          projectType: currentProjectVal.value?.projectType,
+          type: productType.value
+        }
+        break
+      case contractSaleTypeEnum.AUXILIARY_MATERIAL.V:
+        countParams = relationType.value === standardPartPriceSearchEnum.STRUCTURE.V ? {
+          areaId: areaId.value,
+          monomerId: monomerId.value,
+          projectId: projectId.value,
+          projectType: currentProjectVal.value?.projectType,
+          relationType: relationType.value,
+          type: productType.value
+        } : {
+          category: category.value,
+          enclosurePlanId: enclosurePlanId.value,
+          projectId: projectId.value,
+          projectType: currentProjectVal.value?.projectType,
+          relationType: relationType.value,
+          type: productType.value
+        }
+        break
+      default:
+        countParams = {
+          areaId: areaId.value,
+          monomerId: monomerId.value,
+          projectId: projectId.value,
+          projectType: currentProjectVal.value?.projectType,
+          type: productType.value
+        }
+        break
+    }
+    saveCount.value = await saveNum(countParams)
+  } catch (error) {
+    console.log('提交记录待提交数量', error)
+  }
+}, 100, false)
+
+watch(
+  globalProjectId,
+  (val) => {
+    projectId.value = globalProjectId.value
+    projectChange(globalProject.value)
+    handleProjectChange()
+  },
+  { immediate: true }
+)
+
 provide('monomerId', monomerId)
 provide('areaId', areaId)
 provide('projectId', projectId)
 provide('modifyVisible', modifyVisible)
 provide('enclosurePlanId', enclosurePlanId)
+provide('globalProject', globalProject)
 provide('priceEditMode', priceEditMode)
 provide('saveCount', saveCount)
 provide('relationType', relationType)
 provide('category', category)
 
-onMounted(() => {
-  handleProjectChange()
+// 产品类型
+const productEnum = computed(() => {
+  // 箱体和建刚不会同时存在
+  if (globalProject.value?.projectType === projectTypeEnum.BRIDGE.V) {
+    return [bridgeComponentTypeEnum.BOX]
+  }
+  if (globalProject.value?.projectType === projectTypeEnum.ENCLOSURE.V) {
+    return [contractSaleTypeEnum.ENCLOSURE, contractSaleTypeEnum.AUXILIARY_MATERIAL]
+  }
+  return contractSaleTypeEnumArr.value
 })
+
+// onMounted(() => {
+//   handleProjectChange()
+// })
 
 // 项目变动
 function handleProjectChange() {
@@ -316,89 +422,6 @@ function getAreaInfo(val) {
   fetchSaveCount()
   areaInfo.value = val
 }
-// 获取项目造价
-const fetchCost = debounce(async function () {
-  if (!checkPermission(permission.cost) || isBlank(projectId.value) || productType.value === contractSaleTypeEnum.ENCLOSURE.V) {
-    projectCost.value = 0
-    monomerCost.value = 0
-    areaCost.value = 0
-    return
-  }
-  try {
-    costLoading.value = true
-    const params = {
-      projectId: projectId.value,
-      monomerId: monomerId.value,
-      areaId: areaId.value
-    }
-    const { monomerPrice, projectPrice, areaPrice } = await cost(params)
-    projectCost.value = projectPrice || 0
-    monomerCost.value = monomerPrice || 0
-    areaCost.value = areaPrice || 0
-  } catch (error) {
-    console.log(error)
-  } finally {
-    costLoading.value = false
-  }
-}, 100, false)
-
-// 获取待审核数量
-const fetchModifyCount = debounce(async function () {
-  if (!checkPermission(permission.list)) return
-  try {
-    modifyCount.value = await priceModifyCount()
-  } catch (error) {
-    console.log('变更记录未审核数量', error)
-  }
-}, 100, false)
-
-// 获取提交记录数量
-const fetchSaveCount = debounce(async function () {
-  if (!checkPermission(permission.list)) return
-  try {
-    let countParams = {}
-    switch (productType.value) {
-      case contractSaleTypeEnum.ENCLOSURE.V:
-        countParams = {
-          category: category.value,
-          enclosurePlanId: enclosurePlanId.value,
-          projectId: projectId.value,
-          projectType: currentProjectVal.value?.projectType,
-          type: productType.value
-        }
-        break
-      case contractSaleTypeEnum.AUXILIARY_MATERIAL.V:
-        countParams = relationType.value === standardPartPriceSearchEnum.STRUCTURE.V ? {
-          areaId: areaId.value,
-          monomerId: monomerId.value,
-          projectId: projectId.value,
-          projectType: currentProjectVal.value?.projectType,
-          relationType: relationType.value,
-          type: productType.value
-        } : {
-          category: category.value,
-          enclosurePlanId: enclosurePlanId.value,
-          projectId: projectId.value,
-          projectType: currentProjectVal.value?.projectType,
-          relationType: relationType.value,
-          type: productType.value
-        }
-        break
-      default:
-        countParams = {
-          areaId: areaId.value,
-          monomerId: monomerId.value,
-          projectId: projectId.value,
-          projectType: currentProjectVal.value?.projectType,
-          type: productType.value
-        }
-        break
-    }
-    saveCount.value = await saveNum(countParams)
-  } catch (error) {
-    console.log('提交记录待提交数量', error)
-  }
-}, 100, false)
 
 // 刷新数据
 function refreshData() {

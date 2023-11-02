@@ -205,7 +205,7 @@ const mesOutBoundStatisticsList = {
       { show: true, key: 'measureUnit', title: '计量单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.UNIT.K },
       { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.QUANTITY.K },
       { show: true, key: 'accountingUnit', title: '核算单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ACCOUNTING_UNIT.K },
-      { show: true, key: 'mete', title: '核算量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 15, type: typeEnum.METE.K },
+      { show: true, key: 'mete', title: '核算量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 15, type: typeEnum.METE.K, format: { toThousand: false, rowUnit: 'accountingUnit' }},
       { show: true, key: 'outboundTime', title: '出库日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 33, type: typeEnum.DATE.K, format: 'YY/MM/DD' }
     ]
   }

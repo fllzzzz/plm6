@@ -12,6 +12,12 @@ export const enclosureShipSummaryPM = {
   detail: ['enclosure_ship_summary:detail'], // 详情
   print: ['enclosure_ship_summary:print'] // 发运详情打印
 }
+// 发运管理/桥梁-发运统计
+export const bridgeShipSummaryPM = {
+  get: ['bridge_ship_summary:get'], // 列表
+  detail: ['bridge_ship_summary:detail'], // 详情
+  print: ['bridge_ship_summary:print'] // 发运详情打印
+}
 
 // 发运管理/手工打包:手工打包
 export const manualPackPM = {
@@ -90,5 +96,12 @@ export const enclosureProductSendReceiveStoragePM = {
   print: ['enclosure_product-send-receive-storage:print'], // 制成品入发存打印
   detail: ['enclosure_product-send-receive-storage:detail'], // 制成品入发存详情
   detailPrint: ['enclosure_product-send-receive-storage:detailPrint'] // 制成品入发存详情打印
+}
+// 发运管理/分段制成品入发存
+export const boxProductSendReceiveStoragePM = {
+  get: ['box_product-send-receive-storage:get'], // 列表
+  print: ['box_product-send-receive-storage:print'], // 制成品入发存打印
+  detail: ['box_product-send-receive-storage:detail'], // 制成品入发存详情
+  detailPrint: ['box_product-send-receive-storage:detailPrint'] // 制成品入发存详情打印
 }
 // --------------------------- 发运管理 end --------------------------------

@@ -31,7 +31,8 @@ const useUserProjects = (loadedCallBack) => {
     processProjects: computed(() => store.state.project.userProcessProjects),
     projectsCascade: computed(() => store.state.project.userProjectsCascade),
     businessTypeProjectMap: computed(() => store.state.project.userBusinessTypeProjectMap),
-    userBusinessTypeProjectsCascadeMap: computed(() => store.state.project.userBusinessTypeProjectsCascadeMap)
+    userBusinessTypeProjectsCascadeMap: computed(() => store.state.project.userBusinessTypeProjectsCascadeMap),
+    userProjectsMap: computed(() => store.state.project.userProjectsMap)
   }
 }
 

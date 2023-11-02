@@ -29,7 +29,7 @@
         <el-table-column prop="specification" label="规格" min-width="100px" align="center" />
         <el-table-column prop="material" label="材质" min-width="100px" align="center" />
         <el-table-column prop="quantity" label="数量" min-width="80px" align="center" />
-        <el-table-column prop="grossWeight" label="单重(kg)" min-width="100px" align="center" />
+        <el-table-column prop="netWeight" label="单净重(kg)" min-width="100px" align="center" />
         <!--编辑-->
         <el-table-column v-if="checkPermission(crud.permission.edit) && list.length > 1" label="操作" width="70" align="center" fixed="right">
           <template #default="{ row }">

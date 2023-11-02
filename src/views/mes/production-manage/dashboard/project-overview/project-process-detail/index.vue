@@ -61,19 +61,22 @@
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="需生产数（件）">
+        <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="需生产（件/kg）">
           <template v-slot="scope">
-            <span>{{ scope.row.quantity }}</span>
+            <span
+              >{{ scope.row.quantity }}/{{
+                weightStatus === weightTypeEnum.NET.V ? scope.row.totalNetWeight : scope.row.totalGrossWeight
+              }}</span
+            >
           </template>
         </el-table-column>
-        <el-table-column align="center" key="totalNetWeight" prop="totalNetWeight" :show-overflow-tooltip="true" label="需生产量（kg）">
+        <el-table-column align="center" key="completeQuantity" prop="completeQuantity" :show-overflow-tooltip="true" label="完成（件/kg）">
           <template v-slot="scope">
-            <span>{{ weightStatus === weightTypeEnum.NET.V ? scope.row.totalNetWeight : scope.row.totalGrossWeight }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" key="completeQuantity" prop="completeQuantity" :show-overflow-tooltip="true" label="完成（件）">
-          <template v-slot="scope">
-            <span>{{ scope.row.completeQuantity }}</span>
+            <span
+              >{{ scope.row.completeQuantity }}/{{
+                weightStatus === weightTypeEnum.NET.V ? scope.row.completeNetWeight : scope.row.completeGrossWeight
+              }}</span
+            >
           </template>
         </el-table-column>
         <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="完成率" min-width="150px">

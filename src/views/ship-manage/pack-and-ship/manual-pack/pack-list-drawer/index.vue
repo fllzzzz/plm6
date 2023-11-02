@@ -27,7 +27,7 @@
           v-model="packType"
           size="small"
           class="filter-item"
-          :options="packTypeEnum.ENUM"
+          :options="typeVal === packEnum.BOX.V ? bridgePackTypeEnum.ENUM : packTypeEnum.ENUM"
           type="enum"
           :disabledVal="disabledVal"
         >
@@ -36,7 +36,13 @@
         <workshop-select
           v-if="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
           v-model="workshopId"
-          :workshop-type="packType === packTypeEnum.ENCLOSURE.V ? workshopTypeEnum.ENCLOSURE.V : workshopTypeEnum.BUILDING.V"
+          :workshop-type="
+            typeVal === packEnum.BOX.V
+              ? workshopTypeEnum.BRIDGE.V
+              : packType === packTypeEnum.ENCLOSURE.V
+              ? workshopTypeEnum.ENCLOSURE.V
+              : workshopTypeEnum.BUILDING.V
+          "
           placeholder="请选择车间"
           clearable
           style="width: 200px"
@@ -79,7 +85,12 @@
           </template>
         </el-table-column>
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <template v-if="packType & (packTypeEnum.STRUCTURE.V | packTypeEnum.MACHINE_PART.V)">
+        <template
+          v-if="
+            packType &
+            (packTypeEnum.STRUCTURE.V | packTypeEnum.MACHINE_PART.V | bridgePackTypeEnum.BOX.V | bridgePackTypeEnum.MACHINE_PART.V)
+          "
+        >
           <el-table-column
             v-if="packType & packTypeEnum.STRUCTURE.V"
             key="name"
@@ -144,7 +155,14 @@
               {{ scope.row.weight }}
             </template>
           </el-table-column>
-          <el-table-column key="surfaceArea" prop="surfaceArea" :show-overflow-tooltip="true" :label="`单面积\n(m²)`" align="center" min-width="85px">
+          <el-table-column
+            key="surfaceArea"
+            prop="surfaceArea"
+            :show-overflow-tooltip="true"
+            :label="`单面积\n(m²)`"
+            align="center"
+            min-width="85px"
+          >
             <template v-slot="scope">
               {{ convertUnits(scope.row.surfaceArea, 'mm²', 'm²', DP.COM_AREA__M2) }}
             </template>
@@ -155,7 +173,7 @@
             </template>
           </el-table-column>
         </template>
-        <template v-if="packType === packTypeEnum.AUXILIARY_MATERIAL.V">
+        <template v-if="packType === packTypeEnum.AUXILIARY_MATERIAL.V || packType === bridgePackTypeEnum.AUXILIARY_MATERIAL.V">
           <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" />
           <el-table-column key="measureUnit" prop="measureUnit" label="单位" min-width="80px" />
           <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="规格" min-width="120" />
@@ -211,8 +229,10 @@ import { pack, editPack, additionalPack } from '@/api/ship-manage/pack-and-ship/
 import { defineProps, defineEmits, ref, watch, inject, reactive, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { workshopTypeEnum } from '@enum-ms/common'
+import { bridgePackTypeEnum } from '@enum-ms/bridge'
 import { DP } from '@/settings/config'
 import { packTypeEnum } from '@enum-ms/mes'
+import { packEnum } from '@enum-ms/ship-manage'
 import { toFixed } from '@data-type/index'
 import { tableSummary } from '@/utils/el-extra'
 import { convertUnits } from '@/utils/convert/unit'
@@ -243,6 +263,9 @@ const props = defineProps({
   editData: {
     type: Object,
     default: () => {}
+  },
+  typeVal: {
+    type: Number
   }
 })
 
@@ -341,7 +364,11 @@ function packClick() {
 function handleSuccess() {
   handleClose()
   remark.value = ''
-  packType.value = packTypeEnum.STRUCTURE.V
+  if (props.typeVal === packEnum.BOX.V) {
+    packType.value = bridgePackTypeEnum.BOX.V
+  } else {
+    packType.value = packTypeEnum.STRUCTURE.V
+  }
   workshopId.value = undefined
   // factoryId.value = undefined
 }
@@ -356,19 +383,36 @@ async function handlePack({ bagId, isNew, selectBagId }) {
       projectId: projectId.value
     }
     // 所有类型打包
-    for (const item in packTypeEnum.ENUM) {
-      const _list = listObj[item]
-      for (let i = 0; i < _list?.length; i++) {
-        const v = _list[i]
-        console.log(v, 'v')
-        params.packageLinks.push({
-          id: v.id,
-          numberList: v.numberList,
-          quantity: v.productQuantity,
-          productType: packType.value
-        })
+    if (props.typeVal !== packEnum.BOX.V) {
+      for (const item in packTypeEnum.ENUM) {
+        const _list = listObj[item]
+        for (let i = 0; i < _list?.length; i++) {
+          const v = _list[i]
+          console.log(v, 'v')
+          params.packageLinks.push({
+            id: v.id,
+            numberList: v.numberList,
+            quantity: v.productQuantity,
+            productType: packType.value
+          })
+        }
+      }
+    } else {
+      for (const item in bridgePackTypeEnum.ENUM) {
+        const _list = listObj[item]
+        for (let i = 0; i < _list?.length; i++) {
+          const v = _list[i]
+          console.log(v, 'v')
+          params.packageLinks.push({
+            id: v.id,
+            numberList: v.numberList,
+            quantity: v.productQuantity,
+            productType: packType.value
+          })
+        }
       }
     }
+
     // 单独类型打包
     // const _list = listObj[packTypeEnum.VK[packType.value]]
     // params.packageLinks = _list.map((v) => {
@@ -409,7 +453,11 @@ function oneCodeSelectChange(row) {
 }
 
 function del(id) {
-  delete packData[packTypeEnum.VK[packType.value]][id]
+  if (props.typeVal === packEnum.BOX.V) {
+    delete packData[bridgePackTypeEnum.VK[packType.value]][id]
+  } else {
+    delete packData[packTypeEnum.VK[packType.value]][id]
+  }
 }
 
 function getSummaries(param) {

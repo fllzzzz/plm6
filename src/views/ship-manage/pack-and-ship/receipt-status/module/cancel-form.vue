@@ -29,7 +29,7 @@
       <el-row>
         <el-col :span="10">
           <el-form-item label="装载重量(t)">
-            <span>{{ detailInfo?.logisticsDTO?.actualWeight? detailInfo.logisticsDTO.actualWeight/1000: '-' }}</span>
+            <span>{{ detailInfo?.logisticsDTO?.actualWeight ? detailInfo.logisticsDTO.actualWeight / 1000 : '-' }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="10">
@@ -44,9 +44,9 @@
       </el-form-item>
       <el-divider><span class="title">运费变更</span></el-divider>
       <el-form-item label="运费变更" prop="changeFreight">
-        <common-radio v-model="form.changeFreight" :options="freightChangeTypeEnum.ENUM" type="enum" @change="typeChange"/>
+        <common-radio v-model="form.changeFreight" :options="freightChangeTypeEnum.ENUM" type="enum" @change="typeChange" />
       </el-form-item>
-      <template v-if="form.changeFreight===freightChangeTypeEnum.CHANGE.V">
+      <template v-if="form.changeFreight === freightChangeTypeEnum.CHANGE.V">
         <el-form-item label="计价方式" prop="priceType">
           <common-radio-button
             class="filter-item"
@@ -57,31 +57,37 @@
             @change="priceChange"
           />
         </el-form-item>
-        <el-form-item :label="form.priceType === logisticsPriceTypeEnum.WEIGHT.V?'运输单价':'运输费'" prop="price">
+        <el-form-item :label="form.priceType === logisticsPriceTypeEnum.WEIGHT.V ? '运输单价' : '运输费'" prop="price">
           <el-input-number
             v-model="form.price"
             :max="999999999999"
             :precision="decimalPrecision.shipment"
             :step="100"
             :controls="false"
-            style="width: 150px;margin-right:3px;"
+            style="width: 150px; margin-right: 3px"
             placeholder="请填写"
             autocomplete="off"
             @change="priceChange"
           />
-          <span :class="form.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" style="margin-left:3px;">{{ form.priceType?logisticsPriceTypeEnum.V[form.priceType].unit:'' }}</span>
+          <span :class="form.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue' : 'orange'" style="margin-left: 3px">{{
+            form.priceType ? logisticsPriceTypeEnum.V[form.priceType].unit : ''
+          }}</span>
         </el-form-item>
         <el-form-item label="运输费" v-if="form.priceType === logisticsPriceTypeEnum.WEIGHT.V">
           <span><span style="margin-right:3px;">{{ toFixed(allPrice, decimalPrecision.shipment) }}</span>元</span>
         </el-form-item>
       </template>
-      <el-form-item label="变更原因" v-if="form.changeFreight && form.changeFreight!==freightChangeTypeEnum.CONTINUE.V" prop="changeFreightReason">
+      <el-form-item
+        label="变更原因"
+        v-if="form.changeFreight && form.changeFreight !== freightChangeTypeEnum.CONTINUE.V"
+        prop="changeFreightReason"
+      >
         <el-input
           v-model.trim="form.changeFreightReason"
           type="textarea"
-          :autosize="{ minRows: 2, maxRows: 8}"
+          :autosize="{ minRows: 2, maxRows: 8 }"
           placeholder="运费变更原因"
-          style="width: 280px;"
+          style="width: 280px"
           :maxlength="200"
           show-word-limit
         />
@@ -90,9 +96,9 @@
         <el-input
           v-model.trim="form.cancelDeliveryReason"
           type="textarea"
-          :autosize="{ minRows: 3, maxRows: 8}"
+          :autosize="{ minRows: 3, maxRows: 8 }"
           placeholder="取消送货原因"
-          style="width: 280px;"
+          style="width: 280px"
           :maxlength="500"
           show-word-limit
         />
@@ -102,9 +108,9 @@
 </template>
 
 <script setup>
-import { deliveryCancel } from '@/api/ship-manage/pack-and-ship/receipt-status'
+import { deliveryCancel, bridgeDeliveryCancel } from '@/api/ship-manage/pack-and-ship/receipt-status'
 import { ref, defineProps, watch, defineEmits, nextTick } from 'vue'
-
+import { projectTypeEnum } from '@enum-ms/contract'
 import { logisticsPriceTypeEnum, freightChangeTypeEnum } from '@enum-ms/mes'
 import useVisible from '@compos/use-visible'
 import { toFixed } from '@/utils/data-type'
@@ -126,6 +132,9 @@ const props = defineProps({
   detailInfo: {
     type: Object,
     default: () => {}
+  },
+  projectType: {
+    type: Number
   }
 })
 
@@ -190,7 +199,10 @@ function typeChange(val) {
 }
 
 function priceChange() {
-  allPrice.value = form.value.priceType === logisticsPriceTypeEnum.WEIGHT.V ? (props.detailInfo.logisticsDTO.actualWeight * form.value.price) / 1000 : undefined
+  allPrice.value =
+    form.value.priceType === logisticsPriceTypeEnum.WEIGHT.V
+      ? (props.detailInfo.logisticsDTO.actualWeight * form.value.price) / 1000
+      : undefined
 }
 
 async function onSubmit() {
@@ -199,7 +211,7 @@ async function onSubmit() {
     if (!valid) {
       return
     }
-    await deliveryCancel(form.value)
+    props.projectType === projectTypeEnum.BRIDGE.V ? await bridgeDeliveryCancel(form.value) : await deliveryCancel(form.value)
     ElNotification({ title: '取消送货成功', type: 'success' })
     emit('success')
     handleClose()
@@ -210,16 +222,16 @@ async function onSubmit() {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-.flex-div{
-  display:flex;
+.flex-div {
+  display: flex;
 }
-.child-div{
-  flex:1;
+.child-div {
+  flex: 1;
 }
-.blue{
-  color:#409eff;
+.blue {
+  color: #409eff;
 }
-.orange{
-  color:#e6a23c;
+.orange {
+  color: #e6a23c;
 }
 </style>

@@ -456,6 +456,15 @@ export function bridgeProjectShipDetail(params) {
   })
 }
 
+// 发运管理-项目发运详情
+export function bridgeProjectShipDetailDirect(params) {
+  return request({
+    url: `/api/mes/bridge/cargo/project/cargoList/directShipment/details/print`,
+    method: 'get',
+    params
+  })
+}
+
 // 工厂报表-车间报表详情
 export function factoryWorkshopReport(params) {
   return request({
@@ -519,6 +528,14 @@ export function productSendReceiveStorage(params) {
 
 // 制成品入发存详情
 export function productSendReceiveStorageDetail(params) {
+  return request({
+    url: `/api/mes/bridge/warehouse/finish-product/detail/print`,
+    method: 'get',
+    params
+  })
+}
+
+export function structureFinishedGoodsInventoryDetail(params) {
   return request({
     url: `/api/mes/bridge/warehouse/finish-product/detail/print`,
     method: 'get',
@@ -606,6 +623,7 @@ export default {
 
   // 发运管理
   bridgeProjectShipDetail, // 项目发运详情
+  bridgeProjectShipDetailDirect, // 项目直发件发运详情
 
   // 工厂报表-车间报表
   factoryWorkshopReport, // 车间报表详情
@@ -619,6 +637,7 @@ export default {
   // 发运管理
   productSendReceiveStorage, // 制成品入发存
   productSendReceiveStorageDetail, // 制成品入发存详情
+  structureFinishedGoodsInventoryDetail, // 制成品库存详情
 
   // 清单汇总
   boxSummary, // 分段清单汇总

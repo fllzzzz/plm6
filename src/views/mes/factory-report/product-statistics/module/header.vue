@@ -29,6 +29,15 @@
           class="filter-item"
           @change="crud.toQuery"
         />
+        <workshop-select
+          v-model="query.workshopId"
+          :workshop-type="workshopTypeEnum.BUILDING.V"
+          placeholder="请选择车间"
+          clearable
+          style="width: 200px"
+          class="filter-item"
+          @change="crud.toQuery"
+        />
       </div>
       <div>
         <slot name="viewLeft"></slot>
@@ -39,7 +48,8 @@
 <script setup>
 import { regHeader } from '@compos/use-crud'
 import { projectStatusEnum } from '@enum-ms/contract'
-import { weightTypeEnum } from '@enum-ms/common'
+import { weightTypeEnum, workshopTypeEnum } from '@enum-ms/common'
+import workshopSelect from '@comp-mes/workshop-select'
 import moment from 'moment'
 
 const defaultQuery = {
@@ -47,7 +57,8 @@ const defaultQuery = {
   startDate: moment().startOf('month').valueOf(),
   endDate: moment().valueOf(),
   status: projectStatusEnum.PROCESS.V,
-  weightStatus: weightTypeEnum.NET.V
+  weightStatus: weightTypeEnum.NET.V,
+  workshopId: undefined
 }
 
 const { crud, query } = regHeader(defaultQuery)
