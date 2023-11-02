@@ -219,7 +219,7 @@ style="font-size: 14px"
       v-model:visible="detailVisible"
       :detail-info="receiptInfo"
       :title="showType === 'detail' ? '装车详情' : showType === 'cancel' ? '取消送货' : '到场签收'"
-      :detailFunc="detail"
+      :detailFunc="crud.query.projectType === projectTypeEnum.BRIDGE.V ? detailBridge : detail"
     >
       <template #tip>
         <div style="width: 150px; height: 53px; overflow: hidden; position: absolute; top: -18px; left: -20px">
@@ -252,19 +252,12 @@ style="font-size: 14px"
         </el-popconfirm>
       </template>
     </m-detail>
-    <cancelForm
-      v-model="cancelVisible"
-      :detailInfo="detailInfo"
-      @success="
-        detailVisible = false,
-        crud.toQuery()
-      "
-    />
+    <cancelForm v-model="cancelVisible" :detailInfo="detailInfo" @success=";(detailVisible = false), crud.toQuery()" :projectType="crud.query.projectType" />
   </div>
 </template>
 
 <script setup>
-import { get, detail, deliverySign } from '@/api/ship-manage/pack-and-ship/receipt-status'
+import { get, getBridge, detail, detailBridge, deliverySign, bridgeDeliverySign } from '@/api/ship-manage/pack-and-ship/receipt-status'
 import { ref } from 'vue'
 
 import { receiptStatusPM as permission } from '@/page-permission/ship-manage'
@@ -276,7 +269,8 @@ import { cleanArray } from '@/utils/data-type/array'
 import EO from '@enum'
 import checkPermission from '@/utils/system/check-permission'
 import { ElNotification } from 'element-plus'
-
+import { mapGetters } from '@/store/lib'
+import { projectTypeEnum } from '@enum-ms/contract'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -296,11 +290,12 @@ const dataFormat = [
   ['statusUpdateDate', ['parse-time', '{y}-{m}-{d}']]
 ]
 
+const { currentProjectType } = mapGetters(['currentProjectType'])
 const tableRef = ref()
 const cancelVisible = ref(false)
 const detailInfo = ref({})
 const showType = ref('detail')
-const { crud, columns } = useCRUD(
+const { crud, CRUD, columns } = useCRUD(
   {
     title: '收货状态',
     sort: ['auditReceiptTime.desc'],
@@ -326,7 +321,7 @@ function showDetail(row, type) {
 
 async function signSubmit() {
   try {
-    await deliverySign(receiptInfo.value.id)
+    crud.query.projectType === projectTypeEnum.BRIDGE.V ? await bridgeDeliverySign(receiptInfo.value.id) : await deliverySign(receiptInfo.value.id)
     ElNotification({ title: '签收成功', type: 'success' })
     detailVisible.value = false
     crud.toQuery()
@@ -335,4 +330,8 @@ async function signSubmit() {
   }
 }
 
+CRUD.HOOK.beforeToQuery = () => {
+  crud.query.projectType = currentProjectType.value
+  crud.crudApi.get = crud.query.projectType === projectTypeEnum.BRIDGE.V ? getBridge : get
+}
 </script>

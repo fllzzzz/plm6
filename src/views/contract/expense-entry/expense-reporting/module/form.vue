@@ -28,6 +28,7 @@
             type="other"
             :data-structure="{ key: 'id', label: 'serialNumberName', value: 'id' }"
             class="filter-item"
+            :disabled="!form.expenseTypeId || form.costAscriptionEnum === costAscriptionEnum.INDIRECT_COSTS.V"
             clearable
             filterable
             style="width: 270px"
@@ -86,7 +87,7 @@
             placeholder="输入报销费用"
             controls-position="right"
             :precision="decimalPrecision.contract"
-            :min="0"
+            :min="-9999999999"
             :max="9999999999"
           />
         </el-form-item>

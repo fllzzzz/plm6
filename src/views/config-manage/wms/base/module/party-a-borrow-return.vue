@@ -25,7 +25,7 @@
       label-position="left"
       label-width="170px"
     >
-      <el-form-item label="可以从非借用项目归还">
+      <!-- <el-form-item label="可以从非借用项目归还">
         <el-switch
           v-model="form.boolReturnByOtherProject"
           :active-value="whetherEnum.TRUE.V"
@@ -37,7 +37,7 @@
         <span class="form-item-tip">情景：项目B借用 “甲供项目A” 的材料</span>
         <span class="form-item-tip">1.开启：可将项目库中“非项目B的材料（如项目C）”归还到 “甲供项目A”。</span>
         <span class="form-item-tip">2.关闭：只可将“项目B或公共库的材料”归还到 “甲供项目A”。</span>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="钢板-边长度误差(mm)">
         <common-input-number v-model="form.steelPlateSideLengthDiff" controls-position="right" :precision="0" :min="0" :max="100000" style="width: 200px" />
       </el-form-item>
@@ -60,7 +60,7 @@
 <script setup>
 import { getPartyABorrowReturnConf, setPartyABorrowReturnConf } from '@/api/config/wms/base'
 import { ref, onMounted, inject, computed } from 'vue'
-import { whetherEnum } from '@enum-ms/common'
+// import { whetherEnum } from '@enum-ms/common'
 import { deepClone } from '@/utils/data-type'
 import { isObjectValueEqual } from '@data-type/object'
 

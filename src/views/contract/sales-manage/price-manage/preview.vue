@@ -1,6 +1,6 @@
 <template>
   <common-dialog
-    :title="`${contractSaleTypeEnum.V[props.params.type]?.SL}价格修改`"
+    :title="`${globalProject?.projectType === projectTypeEnum.BRIDGE.V ? '分段' : contractSaleTypeEnum.V[props.params.type]?.SL}价格修改`"
     v-model="visible"
     top="8vh"
     append-to-body
@@ -12,9 +12,14 @@
         保 存
       </common-button>
     </template>
-    <common-table :data="props.modifiedData" :max-height="maxHeight-180" empty-text="未做改动" style="width: 100%">
+    <common-table :data="props.modifiedData" :max-height="maxHeight - 180" empty-text="未做改动" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <template v-if="props.params.type === contractSaleTypeEnum.STRUCTURE.V || props.params.type === contractSaleTypeEnum.MACHINE_PART.V">
+      <template
+        v-if="
+          globalProject?.projectType !== projectTypeEnum.BRIDGE.V &&
+          (props.params.type === contractSaleTypeEnum.STRUCTURE.V || props.params.type === contractSaleTypeEnum.MACHINE_PART.V)
+        "
+      >
         <el-table-column prop="name" label="名称" align="center" />
         <el-table-column prop="specification" label="规格" align="center" />
         <el-table-column prop="material" label="材质" align="center" />
@@ -22,7 +27,11 @@
         <el-table-column align="center" prop="pricingManner" label="计价方式">
           <template #default="{ row }">
             <span v-if="row.pricingManner === row.originPricingManner">{{ pricingMannerEnum.VL[row.originPricingManner] }}</span>
-            <cell-change-preview :old="pricingMannerEnum.VL[row.originPricingManner]" :new="pricingMannerEnum.VL[row.pricingManner]" v-else />
+            <cell-change-preview
+              :old="pricingMannerEnum.VL[row.originPricingManner]"
+              :new="pricingMannerEnum.VL[row.pricingManner]"
+              v-else
+            />
           </template>
         </el-table-column>
       </template>
@@ -46,20 +55,20 @@
         <template #default="{ row }">
           <template v-if="props.params.type === contractSaleTypeEnum.STRUCTURE.V">
             <span v-if="row.originUnitPrice === row.unitPrice">{{ row.unitPrice }}</span>
-            <cell-change-preview :old="row.originUnitPrice==='同上'?'-':row.originUnitPrice" :new="row.unitPrice" v-else/>
+            <cell-change-preview :old="row.originUnitPrice === '同上' ? '-' : row.originUnitPrice" :new="row.unitPrice" v-else />
           </template>
-          <cell-change-preview :old="row.originUnitPrice==='同上'?'-':row.originUnitPrice" :new="row.unitPrice" v-else/>
+          <cell-change-preview :old="row.originUnitPrice === '同上' ? '-' : row.originUnitPrice" :new="row.unitPrice" v-else />
         </template>
       </el-table-column>
     </common-table>
-    <el-form style="margin-top:20px;" v-if="priceEditMode===priceEditModeEnum.AUDIT.V || showType==='log'">
+    <el-form style="margin-top: 20px" v-if="priceEditMode === priceEditModeEnum.AUDIT.V || showType === 'log'">
       <el-form-item label="事由：">
         <el-input
           v-model.trim="remark"
           type="textarea"
-          :autosize="{ minRows: 2, maxRows: 6}"
+          :autosize="{ minRows: 2, maxRows: 6 }"
           placeholder="请输入事由"
-          style="width: 100%;"
+          style="width: 100%"
           show-word-limit
           maxlength="255"
         />
@@ -75,7 +84,7 @@ import { defineEmits, defineProps, ref, useAttrs, inject } from 'vue'
 import { ElNotification } from 'element-plus'
 
 import { contractSaleTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
-import { enclosureSettlementTypeEnum, pricingMannerEnum, priceEditModeEnum } from '@enum-ms/contract'
+import { enclosureSettlementTypeEnum, pricingMannerEnum, priceEditModeEnum, projectTypeEnum } from '@enum-ms/contract'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -103,6 +112,8 @@ const props = defineProps({
     default: undefined
   }
 })
+
+const globalProject = inject('globalProject')
 
 const submitLoading = ref(false)
 const remark = ref()
@@ -136,19 +147,23 @@ async function submit() {
         if (props.params.type !== contractSaleTypeEnum.AUXILIARY_MATERIAL.V) {
           _list.push({
             id: v.id,
-            unitPrice: (v.unitPrice !== '同上' ? v.unitPrice : null),
+            unitPrice: v.unitPrice !== '同上' ? v.unitPrice : null,
             pricingManner: v.pricingManner
           })
         } else {
           _list.push({
             id: v.id,
-            unitPrice: (v.unitPrice !== '同上' ? v.unitPrice : null)
+            unitPrice: v.unitPrice !== '同上' ? v.unitPrice : null
           })
         }
       })
     }
-    const api = props.showType === 'log' ? saveTempPrice : (props.params.type === contractSaleTypeEnum.AUXILIARY_MATERIAL.V ? saveStandardPart : save)
-    const params = props.showType === 'log' ? { priceTempIds: _list, remark: remark.value, ...props.params } : { details: _list, remark: remark.value, ...props.params }
+    const api =
+      props.showType === 'log' ? saveTempPrice : props.params.type === contractSaleTypeEnum.AUXILIARY_MATERIAL.V ? saveStandardPart : save
+    const params =
+      props.showType === 'log'
+        ? { priceTempIds: _list, remark: remark.value, ...props.params }
+        : { details: _list, remark: remark.value, ...props.params }
     await api(params)
     ElNotification({ title: '提交成功', type: 'success' })
     handleClose()

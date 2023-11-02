@@ -10,7 +10,7 @@
   >
     <template #titleRight>
       <print-table
-        api-key="mesProjectShipDetail"
+        :api-key="category === mesShipStatisticsTypeEnum.STRUCTURE.V ?'mesProjectShipDetail':'mesProjectShipDetailDirect'"
         v-permission="permission.print"
         :params="{
           projectId: props.projectId,
@@ -77,13 +77,14 @@
 </template>
 
 <script setup>
-import { inboundDetail } from '@/api/ship-manage/pack-and-ship/ship-summary'
+import { inboundDetail, inboundDetailDirect } from '@/api/ship-manage/pack-and-ship/ship-summary'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
 import { DP } from '@/settings/config'
 import { tableSummary } from '@/utils/el-extra'
 import { toThousand } from '@/utils/data-type/number'
+import { mesShipStatisticsTypeEnum } from '@enum-ms/ship-manage'
 import { defineProps, defineEmits, ref } from 'vue'
 import { mesShipSummaryPM as permission } from '@/page-permission/ship-manage'
 
@@ -107,6 +108,10 @@ const props = defineProps({
   },
   projectId: {
     type: Number
+  },
+  category: {
+    type: [Number, String],
+    default: mesShipStatisticsTypeEnum.STRUCTURE.V
   }
 })
 
@@ -130,12 +135,14 @@ async function fetchDetail() {
   list.value = []
   tableLoading.value = true
   try {
-    const { content = [], totalElements } = await inboundDetail({
+    const api = props.category === mesShipStatisticsTypeEnum.STRUCTURE.V ? inboundDetail : inboundDetailDirect
+    const params = {
       projectId: props.projectId,
       ...props.query,
       workshopId: props.workshopId,
       ...queryPage
-    })
+    }
+    const { content = [], totalElements } = await api(params)
     list.value = content
     setTotalPage(totalElements)
     tableLoading.value = false

@@ -68,6 +68,13 @@
           label="总重量(kg)"
           align="center"
         />
+        <el-table-column
+          key="remark"
+          prop="remark"
+          show-overflow-tooltip
+          label="备注"
+          align="center"
+        />
         <el-table-column key="askCompleteTime" prop="askCompleteTime" show-overflow-tooltip label="完成日期" align="center" />
         <el-table-column
           v-if="detail.rowDetail?.category === mesEnclosureTypeEnum.FOLDING_PIECE.V"

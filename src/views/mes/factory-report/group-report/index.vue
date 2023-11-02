@@ -17,6 +17,7 @@
         class="filter-item date-item"
         @change="handleDateChange"
       />
+      <project-radio-button size="small" v-model="projectId" class="filter-item" @change="handleProjectChange" />
       <workshop-select
         v-model="workshopId"
         placeholder="请选择车间"
@@ -204,6 +205,7 @@ import crudApi from '@/api/mes/factory-report/group-report.js'
 import { getProcessList, getProcess } from '@/api/mes/factory-report/group-report.js'
 import { ref, watch, provide, onMounted } from 'vue'
 import moment from 'moment'
+import { tableSummary } from '@/utils/el-extra'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import workshopSelect from '@comp-mes/workshop-select'
 import { mesGroupReportPM as permission } from '@/page-permission/mes'
@@ -233,7 +235,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    invisibleColumns: ['grossWeight'],
+    invisibleColumns: ['grossWeight', 'totalGrossWeight'],
     requiredQuery: ['groupsId']
   },
   tableRef
@@ -246,6 +248,7 @@ const processListRef = ref()
 const date = ref([moment().startOf('month').valueOf(), moment().valueOf()])
 const startDate = ref(moment().startOf('month').valueOf())
 const endDate = ref(moment().valueOf())
+const projectId = ref()
 const workshopId = ref()
 const factoryId = ref()
 const processType = ref()
@@ -253,7 +256,6 @@ const processData = ref([])
 const tableData = ref([])
 const loading = ref(false)
 
-const projectId = ref()
 const monomerId = ref()
 const areaId = ref()
 const serialNumber = ref()
@@ -274,7 +276,8 @@ onMounted(() => {
 async function fetchProcess() {
   try {
     const data = await getProcess({
-      workshopId: workshopId.value
+      workshopId: workshopId.value,
+      projectId: projectId.value
     })
     processData.value = data || []
   } catch (error) {
@@ -290,7 +293,8 @@ async function fetchProcessList() {
       startDate: startDate.value,
       endDate: endDate.value,
       processId: processType.value,
-      workshopId: workshopId.value
+      workshopId: workshopId.value,
+      projectId: projectId.value
     })
     tableData.value = data || []
   } catch (error) {
@@ -334,6 +338,12 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   })
 }
 
+function handleProjectChange() {
+  workshopId.value = undefined
+  fetchProcess()
+  fetchProcessList()
+}
+
 function handleNestingTaskClick(val) {
   crud.query.processId = val?.process?.id
   crud.query.workshopId = val?.workshop?.id
@@ -342,6 +352,7 @@ function handleNestingTaskClick(val) {
   crud.query.taskTypeEnum = val?.taskTypeEnum
   crud.query.startDate = startDate.value
   crud.query.endDate = endDate.value
+  crud.query.projectId = projectId.value
   info.value = val
   crud.toQuery()
 }

@@ -115,7 +115,7 @@ const title = computed(() => {
 const delTip = `此操作不可逆，确认删除【${title.value}】中选中的记录`
 
 const tableList = computed(() => {
-  const list = props.data.filter((v) => v.name.includes(search.name) && (isBlank(search.basicClass) || v.basicClass === search.basicClass))
+  const list = props.data?.filter((v) => v.name.includes(search.name) && (isBlank(search.basicClass) || v.basicClass === search.basicClass)) || []
   // 校验选中行是否依然被选中，未选中则取消
   whetherContainsCheckRow(list)
   return list

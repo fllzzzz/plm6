@@ -40,6 +40,15 @@
         width="100px"
       />
       <el-table-column
+        v-if="columns.visible('specification')"
+        prop="specification"
+        key="specification"
+        label="规格"
+        align="center"
+        fixed="left"
+        width="120px"
+      />
+      <el-table-column
         label="任务数"
         align="center"
         min-width="80px"

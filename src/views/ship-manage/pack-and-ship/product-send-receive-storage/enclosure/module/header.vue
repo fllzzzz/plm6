@@ -52,7 +52,7 @@
         @change="crud.toQuery"
       />
       <el-row v-loading="summaryLoading" v-if="checkPermission(crud.permission.get)" :gutter="10" class="panel-group">
-        <el-col :span="6" class="card-panel-col">
+        <el-col :span="6" class="card-panel-col" style="cursor: pointer;" @click="inventoryDetails(1)">
           <Panel
             name="期初库存(米)"
             text-color="#626262"
@@ -61,7 +61,7 @@
             :precision="DP.MES_ENCLOSURE_L__M"
           />
         </el-col>
-        <el-col :span="6" class="card-panel-col">
+        <el-col :span="6" class="card-panel-col" style="cursor: pointer;" @click="inventoryDetails(2)">
           <Panel
             name="入库量(米)"
             text-color="#626262"
@@ -70,7 +70,7 @@
             :precision="DP.MES_ENCLOSURE_L__M"
           />
         </el-col>
-        <el-col :span="6" class="card-panel-col">
+        <el-col :span="6" class="card-panel-col" style="cursor: pointer;" @click="inventoryDetails(3)">
           <Panel
             name="出库量(米)"
             text-color="#626262"
@@ -79,7 +79,7 @@
             :precision="DP.MES_ENCLOSURE_L__M"
           />
         </el-col>
-        <el-col :span="6" class="card-panel-col">
+        <el-col :span="6" class="card-panel-col" style="cursor: pointer;" @click="inventoryDetails(4)">
           <Panel
             name="期末库存(米)"
             text-color="#626262"
@@ -101,6 +101,7 @@
         />
       </template>
     </crudOperation>
+    <detail-drawer v-model:showDetailDrawer="showDetailDrawer" :query="crud.query" :inventoryType="inventoryType"></detail-drawer>
   </div>
 </template>
 
@@ -119,6 +120,7 @@ import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import Panel from '@/components/Panel'
 import moment from 'moment'
+import detailDrawer from './detail-drawer'
 
 const props = defineProps({
   permission: {
@@ -128,6 +130,8 @@ const props = defineProps({
 })
 const defaultTime = moment().valueOf().toString()
 const categoryList = ref([])
+const showDetailDrawer = ref(false)
+const inventoryType = ref()
 
 const { globalProjectId } = mapGetters(['globalProjectId'])
 const { projects } = useUserProjects()
@@ -230,6 +234,12 @@ function init(val) {
 function projectChange(val) {
   query.category = categoryList.value[0]?.no
   crud.toQuery()
+}
+
+const inventoryDetails = (v) => {
+  showDetailDrawer.value = true
+  inventoryType.value = v
+  console.log(v)
 }
 </script>
 <style lang="scss" scoped>

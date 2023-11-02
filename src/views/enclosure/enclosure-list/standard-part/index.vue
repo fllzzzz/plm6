@@ -115,7 +115,7 @@
               :precision="3"
               :step="0.001"
               :min="0"
-              :max="99999"
+              :max="9999999"
             />
             <span v-else>{{ row.mete }}</span>
           </template>
@@ -281,7 +281,7 @@ const { crud, columns, CRUD } = useCRUD(
     optShow: { ...optShow },
     requiredQuery: ['projectId'],
     crudApi: { ...crudApi },
-    hasPagination: true
+    hasPagination: false
   },
   tableRef
 )

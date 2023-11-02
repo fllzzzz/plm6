@@ -14,10 +14,10 @@
 </template>
 
 <script setup>
-import { getForPackage as getPrintRecord } from '@/api/mes/label-print/print-record'
+import { getForPackage as getPrintRecord, getForBridgePackage } from '@/api/mes/label-print/print-record'
 import { ref, defineEmits, defineProps, watch } from 'vue'
 import { parseTime } from '@/utils/date'
-
+import { projectTypeEnum } from '@enum-ms/contract'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 
@@ -33,6 +33,9 @@ const props = defineProps({
     default: undefined
   },
   productType: {
+    type: Number
+  },
+  projectType: {
     type: Number
   }
 })
@@ -70,7 +73,7 @@ async function fetchRecord() {
   loading.value = true
   let _recordList = []
   try {
-    const { content = [] } = await getPrintRecord(props.packageId)
+    const { content = [] } = props.projectType === projectTypeEnum.BRIDGE.V ? await getForBridgePackage(props.packageId) : await getPrintRecord(props.packageId)
     _recordList = content
   } catch (error) {
     console.log('获取打印记录', error)

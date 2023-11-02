@@ -209,6 +209,8 @@ const expenseReimburseRecord = {
       { show: true, key: 'reimburseUserName', title: '报销人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K },
       { show: true, key: 'expenseSubjectName', title: '费用科目', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.REIMBURSEMENT_TYPE.K },
       { show: true, key: 'reimburseAmount', title: '报销金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: DP.YUAN, unit: amountUnitEnum.YUAN.V }},
+      { show: true, key: 'payee', title: '收款单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.COMPANY_NAME.K },
+      { show: true, key: 'remark', title: '备注', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.OTHER.K },
       { show: true, key: 'writtenByName', title: '填报人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K }
     ]
   }
