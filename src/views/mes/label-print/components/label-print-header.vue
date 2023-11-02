@@ -47,6 +47,8 @@
               <span style="display: flex; align-items: center">
                 <span style="margin-right: 3px">单体</span><el-checkbox v-model="printConfig.showMonomer" />
                 <span style="margin-right: 3px">区域</span><el-checkbox v-model="printConfig.showArea" />
+                <span style="margin-right: 3px" v-show="printConfig.type & labelTypeEnum.SIMPLE.V">规格</span
+                ><el-checkbox v-show="printConfig.type & labelTypeEnum.SIMPLE.V" v-model="printConfig.showSpecification" />
                 <span style="margin-right: 3px">生产日期</span><el-checkbox v-model="printConfig.dateInProduced" />
                 <!-- <span style="margin-right: 3px">生产线</span><el-checkbox v-model="printConfig.showProductionLine" /> -->
               </span>
@@ -80,13 +82,31 @@
         </el-popover>
         <el-tag hit size="medium" style="margin-left: 5px" effect="plain">
           <span v-if="!configLoading">
-            <span>标签类型：{{labelTypeEnum.VL[sourcePrintConfig.type]}}，</span>
-            <span v-show="productType & (componentTypeEnum.ARTIFACT.V | componentTypeEnum.MACHINE_PART.V)">重量：{{printWeightTypeEnum.VL[sourcePrintConfig.weight]}}，</span>
-            <span v-show="productType & (componentTypeEnum.ARTIFACT.V | componentTypeEnum.MACHINE_PART.V)">区域：{{isShowText(sourcePrintConfig.showArea)}}，</span>
-            <span v-show="productType & (componentTypeEnum.ARTIFACT.V | componentTypeEnum.MACHINE_PART.V)">单体：{{isShowText(sourcePrintConfig.showMonomer)}}，</span>
-            <span v-show="productType & (componentTypeEnum.ARTIFACT.V | componentTypeEnum.MACHINE_PART.V | componentTypeEnum.ENCLOSURE.V)">生产日期：{{isShowText(sourcePrintConfig.dateInProduced)}}，</span>
-            <span>制造商名称：{{sourcePrintConfig.manufacturerName || '-'}}，</span>
-            <span>份数：{{sourcePrintConfig.copiesQuantity}}</span>
+            <span>标签类型：{{ labelTypeEnum.VL[sourcePrintConfig.type] }}，</span>
+            <span
+v-show="productType & (componentTypeEnum.ARTIFACT.V | componentTypeEnum.MACHINE_PART.V)"
+              >重量：{{ printWeightTypeEnum.VL[sourcePrintConfig.weight] }}，</span
+            >
+            <span
+v-show="productType & (componentTypeEnum.ARTIFACT.V | componentTypeEnum.MACHINE_PART.V)"
+              >区域：{{ isShowText(sourcePrintConfig.showArea) }}，</span
+            >
+            <span
+v-show="productType & (componentTypeEnum.ARTIFACT.V | componentTypeEnum.MACHINE_PART.V)"
+              >单体：{{ isShowText(sourcePrintConfig.showMonomer) }}，</span
+            >
+            <span
+              v-show="
+                productType & (componentTypeEnum.ARTIFACT.V | componentTypeEnum.MACHINE_PART.V) && printConfig.type & labelTypeEnum.SIMPLE.V
+              "
+              >规格：{{ isShowText(sourcePrintConfig.showSpecification) }}，</span
+            >
+            <span
+v-show="productType & (componentTypeEnum.ARTIFACT.V | componentTypeEnum.MACHINE_PART.V | componentTypeEnum.ENCLOSURE.V)"
+              >生产日期：{{ isShowText(sourcePrintConfig.dateInProduced) }}，</span
+            >
+            <span>制造商名称：{{ sourcePrintConfig.manufacturerName || '-' }}，</span>
+            <span>份数：{{ sourcePrintConfig.copiesQuantity }}</span>
           </span>
           <i v-else class="el-icon-loading" />
         </el-tag>
@@ -161,6 +181,7 @@ let printConfig = reactive({
   weight: printWeightTypeEnum.NET.V,
   type: labelTypeEnum.COMMON.V,
   showArea: true,
+  showSpecification: true,
   showMonomer: true,
   dateInProduced: true,
   // showProductionLine: true,
@@ -194,11 +215,13 @@ async function fetchPrintConfig() {
     configLoading.value = true
     const _data = await getPrintConfig(globalProjectId.value, printType)
     if (_data) {
-      const { type, weight, showArea, showMonomer, dateInProduced, manufacturerName, copiesQuantity } = _data
+      const { type, weight, showArea, showMonomer, showSpecification, dateInProduced, manufacturerName, copiesQuantity } = _data
+      console.log(showSpecification, 'showSpecification')
       printConfig.weight = weight
       printConfig.type = type
       // printConfig.showProductionLine = showProductionLine
       printConfig.showArea = showArea
+      printConfig.showSpecification = showSpecification
       printConfig.showMonomer = showMonomer
       printConfig.dateInProduced = dateInProduced
       printConfig.manufacturerName = manufacturerName
@@ -230,6 +253,7 @@ async function saveConfig() {
       // showProductionLine: printConfig.showProductionLine,
       showArea: printConfig.showArea,
       showMonomer: printConfig.showMonomer,
+      showSpecification: printConfig.showSpecification,
       dateInProduced: printConfig.dateInProduced
     })
     printConfigVisible.value = false

@@ -69,10 +69,16 @@ const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, printConfig
 const ARTIFACT_SIMPLE_L_HTML = function ({ component = defComponent, printConfig }) {
   return `
   <div class="artifact-label">
-    <table class="artifact-table">
-      <tr>
-        <td colspan="2" style="font-size: 40px; font-weight: 600;">${emptyTextFormatter(component.serialNumber)}</td>
-      </tr>
+  <table class="artifact-table">
+    <tr>
+      <td colspan="2" class="amplify-content">
+        <span class="amplify-text">${emptyTextFormatter(component.serialNumber)}</span>
+        <span class="amplify-date" style="${printConfig?.showSpecification ? 'font-size: 12px' : 'display:none;'}">
+        规格：${emptyTextFormatter(component.specification)}</span>
+      </td>
+    </tr>
+  </table>
+  <table class="artifact-table">
       <tr>
         <td style="width:66.66%">
           <span style="${printConfig?.dateInProduced ? '' : 'display:none;'}">
