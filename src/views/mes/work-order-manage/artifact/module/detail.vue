@@ -118,6 +118,7 @@
           <el-table-column :show-overflow-tooltip="true" label="单净重（kg）" key="netWeight" prop="netWeight" align="center" />
           <el-table-column :show-overflow-tooltip="true" label="单毛重（kg）" key="grossWeight" prop="grossWeight" align="center" />
           <el-table-column :show-overflow-tooltip="true" label="任务数" key="quantity" prop="quantity" align="center" />
+          <el-table-column :show-overflow-tooltip="true" label="备注" key="remark" prop="remark" align="center" />
           <el-table-column :show-overflow-tooltip="true" label="完成日期" key="complete" prop="completeTime" align="center">
             <template v-slot="scope">
               <span>{{ scope.row.completeTime ? parseTime(scope.row.completeTime, '{y}-{m}-{d}') : '-' }}</span>
