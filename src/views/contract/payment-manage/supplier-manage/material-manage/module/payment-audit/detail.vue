@@ -84,7 +84,7 @@
         <common-select
           v-if="showType==='audit'"
           v-model="paymentMethod"
-          :options="paymentFineModeEnum.ENUM"
+          :options="[paymentFineModeEnum.PUBLIC_TRANSFER, paymentFineModeEnum.ACCEPTANCE_DRAFT, paymentFineModeEnum.TRANSFER_CHECK, paymentFineModeEnum.PRIVATE_TRANSFER, paymentFineModeEnum.ALLOT_ACCOUNT, paymentFineModeEnum.GIVE_UP_PROFIT, paymentFineModeEnum.EXCHANGE_ACCOUNT, paymentFineModeEnum.OTHER,]"
           type="enum"
           size="small"
           placeholder="付款方式"
@@ -99,6 +99,7 @@
           :options="bankList"
           type="other"
           :dataStructure="typeProp"
+          clearable
           size="small"
           placeholder="收款银行"
           style="width:100%;"
@@ -165,7 +166,7 @@ const props = defineProps({
 
 const dict = useDict(['payment_reason'])
 const bankList = ref([])
-const typeProp = { key: 'account', label: 'depositBank', value: 'account' }
+const typeProp = { key: 'id', label: 'depositBank', value: 'id' }
 const actuallyPaymentAmount = ref()
 const paymentBankAccount = ref()
 const paymentBank = ref()
@@ -219,7 +220,7 @@ function attachmentView(item) {
 
 function bankChange(val) {
   if (val) {
-    const choseVal = bankList.value.find(v => v.account === val)
+    const choseVal = bankList.value.find(v => v.id === val)
     paymentBank.value = choseVal.depositBank
   } else {
     paymentBank.value = undefined
