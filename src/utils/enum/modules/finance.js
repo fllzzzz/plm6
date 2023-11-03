@@ -64,7 +64,12 @@ const paymentFineModeEnum = {
   PUBLIC_TRANSFER: { L: '对公转账', K: 'PUBLIC_TRANSFER', V: paymentModeEnum.PUBLIC_TRANSFER.V },
   ACCEPTANCE_DRAFT: { L: '承兑汇票', K: 'ACCEPTANCE_DRAFT', V: 1 << 3 },
   TRANSFER_CHECK: { L: '转账支票', K: 'TRANSFER_CHECK', V: 1 << 4 },
-  PRIVATE_TRANSFER: { L: '对私转账', K: 'PRIVATE_TRANSFER', V: paymentModeEnum.PRIVATE_TRANSFER.V }
+  PRIVATE_TRANSFER: { L: '对私转账', K: 'PRIVATE_TRANSFER', V: paymentModeEnum.PRIVATE_TRANSFER.V },
+  CASH: { L: '现金', K: 'CASH', V: 1 << 5 },
+  ALLOT_ACCOUNT: { L: '调账', K: 'ALLOT_ACCOUNT', V: 1 << 6 },
+  GIVE_UP_PROFIT: { L: '让利', K: 'GIVE_UP_PROFIT', V: 1 << 7 },
+  EXCHANGE_ACCOUNT: { L: '兑账', K: 'EXCHANGE_ACCOUNT', V: 1 << 8 },
+  OTHER: { L: '其他', K: 'OTHER', V: 1 << 2 }
 }
 constantize(paymentFineModeEnum)
 
@@ -76,6 +81,12 @@ const paymentOtherModeEnum = {
   CASH: { L: '现金', K: 'CASH', V: 1 << 5 }
 }
 constantize(paymentOtherModeEnum)
+const paymentReasonEnum = {
+  ADVANCE_PAYMENT: { L: '预付款', K: 'ADVANCE_PAYMENT', V: '1' },
+  SETTLED_PAYMENT: { L: '结算款', K: 'SETTLED_PAYMENT', V: '2' },
+  PROGRESS_PAYMENT: { L: '进度款', K: 'PROGRESS_PAYMENT', V: '3' }
+}
+constantize(paymentReasonEnum)
 
 export default {
   boolWeightedAverageEnum, // 是否加权平均
@@ -87,6 +98,7 @@ export default {
   newArrearsStatusEnum,
   weightMeasurementModeEnum, // 工程结算方式
   settlementStatusEnum, // 结算状态
+  paymentReasonEnum, // 结算事由
   enclosureSettlementTypeEnum //  围护结算类型
 }
 
@@ -100,5 +112,6 @@ export {
   newArrearsStatusEnum,
   weightMeasurementModeEnum, // 工程结算方式
   settlementStatusEnum, // 结算状态
+  paymentReasonEnum, // 结算事由
   enclosureSettlementTypeEnum //  围护结算类型
 }

@@ -127,8 +127,8 @@ const rules = {
 }
 
 const tableRules = {
-  depositBank: [{ required: true, message: '请输入开户行', trigger: 'blur' }],
-  account: [{ required: true, message: '请输入账号', trigger: 'blur' }]
+  depositBank: [{ required: true, message: '请输入开户行', trigger: 'blur' }]
+  // account: [{ required: true, message: '请输入账号', trigger: 'blur' }]
 }
 
 function wrongCellMask({ row, column }) {
