@@ -135,10 +135,8 @@ const actions = {
     }
     if (menus) {
       menus.forEach(m => {
-        if (m.redirect) {
-          m.redirect = repairStartSymbol(m.redirect, '/')
-        } else {
-          m.redirect = null
+        if (!m.iframe) {
+          m.redirect = m.redirect ? repairStartSymbol(m.redirect, '/') : null
         }
       })
     } else {
