@@ -70,25 +70,30 @@ const ARTIFACT_SIMPLE_L_HTML = function ({ component = defComponent, printConfig
   return `
   <div class="artifact-label">
   <table class="artifact-table">
-    <tr>
-      <td colspan="2" class="amplify-content">
-        <span class="amplify-text">${emptyTextFormatter(component.serialNumber)}</span>
-        <span class="amplify-date" style="${printConfig?.showSpecification ? 'font-size: 12px' : 'display:none;'}">
-        规格：${emptyTextFormatter(component.specification)}</span>
+    <tr class="row-2">
+      <td>
+        <span style="font-size: 60px">${emptyTextFormatter(component.serialNumber)}</span>
       </td>
     </tr>
   </table>
   <table class="artifact-table">
       <tr>
         <td style="width:66.66%">
-          <span style="${printConfig?.dateInProduced ? '' : 'display:none;'}">
-            生产日期：${emptyTextFormatter(component.printTime)}
-          </span>
-          <span style="${component?.oneCode ? '' : 'display:none;'}">
-            编码：${component.oneCode}
+          <span style="${printConfig?.showSpecification ? '' : 'display:none;'}">
+            规格：${emptyTextFormatter(component.specification)}
           </span>
         </td>
-        <td class="qr-content"></td>
+        <td rowspan="2" class="qr-content"></td>
+      </tr>
+      <tr>
+        <td>
+          <div style="${printConfig?.dateInProduced ? '' : 'display:none;'}">
+            生产日期：${emptyTextFormatter(component.printTime)}
+          </div>
+          <div style="${component?.oneCode ? '' : 'display:none;'}">
+            编码：${component.oneCode}
+          </div>
+        </td>
       </tr>
     </table>
   </div>
@@ -502,8 +507,9 @@ export const PRE_LABEL_STYLE = {
     }),
     [labelTypeEnum.SIMPLE.V]: ARTIFACT_STYLE({
       fClass: 'pre-sim-al',
-      qrPosition: { right: '18px', bottom: '8px', size: 160 },
-      rowHeight: 210,
+      qrPosition: { right: '18px', bottom: '25px', size: 160 },
+      // rowHeight: 210,
+      rowHeight: 100,
       colContent: 'center'
     }),
     [labelTypeEnum.CUSTOM.V]: ARTIFACT_STYLE({
@@ -520,8 +526,9 @@ export const PRE_LABEL_STYLE = {
     }),
     [labelTypeEnum.SIMPLE.V]: ARTIFACT_STYLE({
       fClass: 'pre-sim-al',
-      qrPosition: { right: '18px', bottom: '8px', size: 160 },
-      rowHeight: 210,
+      qrPosition: { right: '18px', bottom: '25px', size: 160 },
+      // rowHeight: 210,
+      rowHeight: 100,
       colContent: 'center'
     }),
     [labelTypeEnum.CUSTOM.V]: ARTIFACT_STYLE({
@@ -561,7 +568,8 @@ export const MINI_LABEL_STYLE = {
     }),
     [labelTypeEnum.SIMPLE.V]: ARTIFACT_STYLE({
       fClass: 'mini-sim-al',
-      rowHeight: 140,
+      // rowHeight: 140,
+      rowHeight: 50,
       colContent: 'center'
     }),
     [labelTypeEnum.CUSTOM.V]: ARTIFACT_STYLE({
@@ -576,7 +584,8 @@ export const MINI_LABEL_STYLE = {
     }),
     [labelTypeEnum.SIMPLE.V]: ARTIFACT_STYLE({
       fClass: 'mini-sim-al',
-      rowHeight: 140,
+      // rowHeight: 140,
+      rowHeight: 50,
       colContent: 'center'
     }),
     [labelTypeEnum.CUSTOM.V]: ARTIFACT_STYLE({
@@ -609,7 +618,8 @@ export const PRINT_LABEL_STYLE = {
     }),
     [labelTypeEnum.SIMPLE.V]: ARTIFACT_STYLE({
       fClass: 'print-sim-al',
-      rowHeight: 32,
+      // rowHeight: 32,
+      rowHeight: 17,
       colPadding: 1,
       colContent: 'center',
       unit: 'mm'
@@ -630,7 +640,8 @@ export const PRINT_LABEL_STYLE = {
     }),
     [labelTypeEnum.SIMPLE.V]: ARTIFACT_STYLE({
       fClass: 'print-sim-al',
-      rowHeight: 32,
+      // rowHeight: 32,
+      rowHeight: 17,
       colPadding: 1,
       colContent: 'center',
       unit: 'mm'
