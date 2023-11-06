@@ -81,6 +81,19 @@ const paymentOtherModeEnum = {
   CASH: { L: '现金', K: 'CASH', V: 1 << 5 }
 }
 constantize(paymentOtherModeEnum)
+
+// 付款方式（无现金）
+const paymentNoCashModeEnum = {
+  PUBLIC_TRANSFER: { L: '对公转账', K: 'PUBLIC_TRANSFER', V: paymentModeEnum.PUBLIC_TRANSFER.V },
+  ACCEPTANCE_DRAFT: { L: '承兑汇票', K: 'ACCEPTANCE_DRAFT', V: 1 << 3 },
+  PRIVATE_TRANSFER: { L: '对私转账', K: 'PRIVATE_TRANSFER', V: paymentModeEnum.PRIVATE_TRANSFER.V },
+  ALLOT_ACCOUNT: { L: '调账', K: 'ALLOT_ACCOUNT', V: 1 << 6 },
+  GIVE_UP_PROFIT: { L: '让利', K: 'GIVE_UP_PROFIT', V: 1 << 7 },
+  EXCHANGE_ACCOUNT: { L: '兑账', K: 'EXCHANGE_ACCOUNT', V: 1 << 8 },
+  OTHER: { L: '其他', K: 'OTHER', V: 1 << 2 }
+}
+constantize(paymentNoCashModeEnum)
+
 const paymentReasonEnum = {
   ADVANCE_PAYMENT: { L: '预付款', K: 'ADVANCE_PAYMENT', V: '1' },
   SETTLED_PAYMENT: { L: '结算款', K: 'SETTLED_PAYMENT', V: '2' },
@@ -94,6 +107,7 @@ export default {
   paymentModeEnum, // 付款方式
   paymentFineModeEnum, // 付款（精细）方式
   paymentOtherModeEnum,
+  paymentNoCashModeEnum,
   arrearsStatusEnum, // 欠款状态
   newArrearsStatusEnum,
   weightMeasurementModeEnum, // 工程结算方式
@@ -108,6 +122,7 @@ export {
   paymentModeEnum, // 付款方式
   paymentFineModeEnum, // 付款（精细）方式
   paymentOtherModeEnum,
+  paymentNoCashModeEnum,
   arrearsStatusEnum, // 欠款状态
   newArrearsStatusEnum,
   weightMeasurementModeEnum, // 工程结算方式

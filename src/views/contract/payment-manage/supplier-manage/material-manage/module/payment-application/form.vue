@@ -143,7 +143,7 @@
             <el-form-item label="付款方式" prop="paymentMethod">
               <common-select
                 v-model="form.paymentMethod"
-                :options="paymentOtherModeEnum.ENUM"
+                :options="paymentFineModeEnum.ENUM"
                 type="enum"
                 size="small"
                 placeholder="付款方式"
@@ -218,7 +218,7 @@ import { digitUppercase } from '@data-type/number'
 import { parseTime } from '@/utils/date'
 import { DP } from '@/settings/config'
 import { isNotBlank } from '@/utils/data-type'
-import { paymentOtherModeEnum } from '@enum-ms/finance'
+import { paymentOtherModeEnum, paymentFineModeEnum } from '@enum-ms/finance'
 
 import { regForm } from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
