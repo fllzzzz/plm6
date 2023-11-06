@@ -4,26 +4,39 @@
       <div class="manual-pack-common-header" style="display: flex; justify-content: space-between">
         <div>
           <!-- <component-radio-button v-model="packType" :options="packTypeEnum.ENUM" type="enum" size="small" class="filter-item" /> -->
-          <component-radio-button
-            v-if="typeVal !== packEnum.BOX.V"
-            v-model="packType"
-            :options="packTypeEnum.ENUM"
-            :unshowVal="unValOptions"
-            default
-            type="enum"
-            size="small"
-            class="filter-item"
-          />
-          <component-radio-button
-            v-else
-            v-model="packType"
-            :options="bridgePackTypeEnum.ENUM"
-            :disabledVal="[bridgePackTypeEnum.AUXILIARY_MATERIAL.V]"
-            default
-            type="enum"
-            size="small"
-            class="filter-item"
-          />
+          <div>
+            <component-radio-button
+              v-if="typeVal !== packEnum.BOX.V"
+              v-model="packType"
+              :options="packTypeEnum.ENUM"
+              :unshowVal="unValOptions || []"
+              default
+              type="enum"
+              size="small"
+              class="filter-item"
+            />
+            <component-radio-button
+              v-if="typeVal === packEnum.BOX.V"
+              v-model="packType"
+              :options="bridgePackTypeEnum.ENUM"
+              :disabledVal="[bridgePackTypeEnum.AUXILIARY_MATERIAL.V]"
+              default
+              type="enum"
+              size="small"
+              class="filter-item"
+            />
+            <common-select
+              v-show="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
+              v-model="workshopId"
+              :options="workshopList"
+              type="other"
+              :data-structure="{ key: 'id', label: 'name', value: 'id' }"
+              class="filter-item"
+              clearable
+              style="width: 200px"
+              placeholder="请选择车间"
+            />
+          </div>
           <!-- <project-cascader
             v-model="projectId"
             clearable
@@ -32,17 +45,6 @@
             placeholder="选择项目"
             @change="handleProjectChange"
           /> -->
-          <common-select
-            v-show="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
-            v-model="workshopId"
-            :options="workshopList"
-            type="other"
-            :data-structure="{ key: 'id', label: 'name', value: 'id' }"
-            class="filter-item"
-            clearable
-            style="width: 200px"
-            placeholder="请选择车间"
-          />
         </div>
         <el-badge :value="totalBadge" :max="99" :hidden="totalBadge < 1">
           <common-button type="primary" size="mini" :disabled="typeVal === packEnum.BOX.V ? isEdit : isEmpty" @click="packVisible = true">
@@ -67,32 +69,36 @@
           /> -->
         <!-- <monomer-select v-model="monomerId" :default="false" clearable :project-id="globalProjectId" class="filter-item" /> -->
       </div>
-      <monomer-select-area-tabs
-        v-if="packType === packTypeEnum.STRUCTURE.V || packType === packTypeEnum.MACHINE_PART.V"
-        :project-id="globalProjectId"
-        @change="fetchMonomerAndArea"
-        :default="false"
-        :productType="packType"
-        needConvert
-      />
-      <monomer-select-area-select
-        v-if="packType !== packTypeEnum.STRUCTURE.V && packType !== packTypeEnum.MACHINE_PART.V"
-        :project-id="globalProjectId"
-        v-model:areaId="areaId"
-        v-model:monomerId="monomerId"
-        areaClearable
-        clearable
-      />
-      <area-tabs
-        v-show="packType === packTypeEnum.ENCLOSURE.V && areaInfo.length"
-        class="filter-item"
-        style="width: 100%"
-        v-model="batchId"
-        :area-info="areaInfo"
-        :default-tab="defaultTab"
-        :show-type="2"
-        @tab-click="tabClick"
-      />
+      <div v-show="packType === packTypeEnum.STRUCTURE.V || packType === packTypeEnum.MACHINE_PART.V">
+        <monomer-select-area-tabs
+          :project-id="globalProjectId"
+          @change="fetchMonomerAndArea"
+          :default="false"
+          :productType="packType"
+          needConvert
+        />
+      </div>
+      <div v-show="packType !== packTypeEnum.STRUCTURE.V && packType !== packTypeEnum.MACHINE_PART.V">
+        <monomer-select-area-select
+          :project-id="globalProjectId"
+          v-model:areaId="areaId"
+          v-model:monomerId="monomerId"
+          areaClearable
+          clearable
+        />
+      </div>
+      <div v-show="packType === packTypeEnum.ENCLOSURE.V && areaInfo.length">
+        <area-tabs
+          class="filter-item"
+          style="width: 100%"
+          v-model="batchId"
+          :area-info="areaInfo"
+          :default-tab="defaultTab"
+          :show-type="2"
+          @tab-click="tabClick"
+        />
+      </div>
+
       <!-- </div> -->
     </div>
     <component
@@ -105,7 +111,13 @@
       :area-id="packType === packTypeEnum.ENCLOSURE.V ? batchId : areaId"
       @add="beforeAddIn"
     />
-    <pack-list-drawer v-model:visible="packVisible" :bagId="bagId" :type-val="typeVal" :edit-data="editData" @handleSuccess="handleSuccess" />
+    <pack-list-drawer
+      v-model:visible="packVisible"
+      :bagId="bagId"
+      :type-val="typeVal"
+      :edit-data="editData"
+      @handleSuccess="handleSuccess"
+    />
     <!-- 一物一码 选择弹窗 -->
     <common-dialog
       title="选择一物一码编号"
@@ -198,15 +210,10 @@ const packData = reactive({
   [packTypeEnum.MACHINE_PART.K]: {},
   [packTypeEnum.AUXILIARY_MATERIAL.K]: {},
   [bridgePackTypeEnum.BOX.K]: {},
-  [bridgePackTypeEnum.MACHINE_PART.K]: {}
+  [bridgePackTypeEnum.MACHINE_PART.K]: {},
 })
 
 const typeVal = ref()
-
-onMounted(() => {
-  fetWorkshop()
-  fetchBatch()
-})
 
 watch(
   () => globalProject.value,
@@ -215,7 +222,7 @@ watch(
     typeVal.value = undefined
     typeVal.value = globalProject.value?.productCategory
   },
-  { immediate: true }
+  { immediate: true, deep:  true }
 )
 
 const unValOptions = computed(() => {
@@ -242,7 +249,7 @@ const totalBadge = computed(() => {
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.manual-pack-wrapper',
   extraBox: ['.manual-pack-common-header', '.head-container'],
-  paginate: true
+  paginate: true,
 })
 
 provide('packData', packData)
@@ -263,7 +270,6 @@ watch(
       packData[packTypeEnum.AUXILIARY_MATERIAL.K] = {}
       packData[bridgePackTypeEnum.BOX.K] = {}
       packData[bridgePackTypeEnum.MACHINE_PART.K] = {}
-      fetchBatch()
     }
   },
   { immediate: true, deep: true }
@@ -273,7 +279,7 @@ watch(
   () => packType.value,
   (val) => {
     projectId.value = projectId.value ? projectId.value : globalProjectId.value
-    if (packType.value === packTypeEnum.ENCLOSURE.V || packType.value === packTypeEnum.AUXILIARY_MATERIAL.V) {
+    if (packType.value === packTypeEnum.ENCLOSURE.V) {
       monomerId.value = undefined
       fetchBatch()
     }
@@ -294,7 +300,7 @@ watch(
       // }
       editData.value = {
         ...val.value,
-        data: JSON.parse(val.value.data)
+        data: JSON.parse(val.value.data),
       }
       bagId.value = val.value.id
       const _data = editData.value.data
@@ -329,8 +335,8 @@ async function fetWorkshop() {
         typeVal.value === packEnum.BOX.V
           ? packWorkshopTypeEnum.BRIDGE_WORKSHOP.V
           : packType.value === packTypeEnum.ENCLOSURE.V
-            ? packWorkshopTypeEnum.ENCLOSURE_WORKSHOP.V
-            : packWorkshopTypeEnum.MES_WORKSHOP.V
+          ? packWorkshopTypeEnum.ENCLOSURE_WORKSHOP.V
+          : packWorkshopTypeEnum.MES_WORKSHOP.V,
     })
     console.log(content, 'content')
     workshopList.value = content || []
