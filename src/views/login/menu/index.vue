@@ -38,8 +38,13 @@ export default {
   },
   methods: {
     async goView(view) {
-      this.$emit('replace', view.redirect)
-      this.$router.push({ path: view.redirect })
+      if (view.iframe) {
+        // 如果是外链接，打开新窗口
+        window.open(view.redirect)
+      } else {
+        this.$emit('replace', view.redirect)
+        this.$router.push({ path: view.redirect })
+      }
     }
   }
 }

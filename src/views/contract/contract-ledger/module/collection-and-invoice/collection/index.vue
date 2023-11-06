@@ -92,11 +92,12 @@
           <common-select
             v-if="scope.row.isModify"
             v-model="scope.row.collectionMode"
-            :options="paymentFineModeEnum.ENUM"
+            :options="[paymentFineModeEnum.PUBLIC_TRANSFER, paymentFineModeEnum.ACCEPTANCE_DRAFT, paymentFineModeEnum.TRANSFER_CHECK, paymentFineModeEnum.PRIVATE_TRANSFER, paymentFineModeEnum.CASH, paymentFineModeEnum.OTHER]"
             type="enum"
             size="small"
             placeholder="收款方式"
             style="width:100%;"
+            @change="collectionModeChange(scope.row)"
           />
           <div v-else>{{ scope.row.collectionMode? paymentFineModeEnum.VL[scope.row.collectionMode]: '' }}</div>
         </template>
@@ -116,6 +117,7 @@
             :dataStructure="typeProp"
             size="small"
             placeholder="收款银行"
+            clearable
             style="width:100%;"
             @change="bankChange(scope.row)"
           />
@@ -281,6 +283,7 @@ const bankList = ref([])
 const typeProp = { key: 'id', label: 'depositBank', value: 'id' }
 const totalAmount = ref(0)
 const emit = defineEmits(['success'])
+const paymentMethod = ref()
 provide('bankList', bankList)
 provide('contractInfo', contractInfo)
 provide('totalAmount', totalAmount)
@@ -301,13 +304,21 @@ const tableRules = {
   collectionDate: [{ required: true, message: '请选择收款日期', trigger: 'change' }],
   collectionAmount: [{ required: true, message: '请选择收款金额', trigger: 'change', type: 'number' }],
   collectionBankAccountId: [{ required: true, message: '请选择收款银行', trigger: 'change' }],
+  collectionBankAccount: [{ required: true, message: '请输入银行卡号', trigger: 'change' }],
+  collectionMode: [{ required: true, message: '请选择收款方式', trigger: 'change' }],
+  collectionReason: [{ required: true, message: '请选择收款事由', trigger: 'change' }],
+  paymentUnit: [{ required: true, message: '请输入付款单位', trigger: 'blur' }]
+}
+const tableRulesCash = {
+  collectionDate: [{ required: true, message: '请选择收款日期', trigger: 'change' }],
+  collectionAmount: [{ required: true, message: '请选择收款金额', trigger: 'change', type: 'number' }],
   collectionMode: [{ required: true, message: '请选择收款方式', trigger: 'change' }],
   collectionReason: [{ required: true, message: '请选择收款事由', trigger: 'change' }],
   paymentUnit: [{ required: true, message: '请输入付款单位', trigger: 'blur' }]
 }
 function wrongCellMask({ row, column }) {
   if (!row) return
-  const rules = tableRules
+  const rules = paymentMethod.value === paymentFineModeEnum.CASH.V ? tableRulesCash : tableRules
   let flag = true
   if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
     if (row.verify[column.property] === false) {
@@ -445,7 +456,7 @@ async function rowSubmit(row) {
     ElMessage.error('收款金额必须大于0')
     return
   }
-  const rules = tableRules
+  const rules = paymentMethod.value === paymentFineModeEnum.CASH.V ? tableRulesCash : tableRules
   let flag = true
   row.verify = {}
   for (const rule in rules) {
@@ -479,6 +490,9 @@ function getSummaries(param) {
     props: [['collectionAmount', decimalPrecision.value.contract]],
     toThousandFields: ['collectionAmount']
   })
+}
+function collectionModeChange(row) {
+  paymentMethod.value = row.collectionMode
 }
 
 CRUD.HOOK.afterSubmit = () => {
