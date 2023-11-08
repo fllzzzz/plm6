@@ -12,6 +12,7 @@
     :showOptionAll="showOptionAll"
     :showExtra="showExtra"
     :allLabelText="'全部车间'"
+    :disabledVal="disabledVal"
     filterable
     :placeholder="placeholder"
     :options="options"
@@ -24,11 +25,11 @@ import { defineProps, defineEmits, ref, watch, defineExpose } from 'vue'
 import { isNotBlank, isBlank, deepClone } from '@data-type/index'
 import useWorkshop from '@compos/store/use-workshops'
 
-const emit = defineEmits(['change', 'update:modelValue'])
+const emit = defineEmits(['change', 'update:modelValue', 'nameChange'])
 
 const props = defineProps({
   modelValue: {
-    type: [Number, String, undefined],
+    type: [Array, Number, String, undefined],
     default: undefined
   },
   factoryId: {
@@ -78,6 +79,14 @@ const props = defineProps({
   showExtra: {
     type: Boolean,
     default: false
+  },
+  choseIndex: {
+    type: [Number, String],
+    default: undefined
+  },
+  disabledVal: {
+    type: Array,
+    default: () => []
   }
 })
 
@@ -110,6 +119,13 @@ function handleChange(val) {
   if (props.modelValue !== val) {
     emit('update:modelValue', val)
     emit('change', val)
+    const findVal = options.value.find(v => v.id === val) || {}
+    if (isNotBlank(findVal)) {
+      if (isNotBlank(props.choseIndex)) {
+        findVal.choseIndex = props.choseIndex
+      }
+    }
+    emit('nameChange', findVal)
   }
 }
 

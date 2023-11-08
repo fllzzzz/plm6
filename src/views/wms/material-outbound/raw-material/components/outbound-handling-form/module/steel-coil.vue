@@ -18,13 +18,20 @@
           <common-radio
             v-model="form.materialOutboundMode"
             :options="steelCoilOutboundModeEnum"
+            type="enum"
+            size="small"
+            @change="materialOutboundModeChange"
+          />
+          <!-- <common-radio
+            v-model="form.materialOutboundMode"
+            :options="steelCoilOutboundModeEnum"
             :unshowVal="
               material.classifyFullName.indexOf('卷板') === -1 || material.boolPartyA ? [steelCoilOutboundModeEnum.BY_PLATE.V] : []
             "
             type="enum"
             size="small"
             @change="materialOutboundModeChange"
-          />
+          /> -->
           <div class="tip" v-if="isPlateOut">
             <span>* 提示：</span>
             <span> 出库至钢板库后，无法再进行退库操作，请谨慎操作</span>
@@ -297,8 +304,8 @@ import { ElMessage } from 'element-plus'
 // import { convertUnits } from '@/utils/convert/unit'
 
 const steelCoilOutboundModeEnum = {
-  BY_LENGTH: { L: '按长度出库', K: 'BY_LENGTH ', V: 1 << 0 },
-  BY_PLATE: { L: '按条板出库', K: 'BY_PLATE', V: 1 << 1 }
+  BY_LENGTH: { L: '按长度出库', K: 'BY_LENGTH ', V: 1 << 0 }
+  // BY_PLATE: { L: '按条板出库', K: 'BY_PLATE', V: 1 << 1 }
 }
 
 const previewHeight = 260
@@ -331,7 +338,8 @@ const { user } = mapGetters('user')
 // 材料
 const material = computed(() => props.material || {})
 
-const isPlateOut = computed(() => form.value.materialOutboundMode === steelCoilOutboundModeEnum.BY_PLATE.V)
+const isPlateOut = computed(() => { return false })
+// const isPlateOut = computed(() => form.value.materialOutboundMode === steelCoilOutboundModeEnum.BY_PLATE.V)
 
 const validateQuantity = (rule, value, callback) => {
   if (isBlank(value)) {
