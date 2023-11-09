@@ -34,8 +34,12 @@
             <div v-for="(item, index) in detailRow?.processSummaryDetailsList" v-show="processId === index" :key="index">
               <template v-if="item.teamTraceList?.length">
                 <el-collapse v-for="team in item?.teamTraceList" :key="team.name">
-                  <el-collapse-item
+                  <!-- <el-collapse-item
                     :title="`${detailRow?.processSummaryDetailsList[processId]?.productLineName}>${detailRow?.processSummaryDetailsList[processId]?.groupName}>${detailRow?.processSummaryDetailsList[processId]?.name} / ${team.userName}`"
+                    :name="`${team.userId}`"
+                  > -->
+                  <el-collapse-item
+                    :title="`${team?.productLineName}>${team?.groupName}>${detailRow?.processSummaryDetailsList[processId]?.name} / ${team.userName}`"
                     :name="`${team.userId}`"
                   >
                     <div style="display: flex">

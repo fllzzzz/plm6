@@ -16,6 +16,7 @@
         ref="tableRef"
         :data="tableData"
         :max-height="maxHeight-60"
+        :loading="loading"
         style="width: 100%"
         return-source-data
       >
@@ -71,6 +72,16 @@
         </template>
       </el-table-column>
     </common-table>
+    <!-- 分页 -->
+    <el-pagination
+      :total="total"
+      :current-page="queryPage.pageNumber"
+      :page-size="queryPage.pageSize"
+      style="margin-top: 8px"
+      layout="total, prev, pager, next, sizes"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
     </template>
   </common-drawer>
 </template>
@@ -82,6 +93,7 @@ import { occurLog } from '@/api/contract/contract-ledger'
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import { toThousand } from '@data-type/number'
+import usePagination from '@compos/use-pagination'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 const props = defineProps({
@@ -99,9 +111,12 @@ const { decimalPrecision } = useDecimalPrecision()
 
 const tableData = ref([])
 const drawerRef = ref()
+const loading = ref(false)
 
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
+
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: getOccurLog })
 
 watch(
   () => props.projectId,
@@ -129,11 +144,15 @@ const { maxHeight } = useMaxHeight(
 )
 
 async function getOccurLog() {
+  loading.value = true
   try {
-    const { content } = await occurLog({ projectId: props.projectId })
+    const { content, totalElements } = await occurLog({ projectId: props.projectId, ...queryPage })
     tableData.value = content || []
+    setTotalPage(totalElements)
   } catch (e) {
     console.log('获取变更金额记录', e)
+  } finally {
+    loading.value = false
   }
 }
 </script>

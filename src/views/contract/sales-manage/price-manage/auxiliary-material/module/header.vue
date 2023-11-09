@@ -230,7 +230,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach((v, index) => {
     v.unitPrice = v.unitPrice || '同上'
     v.originUnitPrice = v.unitPrice
-    v.totalPrice = v.quantity * (v.unitPrice && typeof v.unitPrice === 'number' ? v.unitPrice : 0)
+    v.totalPrice = v.mete * (v.unitPrice && typeof v.unitPrice === 'number' ? v.unitPrice : 0)
     v.orderIndex = index + 1
   })
 }

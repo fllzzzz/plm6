@@ -169,6 +169,14 @@
             </div>
           </el-form-item>
         </div>
+        <div>
+          <el-form-item label="备注">
+            <template v-if="!judgeSameValue(originContractInfo.customerRemark,detail.customerRemark)">
+              <cell-change-preview :old="originContractInfo.customerRemark" :new="detail.customerRemark" />
+            </template>
+            <span v-else>{{ props.detail.customerRemark }}</span>
+          </el-form-item>
+        </div>
       </div>
     </el-form>
   </div>

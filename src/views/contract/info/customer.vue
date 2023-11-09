@@ -150,6 +150,12 @@
             </div>
           </el-form-item>
         </div>
+        <div>
+          <el-form-item label="备注" prop="customerRemark">
+            <el-input v-if="isModify" v-model.trim="form.customerRemark" type="textarea" maxlength="1000" />
+            <span v-else>{{ detail.customerRemark }}</span>
+          </el-form-item>
+        </div>
       </div>
     </el-form>
   </div>
@@ -186,7 +192,8 @@ const defaultForm = {
   settleManager: undefined,
   settleManagerPhone: undefined,
   auditManager: undefined,
-  auditManagerPhone: undefined
+  auditManagerPhone: undefined,
+  customerRemark: undefined
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
@@ -310,6 +317,11 @@ defineExpose({
     right: 50px;
     top: 20px;
   }
+}
+
+::v-deep(.el-textarea__inner) {
+  width: 700px;
+  height: 150px;
 }
 ::v-deep(.el-input-number .el-input__inner) {
   text-align: left;
