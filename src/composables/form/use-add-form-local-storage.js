@@ -49,6 +49,7 @@ export default function useAddFormLocalStorage(key, pendingForm, trigger, { useD
     switch (trigger.constructor.name) {
       case 'Function':
       case 'RefImpl':
+      case 'EL':
       case 'ComputedRefImpl':
         _trigger = trigger
         break

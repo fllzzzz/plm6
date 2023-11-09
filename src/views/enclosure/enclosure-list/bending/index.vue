@@ -275,7 +275,7 @@
           min-width="100px"
         >
           <template v-slot="scope">
-            {{ scope.row.totalArea ? scope.row.totalArea.toFixed(DP.COM_AREA__M2) : '-' }}
+            {{ scope.row.totalArea ? scope.row.totalArea.toFixed(DP.COM_ENCLOSURE_AREA__M2) : '-' }}
           </template>
         </el-table-column>
         <el-table-column
