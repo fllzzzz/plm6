@@ -321,7 +321,7 @@ async function fetchSummary() {
   try {
     summaryLoading.value = true
     const { weight, actualWeight } =
-      crud.query.projectType === projectTypeEnum.BRIDGE.V ? await getSummaryShipMete(query) : await getBridgeSummaryShipMete(query)
+      crud.query.projectType === projectTypeEnum.BRIDGE.V ? await getBridgeSummaryShipMete(query) : await getSummaryShipMete(query)
     shipWeight.value = weight
     overWeight.value = actualWeight
   } catch (error) {
