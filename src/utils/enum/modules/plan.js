@@ -29,7 +29,8 @@ const areaPlanTypeEnum = {
   DEEPEN: { L: '深化计划', K: 'DEEPEN', V: 1 << 0 },
   PROCESS: { L: '加工计划', K: 'PROCESS', V: 1 << 1 },
   INSTALL: { L: '安装计划', K: 'INSTALL', V: 1 << 2 },
-  DELIVERY: { L: '发运计划', K: 'DELIVERY', V: 1 << 3 }
+  DELIVERY: { L: '发运计划', K: 'DELIVERY', V: 1 << 3 },
+  PURCHASE: { L: '采购计划', K: 'PURCHASE', V: 1 << 4 }
 }
 constantize(areaPlanTypeEnum)
 

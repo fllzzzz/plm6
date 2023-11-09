@@ -274,6 +274,7 @@ export function validateHasErrorMsg(property, rules, row = {}) {
 function getRules(rules) {
   let _rules
   switch (rules.constructor.name) {
+    case 'EL':
     case 'RefImpl':
     case 'ComputedRefImpl':
       _rules = rules.value

@@ -46,6 +46,7 @@ export default function useMaxHeight(
       switch (trigger.constructor.name) {
         case 'Function':
         case 'RefImpl':
+        case 'EL':
         case 'ComputedRefImpl':
           wv = trigger
           break

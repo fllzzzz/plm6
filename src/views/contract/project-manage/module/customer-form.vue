@@ -93,6 +93,11 @@
           <el-input v-model.trim="form.designManagerPhone" placeholder="联系电话" class="input-underline" />
         </el-form-item>
       </div>
+      <div>
+          <el-form-item label="备注" prop="customerRemark">
+            <el-input  v-model.trim="form.customerRemark" type="textarea" maxlength="1000" size="large" />
+          </el-form-item>
+        </div>
     </div>
   </el-form>
 </template>
@@ -126,7 +131,8 @@ const defaultForm = {
   settleManager: undefined,
   settleManagerPhone: undefined,
   auditManager: undefined,
-  auditManagerPhone: undefined
+  auditManagerPhone: undefined,
+  customerRemark: undefined
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
@@ -226,6 +232,10 @@ defineExpose({
 })
 </script>
 <style lang="scss" scoped>
+::v-deep(.el-textarea__inner) {
+  width: 700px;
+  height: 150px;
+}
 ::v-deep(.input-underline) {
   // width: calc((95vw - 40px)/3);
   width: 250px;
