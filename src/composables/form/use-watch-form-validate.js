@@ -54,6 +54,7 @@ export default function useWatchFormValidate(formRef, form, fields) {
 function getForm(form) {
   let _form
   switch (form.constructor.name) {
+    case 'EL':
     case 'RefImpl':
     case 'ComputedRefImpl':
       _form = form.value
