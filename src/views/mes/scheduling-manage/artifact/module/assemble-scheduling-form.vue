@@ -237,7 +237,7 @@ const form = ref({
 const formRules = ref({
   orderName: [
     { required: true, message: '请输入工单命名', trigger: 'blur' },
-    { max: 10, message: '不大于10个字符', trigger: 'blur' }
+    { max: 30, message: '不大于30个字符', trigger: 'blur' }
   ]
 })
 

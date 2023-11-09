@@ -104,7 +104,7 @@
                 <common-select
                   v-if="showType==='audit'"
                   v-model="paymentMethod"
-                  :options="paymentOtherModeEnum.ENUM"
+                  :options="paymentFineModeEnum.ENUM"
                   type="enum"
                   size="small"
                   placeholder="付款方式"
@@ -218,7 +218,7 @@ import { parseTime } from '@/utils/date'
 import useVisible from '@compos/use-visible'
 import useDict from '@compos/store/use-dict'
 import { auditTypeEnum } from '@enum-ms/contract'
-import { paymentOtherModeEnum } from '@enum-ms/finance'
+import { paymentOtherModeEnum, paymentFineModeEnum } from '@enum-ms/finance'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
 

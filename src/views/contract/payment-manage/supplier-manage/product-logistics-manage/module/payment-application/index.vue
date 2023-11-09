@@ -90,7 +90,7 @@ import { toThousand } from '@data-type/number'
 import { contractSupplierProductLogisticsPM } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
 import useDict from '@compos/store/use-dict'
-import { paymentOtherModeEnum } from '@enum-ms/finance'
+import { paymentFineModeEnum } from '@enum-ms/finance'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -130,7 +130,7 @@ const dataFormat = ref([
   ['auditTime', ['parse-time', '{y}-{m}-{d}']],
   ['applyAmount', 'to-thousand'],
   ['deductionAmount', 'to-thousand'],
-  ['paymentMethod', ['parse-enum', paymentOtherModeEnum]]
+  ['paymentMethod', ['parse-enum', paymentFineModeEnum]]
 ])
 
 const tableRef = ref()

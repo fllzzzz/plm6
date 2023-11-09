@@ -144,7 +144,7 @@
               <el-form-item label="付款方式" prop="paymentMethod">
                 <common-select
                   v-model="form.paymentMethod"
-                  :options="paymentOtherModeEnum.ENUM"
+                  :options="paymentFineModeEnum.ENUM"
                   type="enum"
                   size="small"
                   placeholder="付款方式"
@@ -316,7 +316,7 @@ import useDecimalPrecision from '@compos/store/use-decimal-precision'
 import { ElMessage } from 'element-plus'
 import { auditTypeEnum } from '@enum-ms/contract'
 import { convertUnits } from '@/utils/convert/unit'
-import { paymentOtherModeEnum } from '@enum-ms/finance'
+import { paymentOtherModeEnum, paymentFineModeEnum } from '@enum-ms/finance'
 
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
