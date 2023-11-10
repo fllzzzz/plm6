@@ -234,25 +234,27 @@ async function handleZip(zip) {
   })
   resolveZip.forEach((relativePath, zipEntry) => { // 2) print entries
     const suffix = `.${getFileSuffix(zipEntry.name)}`.toLowerCase()
-    if (zipEntry.name.indexOf('.') > -1) { // 判断是否是目录
-      const data = {
-        name: zipEntry.name,
-        '.PDF': suffix === '.pdf',
-        '.JPG': suffix === '.jpg',
-        '.PNG': suffix === '.png',
-        '.JPEG': suffix === '.jpeg',
-        '.DWG': suffix === '.dwg',
-        '.DXF': suffix === '.dxf'
-      }
-      if (props.tip && props.tip.length > 0) {
-        const errArr = []
-        tipArr.forEach(v => {
-          errArr.push(data[v.toUpperCase()])
-        })
-        if (errArr.indexOf(true) < 0) {
-          errorListData.push(data)
-        } else {
-          zipListData.push(data)
+    if (zipEntry.name.substring(zipEntry.name.length - 1) !== '/') { // 过滤压缩包里的文件夹
+      if (zipEntry.name.indexOf('.') > -1) { // 判断是否是目录
+        const data = {
+          name: zipEntry.name,
+          '.PDF': suffix === '.pdf',
+          '.JPG': suffix === '.jpg',
+          '.PNG': suffix === '.png',
+          '.JPEG': suffix === '.jpeg',
+          '.DWG': suffix === '.dwg',
+          '.DXF': suffix === '.dxf'
+        }
+        if (props.tip && props.tip.length > 0) {
+          const errArr = []
+          tipArr.forEach(v => {
+            errArr.push(data[v.toUpperCase()])
+          })
+          if (errArr.indexOf(true) < 0) {
+            errorListData.push(data)
+          } else {
+            zipListData.push(data)
+          }
         }
       }
     }
