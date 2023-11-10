@@ -42,9 +42,9 @@
       >
         <tr v-for="(item, index) in breakUpList[page - 1]" :key="index">
           <td class="col-1">{{ item.serialNumber }}</td>
-          <td class="col-1">{{ item.material }}</td>
+          <td class="col-1">{{ props.showMaterial ? item.material : '' }}</td>
           <td class="col-1">{{ item.quantity }}</td>
-          <td class="col-1">{{ item.totalWeight }}</td>
+          <td class="col-1">{{ props.showWidth ? item.totalWeight : '' }}</td>
         </tr>
       </template>
       <template v-if="packageInfo.productType === packTypeEnum.AUXILIARY_MATERIAL.V">
@@ -158,6 +158,14 @@ const props = defineProps({
   unitType: {
     type: Number,
     default: 1
+  },
+  showMaterial: {
+    type: Boolean,
+    default: true
+  },
+  showWidth: {
+    type: Boolean,
+    default: true
   }
 })
 
