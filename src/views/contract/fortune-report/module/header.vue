@@ -19,7 +19,8 @@
       class="filter-item"
       @change="crud.toQuery"
     /> -->
-    <common-select
+    <project-cascader v-model="query.projectId" clearable style="width: 270px" class="filter-item" @change="crud.toQuery" />
+    <!-- <common-select
       v-model="query.projectId"
       :options="projectTree"
       type="other"
@@ -30,7 +31,7 @@
       style="width: 300px"
       placeholder="选择项目"
       @change="crud.toQuery"
-    />
+    /> -->
     <common-radio-button
       v-model="query.businessType"
       :options="businessTypeEnum.ENUM"
@@ -70,7 +71,6 @@
   <crudOperation>
     <template #optLeft>
       <time-range-select :query="query" clearable class="filter-item" style="width: 270px" @change="crud.toQuery" />
-      <project-cascader v-model="query.projectId" clearable style="width: 270px" class="filter-item" @change="crud.toQuery" />
     </template>
     <template #viewLeft>
       <print-table
@@ -90,7 +90,7 @@ import { inject } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
-import projectCascader from '@comp-base/project-cascader.vue'
+// import projectCascader from '@comp-base/project-cascader.vue'
 import timeRangeSelect from '@comp-common/time-range-select/index'
 // import projectCascader from '@comp-base/project-cascader.vue'
 // import ExportButton from '@comp-common/export-button/index.vue'
@@ -107,4 +107,5 @@ const defaultQuery = {
 }
 const { crud, query } = regHeader(defaultQuery)
 const projectTree = inject('projectTree')
+console.log(projectTree)
 </script>
