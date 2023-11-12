@@ -103,6 +103,10 @@
               @change="handleCopiesChange"
             />
           </el-form-item>
+          <el-form-item label="显示">
+            <el-checkbox v-model="printConfig.showMaterial" label="材质" @change="checkboxMaterial" />
+            <el-checkbox v-model="printConfig.showWidth" label="重量" @change="checkboxWidth" />
+          </el-form-item>
         </el-form>
         <template #reference>
           <common-button type="primary" size="mini">标签打印设置</common-button>
@@ -162,7 +166,9 @@ import { ElMessage } from 'element-plus'
 
 const typeVal = ref()
 const unitValue = ref(1)
-const emit = defineEmits(['getDetail', 'changeUnit'])
+// const showMaterial = ref(true)
+// const showWidth = ref(true)
+const emit = defineEmits(['getDetail', 'changeUnit', 'checkboxMaterial', 'checkboxWidth'])
 const unitOptions = ref([
   {
     label: '核算单位',
@@ -190,7 +196,9 @@ const { crud, query } = regHeader(defaultQuery)
 
 const printConfig = reactive({
   manufacturerName: user.value.companyName,
-  copies: 1
+  copies: 1,
+  showMaterial: true,
+  showWidth: true
 })
 
 const printParams = computed(() => {
@@ -372,7 +380,9 @@ async function getLabelInfo(row) {
     productType: row.productType,
     project: row.project,
     companyName: printConfig.manufacturerName,
-    unitValue: unitValue.value
+    unitValue: unitValue.value,
+    showMaterial: printConfig.showMaterial,
+    showWidth: printConfig.showWidth
   }
   // 生产线信息
   return {
@@ -400,6 +410,16 @@ function handleCopiesChange(val) {
   if (!val) {
     printConfig.copies = 1
   }
+}
+
+const checkboxMaterial = (v) => {
+  printConfig.showMaterial = v
+  emit('checkboxMaterial', v)
+}
+
+const checkboxWidth = (v) => {
+  printConfig.showWidth = v
+  emit('checkboxWidth', v)
 }
 
 defineExpose({

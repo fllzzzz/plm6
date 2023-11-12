@@ -42,13 +42,12 @@
       />
       <!--编辑与删除-->
       <el-table-column
-        v-if="checkPermission([...permission.import, ...permission.detail])"
+        v-if="checkPermission([...permission.matchImport, ...permission.detail,...permission.download])"
         label="操作"
         :width="
-          (globalProject.projectType === projectTypeEnum.STEEL.V && crud.query.productType === deepenTypeEnum.MACHINE_PART.V) ||
-          (globalProject.projectType === projectTypeEnum.BRIDGE.V && crud.query.productType === bridgeProcessTypeEnum.MACHINE_PART.V)
-            ? '350px'
-            : '270px'
+          globalProject.projectType === projectTypeEnum.STEEL.V
+            ? (crud.query.productType === deepenTypeEnum.MACHINE_PART.V?'350px':'270px')
+            : '180px'
         "
         align="center"
         fixed="right"
@@ -56,9 +55,8 @@
         <template v-slot="scope">
           <div class="btn">
             <export-button
-              v-permission="permission.download"
               v-if="
-                (globalProject.projectType === projectTypeEnum.STEEL.V && crud.query.productType === deepenTypeEnum.MACHINE_PART.V)
+                (globalProject.projectType === projectTypeEnum.STEEL.V && crud.query.productType === deepenTypeEnum.MACHINE_PART.V) && checkPermission(permission.download)
               "
               :fn="dxfZipDownload"
               :params="{ projectId: globalProjectId, monomerId: scope.row.monomerId }"
@@ -77,8 +75,7 @@
               @success="crud.toQuery"
             />
             <upload-btn
-              v-if="globalProject.projectType === projectTypeEnum.STEEL.V"
-              v-permission="permission.matchImport"
+              v-if="globalProject.projectType === projectTypeEnum.STEEL.V && checkPermission(permission.matchImport)"
               :dataType="scope.row.dataType"
               :uploadFun="uploadChoose"
               :accept="`.zip`"

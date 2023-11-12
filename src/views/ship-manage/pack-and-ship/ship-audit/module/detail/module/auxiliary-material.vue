@@ -15,12 +15,12 @@
     <el-table-column :show-overflow-tooltip="true" prop="shipMete" label="核算量" align="center" />
     <el-table-column :show-overflow-tooltip="true" prop="unitPrice" label="单价(元)">
       <template v-slot="scope">
-        {{ toFixed(scope.row.unitPrice, decimalPrecision.shipment) }}
+        {{ toFixed(scope.row.unitPrice, 4) }}
       </template>
     </el-table-column>
     <el-table-column :show-overflow-tooltip="true" prop="totalPrice" label="总价(元)">
-    <template v-slot="scope">
-        {{ toFixed(scope.row.totalPrice, decimalPrecision.shipment) }}
+      <template v-slot="scope">
+        {{ toFixed(scope.row.totalPrice, 4) }}
       </template>
     </el-table-column>
   </common-table>
