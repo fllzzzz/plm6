@@ -13,13 +13,25 @@
     <el-table-column prop="showQuantity" label="数量" align="center" />
     <el-table-column :show-overflow-tooltip="true" prop="accountingUnit" label="核算单位" align="center" />
     <el-table-column :show-overflow-tooltip="true" prop="shipMete" label="核算量" align="center" />
-    <el-table-column :show-overflow-tooltip="true" prop="unitPrice" label="单价(元)" />
-    <el-table-column :show-overflow-tooltip="true" prop="totalPrice" label="总价(元)" />
+    <el-table-column :show-overflow-tooltip="true" prop="unitPrice" label="单价(元)">
+      <template v-slot="scope">
+        {{ toFixed(scope.row.unitPrice, decimalPrecision.shipment) }}
+      </template>
+    </el-table-column>
+    <el-table-column :show-overflow-tooltip="true" prop="totalPrice" label="总价(元)">
+    <template v-slot="scope">
+        {{ toFixed(scope.row.totalPrice, decimalPrecision.shipment) }}
+      </template>
+    </el-table-column>
   </common-table>
 </template>
 
 <script setup>
 import { defineProps } from 'vue'
+import { toFixed } from '@/utils/data-type'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 defineProps({
   list: {
