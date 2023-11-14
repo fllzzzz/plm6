@@ -52,6 +52,25 @@ function productionStatisticsMete({ header, table = [], footer, qrCode }) {
   }
 }
 
+// 发运详情宽度
+function shipmentDetailWidth({ header, table = [], footer, qrCode }) {
+  const _table = table.map(row => {
+    if (row.category === 2 || row.category === 32) {
+      row.wide = row.unfoldedWidth
+    } else {
+      row.wide = row.width
+    }
+    return row
+  })
+  console.log(_table)
+  return {
+    header,
+    table: _table,
+    qrCode,
+    footer
+  }
+}
+
 // 部件套料清单
 function assembleNestingOrder({ header, table = [], footer, qrCode }) {
   const _table = []
@@ -387,5 +406,6 @@ export default {
   materialType,
   areaConvert,
   materialListType,
+  shipmentDetailWidth,
   steelDosageFormat
 }
