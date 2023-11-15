@@ -87,7 +87,7 @@ const mesProductionTaskOrder = {
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 12,
+    height: 22,
     width: 190,
     emptyVal: '',
     /**
@@ -103,12 +103,12 @@ const mesProductionTaskOrder = {
      */
     fields: [ // 字段内容
       // { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '统计日期：', width: 190, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'artifactOrder', title: '任务单号：', width: 80, type: typeEnum.ORDER_TYPE.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'serialNumber', title: '编号：', width: 55, type: typeEnum.SERIAL_NUMBER.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'shortName', title: '简称：', width: 55, type: typeEnum.OTHER.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'name', title: '班组：', width: 80, type: typeEnum.OTHER.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'artifactOrder', title: '任务单号：', width: 120, type: typeEnum.ORDER_TYPE.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'name', title: '班组：', width: 70, type: typeEnum.OTHER.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'serialNumber', title: '编号：', width: 120, type: typeEnum.SERIAL_NUMBER.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 70, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'shortName', title: '简称：', width: 120, type: typeEnum.OTHER.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 70, type: typeEnum.USER_NAME.K }
     ]
   },
   /**
