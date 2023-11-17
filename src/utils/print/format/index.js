@@ -46,6 +46,7 @@ const mesStructureProductionStatistics = mes.unProducedMete
 const mesStructureProductionStatisticsIn = mes.productionStatisticsMete
 const mesEnclosureProductionStatistics = mes.unProducedMete
 const mesEnclosureProductionStatisticsIn = mes.productionStatisticsMete
+const mesShipmentDetail = mes.shipmentDetailWidth
 
 const mesUnfinishedList = mes.unCompleteMete
 const mesStructureProjectSummary = mes.projectSummary
@@ -123,6 +124,7 @@ export default {
   enclosureProductSendReceiveStorageDetail,
   mesStructureProductionStatistics,
   mesStructureProductionStatisticsIn,
+  mesShipmentDetail,
   mesEnclosureProductionStatistics,
   mesEnclosureProductionStatisticsIn,
   mesEnclosureProductionLine,

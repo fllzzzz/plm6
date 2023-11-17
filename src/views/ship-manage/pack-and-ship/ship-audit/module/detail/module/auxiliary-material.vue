@@ -28,6 +28,10 @@
 
 <script setup>
 import { defineProps } from 'vue'
+import { toFixed } from '@/utils/data-type'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 defineProps({
   list: {
