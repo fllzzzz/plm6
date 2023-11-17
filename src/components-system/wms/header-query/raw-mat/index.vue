@@ -85,7 +85,7 @@ import SteelCoil from './module/steel-coil.vue'
 import AuxMat from './module/aux-mat.vue'
 import Gas from './module/gas.vue'
 import RawMat from './module/raw-mat.vue'
-const emit = defineEmits(['to-query'])
+const emit = defineEmits(['to-query', 'searchQuery'])
 
 const props = defineProps({
   basicClass: {
@@ -161,6 +161,7 @@ function toQuery() {
 }
 
 function handleProjectWarehouseTypeChange(val) {
+  emit('searchQuery')
   if (val === projectWarehouseTypeEnum.PUBLIC.V) {
     queryVO.value.projectId = undefined
   }

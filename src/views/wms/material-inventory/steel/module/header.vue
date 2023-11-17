@@ -2,7 +2,7 @@
   <div class="head-container">
     <div v-if="crud.searchToggle">
       <!-- 物料查询相关 -->
-      <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery" multiple show-project-Warehouse-type>
+      <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery" @searchQuery="searchQuery" multiple show-project-Warehouse-type>
         <template #afterProjectWarehouseType>
           <monomer-select-area-select
             v-if="query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V"
@@ -14,7 +14,7 @@
             :project-id="query.projectId"
             :monomerDisabled="!query.projectId"
             :areaDisabled="!query.projectId"
-            @change="crud.toQuery"
+            @change="crud.toQuery()"
           />
           <common-radio-button
             v-model="query.basicClass"
@@ -26,15 +26,15 @@
           />
         </template>
       </mat-header-query>
-      <rr-operation />
+      <rr-operation @resetClick="resetClick" />
     </div>
     <crud-operation>
       <!-- TODO:打印 -->
       <template #optLeft>
-        <common-button class="filter-item" v-permission="permission.outbound" type="primary" size="mini" @click="toBatchOutbound">
+        <common-button class="filter-item" v-permission="permission.outbound" type="primary" size="mini" @click="handleOut">
           <svg-icon icon-class="wms-outbound" /> 批量出库
         </common-button>
-        <common-button class="filter-item" v-permission="permission.transfer" type="warning" size="mini" @click="toBatchTransfer">
+        <common-button class="filter-item" v-permission="permission.transfer" type="warning" size="mini" @click="handleTransfer">
           <svg-icon icon-class="wms-transfer" /> 批量调拨
         </common-button>
       </template>
@@ -55,14 +55,14 @@
       :project-warehouse-type="query.projectWarehouseType"
       :project-id="query.projectId"
       :basic-class="query.basicClass"
-      :material-list="crud.selections"
-      @success="handleBatchOutbound"
+      :material-list="props.tableSelections"
+      @success="handleSuccessOut"
     />
     <transfer-batch-handling-form
       v-model:visible="batchTransferHandlingVisible"
       :basic-class="query.basicClass"
-      :material-list="crud.selections"
-      @success="handleTransferOutbound"
+      :material-list="props.tableSelections"
+      @success="handleSuccessTransfer"
     />
     <common-drawer title="标签打印" v-model="materialPrintViewVisible" size="90%">
       <template #content>
@@ -74,7 +74,7 @@
 
 <script setup>
 import { getSteelPlateInventory, getSectionSteelInventory, getSteelCoilInventory } from '@/api/wms/material-inventory'
-import { computed, defineExpose, onMounted, ref } from 'vue'
+import { computed, defineExpose, onMounted, ref, defineProps, defineEmits } from 'vue'
 import { steelClsEnum } from '@/utils/enum/modules/classification'
 import { projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 import checkPermission from '@/utils/system/check-permission'
@@ -109,6 +109,15 @@ const {
 const materialPrintViewVisible = ref(false)
 const { notPrintedMaterialNumber, refresh: notPrintedMaterialRefresh } = useGetNotPrintedMaterial()
 
+const props = defineProps({
+  tableSelections: {
+    type: Array,
+    default: () => []
+  }
+})
+
+const emit = defineEmits(['clearTableSelection', 'getSelections', 'handleClearSelection'])
+
 // 未打印的标签数量
 const notPrintedMaterialQuantity = computed(() => {
   if (notPrintedMaterialNumber.value) {
@@ -126,6 +135,33 @@ onMounted(async () => {
 //   notPrintedMaterialQuantity.value = data.notPrintedMaterialQuantity || 0
 // }
 
+function handleOut() {
+  emit('getSelections')
+  toBatchOutbound()
+}
+
+function handleTransfer() {
+  emit('getSelections')
+  toBatchTransfer()
+}
+
+function searchQuery() {
+  emit('clearTableSelection')
+  emit('handleClearSelection')
+}
+
+function handleSuccessOut() {
+  emit('clearTableSelection')
+  emit('handleClearSelection')
+  handleBatchOutbound()
+}
+
+function handleSuccessTransfer() {
+  emit('clearTableSelection')
+  emit('handleClearSelection')
+  handleTransferOutbound()
+}
+
 // 基础类型发生变化
 async function handleBasicClassChange(val) {
   switch (val) {
@@ -142,6 +178,11 @@ async function handleBasicClassChange(val) {
   await crud.resetQuery()
   crud.data = []
   crud.setColumns()
+}
+
+function resetClick() {
+  emit('clearTableSelection')
+  emit('handleClearSelection')
 }
 
 // 处理当前用户出库成功
