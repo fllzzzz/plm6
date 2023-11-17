@@ -75,7 +75,7 @@
               <common-button size="mini" type="danger" @click="batchBack">确定</common-button>
             </div>
             <template #reference>
-              <common-button v-permission="permission.batchRevoke" v-show="isEdit === true" size="mini" type="danger" :disabled="!selectionList.length" @click.stop="handleBatch">
+              <common-button v-permission="permission.batchRevoke" :loading="submitLoading" v-show="isEdit === true" size="mini" type="danger" :disabled="!selectionList.length" @click.stop="handleBatch">
                 批量撤回
               </common-button>
             </template>
@@ -139,7 +139,7 @@
                   <common-button type="primary" size="mini" @click.stop="handleDelete(scope.row)">确定</common-button>
                 </div>
                 <template #reference>
-                  <common-button v-permission="permission.revoke" size="mini" type="danger" :disabled="scope.row.boolCanRevoke === false" @click.stop="back(scope.row)">
+                  <common-button v-permission="permission.revoke" size="mini" type="danger" :disabled="scope.row.boolCanRevoke === false || submitLoading" @click.stop="back(scope.row)">
                     撤回
                   </common-button>
                 </template>
@@ -302,6 +302,7 @@ const isAllOrder = ref()
 const selectionList = ref([])
 const totalQuantity = ref()
 const totalWeight = ref()
+const submitLoading = ref(false)
 const emit = defineEmits(['update:visible', 'refresh'])
 const props = defineProps({
   visible: {
@@ -449,6 +450,7 @@ function cancelDelete(row) {
   row.pop = false
 }
 async function handleDelete(row) {
+  submitLoading.value = true
   const ids = []
   ids.push(row.taskId)
   try {
@@ -458,6 +460,8 @@ async function handleDelete(row) {
     ElMessage.success(`当前工单撤回成功`)
   } catch (e) {
     console.log('撤回工单操作失败', e)
+  } finally {
+    submitLoading.value = false
   }
 }
 
@@ -477,6 +481,7 @@ function onPopoverDelClickHide() {
 
 // 批量撤回
 async function batchBack() {
+  submitLoading.value = true
   const ids = []
   selectionList.value?.forEach((v) => {
     ids.push(v.taskId)
@@ -490,6 +495,7 @@ async function batchBack() {
     console.log('撤回操作失败', e)
   } finally {
     delBtn.value = false
+    submitLoading.value = false
   }
 }
 
