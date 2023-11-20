@@ -4,6 +4,7 @@
       <mHeader ref="headRef" />
     </div>
     <!--表格渲染-->
+    <!-- row-key="id"配置为id时，查询编号会多出一条重复数据，可能key值重复导致，我把row-key="id"属性删除页面正常了，后续不知道会不会有问题，有问题需重新配置row-key属性 -->
     <common-table
       ref="tableRef"
       v-loading="crud.loading"
@@ -11,7 +12,6 @@
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       style="width: 100%"
-      row-key="id"
       @sort-change="crud.handleSortChange"
       @selection-change="crud.selectionChangeHandler"
     >
