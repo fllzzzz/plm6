@@ -7,6 +7,9 @@ import { dataValidate } from '@/composables/form/use-table-validate'
 import { compareArray } from '@/utils/data-type/array'
 import { MAT_BASE_UNIT } from '@/settings/config'
 
+import usePriceSet from '@/utils/price-set'
+const { handleMeteChangeCalcPrice } = usePriceSet('weighingTotalWeight')
+
 const baseUnit = MAT_BASE_UNIT[matClsEnum.STEEL_COIL.V]
 const sectionSteelSpecTmpl = {
   title: '钢卷入库清单', // 表格名称
@@ -127,7 +130,8 @@ const sectionSteelSpecTmpl = {
         await calcTheoryLength(row)
 
         // 设置总长度
-        row.length = row.length ?? row.theoryLength
+        row.length = row.length || row.theoryLength
+        if (!row.unitPrice || !row.amount) { handleMeteChangeCalcPrice(row) }
       } else {
         throw new Error(`${row.classifyName}下不存在规格为“${specification}”的材料，请联系管理员/仓库人员添加`)
       }

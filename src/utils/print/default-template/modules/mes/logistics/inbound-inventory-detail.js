@@ -6,7 +6,7 @@ const mesInboundInventoryDetail = {
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
   type: 'mesInboundInventoryDetail', // 表格类型 KEY
-  name: '结构入库量明细（平台）', // 表格名称
+  name: '结构项目入库量明细（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -60,7 +60,7 @@ const mesInboundInventoryDetail = {
   title: {
     show: true,
     allPage: false,
-    title: '结构入库量明细',
+    title: '结构项目入库量明细',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,

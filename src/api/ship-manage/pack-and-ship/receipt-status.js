@@ -29,6 +29,15 @@ export function get(params) {
   })
 }
 
+export function getBridge(params) {
+  return request({
+    module: 'bridge',
+    url: 'cargo/receipt',
+    method: 'get',
+    params
+  })
+}
+
 /**
  * 下载物流详单
  * @param {number} id|required 物流信息id
@@ -63,6 +72,16 @@ export function detail(id) {
     method: 'get'
   })
 }
+/**
+ * 桥梁收货状态-详情
+ */
+export function detailBridge(id) {
+  return request({
+    module: 'bridge',
+    url: `cargo/receipt/${id}`,
+    method: 'get'
+  })
+}
 
 // 取消送货
 export function deliveryCancel(data) {
@@ -73,11 +92,28 @@ export function deliveryCancel(data) {
     data
   })
 }
+// 取消送货
+export function bridgeDeliveryCancel(data) {
+  return request({
+    module: 'bridge',
+    url: 'cargo/cancel',
+    method: 'put',
+    data
+  })
+}
 
 // 到场签收
 export function deliverySign(id) {
   return request({
     module: 'mes',
+    url: `cargo/sign/${id}`,
+    method: 'put'
+  })
+}
+// 桥梁到场签收
+export function bridgeDeliverySign(id) {
+  return request({
+    module: 'bridge',
     url: `cargo/sign/${id}`,
     method: 'put'
   })

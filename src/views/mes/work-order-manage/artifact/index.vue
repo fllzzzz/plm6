@@ -124,7 +124,7 @@
         <pagination />
       </template>
       <!-- 查看 -->
-      <detail v-model:visible="drawerVisible" :detail-data="detailData" @refresh="crud.toQuery" />
+      <detail v-model:visible="drawerVisible" :detail-data="detailData" :serialNumber="crud.query.serialNumber" @refresh="crud.toQuery" />
     </div>
   </div>
 </template>

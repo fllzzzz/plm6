@@ -4,6 +4,7 @@
       <common-table :data="curFiles" :empty-text="emptyText" style="width: 100%" :max-height="props.maxHeight">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="name" label="名称" :show-overflow-tooltip="true" min-width="150" />
+        <slot name='applicant' />
         <el-table-column prop="createTime" label="上传时间" :show-overflow-tooltip="true" width="100" align="center">
           <template #default="{ row }">
             <span v-parse-time="{ val: row.createTime, fmt: '{y}-{m}-{d}' }" />
@@ -18,7 +19,7 @@
               :params="getParams(row, $index)"
               :fn="props.downloadFn"
             />
-            <common-button v-if="(row.name.indexOf('.pdf')>-1 || row.name.indexOf('.png')>-1 || row.name.indexOf('.jpg')>-1 || row.name.indexOf('.jpeg')>-1) && props.showView" icon="el-icon-view" size="mini" @click="attachmentView(row)" />
+            <common-button v-if="props.showView" icon="el-icon-view" size="mini" @click="attachmentView(row)" />
           </template>
         </el-table-column>
       </common-table>
@@ -173,9 +174,11 @@ watchEffect(() => {
 })
 
 // 预览附件
-function attachmentView(item) {
-  currentId.value = item.id
-  pdfShow.value = true
+function attachmentView(row) {
+  if (row.name.indexOf('.pdf') > -1 || row.name.indexOf('.png') > -1 || row.name.indexOf('.jpg') > -1 || row.name.indexOf('.jpeg') > -1) {
+    currentId.value = row.id
+    pdfShow.value = true
+  }
 }
 
 function getParams(row, index) {

@@ -27,9 +27,9 @@
         <span v-if="checkPermission(crud.permission.save)" style="margin-right: 6px">
           <span v-if="modifying">
             <common-button type="warning" size="mini" @click="handelModifying(false, true)">取消录入</common-button>
-            <common-button type="success" size="mini" @click="previewVisible = true">预览并保存</common-button>
+            <common-button type="success" size="mini" @click="confirmModifying">预览并保存</common-button>
           </span>
-          <common-button v-else type="primary" size="mini" @click="handelModifying(true)">录入价格</common-button>
+          <common-button v-else type="primary" size="mini" :disabled="crud.selections?.length===0" @click="handelModifying(true)">录入价格</common-button>
         </span>
         <print-table
           v-permission="crud.permission.print"
@@ -39,6 +39,9 @@
           type="warning"
           class="filter-item"
         />
+        <el-badge v-if="checkPermission(crud.permission.log) && priceEditMode===priceEditModeEnum.SAVE.V" :value="saveCount" :hidden="saveCount <= 0">
+          <common-button type="success" size="mini" @click="handleLog">保存记录</common-button>
+        </el-badge>
       </template>
       <template #viewLeft>
         <span v-if="checkPermission(crud.permission.cost) && query.monomerId">
@@ -67,7 +70,7 @@
     </crudOperation>
     <mPreview
       v-model="previewVisible"
-      :modified-data="modifiedData"
+      :modified-data="submitList"
       v-bind="$attrs"
       :params="previewParams"
       @success="handleSuccess"
@@ -78,14 +81,11 @@
 
 <script setup>
 import { cost } from '@/api/contract/sales-manage/price-manage/enclosure'
-import { ref, watch, nextTick, inject, computed, defineExpose } from 'vue'
+import { ref, watch, nextTick, inject, computed, defineExpose, defineProps, defineEmits } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
 import { contractSaleTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
-import { enclosureSettlementTypeEnum } from '@enum-ms/contract'
-import { toThousand } from '@/utils/data-type/number'
-import { emptyTextFormatter } from '@/utils/data-type'
-import useDecimalPrecision from '@compos/store/use-decimal-precision'
+import { enclosureSettlementTypeEnum, priceEditModeEnum } from '@enum-ms/contract'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -94,13 +94,24 @@ import mPreview from '../../preview'
 
 const projectId = inject('projectId')
 const enclosurePlanId = inject('enclosurePlanId')
-
-const { decimalPrecision } = useDecimalPrecision()
-
-// 有变动的数据
-const modifiedData = computed(() => {
-  return crud.data.filter((v) => v.unitPrice !== v.originUnitPrice)
+const saveCount = inject('saveCount')
+const priceEditMode = inject('priceEditMode')
+const emit = defineEmits(['checkSubmit', 'showVisible'])
+const props = defineProps({
+  showAble: {
+    type: Boolean,
+    default: false
+  },
+  submitList: {
+    type: Array,
+    default: () => []
+  }
 })
+
+// // 有变动的数据
+// const modifiedData = computed(() => {
+//   return crud.data.filter((v) => v.unitPrice !== v.originUnitPrice)
+// })
 
 const categoryValue = computed(() => {
   return crud.data[0]?.category
@@ -140,18 +151,25 @@ const monomerCost = ref({ ...costData })
 
 const defaultQuery = {
   name: undefined,
-  plateType: undefined,
-  monomerId: { value: undefined, resetAble: false }
+  plateType: undefined
+  // monomerId: { value: undefined, resetAble: false }
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
 
+function confirmModifying() {
+  emit('checkSubmit')
+  nextTick(() => {
+    previewVisible.value = props.showAble
+  })
+}
+
 // 刷新数据后
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
-  data.content.forEach((v) => {
-    v.newUnitPrice = v.unitPrice // number类型的单价（unitPrice可能会有千位符）
-    v.originNewUnitPrice = v.newUnitPrice
-    v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice, decimalPrecision.value.contract))
-    v.totalPrice = (v.pricingManner === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.newUnitPrice || 0)
+  data.content.forEach((v, index) => {
+    v.unitPrice = v.unitPrice || '同上'
+    v.originUnitPrice = v.unitPrice
+    v.totalPrice = (v.pricingManner === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.unitPrice && typeof v.unitPrice === 'number' ? v.unitPrice : 0)
+    v.orderIndex = index + 1
   })
   fetchCost()
 }
@@ -184,8 +202,8 @@ function handelModifying(status, reset = false) {
   if (reset) {
     crud.data.forEach((v) => {
       v.unitPrice = v.originUnitPrice
-      v.newUnitPrice = v.originNewUnitPrice
-      v.totalPrice = (v.pricingManner === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.newUnitPrice || 0)
+      // v.newUnitPrice = v.originNewUnitPrice
+      v.totalPrice = (v.pricingManner === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.unitPrice && typeof v.unitPrice === 'number' ? v.unitPrice : 0)
     })
   }
   modifying.value = status
@@ -197,6 +215,9 @@ function handleSuccess() {
   crud.toQuery()
 }
 
+function handleLog() {
+  emit('showVisible')
+}
 defineExpose({
   modifying
 })

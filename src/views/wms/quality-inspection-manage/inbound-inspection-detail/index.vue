@@ -59,10 +59,10 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('serialNumber')"
-        key="serialNumber"
+        v-if="columns.visible('inboundReceipt.serialNumber')"
+        key="inboundReceipt.serialNumber"
         :show-overflow-tooltip="true"
-        prop="serialNumber"
+        prop="inboundReceipt.serialNumber"
         min-width="160"
         label="入库单号"
         align="left"

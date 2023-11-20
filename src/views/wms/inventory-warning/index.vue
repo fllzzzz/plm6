@@ -147,7 +147,7 @@ import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import mBatchForm from './module/batch-form'
-import { numFmtByBasicClass, numFmtByUnit } from '@/utils/wms/convert-unit'
+import { numFmtByUnit, numFmtByUnitReturn } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 
 const optShow = {
@@ -183,10 +183,18 @@ const { rowInit, cancelRowEdit, confirmRowEdit } = useRowEdit(editMinimumInvento
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   await setSpecInfoToList(data.content)
-  data.content = await numFmtByBasicClass(data.content, {
-    toSmallest: false,
-    toNum: true
+  const allPs = []
+  data.content.map((row) => {
+    const ps = numFmtByUnitReturn(row, {
+      unit: row.unitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit,
+      precision: row.unitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision,
+      fields: ['minimumInventory'],
+      toSmallest: false,
+      toNum: true
+    })
+    allPs.push(ps)
   })
+  await Promise.all(allPs)
   data.content.forEach((row) => {
     row.unit = row.unitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit
   })

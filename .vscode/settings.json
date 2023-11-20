@@ -38,5 +38,6 @@
     "vite",
     "WMSPM",
     "Yahei"
-  ]
+  ],
+  "vue.codeActions.enabled": false
 }

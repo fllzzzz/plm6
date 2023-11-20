@@ -114,6 +114,9 @@ const props = defineProps({
   },
   processType: {
     type: Number
+  },
+  serialNumber: {
+    type: String
   }
 })
 
@@ -134,7 +137,7 @@ const { maxHeight } = useMaxHeight({
 })
 
 const commonParams = computed(() => {
-  return { cutId: props.cuttingDetailData.id, processType: props.processType }
+  return { cutId: props.cuttingDetailData.id, processType: props.processType, serialNumber: props.serialNumber }
 })
 const { separateLoading, separateOrderInfo, fetchSeparateOrder } = useGetSeparateOrder(commonParams)
 const { visible: cuttingDrawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })

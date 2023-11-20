@@ -92,20 +92,22 @@
       </el-table-column> -->
       <!--编辑与删除-->
       <el-table-column
-        v-if="checkPermission([...permission.del, ...permission.edit])"
+        v-if="checkPermission([...permission.del, ...permission.edit,...permission.audit])"
         label="操作"
         width="130px"
         align="center"
         fixed="right"
       >
         <template v-slot="scope">
-          <ud-operation :data="scope.row" />
+          <common-button v-if="scope.row.auditStatus===1 && checkPermission(permission.audit)" type="success" size="small" @click="detailInfo=scope.row;auditVisible=true">审核</common-button>
+          <ud-operation v-if="scope.row.auditStatus!==1" :data="scope.row" :permission="permission"/>
         </template>
       </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
     <mForm :boundAllClassifyIds="boundAllClassifyIds" />
+    <audit-form v-model="auditVisible" :detailInfo="detailInfo" @success="crud.toQuery" />
   </div>
 </template>
 
@@ -122,6 +124,7 @@ import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import mForm from './module/form'
+import auditForm from './module/audit-form'
 
 const optShow = {
   add: true,
@@ -131,6 +134,8 @@ const optShow = {
 }
 
 const tableRef = ref()
+const detailInfo = ref({})
+const auditVisible = ref(false)
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '部件特征定义',
@@ -157,6 +162,8 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     if (v.boolSectionSteel) {
       v.classifyNames = v.classifyLinks.map((v) => v.classifyName).join('、')
       v.classifyIds = v.classifyLinks.map((v) => v.classifyId)
+      v.newClassifyNames = v.newClassifyLinks?.map((v) => v.classifyName).join('、')
+      v.newClassifyIds = v.newClassifyLinks?.map((v) => v.classifyId)
       boundAllClassifyIds.value = boundAllClassifyIds.value.concat(v.classifyIds)
     }
   })

@@ -7,13 +7,13 @@
       size="mini"
       type="warning"
       icon="el-icon-refresh-left"
-      @click.stop="crud.resetQuery()"
+      @click.stop="handleReset"
     >
       重置
     </common-button>
 </template>
 <script setup>
-import { defineProps, inject } from 'vue'
+import { defineProps, inject, defineEmits } from 'vue'
 
 const props = defineProps({
   resetBtn: {
@@ -22,5 +22,11 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['resetClick'])
+
+function handleReset() {
+  emit('resetClick')
+  crud.resetQuery()
+}
 const crud = inject('crud')
 </script>

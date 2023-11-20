@@ -1,13 +1,12 @@
-import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, amountUnitEnum, weightUnitEnum, DEF_UNIT } from '@/utils/print/enum'
-import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
+import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, weightUnitEnum, DEF_UNIT } from '@/utils/print/enum'
 
-// 结构发运跟踪
-const contractStructureShipmentTracking = {
+// 桥梁入库量详情
+const bridgeShipInboundMeteDetail = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'contractStructureShipmentTracking', // 表格类型 KEY
-  name: '结构发运跟踪（平台）', // 表格名称
+  type: 'bridgeShipInboundMeteDetail', // 表格类型 KEY
+  name: '桥梁入库量详情（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -29,6 +28,14 @@ const contractStructureShipmentTracking = {
     top: 10,
     left: 10,
     url: ''
+  },
+  qrCode: {
+    show: true,
+    allPage: false,
+    height: 20.5,
+    width: 20.5,
+    top: 10,
+    left: 180
   },
   /**
     * 页码
@@ -61,7 +68,7 @@ const contractStructureShipmentTracking = {
   title: {
     show: true,
     allPage: false,
-    title: '结构发运跟踪',
+    title: '桥梁入库量详情',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -88,7 +95,7 @@ const contractStructureShipmentTracking = {
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 6,
+    height: 12,
     width: 190,
     emptyVal: '',
     /**
@@ -97,15 +104,16 @@ const contractStructureShipmentTracking = {
      * @param {string} key 字段名
      * @param {string} title 列名
      * @param {enum} source 数据来源 系统/自定义
-     * @param {number} maxWidth 最大列宽
+     * @param {number} minWidth 最小列宽
      * @param {number} width 列宽
      * @param {enum} type 数据类型
      * @param {*} format 格式转换
      */
     fields: [ // 字段内容
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'date', title: '统计日期：', width: 110, type: typeEnum.OTHER.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 40, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 40, type: typeEnum.USER_NAME.K }
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'projectName', title: '项目名称：', align: alignEnum.LEFT.V, width: 190, type: typeEnum.OTHER.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'year', title: '统计日期：', width: 90, type: typeEnum.OTHER.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 60, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', align: alignEnum.RIGHT.V, width: 40, type: typeEnum.USER_NAME.K }
     ]
   },
   /**
@@ -123,13 +131,13 @@ const contractStructureShipmentTracking = {
     * @param {array} fields // 字段
     */
   footer: {
-    show: false,
+    show: true,
     allPage: false,
     align: alignEnum.LEFT.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 15,
+    height: 24,
     width: 190,
     emptyVal: '',
     /**
@@ -148,12 +156,13 @@ const contractStructureShipmentTracking = {
      * @param {string} key 字段名
      * @param {string} title 列名
      * @param {enum} source 数据来源 系统/自定义
-     * @param {number} maxWidth 最大列宽
+     * @param {number} minWidth 最小列宽
      * @param {number} width 列宽
      * @param {enum} type 数据类型
      * @param {*} format 格式转换
      */
-    fields: []
+    fields: [
+    ]
   },
   table: {
     /**
@@ -169,7 +178,7 @@ const contractStructureShipmentTracking = {
      * @param {string} bold 是否加粗 'unset' || 'bold'
      * @param {number} lineHeight 行高
      */
-    td: { size: 9, bold: 'unset', lineHeight: 13, paddingTB: 1 },
+    td: { size: 9, bold: 'unset', lineHeight: 13, paddingTB: 2 },
     emptyVal: '/', // string 空值显示
     /**
      * 表格序号
@@ -184,7 +193,7 @@ const contractStructureShipmentTracking = {
      * @param {boolean} show 是否显示
      * @param {string} title 合计名称
      */
-    summary: { show: false, title: '合计' },
+    summary: { show: true, title: '合计' },
     /**
      * 表格列
      * @param {boolean} show 是否显示
@@ -199,28 +208,19 @@ const contractStructureShipmentTracking = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'project', title: '项目', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 24, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
-      { show: true, key: 'monomer.name', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.MONOMER_NAME.K },
-      { show: true, key: 'area.name', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.AREA_NAME.K },
-      { show: true, key: 'name', title: '名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.STRUCTURE_NAME.K },
-      { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.SERIAL_NUMBER.K },
-      { show: false, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SPECIFICATION.K },
-      { show: false, key: 'material', title: '材质', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.MATERIAL.K },
-      { show: true, key: 'totalQuantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }},
-      { show: true, key: 'weight', title: '总重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, unit: weightUnitEnum.KG.V }, sum: true },
-      { show: true, key: 'unitPrice', title: '综合单价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
-      { show: true, key: 'totalPrice', title: '金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
-      { show: true, key: 'createTime', title: '发运日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
-      { show: false, key: 'auditUserName', title: '发运人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K },
-      { show: false, key: 'actualUserName', title: '过磅人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K },
-      { show: false, key: 'supplierName', title: '物流公司', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, width: 22, type: typeEnum.COMPANY_NAME.K },
-      { show: false, key: 'cargoSerialNumber', title: '车次', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.GUID.K },
-      { show: false, key: 'licensePlate', title: '车牌', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.LICENSE_PLATE.K },
-      { show: false, key: 'workshopNames', title: '生产部门', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DEPT.K }
+      { show: true, key: 'workshop.name', title: '车间', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.WORKSHOP.K },
+      { show: true, key: 'monomer.name', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.MONOMER_NAME.K },
+      { show: true, key: 'area.name', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.AREA_NAME.K },
+      { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 19, type: typeEnum.SERIAL_NUMBER.K },
+      { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SPECIFICATION.K },
+      { show: true, key: 'material', title: '材质', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.MATERIAL.K },
+      { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.QUANTITY.K },
+      { show: true, key: 'netWeight', title: '单重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 14, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, unit: weightUnitEnum.KG.V }},
+      { show: true, key: 'totalNetWeight', title: '总重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 14, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, unit: weightUnitEnum.KG.V }, sum: true }
     ]
   }
 }
 
 export default {
-  contractStructureShipmentTracking //  结构发运跟踪
+  bridgeShipInboundMeteDetail //  入库量详情
 }

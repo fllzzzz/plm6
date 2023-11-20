@@ -11,18 +11,24 @@
       value-format="YYYY"
       @change="crud.toQuery"
     />
-    <project-radio-button
-      size="small"
-      :type="'all'"
-      v-model="query.projectType"
-      class="filter-item"
-      @change="crud.toQuery"
-    />
-    <project-cascader
+    <project-radio-button size="small" :type="'all'" v-model="query.projectType" class="filter-item" @change="crud.toQuery" />
+    <!-- <project-cascader
       v-model="query.projectId"
       clearable
       style="width: 300px"
       class="filter-item"
+      @change="crud.toQuery"
+    /> -->
+    <common-select
+      v-model="query.projectId"
+      :options="projectTree"
+      type="other"
+      :data-structure="{ key: 'id', label: 'serialNumberName', value: 'id' }"
+      class="filter-item"
+      clearable
+      filterable
+      style="width: 300px"
+      placeholder="选择项目"
       @change="crud.toQuery"
     />
     <common-radio-button
@@ -37,7 +43,7 @@
       v-model="query.orderSourceType"
       :options="orderSourceTypeEnum.ENUM"
       class="filter-item"
-      :showOptionAll="false"
+      showOptionAll
       type="enum"
       @change="crud.toQuery"
     />
@@ -67,22 +73,19 @@
 import { inject } from 'vue'
 import { parseTime } from '@/utils/date'
 import { regHeader } from '@compos/use-crud'
-import {
-  businessTypeEnum,
-  orderSourceTypeEnum,
-  projectStatusEnum
-} from '@enum-ms/contract'
+import { businessTypeEnum, orderSourceTypeEnum, projectStatusEnum } from '@enum-ms/contract'
 import crudOperation from '@crud/CRUD.operation'
-import projectCascader from '@comp-base/project-cascader.vue'
+// import projectCascader from '@comp-base/project-cascader.vue'
 // import ExportButton from '@comp-common/export-button/index.vue'
 
 const defaultQuery = {
   year: parseTime(new Date(), '{y}'),
   projectId: undefined,
   businessType: businessTypeEnum.MACHINING.V,
-  orderSourceType: orderSourceTypeEnum.INSIDE.V,
+  orderSourceType: undefined,
   settlementStatus: undefined
 }
 const { crud, query } = regHeader(defaultQuery)
 const permission = inject('permission')
+const projectTree = inject('projectTree')
 </script>

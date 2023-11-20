@@ -1,7 +1,7 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
-      <monomer-select-area-tabs :productType="query.productType" needConvert :project-id="globalProjectId" @change="fetchMonomerAndArea" />
+      <monomer-select-area-tabs :productType="query.productType" needConvert :project-id=" globalProjectId" @change="fetchMonomerAndArea" />
       <common-radio-button
        v-if="showComponent"
         v-model="query.productType"
@@ -29,11 +29,9 @@
 </template>
 
 <script setup>
-import { ref, defineExpose, defineEmits } from 'vue'
-
+import { ref, watch, defineExpose, defineEmits } from 'vue'
 import { componentTypeEnum } from '@enum-ms/mes'
 import { mapGetters } from '@/store/lib'
-
 import useUnshowProductTypeByMode from '@compos/use-unshow-productType-by-mode.js'
 import useStructureDashboardHeader from '@compos/mes/dashboard/use-structure-dashboard-header'
 import { regHeader } from '@compos/use-crud'
@@ -56,20 +54,33 @@ const defaultQuery = {
   factoryId: { value: undefined, resetAble: false }
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
-const { unshowVal, showComponent } = useUnshowProductTypeByMode({ resetQuery: function () {
-  query.productType = undefined
-} })
+const { unshowVal, showComponent } = useUnshowProductTypeByMode({
+  resetQuery: function () {
+    // query.productType = undefined
+  }
+})
 
 const { globalProjectId } = mapGetters(['globalProjectId'])
 
+watch(
+  () => globalProjectId.value,
+  (val) => {
+    if (val) {
+      query.projectId = val
+    }
+  }, { immediate: true }
+)
 const emit = defineEmits('load')
 
 const boxScale = ref(1)
-const { colors, boxZoomOut, getColor } = useStructureDashboardHeader({ colorCardTitles: ['未生产', '生产中', '已完成', '待质检'], emit, crud })
+const { colors, boxZoomOut, getColor } = useStructureDashboardHeader({
+  colorCardTitles: ['未生产', '生产中', '已完成', '待质检'],
+  emit,
+  crud
+})
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
-    console.log(v, 'v')
     v.detailLoading = false
     v.hasDetail = false
     v.compareQuantity = v.quantity

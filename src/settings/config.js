@@ -166,6 +166,7 @@ export const DP = {
   COM_L__MM: 0, // 通用_长度（mm）
   COM_WT__G: 3, // 通用_重量（kg）
   COM_AREA__M2: 2, // 通用_面积（㎡）
+  COM_ENCLOSURE_AREA__M2: 3, // 围护通用_面积（㎡）
   COM_VOLUME__L: 2, // 通用_容积—（L）
   COM_T__MM: 3, // 通用_厚度（mm）
   COM_UNIT__KG_M3: 2, // 通用_单位净重（kg/m³）

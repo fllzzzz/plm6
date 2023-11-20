@@ -2,7 +2,7 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <mHeader ref="headerRef" @getDetail="handleDetail" />
+      <mHeader ref="headerRef" @getDetail="handleDetail" @changeUnit="changeUnit" @checkboxMaterial="checkboxMaterial" @checkboxWidth="checkboxWidth" />
     </div>
     <!--表格渲染-->
     <common-table
@@ -78,6 +78,14 @@
         label="数量"
         align="center"
         min-width="60"
+      />
+      <el-table-column
+        label="核算量"
+        align="center"
+        min-width="70"
+        v-if="columns.visible('mete')"
+        key="mete"
+        prop="mete"
       />
       <el-table-column
         v-if="columns.visible('totalGrossWeight') && crud.query.productType === packTypeEnum.STRUCTURE.V"
@@ -173,29 +181,34 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <label-dlg v-model:visible="labelVisible" :label-data="currentLabel" />
+    <label-dlg v-model:visible="labelVisible" :label-data="currentLabel" :unitType="unitType" :showWidth="showWidth" :showMaterial="showMaterial" />
     <m-detail
       v-model:visible="detailVisible"
       :detail-info="packageInfo"
       title="打包清单"
       quantityFelid="packageQuantity"
-      :detailFunc="detail"
+      :detailFunc="crud.query.projectType === projectTypeEnum.BRIDGE.V ? detailBridge : detail"
       @getDetail="handleDetail"
     >
       <template #tip>
         <el-tag effect="plain" style="margin-left: 5px" size="medium">{{ packageInfo.serialNumber }}</el-tag>
       </template>
     </m-detail>
-    <printed-record-drawer v-model:visible="recordVisible" :package-id="printedRecordId" :productType="crud.query.productType" />
+    <printed-record-drawer
+      v-model:visible="recordVisible"
+      :package-id="printedRecordId"
+      :productType="crud.query.productType"
+      :projectType="crud.query.projectType"
+    />
   </div>
 </template>
 
 <script setup>
-import { get, detail, del as delApi } from '@/api/ship-manage/pack-and-ship/pack-list'
+import { get, getBridge, detail, detailBridge, delBridge, del as delApi } from '@/api/ship-manage/pack-and-ship/pack-list'
 import { ref, reactive, provide } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElNotification } from 'element-plus'
-
+import { projectTypeEnum } from '@enum-ms/contract'
 import { packTypeEnum, packStatusTypeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
 import { DP } from '@/settings/config'
@@ -205,7 +218,7 @@ import { convertUnits } from '@/utils/convert/unit'
 import { parseTime } from '@/utils/date'
 import { debounce } from '@/utils'
 import { mesPackPM as permission } from '@/page-permission/ship-manage'
-
+import { mapGetters } from '@/store/lib'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -239,7 +252,7 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 provide('permission', permission)
-
+const { currentProjectType } = mapGetters(['currentProjectType'])
 const { maxHeight } = useMaxHeight({ paginate: true })
 
 const recordVisible = ref(false)
@@ -248,6 +261,14 @@ const detailVisible = ref(false)
 const printedRecordId = ref()
 const currentLabel = ref({})
 const packageInfo = ref({})
+const unitType = ref()
+const showMaterial = ref(true)
+const showWidth = ref(true)
+
+CRUD.HOOK.beforeToQuery = () => {
+  crud.query.projectType = currentProjectType.value
+  crud.crudApi.get = crud.query.projectType === projectTypeEnum.BRIDGE.V ? getBridge : get
+}
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
@@ -257,9 +278,22 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   })
 }
 
+// 单位转换
+const changeUnit = (v) => {
+  unitType.value = v
+}
+
+// 标签设置显示材质
+const checkboxMaterial = (v) => {
+  showMaterial.value = v
+}
+
+const checkboxWidth = (v) => {
+  showWidth.value = v
+}
+
 // 查看详情
 function showDetail(row) {
-  console.log(row, 'row')
   packageInfo.value = row
   detailVisible.value = true
 }
@@ -336,7 +370,7 @@ function handleDataFormat({ artifactList, partList, enclosureList, auxiliaryMate
 
 async function edit(id, projectId) {
   try {
-    const data = await detail(id) || {}
+    const data = crud.query.projectType === projectTypeEnum.BRIDGE.V ? (await detailBridge(id)) || {} : (await detail(id)) || {}
     router.push({ name: 'ShipManageManualPack', params: { id, projectId, remark: data.remark, data: handleDataFormat(data) }})
   } catch (error) {
     console.log('去编辑包', error)
@@ -346,7 +380,7 @@ async function edit(id, projectId) {
 const del = debounce(
   async function (id) {
     try {
-      await delApi(id)
+      crud.query.projectType === projectTypeEnum.BRIDGE.V ? await delBridge(id) : await delApi(id)
       ElNotification({ title: '删除成功', type: 'success', duration: 2500 })
       crud.toQuery()
     } catch (error) {

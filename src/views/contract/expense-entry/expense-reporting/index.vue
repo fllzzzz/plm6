@@ -82,7 +82,7 @@
         label="报销金额（元）"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.reimburseAmount }}</span>
+          <span>{{ scope.row.reimburseAmount?.toFixed(decimalPrecision.contract) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -147,6 +147,9 @@ import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header.vue'
 import mForm from './module/form.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: true,

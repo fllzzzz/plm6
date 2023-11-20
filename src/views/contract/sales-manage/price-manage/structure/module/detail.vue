@@ -9,7 +9,17 @@
     size="70%"
   >
     <template #titleAfter>
-      <el-tag type="warning" size="medium" effect="plain">综合单价：<span>{{ props.detailInfo.originUnitPrice }}</span></el-tag>
+      <el-tag type="warning" size="medium" effect="plain">综合单价：<span>{{ props.detailInfo.originUnitPrice==='同上'?'-':props.detailInfo.originUnitPrice }}</span></el-tag>
+    </template>
+    <template #titleRight>
+      <export-button
+          v-if="checkPermission(crud.permission.print)"
+          :fn="structureDetailDownload"
+          :params="{businessId:props.detailInfo.id}"
+          :disabled="list.length === 0"
+        >
+          下载
+        </export-button>
     </template>
     <template #content>
       <common-table :data="list" row-key="rowId" v-loading="crud.detailLoading" :max-height="maxHeight">
@@ -19,7 +29,7 @@
         <el-table-column prop="specification" label="规格" min-width="100px" align="center" />
         <el-table-column prop="material" label="材质" min-width="100px" align="center" />
         <el-table-column prop="quantity" label="数量" min-width="80px" align="center" />
-        <el-table-column prop="grossWeight" label="单重(kg)" min-width="100px" align="center" />
+        <el-table-column prop="netWeight" label="单净重(kg)" min-width="100px" align="center" />
         <!--编辑-->
         <el-table-column v-if="checkPermission(crud.permission.edit) && list.length > 1" label="操作" width="70" align="center" fixed="right">
           <template #default="{ row }">
@@ -35,7 +45,9 @@
 
 <script setup>
 import { ref, defineProps, defineEmits } from 'vue'
+import { structureDetailDownload } from '@/api/contract/sales-manage/price-manage/structure'
 
+import ExportButton from '@comp-common/export-button/index.vue'
 import checkPermission from '@/utils/system/check-permission'
 
 import { regDetail } from '@compos/use-crud'
@@ -80,11 +92,11 @@ function edit(row) {
 // 刷新页面
 function refreshData() {
   crud.toDetail(props.detailInfo)
+  emit('refresh')
 }
 
 // 关闭
 function handleClose() {
   crud.cancelDetail()
-  emit('refresh')
 }
 </script>

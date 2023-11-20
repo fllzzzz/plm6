@@ -10,7 +10,7 @@
   >
     <template #titleRight>
       <print-table
-        api-key="mesProjectShipDetail"
+        :api-key="category === mesShipStatisticsTypeEnum.STRUCTURE.V ?'mesProjectShipDetail':'mesProjectShipDetailDirect'"
         v-permission="permission.print"
         :params="{
           projectId: props.projectId,
@@ -22,6 +22,15 @@
       />
     </template>
     <template #content>
+      <el-date-picker
+        v-model="date"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        style="margin-bottom: 20px;"
+        value-format="x"
+        type="daterange"
+        @change="dateChange"
+      />
       <!--表格渲染-->
       <common-table :data="list" v-loading="tableLoading" show-summary :summary-method="getSummaries" :max-height="maxHeight - 70">
         <el-table-column prop="index" label="序号" align="center" width="45" type="index" />
@@ -61,6 +70,12 @@
             <!-- <span style="margin-left: 3px">kg</span> -->
           </template>
         </el-table-column>
+        <el-table-column key="cargoDate" label="发运时间" align="center" :show-overflow-tooltip="true">
+          <template #default="{row}">
+            <span v-if="row.cargoDate">{{ `${parseTime(row.cargoDate, '{y}-{m}-{d}')}` }}</span>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
       </common-table>
       <!--分页组件-->
       <el-pagination
@@ -77,17 +92,20 @@
 </template>
 
 <script setup>
-import { inboundDetail } from '@/api/ship-manage/pack-and-ship/ship-summary'
+import { inboundDetail, inboundDetailDirect } from '@/api/ship-manage/pack-and-ship/ship-summary'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
 import { DP } from '@/settings/config'
 import { tableSummary } from '@/utils/el-extra'
 import { toThousand } from '@/utils/data-type/number'
+import { mesShipStatisticsTypeEnum } from '@enum-ms/ship-manage'
 import { defineProps, defineEmits, ref } from 'vue'
 import { mesShipSummaryPM as permission } from '@/page-permission/ship-manage'
+import { parseTime } from '@/utils/date'
+// import moment from 'moment'
 
-const emit = defineEmits(['update:visible'])
+const emit = defineEmits(['update:visible', 'changeDate'])
 const list = ref([])
 const tableLoading = ref(false)
 const props = defineProps({
@@ -107,11 +125,17 @@ const props = defineProps({
   },
   projectId: {
     type: Number
+  },
+  category: {
+    type: [Number, String],
+    default: mesShipStatisticsTypeEnum.STRUCTURE.V
   }
 })
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: fetchDetail })
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchDetail })
+
+const date = ref([])
 
 // 高度
 const { maxHeight } = useMaxHeight(
@@ -126,19 +150,28 @@ const { maxHeight } = useMaxHeight(
   drawerVisible
 )
 
+const dateChange = (date) => {
+  console.log(date)
+  emit('changeDate', date)
+  fetchDetail()
+}
+
 async function fetchDetail() {
   list.value = []
   tableLoading.value = true
   try {
-    const { content = [], totalElements } = await inboundDetail({
+    const api = props.category === mesShipStatisticsTypeEnum.STRUCTURE.V ? inboundDetail : inboundDetailDirect
+    const params = {
       projectId: props.projectId,
       ...props.query,
       workshopId: props.workshopId,
       ...queryPage
-    })
+    }
+    const { content = [], totalElements } = await api(params)
     list.value = content
     setTotalPage(totalElements)
     tableLoading.value = false
+    console.log(list.value)
   } catch (error) {
     console.log('获取详情失败', error)
     tableLoading.value = false

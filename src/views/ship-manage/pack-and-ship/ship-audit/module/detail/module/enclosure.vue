@@ -27,7 +27,7 @@
     </el-table-column>
     <el-table-column :show-overflow-tooltip="true" prop="totalArea" :label="`总面积\n(㎡)`" align="center" width="100px">
       <template v-slot="scope">
-        <span>{{ toFixed(scope.row.totalArea, DP.COM_AREA__M2) }}</span>
+        <span>{{ toFixed(scope.row.totalArea, DP.COM_ENCLOSURE_AREA__M2) }}</span>
       </template>
     </el-table-column>
     <el-table-column :show-overflow-tooltip="true" prop="unitPrice" :label="`单价\n（元）`" align="center">

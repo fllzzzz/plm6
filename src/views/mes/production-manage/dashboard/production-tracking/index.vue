@@ -40,6 +40,15 @@
         width="100px"
       />
       <el-table-column
+        v-if="columns.visible('specification')"
+        prop="specification"
+        key="specification"
+        label="规格"
+        align="center"
+        fixed="left"
+        width="120px"
+      />
+      <el-table-column
         label="任务数"
         align="center"
         min-width="80px"
@@ -56,6 +65,7 @@
           <template #default="{ row }">
             <div
               v-if="
+                row.processMap &&
                 row.processMap[item.id] &&
                 row.processMap[item.id]?.inspectionQuantity === row?.quantity &&
                 row.processMap[item.id]?.quantity === row?.quantity
@@ -64,7 +74,7 @@
             >
               √
             </div>
-            <div v-else-if="row.processMap[item.id]">
+            <div v-else-if="row.processMap && row.processMap[item.id]">
               <span class="tc-danger" :style="row.processMap[item.id]?.quantity === 0 ? 'color: #303133' : ''">
                 {{ row.processMap[item.id]?.quantity }}
               </span>

@@ -106,7 +106,7 @@
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" :show-batch-no="false" />
         <warehouse-info-columns />
-        <el-table-column label="调拨数量" width="170px" align="center" fixed="right">
+        <el-table-column label="调拨数量" width="230px" align="center" fixed="right">
           <template #header>
             <span>调拨数量</span>
             <span class="text-clickable" style="margin-left: 10px" @click="setMaxQuantity">全部调拨</span>
@@ -121,7 +121,7 @@
                 :max="row.corOperableQuantity"
                 controls-position="right"
               />
-              <span style="flex: none; margin-left: 10px">{{ row.outboundUnit }}</span>
+              <span style="flex: none; margin-left: 10px;text-align:left;">{{ row.outboundUnit }}<span style="display:inline-block;width:50px;"><el-tag v-if="(basicClass & materialPurchaseClsEnum.STEEL.V) && (errorList.findIndex(v=>v.id===row.id)>-1 && !(row.batchOutboundQuantity<errorList.find(v=>v.id===row.id)?.quantity))" class="ml-2" type="danger" style="margin-left:2px;">不足</el-tag></span></span>
             </span>
           </template>
         </el-table-column>
@@ -139,8 +139,10 @@ import {
   otherBatchTransferHandling,
   gasBatchTransferHandling
 } from '@/api/wms/material-transfer/raw-material/transfer-handling'
+import { getStock } from '@/api/wms/material-inventory'
 import { defineEmits, defineProps, ref, watchEffect, computed } from 'vue'
-import { matClsEnum } from '@/utils/enum/modules/classification'
+import { matClsEnum, materialPurchaseClsEnum } from '@/utils/enum/modules/classification'
+import { measureTypeEnum } from '@/utils/enum/modules/wms'
 import { materialOperateColumns } from '@/utils/columns-format/wms'
 
 import useVisible from '@compos/use-visible'
@@ -195,6 +197,7 @@ const expandRowKeys = ref([])
 const disabledTransferType = ref([])
 // 过滤后的材料列表
 const materialList = ref([])
+const errorList = ref([])
 // 提交表单
 const form = ref({
   list: [],
@@ -242,6 +245,7 @@ watchEffect(() => {
   // 无需在打开dlg时，判断batchTransferQuantity是否大于corOperableQuantity，因为当corOperableQuantity发生变化时，页面及数据会刷新
   let partyANum = 0
   materialList.value = props.materialList.filter((v) => v.corOperableQuantity > 0) // 过滤不可操作的列表
+  errorList.value = []
   form.value.list = materialList.value
   materialList.value.forEach((v) => {
     if (v.boolPartyA) partyANum++
@@ -253,8 +257,13 @@ watchEffect(() => {
   }
 })
 
+function handleProjectChange(val) {
+
+}
+
 // 表单初始化
 function formInit() {
+  errorList.value = []
   form.value = {
     list: [],
     transferType: transferNormalTypeEnum.PROJECT_WARE.V
@@ -320,6 +329,22 @@ async function submit() {
     })
     if (data.list.length === 0) {
       ElMessage.warning('请填写数据')
+      return
+    }
+    errorList.value = []
+    if (props.basicClass & materialPurchaseClsEnum.STEEL.V) {
+      const ids = data.list.map(v => v.id)
+      const { content } = await getStock({ ids })
+      data.list.map(v => {
+        const findVal = content?.find(k => k.id === v.id)
+        const compareNum = v.outboundUnitType === measureTypeEnum.MEASURE.V ? (findVal?.quantity - (findVal?.frozenQuantity || 0)) : (findVal?.mete - (findVal?.frozenMete || 0))
+        if (v.quantity > compareNum) {
+          errorList.value.push(v)
+        }
+      })
+    }
+    if (errorList.value.length > 0) {
+      ElMessage.error('标红部分库存不足')
       return
     }
     await submitApi(data)

@@ -2,8 +2,22 @@
   <div v-show="crud.searchToggle">
     <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
     <component-radio-button
+      v-if="typeVal !== packEnum.BOX.V"
       v-model="query.productType"
       :options="packTypeEnum.ENUM"
+      :unshowVal="query.projectId ? unValOptions : []"
+      default
+      type="enum"
+      size="small"
+      class="filter-item"
+      @change="crud.toQuery"
+    />
+    <component-radio-button
+      v-if="typeVal === packEnum.BOX.V"
+      v-model="query.productType"
+      :options="bridgePackTypeEnum.ENUM"
+      :disabledVal="[bridgePackTypeEnum.AUXILIARY_MATERIAL.V]"
+      default
       type="enum"
       size="small"
       class="filter-item"
@@ -28,7 +42,7 @@
       end-placeholder="结束日期"
       size="small"
       class="filter-item"
-      style="width: 370px"
+      style="width: 330px"
       clearable
       :shortcuts="PICKER_OPTIONS_SHORTCUTS"
       @change="handleDateChange"
@@ -73,6 +87,7 @@
   </div>
   <crudOperation>
     <template #optRight>
+      <common-radio-button class="filter-item" :options="unitOptions" :dataStructure="{label: 'label', key: 'value', value: 'value'}" v-model="unitValue" @change="unitChange" />
       <el-popover placement="bottom-start" width="400" trigger="click">
         <el-form ref="form" :model="printConfig">
           <!-- <el-form-item label="制造商名称">
@@ -88,6 +103,10 @@
               @change="handleCopiesChange"
             />
           </el-form-item>
+          <el-form-item label="显示">
+            <el-checkbox v-model="printConfig.showMaterial" label="材质" @change="checkboxMaterial" />
+            <el-checkbox v-model="printConfig.showWidth" label="重量" @change="checkboxWidth" />
+          </el-form-item>
         </el-form>
         <template #reference>
           <common-button type="primary" size="mini">标签打印设置</common-button>
@@ -98,7 +117,10 @@
       }}</el-tag>
       <print-table
         v-permission="permission.printPackList"
-        :api-key="crud.query.productType !== packTypeEnum.ENCLOSURE.V ? 'mesPackingList' : 'enclosurePackingList'"
+        :api-key="
+          (crud.query.projectType === projectTypeEnum.ENCLOSURE.V ? 'enclosurePackingList' : crud,
+          query.projectType === projectTypeEnum.BRIDGE.V ? 'mesBridgePackingList' : 'mesPackingList')
+        "
         :params="printParams"
         :before-print="handleBeforePrint"
         size="mini"
@@ -121,13 +143,15 @@
 </template>
 
 <script setup>
-import { detail } from '@/api/ship-manage/pack-and-ship/pack-list'
-import { packageRecordAdd } from '@/api/mes/label-print/print-record'
-import { inject, reactive, defineExpose, computed, defineEmits } from 'vue'
+import { detail, detailBridge } from '@/api/ship-manage/pack-and-ship/pack-list'
+import { packageRecordAdd, packageBridgeRecordAdd } from '@/api/mes/label-print/print-record'
+import { ref, inject, reactive, defineExpose, computed, defineEmits, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 import moment from 'moment'
-
+import { projectTypeEnum } from '@enum-ms/contract'
 import { packTypeEnum } from '@enum-ms/mes'
+import { packEnum } from '@enum-ms/ship-manage'
+import { bridgePackTypeEnum } from '@enum-ms/bridge'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { printPackageLabel } from '@/utils/print/index'
 import { QR_SCAN_F_TYPE, QR_SCAN_TYPE } from '@/settings/config'
@@ -140,9 +164,24 @@ import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import { ElMessage } from 'element-plus'
 
-const emit = defineEmits(['getDetail'])
+const typeVal = ref()
+const unitValue = ref(1)
+// const showMaterial = ref(true)
+// const showWidth = ref(true)
+const emit = defineEmits(['getDetail', 'changeUnit', 'checkboxMaterial', 'checkboxWidth'])
+const unitOptions = ref([
+  {
+    label: '核算单位',
+    value: 1
+  },
+  {
+    label: '计量单位',
+    value: 2
+  }
+])
+
 const permission = inject('permission')
-const { user } = mapGetters(['user'])
+const { user, globalProject } = mapGetters(['user', 'globalProject'])
 const defaultQuery = {
   serialNumber: undefined,
   userName: undefined,
@@ -151,14 +190,15 @@ const defaultQuery = {
   remark: void 0,
   productSerialNumber: undefined,
   materialTypeArr: { value: undefined, resetAble: false },
-  productType: packTypeEnum.STRUCTURE.V,
   projectId: { value: undefined, resetAble: false }
 }
 const { crud, query } = regHeader(defaultQuery)
 
 const printConfig = reactive({
   manufacturerName: user.value.companyName,
-  copies: 1
+  copies: 1,
+  showMaterial: true,
+  showWidth: true
 })
 
 const printParams = computed(() => {
@@ -170,12 +210,40 @@ const printParams = computed(() => {
   return undefined
 })
 
+const unitChange = (v) => {
+  unitValue.value = v
+  emit('changeUnit', v)
+}
+
 function handleBeforePrint() {
   if (!isNotBlank(printParams.value)) {
     ElMessage.warning('至少选择一条需要打印的包单信息')
     return false
   }
 }
+
+watch(
+  () => globalProject.value,
+  (val) => {
+    query.productType = undefined
+    typeVal.value = undefined
+    typeVal.value = globalProject.value?.productCategory
+  },
+  { immediate: true }
+)
+
+const unValOptions = computed(() => {
+  switch (typeVal.value) {
+    case packTypeEnum.STRUCTURE.V:
+      return [packTypeEnum.ENCLOSURE.V]
+    case packTypeEnum.ENCLOSURE.V:
+      return [packTypeEnum.STRUCTURE.V, packTypeEnum.MACHINE_PART.v]
+    case packTypeEnum.STRUCTURE.V + packTypeEnum.ENCLOSURE.V:
+      return []
+    default:
+      return []
+  }
+})
 
 const { batchPrint, print } = usePrintLabel({
   getPrintTotalNumber: () => computed(() => printConfig.copies).value,
@@ -184,7 +252,7 @@ const { batchPrint, print } = usePrintLabel({
   getLoadingTextFunc: (row) => `${row.serialNumber}`,
   printLabelFunc: printPackageLabel,
   needAddPrintRecord: true,
-  addPrintRecordReq: packageRecordAdd
+  addPrintRecordReq: crud.query.projectType === projectTypeEnum.BRIDGE.V ? packageBridgeRecordAdd : packageRecordAdd
 })
 
 const detailStore = inject('detailStore')
@@ -203,8 +271,9 @@ async function getLabelInfo(row) {
   try {
     if (detailStore[row.id]) {
       _data = detailStore[row.id]
+      console.log(_data, '_data')
     } else {
-      _data = await detail(row.id)
+      _data = crud.query.projectType === projectTypeEnum.BRIDGE.V ? await detailBridge(row.id) : await detail(row.id)
       emit('getDetail', row.id, _data)
     }
     const auxList = _data[dataField[packTypeEnum.AUXILIARY_MATERIAL.V]]
@@ -214,12 +283,14 @@ async function getLabelInfo(row) {
     if (auxList?.length > 0 && structureList?.length > 0) {
       for (let m = 0; m < auxList.length; m++) {
         const a = auxList[m]
-        const { name, specification, measureUnit, serialNumber, material, packageQuantity, grossWeight, plate, length } = a
+        const { name, specification, measureUnit, accountingUnit, packageMete, serialNumber, material, packageQuantity, grossWeight, plate, length } = a
         _auxList.push({
           serialNumber,
           name,
           specification,
           measureUnit,
+          accountingUnit,
+          packageMete,
           material,
           quantity: packageQuantity,
           totalWeight: (packageQuantity * grossWeight).toFixed(DP.COM_WT__KG),
@@ -254,6 +325,7 @@ async function getLabelInfo(row) {
               name,
               specification,
               measureUnit,
+              accountingUnit, packageMete,
               serialNumber,
               material,
               packageQuantity,
@@ -268,6 +340,7 @@ async function getLabelInfo(row) {
               name,
               specification,
               measureUnit,
+              accountingUnit, packageMete,
               material,
               quantity: packageQuantity,
               totalWeight: (packageQuantity * grossWeight).toFixed(DP.COM_WT__KG),
@@ -306,7 +379,10 @@ async function getLabelInfo(row) {
     auxList: _auxList,
     productType: row.productType,
     project: row.project,
-    companyName: printConfig.manufacturerName
+    companyName: printConfig.manufacturerName,
+    unitValue: unitValue.value,
+    showMaterial: printConfig.showMaterial,
+    showWidth: printConfig.showWidth
   }
   // 生产线信息
   return {
@@ -334,6 +410,16 @@ function handleCopiesChange(val) {
   if (!val) {
     printConfig.copies = 1
   }
+}
+
+const checkboxMaterial = (v) => {
+  printConfig.showMaterial = v
+  emit('checkboxMaterial', v)
+}
+
+const checkboxWidth = (v) => {
+  printConfig.showWidth = v
+  emit('checkboxWidth', v)
 }
 
 defineExpose({

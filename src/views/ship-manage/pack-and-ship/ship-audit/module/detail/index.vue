@@ -223,8 +223,8 @@ const list = computed(() => {
         enclosureList.value.map((v) => {
           v.showQuantity = v[props.quantityFelid]
           v.totalMete =
-            contract.value.enclosureMeasureMode === enclosureSettlementTypeEnum.AREA.V
-              ? toFixed(v.totalArea, DP.COM_AREA__M2)
+            v.pricingManner === enclosureSettlementTypeEnum.AREA.V
+              ? toFixed(v.totalArea, DP.COM_ENCLOSURE_AREA__M2)
               : convertUnits(v.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
           v.totalPrice = v.unitPrice * v.totalMete || 0
           return v
@@ -236,7 +236,7 @@ const list = computed(() => {
         auxiliaryMaterialList.value.map((v) => {
           v.showQuantity = v[props.quantityFelid]
           v.fullClassName = `${v.firstName}/${v.secondName}/${v.thirdName}`
-          v.totalPrice = v.unitPrice * v.showQuantity || 0
+          v.totalPrice = v.unitPrice * v.shipMete || 0
           return v
         })
       )

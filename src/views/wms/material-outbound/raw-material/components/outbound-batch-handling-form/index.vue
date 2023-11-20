@@ -2,7 +2,7 @@
   <common-dialog
     title="出库办理"
     v-model="dialogVisible"
-    width="90%"
+    width="95%"
     :before-close="handleClose"
     :show-close="true"
     custom-class="wms-batch-outbound-handling"
@@ -13,9 +13,12 @@
     </template>
     <el-form ref="formRef" class="form" :model="form" :rules="rules" size="small" label-position="right" inline label-width="70px">
       <div class="form-header">
-        <el-form-item v-if="!showProjectSelect && isBlank(props.projectId)" label="包含项目" label-width="80px">
+        <el-form-item v-if="!showProjectSelect" label="包含项目" label-width="80px">
           <span v-parse-project="{ project: listProjects }" />
         </el-form-item>
+        <!-- <el-form-item v-if="!showProjectSelect && isBlank(props.projectId)" label="包含项目" label-width="80px">
+          <span v-parse-project="{ project: listProjects }" />
+        </el-form-item> -->
         <template v-else>
           <template v-if="showProjectSelect">
             <el-form-item label="项目" prop="projectId" label-width="55px">
@@ -52,9 +55,9 @@
               />
             </el-form-item>
           </template>
-            <el-form-item v-else label="项目" prop="projectId" label-width="55px">
+            <!-- <el-form-item v-else label="项目" prop="projectId" label-width="55px">
               <span v-parse-project="{ project: currentProject }" v-empty-text style="display: inline-block; min-width: 150px" />
-            </el-form-item>
+            </el-form-item> -->
         </template>
         <el-form-item label="出库目的地" prop="outboundAddress" label-width="95px">
           <common-radio v-model="form.outboundAddress" :options="outboundDestinationTypeEnum.ENUM" type="enum" size="small" />
@@ -123,7 +126,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="出库数量" width="170px" align="center" fixed="right">
+        <el-table-column label="出库数量" width="230px" align="center" fixed="right">
           <template #header>
             <span>出库数量</span>
             <span class="text-clickable" style="margin-left: 10px" @click="setMaxQuantity">全部出库</span>
@@ -138,7 +141,7 @@
                 :max="row.corProjectOperableQuantity"
                 controls-position="right"
               />
-              <span style="flex: none; margin-left: 10px">{{ row.outboundUnit }}</span>
+              <span style="flex: none; margin-left: 10px;text-align:left;">{{ row.outboundUnit }}<span style="display:inline-block;width:50px;"><el-tag v-if="(basicClass & materialPurchaseClsEnum.STEEL.V) && (errorList.findIndex(v=>v.id===row.id)>-1 && !(row.batchOutboundQuantity<errorList.find(v=>v.id===row.id)?.quantity))" class="ml-2" type="danger" style="margin-left:2px;">不足</el-tag></span></span>
             </span>
           </template>
         </el-table-column>
@@ -156,16 +159,17 @@ import {
   otherBatchOutboundHandling,
   gasBatchOutboundHandling
 } from '@/api/wms/material-outbound/raw-material/outbound-handling'
-import { defineEmits, defineProps, watch, ref, computed, nextTick } from 'vue'
+import { getStock } from '@/api/wms/material-inventory'
+import { defineEmits, defineProps, watch, ref, computed, nextTick, watchEffect } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { STEEL_ENUM } from '@/settings/config'
-import { matClsEnum } from '@/utils/enum/modules/classification'
+import { matClsEnum, materialPurchaseClsEnum } from '@/utils/enum/modules/classification'
 import { measureTypeEnum, projectWarehouseTypeEnum, outboundDestinationTypeEnum } from '@/utils/enum/modules/wms'
 import { obj2arr } from '@/utils/convert/type'
 import { isBlank } from '@/utils/data-type'
 import { numFmtByUnitForList } from '@/utils/wms/convert-unit'
 import { materialOperateColumns } from '@/utils/columns-format/wms'
-import { getProjectInfo } from '@/utils/project'
+// import { getProjectInfo } from '@/utils/project'
 
 import useTableValidate from '@compos/form/use-table-validate'
 import useVisible from '@compos/use-visible'
@@ -240,7 +244,8 @@ const expandRowKeys = ref([])
 // 过滤后的材料列表
 const materialList = ref([])
 // 当前项目
-const currentProject = ref()
+// const currentProject = ref()
+const errorList = ref([])
 // 提交表单
 const form = ref({
   list: [],
@@ -305,12 +310,15 @@ watch(
   ([pId, type], [oldPId]) => {
     if (type === projectWarehouseTypeEnum.PUBLIC.V) {
       form.value.projectId = undefined
-    } else {
-      form.value.projectId = pId
     }
-    if (oldPId !== pId) {
-      currentProject.value = getProjectInfo(pId)
-    }
+    // if (type === projectWarehouseTypeEnum.PUBLIC.V) {
+    //   form.value.projectId = undefined
+    // } else {
+    //   form.value.projectId = pId
+    // }
+    // if (oldPId !== pId) {
+    //   currentProject.value = getProjectInfo(pId)
+    // }
   },
   { immediate: true }
 )
@@ -331,17 +339,25 @@ const setRecipientId = watch(
   }
 )
 
-// 监听传入的列表
-watch(
-  () => props.materialList,
-  () => {
-    // 无需在打开dlg时，判断batchOutboundQuantity是否大于corOperableQuantity，因为当corOperableQuantity发生变化时，页面及数据会刷新
-    materialList.value = props.materialList.filter((v) => v.corOperableQuantity > 0) // 过滤不可操作的列表
-    form.value.list = materialList.value
-    dataFormat()
-    setDitto(form.value.list)
-  }
-)
+// // 监听传入的列表
+watchEffect(() => {
+  errorList.value = []
+  materialList.value = props.materialList.filter((v) => v.corOperableQuantity > 0) // 过滤不可操作的列表
+  form.value.list = materialList.value
+  dataFormat()
+  setDitto(form.value.list)
+})
+
+// watch(
+//   () => props.materialList,
+//   () => {
+//     // 无需在打开dlg时，判断batchOutboundQuantity是否大于corOperableQuantity，因为当corOperableQuantity发生变化时，页面及数据会刷新
+//     materialList.value = props.materialList.filter((v) => v.corOperableQuantity > 0) // 过滤不可操作的列表
+//     form.value.list = materialList.value
+//     dataFormat()
+//     setDitto(form.value.list)
+//   }
+// )
 
 // 设置同上
 function setDitto(list) {
@@ -358,6 +374,7 @@ function setDitto(list) {
 
 // 表单初始化
 function formInit() {
+  errorList.value = []
   form.value = { list: [] }
   formRef.value && formRef.value.resetFields()
   form.value.recipientId = user.value.id // 领用人id
@@ -429,6 +446,24 @@ async function submit() {
     }
     if (data.list.length === 0) {
       ElMessage.warning('请填写数据')
+      return
+    }
+    errorList.value = []
+    console.log(data.list)
+    if (props.basicClass & materialPurchaseClsEnum.STEEL.V) {
+      const ids = data.list.map(v => v.id)
+      const { content } = await getStock({ ids })
+      data.list.map(v => {
+        const findVal = content?.find(k => k.id === v.id)
+        const compareNum = v.outboundUnitType === measureTypeEnum.MEASURE.V ? (findVal?.quantity - (findVal?.frozenQuantity || 0)) : (findVal?.mete - (findVal?.frozenMete || 0))
+        if (v.quantity > compareNum) {
+          errorList.value.push(v)
+        }
+      })
+    }
+    console.log(errorList.value)
+    if (errorList.value.length > 0) {
+      ElMessage.error('标红部分库存不足')
       return
     }
     await submitApi(data)

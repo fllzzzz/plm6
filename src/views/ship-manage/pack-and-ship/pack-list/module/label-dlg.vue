@@ -24,9 +24,11 @@
       </tr>
       <tr v-if="packageInfo.productType === packTypeEnum.AUXILIARY_MATERIAL.V">
         <td>名称</td>
-        <td>单位</td>
+        <td v-if="props.unitType === 1">核算单位</td>
+        <td v-else>计量单位</td>
         <td>规格</td>
-        <td>数量</td>
+        <td v-if="props.unitType === 1">核算量</td>
+        <td v-else>数量</td>
       </tr>
       <tr v-if="packageInfo.productType === packTypeEnum.ENCLOSURE.V">
         <td>编号</td>
@@ -40,17 +42,19 @@
       >
         <tr v-for="(item, index) in breakUpList[page - 1]" :key="index">
           <td class="col-1">{{ item.serialNumber }}</td>
-          <td class="col-1">{{ item.material }}</td>
+          <td class="col-1">{{ props.showMaterial ? item.material : '' }}</td>
           <td class="col-1">{{ item.quantity }}</td>
-          <td class="col-1">{{ item.totalWeight }}</td>
+          <td class="col-1">{{ props.showWidth ? item.totalWeight : '' }}</td>
         </tr>
       </template>
       <template v-if="packageInfo.productType === packTypeEnum.AUXILIARY_MATERIAL.V">
         <tr v-for="(item, index) in breakUpList[page - 1]" :key="index">
           <td class="col-1">{{ item.name }}</td>
-          <td class="col-1">{{ item.measureUnit }}</td>
+          <td class="col-1" v-if="props.unitType === 1">{{ item.accountingUnit }}</td>
+          <td class="col-1" v-else>{{ item.measureUnit }}</td>
           <td class="col-1">{{ item.specification }}</td>
-          <td class="col-1">{{ item.quantity }}</td>
+          <td class="col-1" v-if="props.unitType === 1">{{ item.packageMete }}</td>
+          <td class="col-1" v-else>{{ item.quantity }}</td>
         </tr>
       </template>
       <template v-if="packageInfo.productType === packTypeEnum.ENCLOSURE.V">
@@ -100,9 +104,11 @@
       </tr>
       <tr>
         <td>名称</td>
-        <td>单位</td>
+        <td v-if="props.unitType === 1">核算单位</td>
+        <td v-else>计量单位</td>
         <td>规格</td>
-        <td>数量</td>
+        <td v-if="props.unitType === 1">核算量</td>
+        <td v-else>数量</td>
       </tr>
       <!-- <tr v-if="packageInfo.productType === packTypeEnum.ENCLOSURE.V">
         <td>编号</td>
@@ -148,6 +154,18 @@ const props = defineProps({
     default: () => {
       return {}
     }
+  },
+  unitType: {
+    type: Number,
+    default: 1
+  },
+  showMaterial: {
+    type: Boolean,
+    default: true
+  },
+  showWidth: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -161,6 +179,8 @@ const breakUpList = computed(() => {
   for (var i = 0, len = packageInfo.value.list?.length; i < len; i += 11) {
     _list.push(packageInfo.value.list.slice(i, Math.min(i + 11, len)))
   }
+  console.log(packageInfo.value)
+  console.log(_list)
   return _list
 })
 const structureData = computed(() => {

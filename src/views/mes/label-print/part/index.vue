@@ -422,7 +422,8 @@ function getLabelInfo(row, num) {
     wt: printConfig.weight, // 重量类型
     // sl: Number(printConfig.showProductionLine), // 显示生产线
     sa: Number(printConfig.showArea), // 显示区域
-    sm: Number(printConfig.showMonomer) // 显示单体
+    sm: Number(printConfig.showMonomer), // 显示单体
+    wid: row.workshopId
   }
   if (row.boolOneCode) {
     qrCodeObj.num = num

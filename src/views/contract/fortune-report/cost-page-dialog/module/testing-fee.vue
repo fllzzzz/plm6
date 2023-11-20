@@ -58,7 +58,7 @@ const { maxHeight } = useMaxHeight({
 
 const dataFormat = computed(() => {
   return [
-  // ['amount', ['to-thousand-ck', 'YUAN']],
+    ['amount', ['to-thousand', decimalPrecision.value.contract]],
     ['mete', 'to-thousand'],
     ['averagePrice', ['to-thousand', decimalPrecision.value.contract]]
   ]

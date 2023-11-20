@@ -10,6 +10,7 @@
         class="filter-item"
         @change="crud.toQuery"
       /> -->
+      <common-radio-button v-model="query.productType" :options="mesProductTypeEnum.ENUM" type="enum" class="filter-item" @change="crud.toQuery" />
       <common-radio-button
         type="enum"
         v-model="query.weightStatus"
@@ -39,7 +40,7 @@
       />
 
       <el-row v-loading="summaryLoading" v-if="checkPermission(crud.permission.get)" :gutter="10" class="panel-group">
-        <el-col :span="6" class="card-panel-col">
+        <el-col :span="6" class="card-panel-col" style="cursor: pointer;" @click="inventoryDetails(1)">
           <Panel
             name="期初库存(kg)"
             text-color="#626262"
@@ -50,7 +51,7 @@
             :precision="DP.COM_WT__KG"
           />
         </el-col>
-        <el-col :span="6" class="card-panel-col">
+        <el-col :span="6" class="card-panel-col" style="cursor: pointer;" @click="inventoryDetails(2)">
           <Panel
             name="入库量(kg)"
             text-color="#626262"
@@ -59,7 +60,7 @@
             :precision="DP.COM_WT__KG"
           />
         </el-col>
-        <el-col :span="6" class="card-panel-col">
+        <el-col :span="6" class="card-panel-col" style="cursor: pointer;" @click="inventoryDetails(3)">
           <Panel
             name="出库量(kg)"
             text-color="#626262"
@@ -70,7 +71,7 @@
             :precision="DP.COM_WT__KG"
           />
         </el-col>
-        <el-col :span="6" class="card-panel-col">
+        <el-col :span="6" class="card-panel-col" style="cursor: pointer;" @click="inventoryDetails(4)">
           <Panel
             name="期末库存(kg)"
             text-color="#626262"
@@ -85,20 +86,21 @@
       <template #viewLeft>
         <print-table
           v-permission="crud.permission.print"
-          api-key="mesProductSendReceiveStorage"
+          :api-key="query.productType===mesProductTypeEnum.STRUCTURE.V?'mesProductSendReceiveStorage':'mesDirectProductSendReceiveStorage'"
           :params="{ ...query }"
           size="mini"
           type="warning"
         />
       </template>
     </crudOperation>
+    <detail-drawer v-model:showDetailDrawer="showDetailDrawer" :query="crud.query" :inventoryType="inventoryType"  />
   </div>
 </template>
 
 <script setup>
 import { summaryData } from '@/api/ship-manage/pack-and-ship/product-receive-send-storage'
 import { ref, watch } from 'vue'
-import { packTypeEnum } from '@enum-ms/mes'
+import { mesProductTypeEnum } from '@enum-ms/ship-manage'
 import { weightTypeEnum, workshopTypeEnum } from '@enum-ms/common'
 import checkPermission from '@/utils/system/check-permission'
 import { DP } from '@/settings/config'
@@ -107,11 +109,13 @@ import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import Panel from '@/components/Panel'
 import moment from 'moment'
+import detailDrawer from './detail-drawer'
 
+const showDetailDrawer = ref(false)
 const defaultTime = moment().valueOf().toString()
 
 const defaultQuery = {
-  productType: packTypeEnum.STRUCTURE.V,
+  productType: mesProductTypeEnum.STRUCTURE.V,
   dateTime: defaultTime.toString(),
   projectId: undefined,
   weightStatus: weightTypeEnum.NET.V
@@ -120,6 +124,7 @@ const defaultQuery = {
 const { crud, query } = regHeader(defaultQuery)
 const totalAmount = ref({})
 const summaryLoading = ref(false)
+const inventoryType = ref()
 
 watch(
   query,
@@ -134,7 +139,7 @@ async function fetchSummaryInfo() {
   summaryLoading.value = true
   try {
     const data = await summaryData(query)
-    totalAmount.value = data
+    totalAmount.value = data || {}
     // totalAmount.value.intoWeight = (totalAmount.value.intoWeight / 1000).toFixed(DP.COM_WT__T)
     // totalAmount.value.outWeight = (totalAmount.value.outWeight / 1000).toFixed(DP.COM_WT__T)
     // totalAmount.value.stockWeight = (totalAmount.value.stockWeight / 1000).toFixed(DP.COM_WT__T)
@@ -144,6 +149,12 @@ async function fetchSummaryInfo() {
     summaryLoading.value = false
   }
 }
+
+const inventoryDetails = (v) => {
+  showDetailDrawer.value = true
+  inventoryType.value = v
+}
+
 </script>
 <style lang="scss" scoped>
 .panel-group {

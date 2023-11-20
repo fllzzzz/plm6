@@ -63,19 +63,19 @@
           <common-button v-permission="permission.edit" v-show="!processId && isEdit === false && props.detailData.productType === componentTypeEnum.ARTIFACT.V" size="mini" type="primary" @click="editMode">编辑</common-button>
           <el-popover
             v-model:visible="delBtn"
-            placement="top"
+            placement="bottom"
             width="180"
             trigger="click"
             @show="onPopoverBatchClickShow"
             @hide="onPopoverBatchClickHide"
           >
-            <p>是否确认批量撤回操作</p>
+            <p>是否确认批量撤回操作？</p>
             <div style="text-align: right; margin: 0">
               <common-button size="mini" type="text" @click.stop="cancelBatch">取消</common-button>
               <common-button size="mini" type="danger" @click="batchBack">确定</common-button>
             </div>
             <template #reference>
-              <common-button v-permission="permission.batchRevoke" v-show="isEdit === true" size="mini" type="danger" :disabled="!selectionList.length" @click.stop="handleBatch">
+              <common-button v-permission="permission.batchRevoke" :loading="submitLoading" v-show="isEdit === true" size="mini" type="danger" :disabled="!selectionList.length" @click.stop="handleBatch">
                 批量撤回
               </common-button>
             </template>
@@ -133,13 +133,13 @@
                 @show="onPopoverDelClickShow"
                 @hide="onPopoverDelClickHide"
               >
-                <p>是否确认撤回操作</p>
+                <p>是否确认撤回操作？</p>
                 <div style="text-align: right; margin: 0">
                   <common-button size="mini" type="text" @click.stop="cancelDelete(scope.row)">取消</common-button>
                   <common-button type="primary" size="mini" @click.stop="handleDelete(scope.row)">确定</common-button>
                 </div>
                 <template #reference>
-                  <common-button v-permission="permission.revoke" size="mini" type="danger" :disabled="scope.row.boolCanRevoke === false" @click.stop="back(scope.row)">
+                  <common-button v-permission="permission.revoke" size="mini" type="danger" :disabled="scope.row.boolCanRevoke === false || submitLoading" @click.stop="back(scope.row)">
                     撤回
                   </common-button>
                 </template>
@@ -302,6 +302,7 @@ const isAllOrder = ref()
 const selectionList = ref([])
 const totalQuantity = ref()
 const totalWeight = ref()
+const submitLoading = ref(false)
 const emit = defineEmits(['update:visible', 'refresh'])
 const props = defineProps({
   visible: {
@@ -311,6 +312,9 @@ const props = defineProps({
   detailData: {
     type: Object,
     default: () => {}
+  },
+  serialNumber: {
+    type: String
   }
 })
 
@@ -362,7 +366,8 @@ const params = computed(() => {
     orderId: props.detailData.orderId,
     processId: processId.value,
     productType: props.detailData.productType,
-    projectId: props.detailData.projectId
+    projectId: props.detailData.projectId,
+    serialNumber: props.serialNumber
   }
 })
 // const apiKey =
@@ -445,6 +450,7 @@ function cancelDelete(row) {
   row.pop = false
 }
 async function handleDelete(row) {
+  submitLoading.value = true
   const ids = []
   ids.push(row.taskId)
   try {
@@ -454,6 +460,8 @@ async function handleDelete(row) {
     ElMessage.success(`当前工单撤回成功`)
   } catch (e) {
     console.log('撤回工单操作失败', e)
+  } finally {
+    submitLoading.value = false
   }
 }
 
@@ -473,6 +481,7 @@ function onPopoverDelClickHide() {
 
 // 批量撤回
 async function batchBack() {
+  submitLoading.value = true
   const ids = []
   selectionList.value?.forEach((v) => {
     ids.push(v.taskId)
@@ -486,6 +495,7 @@ async function batchBack() {
     console.log('撤回操作失败', e)
   } finally {
     delBtn.value = false
+    submitLoading.value = false
   }
 }
 
@@ -536,7 +546,7 @@ async function initBack() {
 // 整个工单撤回
 async function taskOrderBack() {
   if (!isAllOrder.value) return
-  ElMessageBox.confirm(`是否确认撤回整个工单`, '提示', {
+  ElMessageBox.confirm(`是否确认撤回整个工单？`, '提示', {
     confirmButtonText: '确认',
     cancelButtonText: '取消',
     type: 'warning'

@@ -53,7 +53,7 @@ async function printArtifact({ productType, labelType, component, manufacturerNa
   try {
     LODOP = await getLODOP()
     LODOP.SET_PRINT_PAGESIZE(1, 1030, 680, '1') /* 纸张大小*/
-    LODOP.ADD_PRINT_HTM('2mm', '3mm', '98mm', '68mm', strHtml)
+    LODOP.ADD_PRINT_HTM('0.5mm', '3mm', '98mm', '68mm', strHtml)
     LODOP.ADD_PRINT_BARCODE('40mm', '72mm', '28mm', '28mm', 'QRCode', qrCode)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 7)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeErrorLevel', 'M')
@@ -240,14 +240,14 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
   <div class="row-0 col border-r" style="width:26%;">
   <div class="col-div">名称</div>
   </div>
-  <div class="row-0 col border-r" style="width:23%;">
+  <div class="row-0 col border-r" style="width:14%;">
   <div class="col-div">单位</div>
   </div>
   <div class="row-0 col border-r" style="width:35%;">
   <div class="col-div">规格</div>
   </div>
-  <div class="row-0 col" style="width:14%;">
-  <div class="col-div">数量</div>
+  <div class="row-0 col" style="width:23%;">
+  <div class="col-div">${packageInfo.unitValue === 1 ? '核算量' : '数量'}</div>
   </div>
 </div>
 </div>`
@@ -288,19 +288,20 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
       bodyHtml += `
       <div class="row border-b">
       <div class="row-0 col border-r" style="width:34%;">
-      <div class="col-div">${item.serialNumber}</div>
+      <div class="col-div" style="font-size:${item.serialNumber.length > 12 ? '6pt' : '9pt'}; line-height:${item.serialNumber.length > 12 ? '5.2pt' : '9pt'}">${item.serialNumber}</div>
       </div>
       <div class="row-0 col w-1 border-r">
-      <div class="col-div">${item.material}</div>
+      <div class="col-div">${packageInfo.showMaterial === true ? item.material : ''}</div>
       </div>
       <div class="row-0 col border-r" style="width:14%;">
       <div class="col-div">${item.quantity}</div>
       </div>
       <div class="row-0 col w-1">
-      <div class="col-div">${item.totalWeight}</div>
+      <div class="col-div">${packageInfo.showWidth === true ? item.totalWeight : ''}</div>
       </div>
     </div>
     `
+      console.log(bodyHtml)
     } else if (packageInfo.productType === packTypeEnum.ENCLOSURE.V) {
       bodyHtml += `
       <div class="row border-b">
@@ -327,14 +328,14 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
       <div class="row-0 col border-r" style="width:26%;">
       <div class="col-div">${item.name}</div>
       </div>
-      <div class="row-0 col border-r" style="width:23%;">
-      <div class="col-div">${item.measureUnit}</div>
+      <div class="row-0 col border-r" style="width:14%;">
+      <div class="col-div">${packageInfo.unitValue === 1 ? item.accountingUnit : item.measureUnit}</div>
       </div>
       <div class="row-0 col border-r" style="width:35%;">
       <div class="col-div">${item.specification}</div>
       </div>
-      <div class="row-0 col" style="width:14%;">
-      <div class="col-div">${item.quantity}</div>
+      <div class="row-0 col" style="width:23%;">
+      <div class="col-div">${packageInfo.unitValue === 1 ? item.packageMete : item.quantity}</div>
       </div>
     </div>
     `

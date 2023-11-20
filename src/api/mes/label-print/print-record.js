@@ -44,6 +44,20 @@ export function getForPackage(id) {
 }
 
 /**
+ * 获取包单打印记录
+ * @export
+ * @param {number} id|required 包id
+ * @returns
+ */
+export function getForBridgePackage(id) {
+  return request({
+    module: 'bridge',
+    url: `print/record/package/${id}`,
+    method: 'get'
+  })
+}
+
+/**
  * 添加任务打印记录
  * @export
  * @param {number} taskId|required 任务id
@@ -92,6 +106,24 @@ export function materialAdd({ id, quantity, startTime, endTime }) {
 export function packageRecordAdd({ id, quantity, startTime, endTime }) {
   return request({
     module: 'mes',
+    url: 'print/record/package',
+    method: 'post',
+    data: { packId: id, quantity, startTime, endTime }
+  })
+}
+
+/**
+ * 桥梁添加包单打印记录
+ * @export
+ * @param {number} id|required 包id
+ * @param {number} quantity|required 打印数量
+ * @param {number} startTime|required 打印开始时间【时间戳】
+ * @param {number} endTime|required 打印结束时间【时间戳】
+ * @returns
+ */
+export function packageBridgeRecordAdd({ id, quantity, startTime, endTime }) {
+  return request({
+    module: 'bridge',
     url: 'print/record/package',
     method: 'post',
     data: { packId: id, quantity, startTime, endTime }

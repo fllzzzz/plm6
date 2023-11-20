@@ -6,7 +6,7 @@
     width="1000px"
     :before-close="crud.cancelDetail"
     show-close
-    top="10vh"
+    top="8vh"
   >
     <template #titleRight>
       <span v-if="checkPermission(crud.permission.audit) && props.detailInfo.status === reviewStatusEnum.UNREVIEWED.V">
@@ -14,11 +14,13 @@
         <common-button size="mini" type="danger" @click.stop="submit(reviewStatusEnum.REFUSE.V)">拒 绝</common-button>
       </span>
     </template>
-    <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight">
+    <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight-180">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <template v-if="props.detailInfo.type === contractSaleTypeEnum.STRUCTURE.V">
         <el-table-column :show-overflow-tooltip="true" prop="name" label="结构名称" align="center" />
         <el-table-column prop="material" label="材质" align="center" />
+        <el-table-column key="specification" prop="specification" show-overflow-tooltip label="规格" align="center" />
+        <el-table-column key="totalQuantity" prop="totalQuantity" label="数量" align="center" show-overflow-tooltip />
         <el-table-column align="center" prop="pricingManner" label="计价方式">
           <template #default="{ row }">
             <cell-change-preview
@@ -32,7 +34,9 @@
       </template>
       <template v-if="props.detailInfo.type === contractSaleTypeEnum.ENCLOSURE.V">
         <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" align="center" />
+        <el-table-column key="specification" prop="specification" show-overflow-tooltip label="规格" align="center" />
         <el-table-column v-if="list[0]?.category !== mesEnclosureTypeEnum.FOLDING_PIECE.V" prop="plate" label="板型" align="center" />
+        <el-table-column key="totalQuantity" prop="totalQuantity" label="数量" align="center" show-overflow-tooltip />
         <el-table-column align="center" prop="pricingManner" label="计价方式">
           <template #default="{ row }">
             <cell-change-preview
@@ -47,6 +51,7 @@
       <template v-if="props.detailInfo.type === contractSaleTypeEnum.AUXILIARY_MATERIAL.V">
         <el-table-column prop="name" label="配套件名称" align="center" />
         <el-table-column prop="specification" label="规格" />
+        <el-table-column key="totalQuantity" prop="totalQuantity" label="数量" align="center" show-overflow-tooltip />
       </template>
       <el-table-column align="center" prop="price" label="综合单价">
         <template #default="{ row }">
@@ -91,8 +96,8 @@ const { maxHeight } = useMaxHeight({ extraBox: '.el-drawer__header', wrapperBox:
 const list = ref([])
 const dataFormat = computed(() => {
   return [
-    ['oldUnitPrice', ['to-thousand', decimalPrecision.value.contract]],
-    ['newUnitPrice', ['to-thousand', decimalPrecision.value.contract]]
+    ['oldUnitPrice', ['to-thousand', (decimalPrecision.value.contract === 2 ? 3 : decimalPrecision.value.contract)]],
+    ['newUnitPrice', ['to-thousand', (decimalPrecision.value.contract === 2 ? 3 : decimalPrecision.value.contract)]]
   ]
 })
 const { crud, detail, CRUD } = regDetail()

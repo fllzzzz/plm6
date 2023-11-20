@@ -123,7 +123,7 @@
         min-width="80px"
       >
         <template v-slot="scope">
-          <span>{{ toFixed(scope.row.totalArea, DP.COM_AREA__M2) }}</span>
+          <span>{{ toFixed(scope.row.totalArea, DP.COM_ENCLOSURE_AREA__M2) }}</span>
         </template>
       </el-table-column> -->
       <el-table-column

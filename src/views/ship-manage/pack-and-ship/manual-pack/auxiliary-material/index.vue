@@ -16,7 +16,8 @@
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column v-if="columns.visible('name')" key="name" prop="name" label="名称" align="center" />
       <el-table-column v-if="columns.visible('specification')" key="specification" prop="specification" label="规格" align="center" />
-      <el-table-column v-if="columns.visible('measureUnit')" key="measureUnit" prop="measureUnit" label="单位" align="center" />
+      <el-table-column v-if="columns.visible('accountingUnit')" key="accountingUnit" prop="accountingUnit" label="核算单位" align="center" />
+      <el-table-column v-if="columns.visible('mete')" key="mete" prop="mete" label="核算量" align="center" />
       <el-table-column
         v-if="columns.visible('quantity')"
         key="quantity"
@@ -48,6 +49,7 @@
         label="已打包数（件）"
         align="center"
       />
+      <el-table-column label="备注" align="center" width="80" prop="remark" key="remark" :show-overflow-tooltip="true" v-if="columns.visible('remark')" />
       <!-- <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" align="center" width="70px" fixed="right">
         <template slot="header">
           <el-tooltip
@@ -132,6 +134,14 @@ const props = defineProps({
   maxHeight: {
     type: [String, Number],
     default: undefined
+  },
+  monomerId: {
+    type: [String, Number],
+    default: undefined
+  },
+  areaId: {
+    type: [String, Number],
+    default: undefined
   }
 })
 
@@ -150,6 +160,8 @@ watch(
 
 CRUD.HOOK.beforeRefresh = () => {
   crud.query.projectId = props.projectId
+  crud.query.monomerId = props.monomerId
+  crud.query.areaId = props.areaId
 }
 
 function add(row) {

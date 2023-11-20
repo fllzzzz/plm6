@@ -6,7 +6,7 @@
     :visible="crud.status.cu > 0"
     :title="crud.status.title"
     :wrapper-closable="false"
-    size="90%"
+    size="100%"
   >
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
@@ -88,11 +88,12 @@
               <common-select
                 v-if="scope.row.isModify"
                 v-model="scope.row.collectionMode"
-                :options="paymentFineModeEnum.ENUM"
+                :options="[paymentFineModeEnum.PUBLIC_TRANSFER, paymentFineModeEnum.ACCEPTANCE_DRAFT, paymentFineModeEnum.TRANSFER_CHECK, paymentFineModeEnum.PRIVATE_TRANSFER, paymentFineModeEnum.CASH, paymentFineModeEnum.OTHER]"
                 type="enum"
                 size="small"
                 placeholder="收款方式"
                 style="width:100%;"
+                @change="collectionAmountChange(scope.row)"
               />
               <div v-else>{{ scope.row.collectionMode? paymentFineModeEnum.VL[scope.row.collectionMode]: '' }}</div>
             </template>
@@ -111,11 +112,24 @@
                 type="other"
                 :dataStructure="typeProp"
                 size="small"
+                clearable
                 placeholder="收款银行"
                 style="width:100%;"
                 @change="bankChange(scope.row)"
               />
               <div v-else>{{ scope.row.collectionDepositBank }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column key="collectionBankAccount" prop="collectionBankAccount" :show-overflow-tooltip="true" label="银行卡号" align="center" min-width="120">
+            <template v-slot="scope">
+              <el-input
+                v-if="scope.row.isModify"
+                v-model.trim="scope.row.collectionBankAccount"
+                placeholder="银行卡号"
+                style="width:100%;"
+                maxlength="50"
+              />
+              <div v-else>{{ scope.row.collectionBankAccount }}</div>
             </template>
           </el-table-column>
           <el-table-column key="paymentUnit" prop="paymentUnit" label="*付款单位" align="center" min-width="120" :show-overflow-tooltip="true">
@@ -128,6 +142,19 @@
                 maxlength="50"
               />
               <div v-else>{{ scope.row.paymentUnit  }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column key="remark" prop="remark" label="备注" align="center" min-width="90" :show-overflow-tooltip="true">
+            <template v-slot="scope">
+              <el-input
+                v-if="scope.row.isModify"
+                v-model.trim="scope.row.remark"
+                placeholder="备注"
+                type="textarea"
+                style="width:100%;"
+                maxlength="200"
+              />
+              <div v-else>{{ scope.row.remark  }}</div>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center">
@@ -198,6 +225,7 @@ const { maxHeight } = useMaxHeight({
   paginate: true,
   extraHeight: 40
 })
+const paymentMethod = ref()
 
 // 金额校验
 const validateAmount = (value, row) => {
@@ -208,15 +236,23 @@ const validateAmount = (value, row) => {
 const tableRules = {
   collectionDate: [{ required: true, message: '请选择收款日期', trigger: 'change' }],
   collectionAmount: [{ validator: validateAmount, message: '请选择收款金额', trigger: 'change', type: 'number' }],
-  collectionBankAccountId: [{ required: true, message: '请选择收款银行', trigger: 'change' }],
+  collectionBankAccountId: [{ required: paymentMethod.value === paymentFineModeEnum.CASH, message: '请选择收款银行', trigger: 'change' }],
+  collectionBankAccount: [{ required: true, message: '请输入银行卡号', trigger: 'change' }],
   collectionMode: [{ required: true, message: '请选择收款方式', trigger: 'change' }],
   collectionReason: [{ required: true, message: '请选择收款事由', trigger: 'change' }],
   paymentUnit: [{ required: true, message: '请输入付款单位', trigger: 'blur' }]
 }
 
+const tableRulesCash = {
+  collectionDate: [{ required: true, message: '请选择收款日期', trigger: 'change' }],
+  collectionAmount: [{ required: true, message: '请选择收款金额', trigger: 'change', type: 'number' }],
+  collectionMode: [{ required: true, message: '请选择收款方式', trigger: 'change' }],
+  collectionReason: [{ required: true, message: '请选择收款事由', trigger: 'change' }],
+  paymentUnit: [{ required: true, message: '请输入付款单位', trigger: 'blur' }]
+}
 function wrongCellMask({ row, column }) {
   if (!row) return
-  const rules = tableRules
+  const rules = paymentMethod.value === paymentFineModeEnum.CASH.V ? tableRulesCash : tableRules
   let flag = true
   if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
     if (row.verify[column.property] === false) {
@@ -286,12 +322,16 @@ function bankChange(row) {
   }
 }
 
+function collectionAmountChange(row) {
+  paymentMethod.value = row.collectionMode
+}
+
 CRUD.HOOK.beforeValidateCU = (crud, form) => {
   if (crud.form.list.length <= 0) {
     ElMessage({ message: '请添加收款明细', type: 'error' })
     return false
   }
-  const rules = tableRules
+  const rules = paymentMethod.value === paymentFineModeEnum.CASH.V ? tableRulesCash : tableRules
   let flag = true
   crud.form.list.map(row => {
     row.verify = {}

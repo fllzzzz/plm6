@@ -3,7 +3,7 @@
     <template v-if="pageShow">
       <!--工具栏-->
       <div class="head-container">
-        <mHeader :project-id="globalProjectId" />
+        <mHeader :project-id="globalProjectId" :typeOption="typeOption" @enclosurePlan="enclosurePlanChange"/>
       </div>
       <!--表格渲染-->
       <common-table
@@ -66,6 +66,60 @@
           <span v-else>{{ row.quantity }}</span>
         </template>
       </el-table-column>
+      <el-table-column
+          v-if="columns.visible('accountingUnit')"
+          :show-overflow-tooltip="true"
+          prop="accountingUnit"
+          label="核算单位"
+          align="center"
+          min-width="180px"
+        >
+          <template #default="{ row }">
+            <div v-if="row.isModify" style="display: flex; justify-content: center; align-items: center;">
+              <div>
+                <el-input v-if="!row.boolWeightTypeEnum" v-model.trim="row.accountingUnit" placeholder="核算单位" type="text" style="width: 100px" maxlength="20" />
+                <common-select
+                  v-else
+                  style="width: 100px"
+                  v-model="row.accountingUnit"
+                  placeholder="核算单位"
+                  :options="weightUnit"
+                  :data-structure="{ key: 'value', label: 'label', value: 'value' }"
+                />
+              </div>
+              <common-select
+                v-model="row.boolWeightTypeEnum"
+                style="width: 100px; margin-left: 10px"
+                :options="accountingUnitValue"
+                :data-structure="{ key: 'value', label: 'label', value: 'value' }"
+              />
+            </div>
+            <span v-else>{{ row.accountingUnit }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('mete')"
+          :show-overflow-tooltip="true"
+          prop="mete"
+          label="核算量"
+          align="center"
+          min-width="120px"
+        >
+          <template #default="{ row }">
+            <common-input-number
+              v-if="row.isModify"
+              v-model="row.mete"
+              placeholder="核算量"
+              size="mini"
+              :controls="false"
+              :precision="3"
+              :step="0.001"
+              :min="0"
+              :max="9999999"
+            />
+            <span v-else>{{ row.mete }}</span>
+          </template>
+        </el-table-column>
       <!-- <el-table-column label="单重(kg)" prop="weight">
         <template #default="{ row }">
           <el-input-number
@@ -148,7 +202,7 @@
       </common-table>
       <!--分页组件-->
       <pagination />
-      <mForm />
+      <mForm :enclosurePlan="enclosurePlan" />
     </template>
     <template v-else>
       <span style="color:red;font-size:13px;">当前项目内容没有包含围护制品，请到合同管理中进行配置</span>
@@ -191,6 +245,7 @@ const originRow = ref({})
 
 const typeOption = ref([])
 const pageShow = ref(false)
+const enclosurePlan = ref([])
 const techOptions = [
   {
     name: '压型彩板',
@@ -237,6 +292,28 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
+const accountingUnitValue = ref([
+  {
+    value: true,
+    label: '重量'
+  },
+  {
+    value: false,
+    label: '其他'
+  }
+])
+
+const weightUnit = ref([
+  {
+    value: '吨',
+    label: '吨'
+  },
+  {
+    value: '千克',
+    label: '千克'
+  }
+])
+
 watch(
   () => globalProject.value,
   (val) => {
@@ -265,6 +342,10 @@ const tableRules = {
   specification: [{ required: true, message: '请输入规格', trigger: 'blur' }],
   measureUnit: [{ required: true, message: '请输入单位', trigger: 'blur' }],
   quantity: [{ required: true, message: '请输入数量', trigger: 'change' }]
+}
+
+function enclosurePlanChange(val) {
+  enclosurePlan.value = val
 }
 
 function wrongCellMask({ row, column }) {

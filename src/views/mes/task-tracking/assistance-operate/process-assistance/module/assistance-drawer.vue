@@ -41,6 +41,9 @@
           重置
         </common-button>
       </div>
+      <!-- <crudOperation /> -->
+      <!-- <tableOperation :tableColumns="tableRef" /> -->
+      <!-- <el-checkbox border style="margin-bottom: 10px;" v-model="checkboxChange">查看可协同班组与总毛重</el-checkbox> -->
       <common-table
         :data="tableData"
         v-loading="tableLoading"
@@ -49,6 +52,7 @@
         :show-empty-symbol="false"
         @selection-change="handleSelectChange"
         style="width: 100%"
+        ref="tableRef"
       >
         <!-- <el-table-column type="selection" width="55" align="center" :selectable="selectable" /> -->
         <el-table-column label="序号" type="index" align="center" width="60" />
@@ -107,11 +111,11 @@
             <span>{{ row.totalTaskMete?.netWeight || 0 }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="totalTaskMete.grossWeight" :show-overflow-tooltip="true" label="任务总毛重（kg）">
+        <!-- <el-table-column align="center" prop="totalTaskMete.grossWeight" :show-overflow-tooltip="true" label="任务总毛重（kg）">
           <template #default="{ row }">
             <span>{{ row.totalTaskMete?.grossWeight || 0 }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column align="center" prop="totalCompleteMete.quantity" :show-overflow-tooltip="true" label="完成数（件）">
           <template #default="{ row }">
             <span>{{ row.totalCompleteMete?.quantity || 0 }}</span>
@@ -122,11 +126,11 @@
             <span>{{ row.totalCompleteMete?.netWeight || 0 }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="totalCompleteMete.grossWeight" :show-overflow-tooltip="true" label="完成总毛重（kg）">
+        <!-- <el-table-column align="center" prop="totalCompleteMete.grossWeight" :show-overflow-tooltip="true" label="完成总毛重（kg）">
           <template #default="{ row }">
             <span>{{ row.totalCompleteMete?.grossWeight || 0 }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <!-- <el-table-column
           align="center"
           prop="askCompleteTime"
@@ -154,7 +158,7 @@
             <span>{{ row.totalCanAssistMete?.quantity }}</span>
           </template>
         </el-table-column>
-        <!-- <el-table-column :show-overflow-tooltip="true" prop="groupsId" label="协同生产组" min-width="150px" align="center">
+        <!-- <el-table-column :show-overflow-tooltip="true" prop="groupsId" label="协同班组" min-width="150px" align="center">
           <template #default="{ row: { sourceRow: row }, $index }">
             <el-cascader
               v-model="row.groupsId"
@@ -170,6 +174,18 @@
             />
           </template>
         </el-table-column> -->
+        <el-table-column label="协同班组" align="center" min-width="150px">
+          <template #default="{ row }">
+            <!-- <el-cascader
+              v-if="row.mesBuildingAssistDetailDTOS"
+              v-model="row.mesBuildingAssistDetailDTOS[0].groupsId"
+              :options="row.mesBuildingAssistDetailDTOS ? row.mesBuildingAssistDetailDTOS[0].cooperativeList : []"
+              :props="{ value: 'id', label: 'name', children: 'children' }"
+              placeholder="请选择生产组"
+            /> -->
+            <span>{{ row.mesBuildingAssistDetailDTOS && row.mesBuildingAssistDetailDTOS.length > 0 ? row.mesBuildingAssistDetailDTOS[0].workshop.name + '/' + row.mesBuildingAssistDetailDTOS[0].productionLine.name + '/' + row.mesBuildingAssistDetailDTOS[0].groups.name : '-'}}</span>
+          </template>
+        </el-table-column>
         <el-table-column align="center" :show-overflow-tooltip="true" label="操作">
           <template #default="{ row }">
             <common-button size="mini" type="success" @click.stop="deal(row)">办理</common-button>
@@ -199,6 +215,8 @@ import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 // import useTableValidate from '@compos/form/use-table-validate'
 import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-scheduling-groups'
+// import crudOperation from '@crud/CRUD.operation'
+// import tableOperation from '@/components/table-operation'
 
 import assistancePreview from './assistance-preview'
 import assistanceDetailForm from './assistance-detail-form'
@@ -207,6 +225,7 @@ const drawerRef = ref()
 const detailVisible = ref(false)
 const detailData = ref({})
 const detailList = ref([])
+const tableRef = ref()
 const emit = defineEmits(['update:visible', 'success'])
 const props = defineProps({
   visible: {
@@ -328,6 +347,28 @@ async function fetch() {
         }
       }
       tableData.value.push(v)
+      // tableData.value.forEach((item) => {
+      //   console.log(item)
+      //   if (item.mesBuildingAssistDetailDTOS) {
+      //     item.mesBuildingAssistDetailDTOS.forEach((v) => {
+      //       v.cooperativeList = []
+      //       v.cooperativeList.push(v.workshop)
+      //       if (v.cooperativeList.length > 0) {
+      //         v.cooperativeList.forEach((value) => {
+      //           value.children = []
+      //           value.children.push(v.productionLine)
+      //           if (value.children.length > 0) {
+      //             value.children.forEach((data) => {
+      //               data.children = []
+      //               data.children.push(v.groups)
+      //             })
+      //           }
+      //         })
+      //       }
+      //     })
+      //   }
+      // })
+      console.log(tableData.value)
     }
   } catch (error) {
     console.log('可变更的任务工单详情列表获取失败', error)

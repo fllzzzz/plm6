@@ -12,15 +12,14 @@ export function getOverweightSMSRecipient() {
 
 /**
  * 设置过磅超标短信接收人
- * @param {number} id 用户id
- * @param {string} phone 用户手机号
+ * @param {array} userChecks 列表信息
  * @param {number} maxWeight 过磅超标重量允许值
  */
-export function setOverweightSMSRecipient({ id, phone, maxWeight }) {
+export function setOverweightSMSRecipient(data) {
   return request({
     url: 'api/config/mes/overweightSMSRecipient',
     method: 'put',
-    data: { id, phone, maxWeight }
+    data
   })
 }
 
@@ -260,5 +259,52 @@ export function setInfo({ type }) {
     module: 'config',
     url: `show/need/${type}`,
     method: 'put'
+  })
+}
+
+// 获取构件部件特征定义审批配置
+export function getAuditConfig() {
+  return request({
+    module: 'config',
+    url: `getFeatureDefinitionConfig`,
+    method: 'get'
+  })
+}
+
+// 更改构件部件特征定义审批配置
+export function setAuditConfig(data) {
+  return request({
+    module: 'config',
+    url: `setFeatureDefinitionConfig`,
+    method: 'put',
+    data
+  })
+}
+
+// 获取构件部件特征定义审批配置
+export function getPriceConfig() {
+  return request({
+    module: 'config',
+    url: `getPriceEditMode`,
+    method: 'get'
+  })
+}
+
+// 更改构件部件特征定义审批配置
+export function setPriceConfig(data) {
+  return request({
+    module: 'config',
+    url: `editPriceEditMode`,
+    method: 'post',
+    data
+  })
+}
+
+// 获取公用构件部件特征定义审批配置
+export function getPriceConfigPublic() {
+  return request({
+    module: 'config',
+    url: `getPriceEditMode/public`,
+    method: 'get'
   })
 }

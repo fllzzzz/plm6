@@ -587,7 +587,7 @@ const AllContent = computed(() => {
   if (form.value.businessType) {
     const typeData = form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData : installData
     const arr = []
-    if (typeData && typeData[projectTypeEnum.STEEL.V].length > 0) {
+    if (typeData && typeData[projectTypeEnum.STEEL.V]?.length > 0) {
       typeData[projectTypeEnum.STEEL.V].map(v => {
         if (v.children && v.children.length > 0) {
           v.children.map(k => {
@@ -720,13 +720,13 @@ function getShowItem(val, type) {
     val.map((v) => {
       const val = AllContent.value.find((k) => k.id === v)
       AllInfo.push(val)
-      if (val.categoryType === TechnologyMainTypeEnum.STRUCTURE.V) {
+      if (val?.categoryType === TechnologyMainTypeEnum.STRUCTURE.V) {
         if (showItem.value.indexOf(TechnologyTypeEnum.STRUCTURE.V) < 0) {
           showItem.value.push(TechnologyTypeEnum.STRUCTURE.V)
         }
         showCategory.value.push(val)
       } else {
-        if (totalArr.indexOf(val.no) > -1 && showItem.value.indexOf(val.no) < 0) {
+        if (totalArr.indexOf(val?.no) > -1 && showItem.value.indexOf(val?.no) < 0) {
           showItem.value.push(val.no)
         }
       }
@@ -816,6 +816,10 @@ async function fetchDetail() {
       [TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V]: data.pressureBearingPlateList ? data.pressureBearingPlateList : [],
       [TechnologyTypeEnum.SANDWICH_BOARD.V]: data.sandwichBoardList ? data.sandwichBoardList : []
     }
+    data?.sandwichBoardList?.map(v => {
+      const fileIds = v.attachments && v.attachments.map(v => v.id)
+      v.attachmentIds = fileIds ? fileIds.join(',') : undefined
+    })
     _detail.structureList = data.structureList ? data.structureList : []
     _detail.profiledPlateList = data.profiledPlateList ? data.profiledPlateList : []
     _detail.trussFloorPlateList = data.trussFloorPlateList ? data.trussFloorPlateList : []

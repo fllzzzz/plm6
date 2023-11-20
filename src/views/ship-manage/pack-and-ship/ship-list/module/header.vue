@@ -12,8 +12,21 @@
         @change="crud.toQuery"
       />
       <component-radio-button
+        v-if="typeVal !== packEnum.BOX.V"
         v-model="query.productType"
         :options="packTypeEnum.ENUM"
+        :unshowVal="query.projectId ? unValOptions : []"
+        showOptionAll
+        type="enum"
+        size="small"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <component-radio-button
+        v-if="typeVal === packEnum.BOX.V"
+        v-model="query.productType"
+        :options="bridgePackTypeEnum.ENUM"
+        :disabledVal="[bridgePackTypeEnum.AUXILIARY_MATERIAL.V]"
         showOptionAll
         type="enum"
         size="small"
@@ -177,24 +190,32 @@
 </template>
 
 <script setup>
-import { getSummaryShipMete, getSummaryMonthMete } from '@/api/mes/pack-and-ship/ship-list'
-import { inject, onMounted, ref, computed } from 'vue'
+import {
+  getSummaryShipMete,
+  getSummaryMonthMete,
+  getBridgeSummaryShipMete,
+  getBridgeSummaryMonthMete
+} from '@/api/mes/pack-and-ship/ship-list'
+import { inject, onMounted, ref, computed, watch } from 'vue'
 import moment from 'moment'
-
+import { mapGetters } from '@/store/lib'
 import { packTypeEnum, deliveryStatusEnum } from '@enum-ms/mes'
+import { packEnum } from '@enum-ms/ship-manage'
+import { bridgePackTypeEnum } from '@enum-ms/bridge'
 import { manufactureTypeEnum } from '@enum-ms/production'
 // import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 import { isBlank, isNotBlank } from '@data-type/index'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import checkPermission from '@/utils/system/check-permission'
-
+import { projectTypeEnum } from '@enum-ms/contract'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import Panel from '@/components/Panel'
 import { ElMessage } from 'element-plus'
 
+const typeVal = ref()
 const defaultQuery = {
   serialNumber: undefined,
   licensePlate: undefined,
@@ -210,6 +231,7 @@ const defaultQuery = {
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
 
+const { globalProject } = mapGetters(['globalProject'])
 const permission = inject('permission')
 const summaryLoading = ref(false)
 const shipWeight = ref(0)
@@ -218,20 +240,50 @@ const currentKey = ref()
 const apiKey = ref([])
 const totalAmount = ref({})
 
+watch(
+  () => globalProject.value,
+  (val) => {
+    query.productType = undefined
+    typeVal.value = undefined
+    typeVal.value = globalProject.value?.productCategory
+  },
+  { immediate: true }
+)
+
+const unValOptions = computed(() => {
+  switch (typeVal.value) {
+    case packTypeEnum.STRUCTURE.V:
+      return [packTypeEnum.ENCLOSURE.V]
+    case packTypeEnum.ENCLOSURE.V:
+      return [packTypeEnum.STRUCTURE.V, packTypeEnum.MACHINE_PART.V]
+    case packTypeEnum.STRUCTURE.V + packTypeEnum.ENCLOSURE.V:
+      return []
+    default:
+      return []
+  }
+})
+
 onMounted(() => {
   if (checkPermission(permission.print)) {
-    apiKey.value.push('mesShipmentSummary')
+    crud.query.projectType === projectTypeEnum.BRIDGE.V
+      ? apiKey.value.push('mesBridgeShipmentSummary')
+      : apiKey.value.push('mesShipmentSummary')
   }
   if (checkPermission(permission.detailPrint)) {
-    apiKey.value.push('mesShipmentDetail')
+    crud.query.projectType === projectTypeEnum.BRIDGE.V
+      ? apiKey.value.push('mesBridgeShipmentDetail')
+      : apiKey.value.push('mesShipmentDetail')
   }
 })
 
 const printParams = computed(() => {
-  if (currentKey.value === 'mesShipmentSummary') {
+  if (currentKey.value === 'mesShipmentSummary' || currentKey.value === 'mesBridgeShipmentSummary') {
     return { ...query }
   }
-  if (currentKey.value === 'mesShipmentDetail' && isNotBlank(crud.selections)) {
+  if (
+    (currentKey.value === 'mesShipmentDetail' && isNotBlank(crud.selections)) ||
+    (currentKey.value === 'mesBridgeShipmentDetail' && isNotBlank(crud.selections))
+  ) {
     return crud.selections.map((row) => {
       return row.id
     })
@@ -240,7 +292,10 @@ const printParams = computed(() => {
 })
 
 function handleBeforePrint() {
-  if (currentKey.value === 'mesShipmentDetail' && isBlank(printParams.value)) {
+  if (
+    (currentKey.value === 'mesShipmentDetail' && isBlank(printParams.value)) ||
+    (currentKey.value === 'mesBridgeShipmentDetail' && isBlank(printParams.value))
+  ) {
     ElMessage.warning('至少选择一条需要打印的发运信息')
     return false
   }
@@ -265,7 +320,8 @@ async function fetchSummary() {
   }
   try {
     summaryLoading.value = true
-    const { weight, actualWeight } = await getSummaryShipMete(query)
+    const { weight, actualWeight } =
+      crud.query.projectType === projectTypeEnum.BRIDGE.V ? await getBridgeSummaryShipMete(query) : await getSummaryShipMete(query)
     shipWeight.value = weight
     overWeight.value = actualWeight
   } catch (error) {
@@ -277,7 +333,10 @@ async function fetchSummary() {
 
 async function fetchMonthSummary() {
   try {
-    const data = await getSummaryMonthMete({ dateTime: new Date().getTime(), projectId: query.projectId })
+    const data =
+      crud.query.projectType === projectTypeEnum.BRIDGE.V
+        ? await getBridgeSummaryMonthMete({ dateTime: new Date().getTime(), projectId: query.projectId })
+        : await getSummaryMonthMete({ dateTime: new Date().getTime(), projectId: query.projectId })
     totalAmount.value = data || {}
   } catch (e) {
     console.log('获取发运记录汇总失败', e)

@@ -100,6 +100,41 @@
           </template>
         </el-table-column>
         <el-table-column
+          v-if="columns.visible('purchase')"
+          key="purchase"
+          prop="purchase"
+          align="center"
+          label="采购计划"
+          min-width="150"
+        >
+        <template v-slot="scope">
+          <template v-if="scope.row.areaList.length > 0">
+            <div v-for="(k,i) in scope.row.areaList" :key="k.id">
+              <div :class="i===scope.row.areaList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
+                <template v-if="isNotBlank(k.purchaseVal)">
+                  <el-date-picker
+                    v-if="k.isModify"
+                    v-model="k.purchaseVal.timeArr"
+                    type="daterange"
+                    range-separator=":"
+                    size="small"
+                    class="date-item filter-item"
+                    value-format="x"
+                    start-placeholder="开始"
+                    end-placeholder="结束"
+                    @change="timeChange(k.purchaseVal,k)"
+                    :disabled="!isNotBlank(k.deepVal.timeArr)"
+                    :disabledDate="(date) => {if (k.deepVal.startDate) { return date.getTime() < k.deepVal.startDate || date.getTime() > k.date } else { return (scope.row.startDate?date.getTime() < scope.row.startDate:date.getTime() < globalProject.startDate) || date.getTime() > k.date }}"
+                  />
+                  <span>{{k.purchaseVal?.startDate && k.purchaseVal?.endDate? parseTime(k.purchaseVal.startDate,'{y}-{m}-{d}')+' : '+parseTime(k.purchaseVal.endDate,'{y}-{m}-{d}'): '-'}}</span>
+                </template>
+              </div>
+            </div>
+          </template>
+          <div v-else class="sandwich-cell-bottom"></div>
+        </template>
+        </el-table-column>
+        <el-table-column
           v-if="columns.visible('process')"
           key="process"
           prop="process"
@@ -287,12 +322,13 @@ const originDetailRow = ref({})
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '区域计划',
-    sort: ['id.desc'],
+    sort: ['sort.asc', 'id.desc'],
     permission: { ...permission.value },
     optShow: { ...optShow },
     requiredQuery: ['projectId'],
     crudApi: { ...crudApi },
-    hasPagination: true
+    hasPagination: true,
+    queryOnPresenterCreated: false
   },
   tableRef
 )
@@ -305,10 +341,13 @@ const { maxHeight } = useMaxHeight({
 
 watch(
   () => globalProjectId.value,
+  // 建钢和桥梁切换val的值触发两次，导致val为undefined发送请求后会导致服务器报错
   (val) => {
     if (val) {
       crud.query.projectId = globalProjectId.value
-      crud.toQuery()
+      setTimeout(() => {
+        crud.toQuery()
+      }, 10)
     }
   },
   { immediate: true, deep: true }
@@ -333,6 +372,7 @@ function objectSpanMethod({ row, column, rowIndex, columnIndex }) {
 function handleRow(row, index) {
   originDetailRow.value = JSON.parse(JSON.stringify(row.areaList[index]))
   row.areaList[index].isModify = true
+  console.log(row.areaList[index])
 }
 
 function rowCancel(row, index) {
@@ -352,8 +392,8 @@ function timeChange(value, k) {
 }
 
 function totalTime(k) {
-  const startDate = k.deepVal?.startDate || k.processVal?.startDate || k.deliveryVal?.startDate || k.installVal?.startDate || undefined
-  const endDate = k.deliveryVal?.startDate || k.installVal?.endDate || k.processVal?.endDate || k.deepVal?.endDate || undefined
+  const startDate = k.deepVal?.startDate || k.purchaseVal?.startDate || k.processVal?.startDate || k.deliveryVal?.startDate || k.installVal?.startDate || undefined
+  const endDate = k.installVal?.endDate || k.deliveryVal?.endDate || k.processVal?.endDate || k.purchaseVal?.endDate || k.deepVal?.endDate || undefined
   if (startDate && endDate) {
     k.totalDays = dateDifference(startDate, endDate)
   }
@@ -376,7 +416,7 @@ async function rowSubmit(row, index) {
     return
   }
   try {
-    const data = [{ ...row.areaList[index].deepVal }, { ...row.areaList[index].processVal }, { ...row.areaList[index].deliveryVal }]
+    const data = [{ ...row.areaList[index].deepVal }, { ...row.areaList[index].processVal }, { ...row.areaList[index].deliveryVal }, { ...row.areaList[index].purchaseVal }]
     if (globalProject.value.businessType === businessTypeEnum.INSTALLATION.V) {
       data.push({ ...row.areaList[index].installVal })
     }
@@ -404,6 +444,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
             const processVal = value.planDetailList.find(m => m.type === areaPlanTypeEnum.PROCESS.V)
             const installVal = value.planDetailList.find(m => m.type === areaPlanTypeEnum.INSTALL.V)
             const deliveryVal = value.planDetailList.find(m => m.type === areaPlanTypeEnum.DELIVERY.V) || {}
+            const purchaseVal = value.planDetailList.find(m => m.type === areaPlanTypeEnum.PURCHASE.V) || {}
             if (deepVal) {
               deepVal.timeArr = []
               if (deepVal.startDate && deepVal.endDate) {
@@ -429,10 +470,17 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
                 deliveryVal.timeArr = [deliveryVal.startDate, deliveryVal.endDate]
               }
             }
+            if (purchaseVal) {
+              purchaseVal.timeArr = []
+              if (purchaseVal.startDate && purchaseVal.endDate) {
+                purchaseVal.timeArr = [purchaseVal.startDate, purchaseVal.endDate]
+              }
+            }
             value.deepVal = deepVal
             value.processVal = processVal
             value.installVal = installVal
             value.deliveryVal = deliveryVal
+            value.purchaseVal = purchaseVal
             totalTime(value)
           })
         }

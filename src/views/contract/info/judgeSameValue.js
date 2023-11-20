@@ -1,7 +1,7 @@
 import { isNotBlank, deepClone } from '@data-type/index'
 // import { compareArray } from '@data-type/array'
 
-export function compareArrayValue(a, b, order=true) {
+export function compareArrayValue(a, b, order = true) {
   if (!(a instanceof Array)) return false
   if (!(b instanceof Array)) return false
   if (a.length !== b.length) return false
@@ -10,7 +10,7 @@ export function compareArrayValue(a, b, order=true) {
     for (let i = 0; i < a.length; i++) {
       if (typeof a[i] === 'object') {
         return isObjectValueEqual(a[i], b[i])
-      }else{
+      } else {
         if (a[i] !== b[i]) {
           return false
         }
@@ -50,11 +50,11 @@ export function isObjectValueEqual(a, b) {
     var propName = aProps[i]
     if (propName !== '__ob__' && a[propName] !== b[propName]) {
       if (typeof a[propName] === 'object') {
-        if(Array.isArray(a[propName])){
-          if(!compareArrayValue(a[propName], b[propName])){
+        if (Array.isArray(a[propName])) {
+          if (!compareArrayValue(a[propName], b[propName])) {
             return false
           }
-        }else{
+        } else {
           return isObjectValueEqual(a[propName], b[propName])
         }
       } else if (a[propName] || b[propName]) {

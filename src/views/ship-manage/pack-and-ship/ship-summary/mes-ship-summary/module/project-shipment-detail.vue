@@ -43,7 +43,7 @@
         />
       </div>
       <el-descriptions
-        v-show="category === mesShipStatisticsTypeEnum.STRUCTURE.V"
+        v-show="category === mesShipStatisticsTypeEnum.STRUCTURE.V || category === mesShipStatisticsTypeEnum.DIRECT.V"
         v-loading="summaryLoading"
         :data="summaryData"
         direction="vertical"
@@ -60,11 +60,12 @@
           }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="任务总量（吨）">
-          <span class="tc-primary" style="cursor: pointer" @click="openDetail('ASSIGNMENT')">{{
+          <span class="tc-primary" style="cursor: pointer" @click="openDetail('ASSIGNMENT')" v-if="category === mesShipStatisticsTypeEnum.STRUCTURE.V">{{
             props.weightStatus === weightTypeEnum.NET.V
               ? convertUnits(summaryData?.schedulingMete || 0, 'kg', 't', 2)
               : convertUnits(summaryData?.schedulingGrossMete || 0, 'kg', 't', 2)
           }}</span>
+          <span v-else>-</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="入库量（吨）">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('STORAGE')">{{
@@ -113,7 +114,6 @@
         v-show="category === mesShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V"
         :data="list"
         v-loading="tableLoading"
-        :show-empty-symbol="false"
       >
         <el-table-column prop="index" label="序号" align="center" width="45" type="index" />
         <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" :show-overflow-tooltip="true" min-width="100px" />
@@ -127,11 +127,23 @@
           :show-overflow-tooltip="true"
           min-width="120px"
         />
-        <el-table-column key="unit" prop="unit" label="单位" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="accountingUnit" prop="accountingUnit" label="核算单位" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="mete" prop="mete" label="核算量" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="measureUnit" prop="measureUnit" label="计量单位" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="quantity" prop="quantity" label="清单量" align="center" :show-overflow-tooltip="true" />
-        <el-table-column key="shipQuantity" prop="shipQuantity" label="已发运" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="cargoQuantity" prop="cargoQuantity" label="已发运" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="unCargoQuantity" prop="unCargoQuantity" label="未发运" align="center" :show-overflow-tooltip="true" />
       </common-table>
+      <!-- 分页组件 -->
+      <el-pagination
+        v-show="category === mesShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V"
+        :total="total"
+        :current-page="queryPage.pageNumber"
+        :page-size="queryPage.pageSize"
+        layout="total, prev, pager, next, sizes"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </div>
     <component
       :is="showComponent"
@@ -149,18 +161,22 @@
       :workshopId="props.workshopId"
       :projectId="props.currentRow.projectId"
       :detail-data="props.currentRow"
+      :category="category"
+      @changeDate="changeDate"
     />
   </div>
 </template>
 
 <script setup>
 import { ref, defineProps, watch, nextTick, computed } from 'vue'
-import { projectSummary, auxInboundDetail } from '@/api/ship-manage/pack-and-ship/ship-summary'
+import { projectSummary, structureDirectSummary, auxInboundDetail } from '@/api/ship-manage/pack-and-ship/ship-summary'
 import { weightTypeEnum } from '@enum-ms/common'
 import { convertUnits } from '@/utils/convert/unit'
 import { mesShipStatisticsTypeEnum } from '@enum-ms/ship-manage'
 import monomerSelect from '@/components-system/plan/monomer-select'
+import usePagination from '@compos/use-pagination'
 import mDetail from './detail.vue'
+import directDetail from './direct-detail'
 import detailDrawer from './detail-drawer.vue'
 
 const props = defineProps({
@@ -183,13 +199,18 @@ const props = defineProps({
   }
 })
 
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchAuxMat })
+
 const category = ref(mesShipStatisticsTypeEnum.STRUCTURE.V)
 const list = ref([])
 const tableLoading = ref(false)
 const areaInfo = ref([])
 const query = ref({
   monomerId: undefined,
-  areaId: undefined
+  areaId: undefined,
+  // date: [moment().startOf().valueOf(), moment().valueOf()],
+  startDate: undefined,
+  endDate: undefined
 })
 const summaryLoading = ref(false)
 const summaryData = ref({})
@@ -198,7 +219,7 @@ const detailVisible = ref(false)
 const drawerVisible = ref(false)
 
 const showComponent = computed(() => {
-  return mDetail
+  return category.value === mesShipStatisticsTypeEnum.STRUCTURE.V ? mDetail : directDetail
 })
 
 watch(
@@ -226,9 +247,21 @@ watch(
   (val) => {
     if (val === mesShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V) {
       fetchAuxMat()
+    } else {
+      fetchSummary()
     }
   }
 )
+
+const changeDate = (v) => {
+  if (v) {
+    query.value.startDate = v[0]
+    query.value.endDate = v[1]
+  } else {
+    query.value.startDate = undefined
+    query.value.endDate = undefined
+  }
+}
 
 function getAreaInfo(val) {
   areaInfo.value = val || []
@@ -242,11 +275,13 @@ async function fetchSummary() {
     return
   }
   try {
-    const data = await projectSummary({
+    const param = {
       projectId: props.currentRow.projectId,
       ...query.value,
       workshopId: props.workshopId
-    })
+    }
+    const api = category.value === mesShipStatisticsTypeEnum.STRUCTURE.V ? projectSummary : structureDirectSummary
+    const data = await api(param)
     summaryData.value = data || {}
   } catch (err) {
     console.log('获取项目发运数据汇总', err)
@@ -257,13 +292,15 @@ async function fetchSummary() {
 
 async function fetchAuxMat() {
   try {
-    const { content } = await auxInboundDetail({
+    const { content, totalElements } = await auxInboundDetail({
       projectId: props.currentRow.projectId,
       workshopId: props.workshopId,
       relationType: mesShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V,
-      ...query.value
+      ...query.value,
+      ...queryPage
     })
     list.value = content || []
+    setTotalPage(totalElements)
   } catch (e) {
     console.log('获取配套件详情失败')
   }

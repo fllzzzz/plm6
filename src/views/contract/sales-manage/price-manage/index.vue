@@ -3,33 +3,36 @@
     <div class="head-container">
       <div class="filter-container">
         <div class="filter-left-box">
-          <project-visa-select
-            v-model="projectId"
-            :default-id="globalProjectId"
-            class="filter-item"
-            style="width: 300px"
-            placeholder="可选择项目搜索"
-            @projectChange="projectChange"
-          />
           <common-radio-button
             v-model="productType"
-            :options="contractSaleTypeEnumArr"
+            :options="productEnum"
             default
             type="enumSL"
             size="small"
             class="filter-item"
-            @change="()=>{if(productType===contractSaleTypeEnum.AUXILIARY_MATERIAL.V){monomerId=undefined;areaId=undefined}}"
+            @change="(val)=>{if(val===contractSaleTypeEnum.ENCLOSURE.V){monomerId=undefined;areaId=undefined;relationType=undefined}else if(val===contractSaleTypeEnum.AUXILIARY_MATERIAL.V){monomerId=undefined;areaId=undefined;category=undefined;relationType=standardPartPriceSearchEnum.STRUCTURE.V;enclosurePlanId=undefined}else{category=undefined;enclosurePlanId=undefined;relationType=undefined;};fetchSaveCount();}"
           />
-          <template v-if="productType!==contractSaleTypeEnum.AUXILIARY_MATERIAL.V && productType!==contractSaleTypeEnum.ENCLOSURE.V">
+          <common-radio-button
+            v-if="productType===contractSaleTypeEnum.AUXILIARY_MATERIAL.V"
+            v-model="relationType"
+            :options="standardPartPriceSearchEnum.ENUM"
+            type="enum"
+            size="small"
+            class="filter-item"
+            @change="(val)=>{if(val===standardPartPriceSearchEnum.ENCLOSURE.V){monomerId=undefined;areaId=undefined}else{category=undefined;enclosurePlanId=undefined};fetchSaveCount()}"
+          />
+          <template v-if="((relationType && relationType!==standardPartPriceSearchEnum.ENCLOSURE.V) && productType!==contractSaleTypeEnum.ENCLOSURE.V) || productType!==contractSaleTypeEnum.ENCLOSURE.V && productType!==contractSaleTypeEnum.AUXILIARY_MATERIAL.V">
             <monomer-select
               v-model="monomerId"
               :project-id="projectId"
               class="filter-item"
+              :default="relationType?false:true"
               clearable
               @change="handleMonomerChange"
               @getAreaInfo="getAreaInfo"
             />
             <common-select
+              v-if="globalProject?.projectType !== projectTypeEnum.BRIDGE.V"
               v-model="areaId"
               :options="areaInfo"
               type="other"
@@ -39,10 +42,10 @@
               placeholder="请选择区域"
               class="filter-item"
               style="width:200px;"
-              @change="fetchCost"
+              @change="costNumChange"
             />
           </template>
-          <template v-if="productType===contractSaleTypeEnum.ENCLOSURE.V">
+          <template v-if="productType===contractSaleTypeEnum.ENCLOSURE.V || relationType===standardPartPriceSearchEnum.ENCLOSURE.V">
             <common-radio-button
               v-model="category"
               :options="typeOption"
@@ -61,7 +64,7 @@
               placeholder="请选择围护计划"
               class="filter-item"
               style="width:200px;"
-              @change="fetchCost"
+              @change="costNumChange"
             />
           </template>
         </div>
@@ -79,13 +82,26 @@
           <el-col :span="8">
             <Panel name="单体造价（元）" text-color="#626262" num-color="#1890ff" :end-val="monomerCost || 0" :precision="decimalPrecision.contract" />
           </el-col>
-          <el-col :span="8">
+          <el-col :span="globalProject?.projectType === projectTypeEnum.BRIDGE.V?12:8" v-if="globalProject?.projectType !== projectTypeEnum.BRIDGE.V">
             <Panel name="选定区域造价（元）" text-color="#626262" num-color="#1890ff" :end-val="areaCost || 0" :precision="decimalPrecision.contract" />
           </el-col>
         </el-row>
       </div>
     </div>
-    <component :is="currentView" ref="domRef" @refresh-count="fetchModifyCount" :category="category" />
+    <component :is="currentView" ref="domRef" @refresh-count="successFetchNum" :category="category" @showLog="showLog"/>
+    <!-- 提交记录 -->
+    <submitLog
+    v-model="submitVisible"
+    :projectId="projectId"
+    :type="productType"
+    :monomerId="monomerId"
+    :areaId="areaId"
+    :category="category"
+    :enclosurePlanId="enclosurePlanId"
+    :projectType="currentProjectVal?.projectType"
+    :relationType="relationType"
+    @refresh-count="successFetchNum"
+    @success="refreshData()"/>
     <!-- 商务变更记录 -->
     <common-drawer
       append-to-body
@@ -107,14 +123,16 @@
 </template>
 
 <script setup>
-import { cost, priceModifyCount } from '@/api/contract/sales-manage/price-manage/common'
+import { cost, priceModifyCount, saveNum } from '@/api/contract/sales-manage/price-manage/common'
+import { getPriceConfigPublic as getPriceConfig } from '@/api/config/mes/base'
 import { allProjectPlan } from '@/api/enclosure/enclosure-plan/area'
-import { ref, computed, onMounted, provide } from 'vue'
+import { ref, computed, provide, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { priceManagePM as permission } from '@/page-permission/contract'
 
-import { TechnologyTypeAllEnum } from '@enum-ms/contract'
+import { TechnologyTypeAllEnum, standardPartPriceSearchEnum, projectTypeEnum } from '@enum-ms/contract'
 import { contractSaleTypeEnum } from '@enum-ms/mes'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { debounce } from '@/utils'
 import { isBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
@@ -126,14 +144,19 @@ import enclosure from './enclosure'
 import auxiliaryMaterial from './auxiliary-material'
 import machinePart from './machine-part'
 import modifyRecord from './price-modify-list/index'
-import projectVisaSelect from '@comp-base/project-visa-select'
+import box from './box'
+// import projectVisaSelect from '@comp-base/project-visa-select'
 import Panel from '@/components/Panel'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
+import submitLog from './submit-log'
 
 const { decimalPrecision } = useDecimalPrecision()
 
 // 当前显示组件
 const currentView = computed(() => {
+  if (globalProject.value?.projectType === projectTypeEnum.BRIDGE.V) {
+    return box
+  }
   switch (productType.value) {
     case contractSaleTypeEnum.ENCLOSURE.V:
       return enclosure
@@ -146,7 +169,7 @@ const currentView = computed(() => {
   }
 })
 
-const { globalProjectId, contractSaleTypeEnumArr } = mapGetters(['globalProjectId', 'contractSaleTypeEnumArr'])
+const { globalProject, globalProjectId, contractSaleTypeEnumArr } = mapGetters(['globalProject', 'globalProjectId', 'contractSaleTypeEnumArr'])
 
 const domRef = ref()
 const projectId = ref()
@@ -166,6 +189,11 @@ const enclosureAreaInfo = ref([])
 const enclosurePlanId = ref()
 const category = ref()
 const typeOption = ref([])
+const priceEditMode = ref()
+const submitVisible = ref(false)
+const saveCount = ref()
+const relationType = ref()
+
 const techOptions = [
   {
     name: '压型彩板',
@@ -194,73 +222,9 @@ const techOptions = [
   }
 ]
 
-provide('monomerId', monomerId)
-provide('areaId', areaId)
-provide('projectId', projectId)
-provide('modifyVisible', modifyVisible)
-provide('enclosurePlanId', enclosurePlanId)
-
-onMounted(() => {
-  handleProjectChange()
-})
-
-// 项目变动
-function handleProjectChange() {
-  fetchCost()
-  fetchModifyCount()
-}
-
-// 单体变动
-function handleMonomerChange() {
-  fetchCost()
-}
-
-function projectChange(val) {
-  currentProjectVal.value = val
-  typeOption.value = []
-  enclosureAreaInfo.value = []
-  enclosurePlanId.value = undefined
-  if (isNotBlank(currentProjectVal.value)) {
-    techOptions.forEach((v) => {
-      if (val.projectContentList.findIndex((k) => Number(k.no) === v.no) > -1) {
-        typeOption.value.push(v)
-      }
-    })
-    if (typeOption.value.length > 0) {
-      category.value = typeOption.value[0].no
-      getAllProjectPlan()
-    }
-  }
-}
-
-function categoryChange(val) {
-  enclosurePlanId.value = undefined
-  enclosureAreaInfo.value = allEnclosureAreaInfo.value.filter(v => v.category === category.value) || []
-  if (enclosureAreaInfo.value && enclosureAreaInfo.value.length > 0) {
-    enclosurePlanId.value = enclosureAreaInfo.value[0].id
-  }
-}
-
-async function getAllProjectPlan() {
-  try {
-    const data = await allProjectPlan(currentProjectVal.value.id) || []
-    allEnclosureAreaInfo.value = data
-    enclosureAreaInfo.value = allEnclosureAreaInfo.value.filter(v => v.category === category.value) || []
-    if (enclosureAreaInfo.value && enclosureAreaInfo.value.length > 0) {
-      enclosurePlanId.value = enclosureAreaInfo.value[0].id
-    }
-  } catch (e) {
-    console.log('获取围护项目所有计划', e)
-  }
-}
-
-function getAreaInfo(val) {
-  fetchCost()
-  areaInfo.value = val
-}
 // 获取项目造价
 const fetchCost = debounce(async function () {
-  if (!checkPermission(permission.cost) || isBlank(projectId.value) || productType.value === contractSaleTypeEnum.ENCLOSURE.V) {
+  if (!checkPermission(permission.cost) || isBlank(projectId.value) || productType.value === contractSaleTypeEnum.ENCLOSURE.V || !productType.value) {
     projectCost.value = 0
     monomerCost.value = 0
     areaCost.value = 0
@@ -271,7 +235,8 @@ const fetchCost = debounce(async function () {
     const params = {
       projectId: projectId.value,
       monomerId: monomerId.value,
-      areaId: areaId.value
+      areaId: areaId.value,
+      type: productType.value
     }
     const { monomerPrice, projectPrice, areaPrice } = await cost(params)
     projectCost.value = projectPrice || 0
@@ -294,38 +259,207 @@ const fetchModifyCount = debounce(async function () {
   }
 }, 100, false)
 
+// 获取提交记录数量
+const fetchSaveCount = debounce(async function () {
+  if (!checkPermission(permission.list)) return
+  try {
+    let countParams = {}
+    switch (productType.value) {
+      case contractSaleTypeEnum.ENCLOSURE.V:
+        countParams = {
+          category: category.value,
+          enclosurePlanId: enclosurePlanId.value,
+          projectId: projectId.value,
+          projectType: currentProjectVal.value?.projectType,
+          type: productType.value
+        }
+        break
+      case contractSaleTypeEnum.AUXILIARY_MATERIAL.V:
+        countParams = relationType.value === standardPartPriceSearchEnum.STRUCTURE.V ? {
+          areaId: areaId.value,
+          monomerId: monomerId.value,
+          projectId: projectId.value,
+          projectType: currentProjectVal.value?.projectType,
+          relationType: relationType.value,
+          type: productType.value
+        } : {
+          category: category.value,
+          enclosurePlanId: enclosurePlanId.value,
+          projectId: projectId.value,
+          projectType: currentProjectVal.value?.projectType,
+          relationType: relationType.value,
+          type: productType.value
+        }
+        break
+      default:
+        countParams = {
+          areaId: areaId.value,
+          monomerId: monomerId.value,
+          projectId: projectId.value,
+          projectType: currentProjectVal.value?.projectType,
+          type: productType.value
+        }
+        break
+    }
+    saveCount.value = await saveNum(countParams)
+  } catch (error) {
+    console.log('提交记录待提交数量', error)
+  }
+}, 100, false)
+
+watch(
+  globalProjectId,
+  (val) => {
+    projectId.value = globalProjectId.value
+    projectChange(globalProject.value)
+    handleProjectChange()
+  },
+  { immediate: true }
+)
+
+provide('monomerId', monomerId)
+provide('areaId', areaId)
+provide('projectId', projectId)
+provide('modifyVisible', modifyVisible)
+provide('enclosurePlanId', enclosurePlanId)
+provide('globalProject', globalProject)
+provide('priceEditMode', priceEditMode)
+provide('saveCount', saveCount)
+provide('relationType', relationType)
+provide('category', category)
+
+// 产品类型
+const productEnum = computed(() => {
+  // 箱体和建刚不会同时存在
+  if (globalProject.value?.projectType === projectTypeEnum.BRIDGE.V) {
+    return [bridgeComponentTypeEnum.BOX]
+  }
+  if (globalProject.value?.projectType === projectTypeEnum.ENCLOSURE.V) {
+    return [contractSaleTypeEnum.ENCLOSURE, contractSaleTypeEnum.AUXILIARY_MATERIAL]
+  }
+  return contractSaleTypeEnumArr.value
+})
+
+// onMounted(() => {
+//   handleProjectChange()
+// })
+
+// 项目变动
+function handleProjectChange() {
+  fetchCost()
+  fetchModifyCount()
+}
+
+// 单体变动
+function handleMonomerChange() {
+  fetchCost()
+}
+
+function successFetchNum() {
+  fetchModifyCount()
+  fetchSaveCount()
+}
+
+fetchSubmitConfig()
+
+async function fetchSubmitConfig() {
+  try {
+    const data = await getPriceConfig()
+    priceEditMode.value = data?.priceEditMode
+  } catch (error) {
+    console.log('获取特征定义审批配置', error)
+  }
+}
+
+function projectChange(val) {
+  currentProjectVal.value = val
+  typeOption.value = []
+  enclosureAreaInfo.value = []
+  enclosurePlanId.value = undefined
+  if (isNotBlank(currentProjectVal.value)) {
+    techOptions.forEach((v) => {
+      if (val.projectContentList.findIndex((k) => Number(k.no) === v.no) > -1) {
+        typeOption.value.push(v)
+      }
+    })
+    if (typeOption.value.length > 0) {
+      category.value = typeOption.value[0].no
+      getAllProjectPlan()
+    }
+  }
+  fetchSaveCount()
+}
+
+function categoryChange(val) {
+  enclosurePlanId.value = undefined
+  enclosureAreaInfo.value = allEnclosureAreaInfo.value.filter(v => v.category === category.value) || []
+  if (enclosureAreaInfo.value && enclosureAreaInfo.value.length > 0 && !relationType.value) {
+    enclosurePlanId.value = enclosureAreaInfo.value[0].id
+  }
+  fetchSaveCount()
+}
+
+function costNumChange() {
+  fetchSaveCount()
+  fetchCost()
+}
+
+async function getAllProjectPlan() {
+  try {
+    const data = await allProjectPlan(currentProjectVal.value.id) || []
+    allEnclosureAreaInfo.value = data
+    enclosureAreaInfo.value = allEnclosureAreaInfo.value.filter(v => v.category === category.value) || []
+    if (enclosureAreaInfo.value && enclosureAreaInfo.value.length > 0) {
+      enclosurePlanId.value = enclosureAreaInfo.value[0].id
+    }
+  } catch (e) {
+    console.log('获取围护项目所有计划', e)
+  }
+}
+
+function getAreaInfo(val) {
+  fetchCost()
+  fetchSaveCount()
+  areaInfo.value = val
+}
+
 // 刷新数据
 function refreshData() {
   handleProjectChange()
   domRef.value.refresh()
 }
+
+function showLog() {
+  submitVisible.value = true
+}
+
 </script>
 
 <style lang="scss" scoped>
-$default-cell-mask-color: #52f09840;
-::v-deep(.mask-td) {
-  .cell {
-    &:after {
-      background-color: $default-cell-mask-color;
-    }
-  }
-}
+// $default-cell-mask-color: #52f09840;
+// ::v-deep(.mask-td) {
+//   .cell {
+//     &:after {
+//       background-color: $default-cell-mask-color;
+//     }
+//   }
+// }
 
-::v-deep(.wrong-td) {
-  .cell {
-    &:after {
-      content: '';
-      position: absolute;
-      z-index: 1;
-      background-color: #ff000021;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      pointer-events: none; // 穿透
-    }
-  }
-}
+// ::v-deep(.wrong-td) {
+//   .cell {
+//     &:after {
+//       content: '';
+//       position: absolute;
+//       z-index: 1;
+//       background-color: #ff000021;
+//       top: 0;
+//       right: 0;
+//       bottom: 0;
+//       left: 0;
+//       pointer-events: none; // 穿透
+//     }
+//   }
+// }
 
 ::v-deep(.el-table.businessTable) {
   th,

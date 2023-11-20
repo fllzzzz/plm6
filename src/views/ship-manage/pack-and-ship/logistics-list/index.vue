@@ -58,6 +58,7 @@
         :show-overflow-tooltip="true"
         label="车牌号"
         align="center"
+        width="120"
       />
       <el-table-column
         v-if="columns.visible('driverName')"
@@ -84,6 +85,7 @@
         prop="actualWeight"
         label="装载重量(t)"
         align="center"
+        width="120"
       >
         <template v-slot="scope">
           <span>{{ convertUnits(scope.row.actualWeight, 'kg', 't', DP.COM_WT__T) }}</span>
@@ -197,24 +199,31 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <priceForm v-model="formVisible" :detailInfo="detailInfo" :showType="showType" @success="crud.toQuery" />
+    <priceForm
+      v-model="formVisible"
+      :detailInfo="detailInfo"
+      :showType="showType"
+      :projectType="crud.query.projectType"
+      @success="crud.toQuery"
+    />
   </div>
 </template>
 
 <script setup>
-import crudApi from '@/api/ship-manage/pack-and-ship/logistics-list'
-import { ref } from 'vue'
-
+import { get, getBridge } from '@/api/ship-manage/pack-and-ship/logistics-list'
+import { ref, provide } from 'vue'
+import useUserProjects from '@compos/store/use-user-projects'
 import { logisticsPM as permission } from '@/page-permission/ship-manage'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { packTypeEnum, logisticsPriceTypeEnum, deliveryStatusEnum, freightChangeTypeEnum } from '@enum-ms/mes'
+import { projectTypeEnum } from '@enum-ms/contract'
 import { projectNameFormatter } from '@/utils/project'
 import { DP } from '@/settings/config'
 import { cleanArray } from '@/utils/data-type/array'
 import EO from '@enum'
 import { toFixed } from '@/utils/data-type'
 import { convertUnits } from '@/utils/convert/unit'
-
+import { mapGetters } from '@/store/lib'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -235,24 +244,34 @@ const tableRef = ref()
 const formVisible = ref(false)
 const detailInfo = ref({})
 const showType = ref()
-const { crud, columns } = useCRUD(
+const { crud, CRUD, columns } = useCRUD(
   {
     title: '物流记录',
     sort: ['auditTime.desc'],
     permission: { ...permission },
-    crudApi: { ...crudApi },
+    crudApi: { get },
     optShow: { ...optShow },
     invisibleColumns: ['manufactureType', 'productType', 'serialNumber']
   },
   tableRef
 )
 
+const { currentProjectType } = mapGetters(['currentProjectType'])
 const { maxHeight } = useMaxHeight({ paginate: true })
+
+const { projects } = useUserProjects()
+
+provide('projects', projects)
 
 function openForm(row, type) {
   showType.value = type
   detailInfo.value = row?.sourceRow
   formVisible.value = true
+}
+
+CRUD.HOOK.beforeToQuery = () => {
+  crud.query.projectType = currentProjectType.value
+  crud.crudApi.get = crud.query.projectType === projectTypeEnum.BRIDGE.V ? getBridge : get
 }
 </script>
 <style lang="scss" scoped>

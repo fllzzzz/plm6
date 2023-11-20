@@ -36,4 +36,14 @@ export function del(data) {
   })
 }
 
+// 部件特征定义修改审核
+export function audit(data) {
+  return request({
+    module: 'contract',
+    url: 'system/assemble-config/auditUpdate',
+    method: 'put',
+    data
+  })
+}
+
 export default { get, add, edit, del }

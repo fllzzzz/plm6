@@ -5,31 +5,46 @@
         <div class="form-row">
           <el-form-item label="客户名称" prop="customerUnit">
             <div class="input-underline">
-              <span>{{ detail.customerUnit }}</span>
+               <template v-if="(detail.customerUnit || originContractInfo.customerUnit) && originContractInfo.customerUnit!==detail.customerUnit">
+                  <cell-change-preview :old="originContractInfo.customerUnit" :new="detail.customerUnit" />
+                </template>
+                <span v-else>{{ detail.customerUnit }}</span>
             </div>
           </el-form-item>
           <el-form-item label="社会统一代码" prop="socialCode">
             <div class="input-underline">
-              <span>{{ detail.socialCode }}</span>
+              <template v-if="(detail.socialCode || originContractInfo.socialCode) && originContractInfo.socialCode!==detail.socialCode">
+                <cell-change-preview :old="originContractInfo.socialCode" :new="detail.socialCode" />
+              </template>
+              <span v-else>{{ detail.socialCode }}</span>
             </div>
           </el-form-item>
         </div>
         <div class="form-row">
           <el-form-item label="联系电话" prop="customerUnitPhone">
             <div class="input-underline">
-              <span>{{ detail.customerUnitPhone }}</span>
+              <template v-if="(detail.customerUnitPhone || originContractInfo.customerUnitPhone) && originContractInfo.customerUnitPhone!==detail.customerUnitPhone">
+                <cell-change-preview :old="originContractInfo.customerUnitPhone" :new="detail.customerUnitPhone" />
+              </template>
+              <span v-else>{{ detail.customerUnitPhone }}</span>
             </div>
           </el-form-item>
           <el-form-item label="邮箱" prop="customerEmail">
             <div class="input-underline">
-              <span class="detail-break">{{ detail.customerEmail }}</span>
+              <template v-if="(detail.customerEmail || originContractInfo.customerEmail) && originContractInfo.customerEmail!==detail.customerEmail">
+                <cell-change-preview :old="originContractInfo.customerEmail" :new="detail.customerEmail" />
+              </template>
+              <span v-else class="detail-break">{{ detail.customerEmail }}</span>
             </div>
           </el-form-item>
         </div>
         <div class="form-row">
           <el-form-item label="省市区" prop="region">
             <div class="input-underline">
-              <span>{{detail.customerCountryName}}</span><span>{{detail.customerProvinceName}}</span><span>{{detail.customerCityName}}</span><span>{{detail.customerRegionName}}</span>
+              <template v-if="(!judgeSameValue(detail.customerCountryName,originContractInfo.customerCountryName) || !judgeSameValue(detail.customerProvinceName,originContractInfo.customerProvinceName)|| !judgeSameValue(detail.customerCityName,originContractInfo.customerCityName) ||!judgeSameValue(detail.customerRegionName,originContractInfo.customerRegionName))">
+                <cell-change-preview :old="(originContractInfo.customerCountryName || '')+(originContractInfo.customerProvinceName || '')+(originContractInfo.customerCityName || '')+(originContractInfo.customerRegionName || '')" :new="(detail.customerCountryName || '')+(detail.customerProvinceName || '')+(detail.customerCityName || '')+(detail.customerRegionName || '')" />
+              </template>
+              <span v-else>{{detail.customerCountryName}}</span><span>{{detail.customerProvinceName}}</span><span>{{detail.customerCityName}}</span><span>{{detail.customerRegionName}}</span>
             </div>
           </el-form-item>
           <el-form-item label="详细地址" prop="customerAddress">
@@ -41,78 +56,125 @@
         <div class="form-row">
           <el-form-item label="银行账户户名" prop="customerBankUserName">
             <div class="input-underline">
-              <span class="detail-break">{{ detail.customerBankUserName }}</span>
+              <template v-if="!judgeSameValue(originContractInfo.customerBankUserName,detail.customerBankUserName)">
+                <cell-change-preview :old="originContractInfo.customerBankUserName" :new="detail.customerBankUserName" />
+              </template>
+              <span v-else class="detail-break">{{ detail.customerBankUserName }}</span>
             </div>
           </el-form-item>
           <el-form-item label="银行账号" prop="customerBankCode">
             <div class="input-underline" style="width:260px;">
-              <span>{{ detail.customerBankCode }}</span>
+              <template v-if="!judgeSameValue(originContractInfo.customerBankCode,detail.customerBankCode)">
+                <cell-change-preview :old="originContractInfo.customerBankCode" :new="detail.customerBankCode" />
+              </template>
+              <span v-else>{{ detail.customerBankCode }}</span>
             </div>
           </el-form-item>
           <el-form-item label="开户行" prop="customerBankName">
             <div class="input-underline" style="width:260px;">
-              <span>{{ detail.customerBankName }}</span>
+              <template v-if="!judgeSameValue(originContractInfo.customerBankName,detail.customerBankName)">
+                <cell-change-preview :old="originContractInfo.customerBankName" :new="detail.customerBankName" />
+              </template>
+              <span v-else>{{ detail.customerBankName }}</span>
             </div>
           </el-form-item>
         </div>
           <div class="form-row">
           <el-form-item label="收货负责人" prop="receivingManager">
             <div class="input-underline">
-              <span>{{ detail.receivingManager }}</span>
+              <template v-if="!judgeSameValue(originContractInfo.receivingManager,detail.receivingManager)">
+                <cell-change-preview :old="originContractInfo.receivingManager" :new="detail.receivingManager" />
+              </template>
+              <span v-else>{{ detail.receivingManager }}</span>
             </div>
           </el-form-item>
           <el-form-item label="联系电话" prop="receivingManagerPhone">
             <div class="input-underline">
-              <span>{{ detail.receivingManagerPhone }}</span>
+              <template v-if="!judgeSameValue(originContractInfo.receivingManagerPhone,detail.receivingManagerPhone)">
+                <cell-change-preview :old="originContractInfo.receivingManagerPhone" :new="detail.receivingManagerPhone" />
+              </template>
+              <span v-else>{{ detail.receivingManagerPhone }}</span>
             </div>
           </el-form-item>
         </div>
         <div class="form-row">
           <el-form-item label="结算负责人" prop="settleManager">
             <div class="input-underline">
-              <span>{{ detail.settleManager }}</span>
+              <template v-if="!judgeSameValue(originContractInfo.settleManager,detail.settleManager)">
+                <cell-change-preview :old="originContractInfo.settleManager" :new="detail.settleManager" />
+              </template>
+              <span v-else>{{ detail.settleManager }}</span>
             </div>
           </el-form-item>
           <el-form-item label="联系电话" prop="settleManagerPhone">
             <div class="input-underline">
-              <span>{{ detail.settleManagerPhone }}</span>
+              <template v-if="!judgeSameValue(originContractInfo.settleManagerPhone,detail.settleManagerPhone)">
+                <cell-change-preview :old="originContractInfo.settleManagerPhone" :new="detail.settleManagerPhone" />
+              </template>
+              <span v-else>{{ detail.settleManager }}</span>
             </div>
           </el-form-item>
         </div>
         <div class="form-row">
           <el-form-item label="财务负责人" prop="financeManager">
             <div class="input-underline">
-              <span>{{ detail.financeManager }}</span>
+              <template v-if="!judgeSameValue(originContractInfo.financeManager,detail.financeManager)">
+                <cell-change-preview :old="originContractInfo.financeManager" :new="detail.financeManager" />
+              </template>
+              <span v-else>{{ detail.financeManager }}</span>
             </div>
           </el-form-item>
           <el-form-item label="联系电话" prop="financeManagerPhone">
             <div class="input-underline">
-              <span>{{ detail.financeManagerPhone }}</span>
+              <template v-if="!judgeSameValue(originContractInfo.financeManagerPhone,detail.financeManagerPhone)">
+                <cell-change-preview :old="originContractInfo.financeManagerPhone" :new="detail.financeManagerPhone" />
+              </template>
+              <span v-else>{{ detail.financeManagerPhone }}</span>
             </div>
           </el-form-item>
         </div>
         <div class="form-row">
           <el-form-item label="审核负责人" prop="auditManager">
             <div class="input-underline">
-              <span>{{ detail.auditManager }}</span>
+              <template v-if="!judgeSameValue(originContractInfo.auditManager,detail.auditManager)">
+                <cell-change-preview :old="originContractInfo.auditManager" :new="detail.auditManager" />
+              </template>
+              <span v-else>{{ detail.auditManager }}</span>
             </div>
           </el-form-item>
           <el-form-item label="联系电话" prop="auditManagerPhone">
             <div class="input-underline">
-              <span>{{ detail.auditManagerPhone }}</span>
+              <template v-if="!judgeSameValue(originContractInfo.auditManagerPhone,detail.auditManagerPhone)">
+                <cell-change-preview :old="originContractInfo.auditManagerPhone" :new="detail.auditManagerPhone" />
+              </template>
+              <span v-else>{{ detail.auditManagerPhone }}</span>
             </div>
           </el-form-item>
         </div>
         <div class="form-row">
           <el-form-item label="设计负责人" prop="designManager">
             <div class="input-underline">
-              <span>{{ detail.designManager }}</span>
+              <template v-if="!judgeSameValue(originContractInfo.designManager,detail.designManager)">
+                <cell-change-preview :old="originContractInfo.designManager" :new="detail.designManager" />
+              </template>
+              <span v-else>{{ detail.designManager }}</span>
             </div>
           </el-form-item>
           <el-form-item label="联系电话" prop="designManagerPhone">
             <div class="input-underline">
-              <span>{{ props.detail.designManagerPhone }}</span>
+              <template v-if="!judgeSameValue(originContractInfo.designManagerPhone,detail.designManagerPhone)">
+                <cell-change-preview :old="originContractInfo.designManagerPhone" :new="detail.designManagerPhone" />
+              </template>
+              <span v-else>{{ props.detail.designManagerPhone }}</span>
             </div>
+          </el-form-item>
+        </div>
+        <div>
+          <el-form-item label="备注">
+            <template v-if="!judgeSameValue(originContractInfo.customerRemark,detail.customerRemark)">
+              <cell-change-preview :old="originContractInfo.customerRemark" :new="detail.customerRemark" />
+            </template>
+            <span v-else>{{ props.detail.customerRemark }}</span>
           </el-form-item>
         </div>
       </div>
@@ -122,12 +184,18 @@
 
 <script setup>
 import { ref, defineProps } from 'vue'
+import cellChangePreview from '@comp-common/cell-change-preview'
+import { judgeSameValue } from '@data-type/index'
 
 const formRef = ref()
 const form = ref({})
 
 const props = defineProps({
   detail: {
+    type: Object,
+    default: () => {}
+  },
+  originContractInfo: {
     type: Object,
     default: () => {}
   }

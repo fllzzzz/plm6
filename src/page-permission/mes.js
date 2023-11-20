@@ -43,6 +43,11 @@ export const surplusListPM = {
   scrap: ['mes_surplus_list:scrap'] // 报废
 }
 
+// 变更管理/成品变更清单
+export const finishedProductChangePM = {
+  download: ['mes_finished_product_change:download'] // 下载
+}
+
 // --------------------------- 变更管理 end --------------------------------
 
 // ########################################################################

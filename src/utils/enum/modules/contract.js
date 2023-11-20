@@ -47,7 +47,7 @@ const TechnologyMainTypeEnum = {
   STRUCTURE: { L: '结构', K: 'STRUCTURE', V: 1 << 1 },
   ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: 1 << 2 },
   AUXILIARY_MATERIAL: { L: '配套件', K: 'AUXILIARY_MATERIAL', V: 1 << 3 },
-  BOX: { L: '箱体', K: 'BOX', V: 1 << 4 }
+  BOX: { L: '分段制品', K: 'BOX', V: 1 << 4 }
 }
 constantize(TechnologyMainTypeEnum)
 
@@ -72,6 +72,13 @@ const TechnologyTypeAllEnum = {
   BRIDGE: { L: '箱体', K: 'BRIDGE', V: 1 << 7 }
 }
 constantize(TechnologyTypeAllEnum)
+
+// 业务类型
+const standardPartPriceSearchEnum = {
+  STRUCTURE: { L: '结构配套件', K: 'STRUCTURE', V: 1 << 1 },
+  ENCLOSURE: { L: '围护配套件', K: 'ENCLOSURE', V: 1 << 2 }
+}
+constantize(standardPartPriceSearchEnum)
 
 // 业务类型
 const businessTypeEnum = {
@@ -379,6 +386,12 @@ const isEnclosureContainEnum = {
 }
 constantize(isEnclosureContainEnum)
 
+const priceEditModeEnum = {
+  AUDIT: { L: '提交即审核', K: 'AUDIT', V: 1 },
+  SAVE: { L: '提交即保存', K: 'SAVE', V: 2 }
+}
+constantize(priceEditModeEnum)
+
 export {
   projectStatusEnum, // 项目状态
   projectTypeEnum, // 项目类型
@@ -423,7 +436,9 @@ export {
   managementSalaryTypeEnum,
   mainAuxiliaryTypeEnum,
   structureTypeEnum,
-  isEnclosureContainEnum
+  isEnclosureContainEnum,
+  priceEditModeEnum,
+  standardPartPriceSearchEnum
 }
 
 export default {
@@ -470,5 +485,7 @@ export default {
   managementSalaryTypeEnum, // 不同人员类型工资
   mainAuxiliaryTypeEnum,
   structureTypeEnum,
-  isEnclosureContainEnum
+  isEnclosureContainEnum,
+  priceEditModeEnum,
+  standardPartPriceSearchEnum
 }

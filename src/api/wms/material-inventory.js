@@ -77,3 +77,13 @@ export function getGasInventory(params) {
     params
   })
 }
+
+// 根据ids获取钢板库存
+export function getStock(params) {
+  return request({
+    module: 'wms',
+    url: 'material-inventory/ids',
+    method: 'get',
+    params
+  })
+}

@@ -111,7 +111,7 @@
           <common-button type="primary" icon="el-icon-view" size="mini" @click.stop="showDetail" />
         </el-descriptions-item>
       </el-descriptions>
-      <common-table v-show="query.category === 64" :data="list" v-loading="tableLoading" :show-empty-symbol="false">
+      <common-table v-show="query.category === 64" :data="list" v-loading="tableLoading">
         <el-table-column prop="index" label="序号" align="center" width="45" type="index" />
         <el-table-column key="name" prop="name" label="名称" align="center" :show-overflow-tooltip="true" min-width="100px" />
         <el-table-column
@@ -122,11 +122,22 @@
           :show-overflow-tooltip="true"
           min-width="120px"
         />
-        <el-table-column key="measureUnit" prop="measureUnit" label="单位" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="accountingUnit" prop="accountingUnit" label="核算单位" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="mete" prop="mete" label="核算量" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="measureUnit" prop="measureUnit" label="计量单位" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="quantity" prop="quantity" label="清单量" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="cargoQuantity" prop="cargoQuantity" label="已发运" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="unCargoQuantity" prop="unCargoQuantity" label="未发运" align="center" :show-overflow-tooltip="true" />
       </common-table>
+      <el-pagination
+        v-show="query.category === 64"
+        :total="total"
+        :current-page="queryPage.pageNumber"
+        :page-size="queryPage.pageSize"
+        layout="total, prev, pager, next, sizes"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </div>
     <component
       :is="showComponent"
@@ -157,6 +168,7 @@ import { DP } from '@/settings/config'
 import checkPermission from '@/utils/system/check-permission'
 import { convertUnits } from '@/utils/convert/unit'
 // import monomerSelect from '@/components-system/plan/monomer-select'
+import usePagination from '@compos/use-pagination'
 import mDetail from './detail.vue'
 import detailDrawer from './detail-drawer.vue'
 
@@ -180,6 +192,8 @@ const props = defineProps({
     default: () => []
   }
 })
+
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchAuxMat })
 
 const list = ref([])
 const tableLoading = ref(false)
@@ -245,13 +259,15 @@ async function fetchBatch() {
 
 async function fetchAuxMat() {
   try {
-    const { content } = await auxInboundDetail({
+    const { content, totalElements } = await auxInboundDetail({
       projectId: props.currentRow.projectId,
       workshopId: props.workshopId,
       relationType: 4, // 围护配套件
-      ...query.value
+      ...query.value,
+      ...queryPage
     })
     list.value = content || []
+    setTotalPage(totalElements)
   } catch (e) {
     console.log('获取配套件详情失败')
   }

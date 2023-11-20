@@ -173,7 +173,7 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, provide } from 'vue'
 import crudApi from '@/api/contract/fortune-report/fortune-report'
 import pagination from '@crud/Pagination'
 import checkPermission from '@/utils/system/check-permission'
@@ -185,7 +185,7 @@ import { toThousand } from '@data-type/number'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
-
+import useProjectTree from '@compos/store/use-project-tree'
 import ExportButton from '@comp-common/export-button/index.vue'
 import mHeader from './module/header.vue'
 import costPageDialog from './cost-page-dialog/index'
@@ -198,6 +198,9 @@ const optShow = {
 }
 
 const { decimalPrecision } = useDecimalPrecision()
+const { projectTree } = useProjectTree()
+
+provide('projectTree', projectTree)
 
 const tableRef = ref()
 const list = ref({})
@@ -239,6 +242,10 @@ function showCostDetail(row) {
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
+  projectTree.value = projectTree.value.map(p => {
+    p.serialNumberName = p.serialNumber + ' ' + p.name
+    return p
+  })
   res.data.content = res.data.content?.map(v => {
     if (v.settlementStatus === settlementStatusEnum.SETTLED.V) {
       v.status = projectStatusEnum.SETTLED.V

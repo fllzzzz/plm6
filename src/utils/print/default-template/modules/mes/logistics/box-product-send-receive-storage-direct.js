@@ -1,13 +1,13 @@
-import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, amountUnitEnum } from '@/utils/print/enum'
+import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum } from '@/utils/print/enum'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
-// 配套件发运跟踪
-const contractAuxiliaryMaterialShipmentTracking = {
+// 发运管理-桥梁直发件制成品入发存
+const boxProductSendReceiveStorageDirect = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'contractAuxiliaryMaterialShipmentTracking', // 表格类型 KEY
-  name: '配套件发运跟踪（平台）', // 表格名称
+  type: 'boxProductSendReceiveStorageDirect', // 表格类型 KEY
+  name: '桥梁直发件制成品入发存（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -61,7 +61,7 @@ const contractAuxiliaryMaterialShipmentTracking = {
   title: {
     show: true,
     allPage: false,
-    title: '配套件发运跟踪',
+    title: '桥梁直发件制成品入发存',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -103,8 +103,9 @@ const contractAuxiliaryMaterialShipmentTracking = {
      * @param {*} format 格式转换
      */
     fields: [ // 字段内容
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'date', title: '统计日期：', width: 110, type: typeEnum.OTHER.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 40, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'datetime', title: '统计日期：', width: 50, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'workShopName', title: '车间：', width: 50, type: typeEnum.WORKSHOP.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 50, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 40, type: typeEnum.USER_NAME.K }
     ]
   },
@@ -123,13 +124,13 @@ const contractAuxiliaryMaterialShipmentTracking = {
     * @param {array} fields // 字段
     */
   footer: {
-    show: false,
+    show: true,
     allPage: false,
     align: alignEnum.LEFT.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 15,
+    height: 0,
     width: 190,
     emptyVal: '',
     /**
@@ -153,7 +154,8 @@ const contractAuxiliaryMaterialShipmentTracking = {
      * @param {enum} type 数据类型
      * @param {*} format 格式转换
      */
-    fields: []
+    fields: [
+    ]
   },
   table: {
     /**
@@ -184,7 +186,7 @@ const contractAuxiliaryMaterialShipmentTracking = {
      * @param {boolean} show 是否显示
      * @param {string} title 合计名称
      */
-    summary: { show: false, title: '合计' },
+    summary: { show: true, title: '合计' },
     /**
      * 表格列
      * @param {boolean} show 是否显示
@@ -199,25 +201,22 @@ const contractAuxiliaryMaterialShipmentTracking = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'project', title: '项目', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 24, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
-      { show: true, key: 'monomer.name', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.MONOMER_NAME.K },
-      { show: true, key: 'area.name', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.AREA_NAME.K },
-      { show: true, key: 'name', title: '名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.STRUCTURE_NAME.K },
-      { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SPECIFICATION.K },
-      { show: true, key: 'measureUnit', title: '单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.ACCOUNTING_UNIT.K },
-      { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }},
-      { show: true, key: 'unitPrice', title: '综合单价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
-      { show: true, key: 'totalPrice', title: '金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
-      { show: true, key: 'createTime', title: '发运日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
-      { show: false, key: 'actualUserName', title: '过磅人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K },
-      { show: false, key: 'supplierName', title: '物流公司', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, width: 22, type: typeEnum.COMPANY_NAME.K },
-      { show: false, key: 'cargoSerialNumber', title: '车次', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.GUID.K },
-      { show: false, key: 'licensePlate', title: '车牌', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.LICENSE_PLATE.K },
-      { show: false, key: 'workshopNames', title: '生产部门', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DEPT.K }
+      { show: true, key: 'project', title: '项目名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 26, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
+      // { show: true, key: 'workshopName', title: '车间', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 13, type: typeEnum.WORKSHOP.K },
+      { show: true, key: 'quantity', title: '清单数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.QUANTITY.K, sum: true },
+      { show: true, key: 'totalNetWeight', title: '清单量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.METE.K, sum: true },
+      { show: true, key: 'beginningQuantity', title: '期初数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 13, type: typeEnum.QUANTITY.K, sum: true },
+      { show: true, key: 'beginningNetWeight', title: '期初量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.METE.K, sum: true },
+      { show: true, key: 'inboundQuantity', title: '入库数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 13, type: typeEnum.QUANTITY.K, sum: true },
+      { show: true, key: 'inboundNetWeight', title: '入库量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.METE.K, sum: true },
+      { show: true, key: 'outboundQuantity', title: '出库数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 13, type: typeEnum.QUANTITY.K, sum: true },
+      { show: true, key: 'outboundNetWeight', title: '出库量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.METE.K, sum: true },
+      { show: true, key: 'stockQuantity', title: '期末数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 13, type: typeEnum.QUANTITY.K, sum: true },
+      { show: true, key: 'stockNetWeight', title: '期末量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.METE.K, sum: true }
     ]
   }
 }
 
 export default {
-  contractAuxiliaryMaterialShipmentTracking //  配套件发运跟踪
+  boxProductSendReceiveStorageDirect // 制成品入发存
 }

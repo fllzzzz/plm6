@@ -97,9 +97,9 @@ async function fetchMenuModule() {
   menuArr.value = []
   try {
     const { content } = await getMenuModule()
-    const wmsValue = content.find(v => v.name === 'WMS')
-    if (isNotBlank(wmsValue)) {
-      menuArr.value.push(wmsValue)
+    const filterValue = content.filter(v => (v.name === 'WMS' || v.name === '合同管理'))
+    if (isNotBlank(filterValue)) {
+      menuArr.value.push(...filterValue)
     }
   } catch (e) {
     console.log(e)

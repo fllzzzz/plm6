@@ -357,7 +357,20 @@ export default {
           icon: 'project',
           noCache: true
         }
+      },
+      {
+        name: 'MesFinishedProductChange',
+        path: 'finished-product-change',
+        hidden: false,
+        component: '/mes/changed-manage/finished-product-change/index',
+        meta: {
+          title: '成品变更清单',
+          icon: 'project',
+          noCache: true
+        }
       }
+      // {
+      // }
       // {
       //   name: 'MesSurplusList',
       //   path: 'surplus-list',
