@@ -6,6 +6,9 @@ import { judgeMaterialUnitExist } from '@/utils/convert/unit'
 import { dataValidate } from '@/composables/form/use-table-validate'
 import { compareArray } from '@/utils/data-type/array'
 
+import usePriceSet from '@/utils/price-set'
+const { handleMeteChangeCalcPrice } = usePriceSet('mete')
+
 const sectionSteelSpecTmpl = {
   title: '辅材入库清单', // 表格名称
   dlgWidth: '1500px', // 预览窗口宽度
@@ -151,6 +154,7 @@ const sectionSteelSpecTmpl = {
         if (!row.measureUnit) {
           row.quantity = undefined
         }
+        if (!row.unitPrice || !row.amount) { handleMeteChangeCalcPrice(row) }
       } else {
         throw new Error(`${row.classifyName}下不存在规格为“${specification}”的材料，请联系管理员/仓库人员添加`)
       }

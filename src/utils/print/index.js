@@ -288,19 +288,20 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
       bodyHtml += `
       <div class="row border-b">
       <div class="row-0 col border-r" style="width:34%;">
-      <div class="col-div">${item.serialNumber}</div>
+      <div class="col-div" style="font-size:${item.serialNumber.length > 12 ? '6pt' : '9pt'}; line-height:${item.serialNumber.length > 12 ? '5.2pt' : '9pt'}">${item.serialNumber}</div>
       </div>
       <div class="row-0 col w-1 border-r">
-      <div class="col-div">${item.material}</div>
+      <div class="col-div">${packageInfo.showMaterial === true ? item.material : ''}</div>
       </div>
       <div class="row-0 col border-r" style="width:14%;">
       <div class="col-div">${item.quantity}</div>
       </div>
       <div class="row-0 col w-1">
-      <div class="col-div">${item.totalWeight}</div>
+      <div class="col-div">${packageInfo.showWidth === true ? item.totalWeight : ''}</div>
       </div>
     </div>
     `
+      console.log(bodyHtml)
     } else if (packageInfo.productType === packTypeEnum.ENCLOSURE.V) {
       bodyHtml += `
       <div class="row border-b">

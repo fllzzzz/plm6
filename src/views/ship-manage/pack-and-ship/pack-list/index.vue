@@ -2,7 +2,7 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <mHeader ref="headerRef" @getDetail="handleDetail" @changeUnit="changeUnit" />
+      <mHeader ref="headerRef" @getDetail="handleDetail" @changeUnit="changeUnit" @checkboxMaterial="checkboxMaterial" @checkboxWidth="checkboxWidth" />
     </div>
     <!--表格渲染-->
     <common-table
@@ -181,7 +181,7 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <label-dlg v-model:visible="labelVisible" :label-data="currentLabel" :unitType="unitType" />
+    <label-dlg v-model:visible="labelVisible" :label-data="currentLabel" :unitType="unitType" :showWidth="showWidth" :showMaterial="showMaterial" />
     <m-detail
       v-model:visible="detailVisible"
       :detail-info="packageInfo"
@@ -262,6 +262,8 @@ const printedRecordId = ref()
 const currentLabel = ref({})
 const packageInfo = ref({})
 const unitType = ref()
+const showMaterial = ref(true)
+const showWidth = ref(true)
 
 CRUD.HOOK.beforeToQuery = () => {
   crud.query.projectType = currentProjectType.value
@@ -279,6 +281,15 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 // 单位转换
 const changeUnit = (v) => {
   unitType.value = v
+}
+
+// 标签设置显示材质
+const checkboxMaterial = (v) => {
+  showMaterial.value = v
+}
+
+const checkboxWidth = (v) => {
+  showWidth.value = v
 }
 
 // 查看详情
