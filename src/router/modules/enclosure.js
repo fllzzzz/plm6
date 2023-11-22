@@ -98,6 +98,13 @@ export default {
           meta: { title: '排产工单', icon: 'project', noCache: true }
         },
         {
+          name: 'EnclosureChangeApproval',
+          path: 'change-approval',
+          hidden: false,
+          component: '/enclosure/production-manage/change-approval/index',
+          meta: { title: '变更审批', icon: 'project', noCache: true }
+        },
+        {
           name: 'EnclosureProductionTracking',
           path: 'production-tracking',
           hidden: false,

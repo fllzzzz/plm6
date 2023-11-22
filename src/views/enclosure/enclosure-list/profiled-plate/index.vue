@@ -443,7 +443,7 @@
             </template>
             <template v-else>
               <common-button size="small" class="el-icon-edit" type="primary" @click="editRow(scope.row)" v-permission="permission.edit"/>
-              <el-popconfirm
+              <!-- <el-popconfirm
                 confirm-button-text="确定"
                 cancel-button-text="取消"
                 icon-color="red"
@@ -454,7 +454,8 @@
                 <template #reference>
                   <common-button size="small" class="el-icon-delete" type="danger"/>
                 </template>
-              </el-popconfirm>
+              </el-popconfirm> -->
+              <common-button size="small" class="el-icon-document" type="success" @click="deleteRow(scope.row)"></common-button>
             </template>
           </template>
         </el-table-column>
@@ -470,6 +471,8 @@
         :serial-number="drawingRow?.serialNumber"
         :attachmentId="drawingRow?.attachmentId"
       />
+      <!-- 围护变更 -->
+      <enclosureChange v-model:visible="deleteVisible" :detailInfo="currentRow" @success="handleSuccess" />
     </template>
     <template v-else>
       <span style="color:red;font-size:13px;">当前项目内容没有包含围护制品，请到合同管理中进行配置</span>
@@ -498,6 +501,7 @@ import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { validate } from '@compos/form/use-table-validate'
 
 import SimpleDrawing from '../components/simple-drawing'
+import enclosureChange from '../components/enclosure-change.vue'
 import useDrawing from '@compos/use-drawing'
 import drawingImg from '@comp-base/drawing-img.vue'
 import uploadBtn from '@comp/file-upload/SingleFileUploadBtn'
@@ -520,6 +524,7 @@ const sumData = ref({})
 provide('plateOption', plateOption)
 provide('technicalTypeStatus', technicalTypeStatus)
 const drawVisible = ref(false)
+const deleteVisible = ref(false)
 const currentRow = ref({})
 const typeOption = ref([])
 const enclosureDictKV = ref({}) // 围护配置
@@ -885,16 +890,30 @@ function editRow(row) {
   row.isModify = true
 }
 
-async function deleteRow(row) {
+// async function deleteRow(row) {
+//   try {
+//     await crudApi.del(row.id)
+//     crud.notify(`删除成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
+//     getData()
+//     crud.toQuery()
+//   } catch (e) {
+//     console.log('删除', e)
+//   }
+// }
+
+const deleteRow = (row) => {
+  currentRow.value = row
+  deleteVisible.value = true
+}
+
+const handleSuccess = async () => {
   try {
-    await crudApi.del(row.id)
-    crud.notify(`删除成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
-    getData()
     crud.toQuery()
-  } catch (e) {
-    console.log('删除', e)
+  } catch (error) {
+    console.log(error)
   }
 }
+
 function rowCancel(row) {
   if (!row.id) {
     const index = crud.data.findIndex((v) => v.dataIndex === row.dataIndex)

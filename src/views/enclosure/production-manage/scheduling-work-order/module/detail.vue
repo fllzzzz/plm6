@@ -20,6 +20,21 @@
       </el-tag>
     </template>
     <template #titleRight>
+      <common-button v-if="delButton" type="primary" size="mini" class="filter-item" @click="delButton = false">编辑</common-button>
+      <div v-else>
+        <common-button type="warning" size="mini" @click="cancelEdit">取消编辑</common-button>
+        <el-popconfirm
+          confirm-button-text="确定"
+          cancel-button-text="取消"
+          icon-color="red"
+          title="是否确定批量撤回?"
+          @confirm="batchRevocation"
+        >
+        <template #reference>
+          <common-button type="danger" size="mini" :disabled="selectDisable">批量撤回</common-button>
+        </template>
+      </el-popconfirm>
+      </div>
       <export-button
         v-permission="crud.permission.print"
         :fn="download"
@@ -40,7 +55,8 @@
       /> -->
     </template>
     <template #content>
-      <common-table :data="detail.content" :max-height="maxHeight" :data-format="dataFormat" show-summary :summary-method="getSummaries">
+      <common-table ref="tableRef" :data="detail.content" :max-height="maxHeight" :data-format="dataFormat" show-summary :summary-method="getSummaries" @selection-change="selectChange">
+        <el-table-column type="selection" :selectable="selectable" width="55" align="center" />
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column key="planName" prop="planName" label="批次" show-overflow-tooltip align="center" />
         <el-table-column key="name" prop="name" show-overflow-tooltip label="名称" align="center" />
@@ -82,14 +98,30 @@
             <span v-else>未上传图片</span>
           </template>
         </el-table-column>
+        <el-table-column label="操作" align="center">
+          <template #default="{row}">
+            <el-popconfirm
+              confirm-button-text="确定"
+              cancel-button-text="取消"
+              icon-color="red"
+              title="是否确认撤回操作?"
+              @confirm="revocation(row)"
+            >
+            <template #reference>
+              <common-button type="danger" size="mini">撤回</common-button>
+            </template>
+          </el-popconfirm>
+          </template>
+        </el-table-column>
       </common-table>
     </template>
   </common-drawer>
 </template>
 
 <script setup>
-import { report, download } from '@/api/enclosure/production-manage/scheduling-work-order'
+import { report, download, workOrderRevocation } from '@/api/enclosure/production-manage/scheduling-work-order'
 import { computed, defineProps, ref } from 'vue'
+import { ElMessage } from 'element-plus'
 
 import { tableSummary } from '@/utils/el-extra'
 import { DP } from '@/settings/config'
@@ -107,6 +139,10 @@ const props = defineProps({
 })
 
 const drawerRef = ref()
+const tableRef = ref()
+const delButton = ref(true)
+const taskId = ref([])
+const selectDisable = ref(true)
 const dataFormat = ref([
   ['askCompleteTime', ['parse-time', '{y}-{m}-{d}']],
   ['thickness', ['to-fixed', DP.MES_ENCLOSURE_T__MM]],
@@ -149,10 +185,63 @@ function getSummaries(param) {
   })
 }
 
+// 取消编辑时复选框清空
+const cancelEdit = () => {
+  delButton.value = true
+  tableRef.value.clearSelection()
+}
+
+// 点击编辑时，可选择复选框
+function selectable() {
+  return !delButton.value
+}
+
+const selectChange = (v) => {
+  console.log(crud)
+  if (v.length > 0) {
+    selectDisable.value = false
+    taskId.value = []
+    v.forEach(item => {
+      taskId.value.push(item.id)
+    })
+  } else {
+    selectDisable.value = true
+  }
+}
+
+// 批量撤回
+const batchRevocation = async () => {
+  try {
+    await workOrderRevocation({ orderId: detail.rowDetail.id, taskIds: taskId.value })
+    delButton.value = true
+    crud.toDetail({ ...detail.rowDetail })
+    ElMessage.success(`批量工单撤回成功`)
+  } catch (error) {
+    console.log(error, '批量撤回失败')
+  }
+}
+
+// 撤回
+const revocation = async (row) => {
+  taskId.value = []
+  try {
+    taskId.value.push(row.id)
+    await workOrderRevocation({ orderId: detail.rowDetail.id, taskIds: taskId.value })
+    crud.toDetail({ ...detail.rowDetail })
+    ElMessage.success(`当前工单撤回成功`)
+  } catch (error) {
+    console.log(error, '撤回失败')
+  }
+}
+
 // 详情加载后
 CRUD.HOOK.beforeDetailLoaded = async (crud) => {
   (detail.content || []).forEach((row) => {
     row.totalLength = (row.totalLength || 0) / 1000
   })
+  if (detail.content?.length === 0) {
+    crud.cancelDetail()
+    crud.toQuery()
+  }
 }
 </script>
