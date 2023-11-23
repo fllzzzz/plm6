@@ -162,6 +162,7 @@
       :projectId="props.currentRow.projectId"
       :detail-data="props.currentRow"
       :category="category"
+      @changeDate="changeDate"
     />
   </div>
 </template>
@@ -206,7 +207,10 @@ const tableLoading = ref(false)
 const areaInfo = ref([])
 const query = ref({
   monomerId: undefined,
-  areaId: undefined
+  areaId: undefined,
+  // date: [moment().startOf().valueOf(), moment().valueOf()],
+  startDate: undefined,
+  endDate: undefined
 })
 const summaryLoading = ref(false)
 const summaryData = ref({})
@@ -248,6 +252,16 @@ watch(
     }
   }
 )
+
+const changeDate = (v) => {
+  if (v) {
+    query.value.startDate = v[0]
+    query.value.endDate = v[1]
+  } else {
+    query.value.startDate = undefined
+    query.value.endDate = undefined
+  }
+}
 
 function getAreaInfo(val) {
   areaInfo.value = val || []

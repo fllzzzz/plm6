@@ -93,4 +93,12 @@ export function download({ id }) {
   })
 }
 
+export function workOrderRevocation(data) {
+  return request({
+    url: '/api/enclosure/order/detail/delete',
+    method: 'post',
+    data
+  })
+}
+
 export default { get, del, detail, download }
