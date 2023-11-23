@@ -2,7 +2,7 @@
   <div class="logo-container">
     <img class="logo" :src="logo">
     <!-- <div class="logo-simple">
-      <span>初鸣智造</span>
+      <span>经典集团</span>
     </div>
     <div class="logo-detail">
       <span>钢结构生产执行管理系统</span>

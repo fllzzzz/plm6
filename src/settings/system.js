@@ -11,7 +11,7 @@ import assetsSidebarLogo from '@/assets/logo/logo-colorful-title.png'
 import assetsCollapseSidebarLogo from '@/assets/logo/logo-white.png'
 
 // 标题
-export const title = '初鸣智造'
+export const title = '经典集团'
 // 页面logo
 export const logo = assetsLogo
 // 菜单栏顶部logo
