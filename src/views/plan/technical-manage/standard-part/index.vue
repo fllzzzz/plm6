@@ -225,6 +225,18 @@
             <span v-else>{{ row.remark }}</span>
           </template>
         </el-table-column>
+        <el-table-column prop="boolReturn" label="是否退量" align="center">
+          <template v-slot="scope">
+            <el-switch
+              v-if="scope.row.isModify"
+              v-model="scope.row.boolReturn"
+              active-color="#13ce66"
+              :active-value="true"
+              :inactive-value="false"
+            />
+            <span v-else :style="`color:${scope.row.boolReturn?'green':''}`">{{scope.row.boolReturn?'√':'-'}}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkPermission([...permission.edit, ...permission.del])"
           label="操作"
@@ -420,6 +432,7 @@ async function rowSubmit(row) {
 CRUD.HOOK.handleRefresh = (crud, data) => {
   data.data.content.map((v) => {
     v.projectId = v.project.id
+    v.boolReturn = v.boolReturn || false
     if (isNotBlank(v.monomer)) {
       v.monomerId = v.monomer.id
     }

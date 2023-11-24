@@ -29,6 +29,16 @@
           <span style="font-size:12px;color:red;margin-left:10px;">*当前项目下未创建计划</span>
         </template>
       </template>
+      <common-select
+        type="enum"
+        v-model="query.boolReturn"
+        :options="whetherEnum.ENUM"
+        clearable
+        placeholder="是否退量"
+        style="width: 200px"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
     </div>
     <crudOperation :disabled="!query.enclosurePlanId">
        <template #optRight>
@@ -59,6 +69,8 @@ import { defineProps, watch, computed, ref, defineEmits } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import checkPermission from '@/utils/system/check-permission'
 
+import { whetherEnum } from '@enum-ms/common'
+
 import crudOperation from '@crud/CRUD.operation'
 // import monomerSelect from '@/components-system/plan/monomer-select'
 // import rrOperation from '@crud/RR.operation'
@@ -66,7 +78,8 @@ import uploadBtn from '@comp/file-upload/ExcelUploadBtn'
 import ExportButton from '@comp-common/export-button/index.vue'
 
 const defaultQuery = {
-  projectId: { value: undefined, resetAble: false }
+  projectId: { value: undefined, resetAble: false },
+  boolReturn: undefined
 }
 
 const emit = defineEmits(['enclosurePlan'])
