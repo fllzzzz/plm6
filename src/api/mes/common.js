@@ -116,6 +116,20 @@ export function getAllPackage(params) {
 }
 
 /**
+ * 所有包单号列表（桥梁）
+ * @export
+ * @returns
+ */
+export function getBridgeAllPackage(params) {
+  return request({
+    module: 'bridge',
+    url: 'package/list',
+    method: 'get',
+    params
+  })
+}
+
+/**
  * 获取区域下有任务的生产线idsArr
  * @param {number} monomerId 单体id
  * @param {number} areaId 区域id

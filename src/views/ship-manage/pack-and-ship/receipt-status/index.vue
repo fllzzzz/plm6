@@ -42,7 +42,7 @@
           }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('productType')" key="productType" prop="productType" label="装载类型" width="165">
+      <el-table-column v-if="columns.visible('productType') && crud.query.projectType === projectTypeEnum.STEEL.V" key="productType" prop="productType" label="装载类型" width="165">
         <template v-slot="scope">
           <el-tag
             v-for="item in cleanArray(EO.getBits(packTypeEnum, scope.row.productType, 'V'))"
@@ -52,6 +52,19 @@
             effect="light"
             disable-transitions
             >{{ packTypeEnum.VL[item] }}</el-tag
+          >
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('productType') && crud.query.projectType === projectTypeEnum.BRIDGE.V" key="productType" prop="productType" label="装载类型" width="165">
+        <template v-slot="scope">
+          <el-tag
+            v-for="item in cleanArray(EO.getBits(bridgePackTypeEnum, scope.row.productType, 'V'))"
+            style="margin-right: 5px"
+            :key="item"
+            :type="bridgePackTypeEnum.V[item].T"
+            effect="light"
+            disable-transitions
+            >{{ bridgePackTypeEnum.VL[item] }}</el-tag
           >
         </template>
       </el-table-column>
@@ -220,6 +233,7 @@ style="font-size: 14px"
       :detail-info="receiptInfo"
       :title="showType === 'detail' ? '装车详情' : showType === 'cancel' ? '取消送货' : '到场签收'"
       :detailFunc="crud.query.projectType === projectTypeEnum.BRIDGE.V ? detailBridge : detail"
+      :projectType="crud.query.projectType"
     >
       <template #tip>
         <div style="width: 150px; height: 53px; overflow: hidden; position: absolute; top: -18px; left: -20px">
@@ -264,6 +278,7 @@ import { receiptStatusPM as permission } from '@/page-permission/ship-manage'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { businessTypeEnum } from '@enum-ms/contract'
 import { packTypeEnum, deliveryReceiptStatusEnum } from '@enum-ms/mes'
+import { bridgePackTypeEnum } from '@enum-ms/bridge'
 import { projectNameFormatter } from '@/utils/project'
 import { cleanArray } from '@/utils/data-type/array'
 import EO from '@enum'

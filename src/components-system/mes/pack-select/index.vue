@@ -17,9 +17,10 @@
 </template>
 
 <script setup>
-import { getAllPackage as getAll } from '@/api/mes/common'
+import { getAllPackage as getAll, getBridgeAllPackage } from '@/api/mes/common'
 import { defineProps, watch, defineEmits, defineExpose, ref } from 'vue'
 import { isNotBlank } from '@data-type'
+import { packEnum } from '@enum-ms/ship-manage'
 
 const emit = defineEmits(['update:modelValue', 'change'])
 const props = defineProps({
@@ -61,6 +62,10 @@ const props = defineProps({
   default: {
     type: Boolean,
     default: false
+  },
+  // 判断桥梁还是建钢
+  typeVal: {
+    type: Number
   }
 })
 
@@ -105,7 +110,7 @@ async function fetch() {
   let _options = []
   loading.value = true
   try {
-    const { content } = (await getAll({ projectId: props.projectId })) || []
+    const { content } = props.type === packEnum.BOX.V ? (await getBridgeAllPackage({ projectId: props.projectId })) : (await getAll({ projectId: props.projectId })) || []
     _options = content.map((o) => {
       return {
         value: o.id,

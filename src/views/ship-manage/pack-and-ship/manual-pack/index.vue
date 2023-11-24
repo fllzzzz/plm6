@@ -154,7 +154,7 @@
 <script setup>
 // import { ElNotification } from 'element-plus'
 import { getWorkshopsAllSimple, getEnclosureBatch } from '@/api/mes/common.js'
-import { computed, reactive, ref, provide, watch, nextTick, onMounted } from 'vue'
+import { computed, reactive, ref, provide, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { mapGetters } from '@/store/lib'
 import { isBlank, isNotBlank } from '@data-type/index'
@@ -210,7 +210,7 @@ const packData = reactive({
   [packTypeEnum.MACHINE_PART.K]: {},
   [packTypeEnum.AUXILIARY_MATERIAL.K]: {},
   [bridgePackTypeEnum.BOX.K]: {},
-  [bridgePackTypeEnum.MACHINE_PART.K]: {},
+  [bridgePackTypeEnum.MACHINE_PART.K]: {}
 })
 
 const typeVal = ref()
@@ -222,7 +222,7 @@ watch(
     typeVal.value = undefined
     typeVal.value = globalProject.value?.productCategory
   },
-  { immediate: true, deep:  true }
+  { immediate: true, deep: true }
 )
 
 const unValOptions = computed(() => {
@@ -249,7 +249,7 @@ const totalBadge = computed(() => {
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.manual-pack-wrapper',
   extraBox: ['.manual-pack-common-header', '.head-container'],
-  paginate: true,
+  paginate: true
 })
 
 provide('packData', packData)
@@ -300,7 +300,7 @@ watch(
       // }
       editData.value = {
         ...val.value,
-        data: JSON.parse(val.value.data),
+        data: JSON.parse(val.value.data)
       }
       bagId.value = val.value.id
       const _data = editData.value.data
@@ -335,8 +335,8 @@ async function fetWorkshop() {
         typeVal.value === packEnum.BOX.V
           ? packWorkshopTypeEnum.BRIDGE_WORKSHOP.V
           : packType.value === packTypeEnum.ENCLOSURE.V
-          ? packWorkshopTypeEnum.ENCLOSURE_WORKSHOP.V
-          : packWorkshopTypeEnum.MES_WORKSHOP.V,
+            ? packWorkshopTypeEnum.ENCLOSURE_WORKSHOP.V
+            : packWorkshopTypeEnum.MES_WORKSHOP.V
     })
     console.log(content, 'content')
     workshopList.value = content || []

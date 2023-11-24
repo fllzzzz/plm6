@@ -8,7 +8,7 @@
       <el-radio :label="false">使用原有包单</el-radio>
     </el-radio-group>
     <div v-if="!isNew" style="margin-top: 15px">
-      <pack-select v-model="selectBagId" :project-id="projectId" :packType="packType" style="width:100%;"/>
+      <pack-select v-model="selectBagId" :project-id="projectId" :packType="packType" :typeVal="typeVal" style="width:100%;"/>
     </div>
   </common-dialog>
 </template>
@@ -33,6 +33,10 @@ const props = defineProps({
   packType: {
     type: Number,
     default: undefined
+  },
+  // 判断是桥梁还是建刚
+  typeVal: {
+    type: Number
   }
 })
 const projectId = inject('projectId')
