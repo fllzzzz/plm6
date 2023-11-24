@@ -75,7 +75,7 @@
           <common-button
             type="success"
             icon="el-icon-plus"
-            :disabled="ids.includes(`${scope.row.id}`)"
+            :disabled="ids.includes(`${scope.row?.id}`)"
             size="mini"
             @click="add(scope.row)"
           />

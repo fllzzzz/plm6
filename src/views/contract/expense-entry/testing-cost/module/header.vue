@@ -14,7 +14,19 @@
         :disabled-date="disabledDate"
         @change="crud.toQuery"
       />
-      <project-cascader v-model="query.projectId" clearable class="filter-item" style="width: 300px" @change="crud.toQuery" />
+      <!-- <project-cascader v-model="query.projectId" clearable class="filter-item" style="width: 300px" @change="crud.toQuery" /> -->
+      <common-select
+        v-model="query.projectId"
+        :options="projectList"
+        type="other"
+        :data-structure="{ key: 'id', label: 'serialNumberName', value: 'id' }"
+        class="filter-item"
+        clearable
+        filterable
+        style="width: 300px"
+        placeholder="选择项目"
+        @change="crud.toQuery"
+      />
       <common-select
         v-model="query.testingFeeTypeId"
         :options="dict.testing_fee_type"
@@ -44,11 +56,12 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 
 const dict = inject('dict')
+const projectList = inject('projectList')
 
 const defaultQuery = {
   year: parseTime(new Date(), '{y}'),
   projectId: undefined,
-  testingFeeTypeId: undefined
+  testingFeeTypeId: undefined,
 }
 
 const { crud, query } = regHeader(defaultQuery)
