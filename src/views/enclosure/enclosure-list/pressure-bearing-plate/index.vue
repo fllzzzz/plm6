@@ -433,7 +433,7 @@
                   <common-button size="small" class="el-icon-delete" type="danger"/>
                 </template>
               </el-popconfirm> -->
-              <common-button size="small" class="el-icon-document" type="success" @click="deleteRow(scope.row)"></common-button>
+              <common-button size="small" class="el-icon-view" type="success" @click="deleteRow(scope.row)"></common-button>
             </template>
           </template>
         </el-table-column>
