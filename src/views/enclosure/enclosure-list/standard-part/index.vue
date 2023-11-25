@@ -184,7 +184,7 @@
           </template>
           <template v-else>
             <common-button size="small" class="el-icon-edit" type="primary" @click="editRow(scope.row)" v-permission="permission.edit"/>
-            <el-popconfirm
+            <!-- <el-popconfirm
               confirm-button-text="确定"
               cancel-button-text="取消"
               icon-color="red"
@@ -195,7 +195,8 @@
               <template #reference>
                 <common-button size="small" class="el-icon-delete" type="danger"/>
               </template>
-            </el-popconfirm>
+            </el-popconfirm> -->
+            <common-button size="small" class="el-icon-view" type="success" @click="deleteRow(scope.row)"></common-button>
           </template>
         </template>
       </el-table-column>
@@ -203,6 +204,8 @@
       <!--分页组件-->
       <pagination />
       <mForm :enclosurePlan="enclosurePlan" />
+      <!-- 围护变更 -->
+      <enclosureChange v-model:visible="deleteVisible" :detailInfo="currentRow" />
     </template>
     <template v-else>
       <span style="color:red;font-size:13px;">当前项目内容没有包含围护制品，请到合同管理中进行配置</span>
@@ -223,6 +226,7 @@ import { validate } from '@compos/form/use-table-validate'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+import enclosureChange from '../components/enclosure-change.vue'
 import { mapGetters } from '@/store/lib'
 import { ElMessage } from 'element-plus'
 import { enclosureStandardPartPM as permission } from '@/page-permission/enclosure'
@@ -245,6 +249,8 @@ const originRow = ref({})
 
 const typeOption = ref([])
 const pageShow = ref(false)
+const deleteVisible = ref(false)
+const currentRow = ref({})
 const enclosurePlan = ref([])
 const techOptions = [
   {
@@ -367,14 +373,19 @@ function editRow(row) {
   originRow.value = JSON.parse(JSON.stringify(row))
   row.isModify = true
 }
-async function deleteRow(row) {
-  try {
-    await crudApi.del([row.id])
-    crud.notify(`删除成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
-    crud.toQuery()
-  } catch (e) {
-    console.log('删除', e)
-  }
+// async function deleteRow(row) {
+//   try {
+//     await crudApi.del([row.id])
+//     crud.notify(`删除成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
+//     crud.toQuery()
+//   } catch (e) {
+//     console.log('删除', e)
+//   }
+// }
+
+const deleteRow = (row) => {
+  currentRow.value = row
+  deleteVisible.value = true
 }
 function rowCancel(row) {
   row = Object.assign(row, JSON.parse(JSON.stringify(originRow.value)))

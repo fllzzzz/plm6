@@ -119,7 +119,7 @@
           <span>{{ measureModeEnum.VL[scope.row.structureMeasureMode] }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('productType')" key="productType" prop="productType" label="装载类型" width="165">
+      <el-table-column v-if="columns.visible('productType') && crud.query.projectType === projectTypeEnum.STEEL.V" key="productType" prop="productType" label="装载类型" width="165">
         <template v-slot="scope">
           <el-tag
             v-for="item in cleanArray(EO.getBits(packTypeEnum, scope.row.productType, 'V'))"
@@ -129,6 +129,19 @@
             effect="light"
             disable-transitions
             >{{ packTypeEnum.VL[item] }}</el-tag
+          >
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('productType') && crud.query.projectType === projectTypeEnum.BRIDGE.V" key="productType" prop="productType" label="装载类型" width="165">
+        <template v-slot="scope">
+          <el-tag
+            v-for="item in cleanArray(EO.getBits(bridgePackTypeEnum, scope.row.productType, 'V'))"
+            style="margin-right: 5px"
+            :key="item"
+            :type="bridgePackTypeEnum.V[item].T"
+            effect="light"
+            disable-transitions
+            >{{ bridgePackTypeEnum.VL[item] }}</el-tag
           >
         </template>
       </el-table-column>
@@ -192,6 +205,7 @@
       :detail-info="shipInfo"
       title="发运审核"
       :detailFunc="crud.query.projectType === projectTypeEnum.BRIDGE.V ? detailBridge : detail"
+      :projectType="currentProjectType"
     >
       <template #titleRight>
         <template v-if="shipInfo.checkStatus === shipAuditStatusEnum.UNCHECKED.V">
@@ -228,6 +242,7 @@ import { ElNotification } from 'element-plus'
 
 import { shipAuditPM as permission } from '@/page-permission/ship-manage'
 import { packTypeEnum, shipAuditStatusEnum } from '@enum-ms/mes'
+import { bridgePackTypeEnum } from '@enum-ms/bridge'
 import { weightMeasurementModeEnum as measureModeEnum } from '@enum-ms/finance'
 import { cleanArray } from '@/utils/data-type/array'
 import EO from '@enum'

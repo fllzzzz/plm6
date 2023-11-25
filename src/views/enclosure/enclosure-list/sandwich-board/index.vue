@@ -420,7 +420,7 @@
             </template>
             <template v-else>
               <common-button size="small" class="el-icon-edit" type="primary" @click="editRow(scope.row)" v-permission="permission.edit"/>
-              <el-popconfirm
+              <!-- <el-popconfirm
                 confirm-button-text="确定"
                 cancel-button-text="取消"
                 icon-color="red"
@@ -431,7 +431,8 @@
                 <template #reference>
                   <common-button size="small" class="el-icon-delete" type="danger"/>
                 </template>
-              </el-popconfirm>
+              </el-popconfirm> -->
+              <common-button size="small" class="el-icon-view" type="success" @click="deleteRow(scope.row)"></common-button>
             </template>
           </template>
         </el-table-column>
@@ -447,6 +448,8 @@
         :serial-number="drawingRow?.serialNumber"
         :attachmentId="drawingRow?.attachmentId"
       />
+      <!-- 围护变更 -->
+      <enclosureChange v-model:visible="deleteVisible" :detailInfo="currentRow" @success="handleSuccess" />
     </template>
     <template v-else>
       <span style="color:red;font-size:13px;">当前项目内容没有包含围护制品，请到合同管理中进行配置</span>
@@ -464,6 +467,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { enclosureListPM as permission } from '@/page-permission/plan'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
+import enclosureChange from '../components/enclosure-change.vue'
 import useCRUD from '@compos/use-crud'
 import { mapGetters } from '@/store/lib'
 import { parseTime } from '@/utils/date'
@@ -500,6 +504,7 @@ const drawVisible = ref(false)
 const currentRow = ref({})
 const typeOption = ref([])
 const enclosureDictKV = ref({}) // 围护配置
+const deleteVisible = ref(false)
 const techOptions = [
   {
     name: '压型彩板',
@@ -858,14 +863,27 @@ function editRow(row) {
   }
   row.isModify = true
 }
-async function deleteRow(row) {
+// async function deleteRow(row) {
+//   try {
+//     await crudApi.del(row.id)
+//     crud.notify(`删除成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
+//     getData()
+//     crud.toQuery()
+//   } catch (e) {
+//     console.log('删除', e)
+//   }
+// }
+
+const deleteRow = (row) => {
+  currentRow.value = row
+  deleteVisible.value = true
+}
+
+const handleSuccess = async () => {
   try {
-    await crudApi.del(row.id)
-    crud.notify(`删除成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
-    getData()
     crud.toQuery()
-  } catch (e) {
-    console.log('删除', e)
+  } catch (error) {
+    console.log(error)
   }
 }
 function rowCancel(row) {

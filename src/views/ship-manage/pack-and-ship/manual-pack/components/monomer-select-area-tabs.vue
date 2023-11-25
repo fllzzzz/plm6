@@ -1,4 +1,5 @@
 <template>
+<div style="display: flex">
   <monomer-select
     ref="monomerRef"
     v-model="monomerId"
@@ -17,6 +18,7 @@
     :default-tab="defaultTab"
     @tab-click="tabClick"
   />
+  </div>
 </template>
 
 <script setup>

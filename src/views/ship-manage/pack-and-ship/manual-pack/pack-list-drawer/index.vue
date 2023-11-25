@@ -13,7 +13,7 @@
         {{ packTypeEnum.VL[packType] }}打包({{ listObj['source' + packTypeEnum.VK[packType]].length }})
       </common-button> -->
       <common-button v-permission="permission.pack" type="primary" :loading="packLoading" size="mini" @click="packClick">
-        打包 ({{ totalBadge }})
+        打包 ({{ typeVal === packEnum.BOX.V ? bridgeTotalBadge : totalBadge }})
       </common-button>
     </template>
     <template #content>
@@ -29,9 +29,9 @@
           class="filter-item"
           :options="typeVal === packEnum.BOX.V ? bridgePackTypeEnum.ENUM : packTypeEnum.ENUM"
           type="enum"
-          :disabledVal="disabledVal"
+          :disabledVal="typeVal === packEnum.BOX.V ? bridgeDisabledVal : disabledVal"
         >
-          <template #suffix="{ item }"> ({{ listObj['source' + item.K].length }})</template>
+          <template #suffix="{ item }"> ({{ listObj['source' + item.K]?.length }})</template>
         </component-radio-button>
         <workshop-select
           v-if="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
@@ -57,7 +57,7 @@
         /> -->
       </div>
       <common-table
-        :data="listObj[packTypeEnum.VK[packType]]"
+        :data="typeVal === packEnum.BOX.V ? listObj[bridgePackTypeEnum.VK[packType]] : listObj[packTypeEnum.VK[packType]]"
         return-source-data
         :show-empty-symbol="false"
         show-summary
@@ -110,7 +110,7 @@
           <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="规格" min-width="140px" />
           <el-table-column key="length" prop="length" :show-overflow-tooltip="true" :label="`长度\n(mm)`" align="left" min-width="85px">
             <template v-slot="scope">
-              {{ toFixed(scope.row.length, DP.MES_ARTIFACT_L__MM) }}
+              {{ toFixed(scope.row?.length, DP.MES_ARTIFACT_L__MM) }}
             </template>
           </el-table-column>
           <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质" min-width="80px" />
@@ -169,7 +169,7 @@
           </el-table-column>
           <el-table-column key="length" prop="length" :show-overflow-tooltip="true" :label="`单长\n(mm)`" align="center" min-width="85px">
             <template v-slot="scope">
-              {{ toFixed(scope.row.length, DP.MES_ENCLOSURE_L__MM) }}
+              {{ toFixed(scope.row?.length, DP.MES_ENCLOSURE_L__MM) }}
             </template>
           </el-table-column>
         </template>
@@ -220,12 +220,20 @@
     v-model:visible="choseVisible"
     :packType="packType"
     :packLoading="packLoading"
+    :typeVal="props.typeVal"
     @handlePack="handlePack"
   />
 </template>
 
 <script setup>
-import { pack, editPack, additionalPack } from '@/api/ship-manage/pack-and-ship/manual-pack'
+import {
+  pack,
+  editPack,
+  additionalPack,
+  bridgePack,
+  bridgeEditPack,
+  bridgeAdditionalPack
+} from '@/api/ship-manage/pack-and-ship/manual-pack'
 import { defineProps, defineEmits, ref, watch, inject, reactive, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { workshopTypeEnum } from '@enum-ms/common'
@@ -303,8 +311,19 @@ const listObj = reactive({
 const disabledVal = computed(() => {
   const _arr = []
   for (const item in packTypeEnum.ENUM) {
-    if (!listObj['source' + item].length) {
+    if (!listObj['source' + item]?.length) {
       _arr.push(packTypeEnum.KV[item])
+    }
+  }
+  return _arr
+})
+
+// 桥梁
+const bridgeDisabledVal = computed(() => {
+  const _arr = []
+  for (const item in bridgePackTypeEnum.ENUM) {
+    if (!listObj['source' + item]?.length) {
+      _arr.push(bridgePackTypeEnum.KV[item])
     }
   }
   return _arr
@@ -320,10 +339,29 @@ const totalBadge = computed(() => {
   return _total
 })
 
+// 桥梁
+const bridgeTotalBadge = computed(() => {
+  let _total = 0
+  for (const item in bridgePackTypeEnum.ENUM) {
+    if (listObj[item]?.length) {
+      _total += listObj[item].length
+    }
+  }
+  return _total
+})
+
 watch(workshopId, (val) => {
-  for (const item in packTypeEnum.ENUM) {
-    if (listObj['source' + item].length) {
-      listObj[item] = listObj['source' + item].filter((v) => val === v.workshop?.id || !val)
+  if (props.typeVal !== packEnum.BOX.V) {
+    for (const item in packTypeEnum.ENUM) {
+      if (listObj['source' + item]?.length) {
+        listObj[item] = listObj['source' + item].filter((v) => val === v.workshop?.id || !val)
+      }
+    }
+  } else {
+    for (const item in bridgePackTypeEnum.ENUM) {
+      if (listObj['source' + item]?.length) {
+        listObj[item] = listObj['source' + item].filter((v) => val === v.workshop?.id || !val)
+      }
     }
   }
 })
@@ -332,11 +370,20 @@ watch(
   packData,
   () => {
     let _type
-    for (const item in packTypeEnum.ENUM) {
-      if (packData[item] === null) packData[item] = {}
-      listObj[item] = Object.values(packData[item])
-      listObj['source' + item] = Object.values(packData[item])
-      if (listObj[item].length && !_type) _type = packTypeEnum.KV[item]
+    if (props.typeVal !== packEnum.BOX.V) {
+      for (const item in packTypeEnum.ENUM) {
+        if (packData[item] === null) packData[item] = {}
+        listObj[item] = Object.values(packData[item])
+        listObj['source' + item] = Object.values(packData[item])
+        if (listObj[item].length && !_type) _type = packTypeEnum.KV[item]
+      }
+    } else {
+      for (const item in bridgePackTypeEnum.ENUM) {
+        if (packData[item] === null) packData[item] = {}
+        listObj[item] = Object.values(packData[item])
+        listObj['source' + item] = Object.values(packData[item])
+        if (listObj[item].length && !_type) _type = bridgePackTypeEnum.KV[item]
+      }
     }
     packType.value = _type || packType.value
   },
@@ -422,21 +469,41 @@ async function handlePack({ bagId, isNew, selectBagId }) {
     //     quantity: v.productQuantity
     //   }
     // })
-    if (bagId) {
-      params.id = bagId
-      if (await editPack(params)) {
-        ElMessage({ type: 'success', message: '更新打包清单成功' })
+    if (props.typeVal !== packEnum.BOX.V) {
+      if (bagId) {
+        params.id = bagId
+        if (await editPack(params)) {
+          ElMessage({ type: 'success', message: '更新打包清单成功' })
+        }
+      } else if (isNew) {
+        if (await pack(params)) {
+          ElMessage({ type: 'success', message: '打包成功' })
+        }
+      } else {
+        params.id = selectBagId
+        if (await additionalPack(params)) {
+          ElMessage({ type: 'success', message: '追加打包成功' })
+        }
       }
-    } else if (isNew) {
-      if (await pack(params)) {
-        ElMessage({ type: 'success', message: '打包成功' })
-      }
+      // 桥梁
     } else {
-      params.id = selectBagId
-      if (await additionalPack(params)) {
-        ElMessage({ type: 'success', message: '追加打包成功' })
+      if (bagId) {
+        params.id = bagId
+        if (await bridgeEditPack(params)) {
+          ElMessage({ type: 'success', message: '更新打包清单成功' })
+        }
+      } else if (isNew) {
+        if (await bridgePack(params)) {
+          ElMessage({ type: 'success', message: '打包成功' })
+        }
+      } else {
+        params.id = selectBagId
+        if (await bridgeAdditionalPack(params)) {
+          ElMessage({ type: 'success', message: '追加打包成功' })
+        }
       }
     }
+
     // 关闭选择框，重置选择
     choseDialogRef.value.handleSuccess()
     handleSuccess()

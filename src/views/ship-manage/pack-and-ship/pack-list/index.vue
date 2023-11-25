@@ -2,7 +2,7 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <mHeader ref="headerRef" @getDetail="handleDetail" @changeUnit="changeUnit" @checkboxMaterial="checkboxMaterial" @checkboxWidth="checkboxWidth" />
+      <mHeader ref="headerRef" @getDetail="handleDetail" :currentProjectType="currentProjectType" @changeUnit="changeUnit" @checkboxMaterial="checkboxMaterial" @checkboxWidth="checkboxWidth" />
     </div>
     <!--表格渲染-->
     <common-table
@@ -43,7 +43,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('productType')"
+        v-if="columns.visible('productType') && crud.query.projectType === projectTypeEnum.STEEL.V"
         key="productType"
         prop="productType"
         label="产品类型"
@@ -52,6 +52,20 @@
       >
         <template v-slot="scope">
           <template v-for="item in packTypeEnum.ENUM" :key="item">
+            <el-tag style="margin-right: 5px" v-if="scope.row.productType & item.V" :type="item.T" effect="light">{{ item.L }}</el-tag>
+          </template>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('productType') && crud.query.projectType === projectTypeEnum.BRIDGE.V"
+        key="productType"
+        prop="productType"
+        label="产品类型"
+        align="center"
+        min-width="140px"
+      >
+        <template v-slot="scope">
+          <template v-for="item in bridgePackTypeEnum.ENUM" :key="item">
             <el-tag style="margin-right: 5px" v-if="scope.row.productType & item.V" :type="item.T" effect="light">{{ item.L }}</el-tag>
           </template>
         </template>
@@ -189,6 +203,7 @@
       quantityFelid="packageQuantity"
       :detailFunc="crud.query.projectType === projectTypeEnum.BRIDGE.V ? detailBridge : detail"
       @getDetail="handleDetail"
+      :projectType="crud.query.projectType"
     >
       <template #tip>
         <el-tag effect="plain" style="margin-left: 5px" size="medium">{{ packageInfo.serialNumber }}</el-tag>
@@ -210,6 +225,7 @@ import { useRouter } from 'vue-router'
 import { ElNotification } from 'element-plus'
 import { projectTypeEnum } from '@enum-ms/contract'
 import { packTypeEnum, packStatusTypeEnum } from '@enum-ms/mes'
+import { bridgePackTypeEnum } from '@enum-ms/bridge'
 import checkPermission from '@/utils/system/check-permission'
 import { DP } from '@/settings/config'
 import { deepClone, toFixed } from '@data-type/index'
@@ -324,7 +340,7 @@ function openRecordView(row) {
   recordVisible.value = true
 }
 
-function handleDataFormat({ artifactList, partList, enclosureList, auxiliaryMaterialList }) {
+function handleDataFormat({ artifactList, partList, enclosureList, auxiliaryMaterialList, boxList }) {
   const data = {}
   data.artifactList =
     artifactList &&
@@ -360,6 +376,16 @@ function handleDataFormat({ artifactList, partList, enclosureList, auxiliaryMate
     auxiliaryMaterialList &&
     auxiliaryMaterialList.map((v) => {
       v.fullClassName = `${v.firstName}/${v.secondName}/${v.thirdName}`
+      v.productQuantity = v.packageQuantity
+      v.originNumberList = v.numberList ? deepClone(v.numberList) : []
+      v.numberList = v.numberList ? v.numberList.filter((v) => v.boolPackage).map((v) => v.number) : []
+      return v
+    })
+  data.boxList =
+    boxList &&
+    boxList.map((v) => {
+      v.weight = v.netWeight || v.grossWeight
+      v.totalWeight = convertUnits(v.weight * v.packageQuantity, 'kg', 't')
       v.productQuantity = v.packageQuantity
       v.originNumberList = v.numberList ? deepClone(v.numberList) : []
       v.numberList = v.numberList ? v.numberList.filter((v) => v.boolPackage).map((v) => v.number) : []
