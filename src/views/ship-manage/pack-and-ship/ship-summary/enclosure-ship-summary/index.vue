@@ -24,7 +24,7 @@
           <el-table-column key="rate" prop="rate" label="发运数据(米)" align="center" min-width="160" show-overflow-tooltip>
             <template v-slot="scope">
               <div style="position: relative">
-                <el-progress :stroke-width="16" :percentage="scope.row.ratio" />
+                <el-progress color="#67C23A" :stroke-width="16" :percentage="scope.row.ratio" />
                 <span style="position: absolute; top: -2px; left: 0; width: 100%; text-align: right; padding-right: 60px">{{
                   (scope.row.sendTotalLength / 1000).toFixed(3) + ' | ' + (scope.row.totalLength / 1000).toFixed(3)
                 }}</span>
