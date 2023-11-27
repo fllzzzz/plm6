@@ -66,7 +66,7 @@
       :show-empty-symbol="false"
       show-summary
       :summary-method="getSummaries"
-      :max-height="maxHeight - 30"
+      :max-height="maxHeight - 80"
     >
       <el-table-column prop="index" label="序号" align="center" width="45" type="index" />
       <el-table-column

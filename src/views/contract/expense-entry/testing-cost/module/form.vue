@@ -24,7 +24,17 @@
           />
         </el-form-item>
         <el-form-item label="项目：" prop="projectId">
-          <project-cascader v-model="form.projectId" clearable class="filter-item" style="width: 270px" />
+          <common-select
+            v-model="form.projectId"
+            :options="projectList"
+            type="other"
+            :data-structure="{ key: 'id', label: 'serialNumberName', value: 'id' }"
+            class="filter-item"
+            clearable
+            filterable
+            style="width: 270px"
+            placeholder="选择项目"
+          />
         </el-form-item>
         <el-form-item label="检测费类别：" prop="testingFeeTypeId">
           <common-select
@@ -39,7 +49,7 @@
           />
         </el-form-item>
         <el-form-item label="费用：" prop="feeAmount">
-           <el-input-number
+          <el-input-number
             v-model="form.feeAmount"
             style="width: 270px"
             placeholder="输入费用 单位（元）"
@@ -91,15 +101,15 @@ const emit = defineEmits(['update:visible', 'refresh', 'success'])
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false
+    default: false,
   },
   showType: {
-    type: String
+    type: String,
   },
   info: {
     type: Object,
-    default: () => {}
-  }
+    default: () => {},
+  },
 })
 
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
@@ -110,16 +120,17 @@ const form = ref({
   testingFeeTypeId: undefined,
   feeAmount: undefined,
   attachmentIds: undefined,
-  attachmentFiles: []
+  attachmentFiles: [],
 })
 const formRef = ref()
 const saveLoading = ref(false)
 const dict = inject('dict')
+const projectList = inject('projectList')
 
 const rules = {
   payDate: [{ required: true, message: '请选择支付时间', trigger: 'blur' }],
   testingFeeTypeId: [{ required: true, message: '请选择检测费类别', trigger: 'blur' }],
-  feeAmount: [{ required: true, message: '请输入费用', trigger: 'blur' }]
+  feeAmount: [{ required: true, message: '请输入费用', trigger: 'blur' }],
   // projectId: [{ required: true, message: '请选择项目', trigger: 'blur' }]
 }
 

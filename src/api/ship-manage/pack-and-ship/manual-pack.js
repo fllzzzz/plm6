@@ -62,3 +62,31 @@ export function additionalPack({ id, remark, packageLinks }) {
   })
 }
 
+// 桥梁
+export function bridgePack(data) {
+  return request({
+    module: 'bridge',
+    url: 'package',
+    method: 'post',
+    data
+  })
+}
+
+export function bridgeEditPack({ id, remark, packageLinks }) {
+  return request({
+    module: 'bridge',
+    url: `package`,
+    method: 'put',
+    data: { id, remark, packageLinks }
+  })
+}
+
+export function bridgeAdditionalPack({ id, remark, packageLinks }) {
+  return request({
+    module: 'bridge',
+    url: `package/add`,
+    method: 'put',
+    data: { id, remark, packageLinks }
+  })
+}
+

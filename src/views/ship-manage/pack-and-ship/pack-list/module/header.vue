@@ -145,7 +145,7 @@
 <script setup>
 import { detail, detailBridge } from '@/api/ship-manage/pack-and-ship/pack-list'
 import { packageRecordAdd, packageBridgeRecordAdd } from '@/api/mes/label-print/print-record'
-import { ref, inject, reactive, defineExpose, computed, defineEmits, watch } from 'vue'
+import { ref, inject, defineProps, reactive, defineExpose, computed, defineEmits, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 import moment from 'moment'
 import { projectTypeEnum } from '@enum-ms/contract'
@@ -164,6 +164,11 @@ import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import { ElMessage } from 'element-plus'
 
+const props = defineProps({
+  currentProjectType: {
+    type: Number
+  }
+})
 const typeVal = ref()
 const unitValue = ref(1)
 // const showMaterial = ref(true)
@@ -252,13 +257,14 @@ const { batchPrint, print } = usePrintLabel({
   getLoadingTextFunc: (row) => `${row.serialNumber}`,
   printLabelFunc: printPackageLabel,
   needAddPrintRecord: true,
-  addPrintRecordReq: crud.query.projectType === projectTypeEnum.BRIDGE.V ? packageBridgeRecordAdd : packageRecordAdd
+  addPrintRecordReq: props.currentProjectType === projectTypeEnum.BRIDGE.V ? packageBridgeRecordAdd : packageRecordAdd
 })
 
 const detailStore = inject('detailStore')
 const dataField = {
   [packTypeEnum.STRUCTURE.V]: 'artifactList',
   [packTypeEnum.MACHINE_PART.V]: 'partList',
+  [bridgePackTypeEnum.BOX.V]: 'boxList',
   [packTypeEnum.ENCLOSURE.V]: 'enclosureList',
   [packTypeEnum.AUXILIARY_MATERIAL.V]: 'auxiliaryMaterialList'
 }
@@ -390,7 +396,7 @@ async function getLabelInfo(row) {
     qrCode: JSON.stringify({
       id: row.id,
       type: QR_SCAN_TYPE.MES_PACKAGE,
-      ftype: QR_SCAN_F_TYPE.MES_PACKAGE_SHIP
+      ftype: crud.query.projectType === projectTypeEnum.BRIDGE.V ? QR_SCAN_F_TYPE.BRIDGE_PACKAGE_SHIP : QR_SCAN_F_TYPE.MES_PACKAGE_SHIP
     })
   }
 }

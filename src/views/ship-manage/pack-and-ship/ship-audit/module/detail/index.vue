@@ -13,89 +13,163 @@
     <template #titleRight>
       <slot name="titleRight" />
     </template>
-    <div class="head-container">
-      <el-descriptions :column="2" border style="margin-bottom: 10px" v-loading="tableLoading" v-if="contract">
-        <el-descriptions-item label-class-name="contractLabel" label="项目名称">{{ contract.name }}</el-descriptions-item>
-        <el-descriptions-item label-class-name="contractLabel" label="车牌号">{{ contract.licensePlate }}</el-descriptions-item>
-        <el-descriptions-item label-class-name="contractLabel" label="本次发货额">
-          {{ toFixed(contract.deliveryAmount, decimalPrecision.shipment) }}
-        </el-descriptions-item>
-        <el-descriptions-item label-class-name="contractLabel" label="安全余额">
-          {{ toFixed(contract.safeAmount, decimalPrecision.shipment) }}
-        </el-descriptions-item>
-        <el-descriptions-item label-class-name="contractLabel" label="合同额">
-          {{ toFixed(contract.contractAmount, decimalPrecision.shipment) }}
-        </el-descriptions-item>
-        <el-descriptions-item label-class-name="contractLabel" label="累计收款">
-          {{ toFixed(contract.totalCollectionAmount, decimalPrecision.shipment) }}
-        </el-descriptions-item>
-        <el-descriptions-item label-class-name="contractLabel" label="累计发运">
-          {{ toFixed(contract.totalDeliveryAmount, decimalPrecision.shipment) }}
-        </el-descriptions-item>
-        <el-descriptions-item label-class-name="contractLabel" label="累计发运额">
-          {{ toFixed(contract.totalDeliveryAmount, decimalPrecision.shipment) }}
-        </el-descriptions-item>
-        <el-descriptions-item label-class-name="contractLabel" label="合同应收">
-          {{ toFixed(contract.contractReceivableAmount, decimalPrecision.shipment) }}
-        </el-descriptions-item>
-        <el-descriptions-item label-class-name="contractLabel" label="开票应收">
-          {{ toFixed(contract.billingReceivableAmount, decimalPrecision.shipment) }}
-        </el-descriptions-item>
-        <el-descriptions-item label-class-name="contractLabel" label="附件">
-          <div class="imgs-box">
-            <el-image
-              v-for="url in contract.attachmentDTOS"
-              :preview-src-list="contract.attachmentImgSrc"
-              :initial-index="1"
-              :key="url.id"
-              :src="url.tinyImageUrl"
-              lazy
-              style="margin:0 2px;"
-            ></el-image>
-          </div>
-        </el-descriptions-item>
-      </el-descriptions>
-      <el-radio-group v-model="curProductType" v-if="productTypeBits.length > 1" size="small" class="filter-item">
-        <el-radio-button
-          v-if="packTypeEnum.STRUCTURE.V & productType"
-          :label="packTypeEnum.STRUCTURE.V"
-          :disabled="artifactList.length == 0"
-          >{{ packTypeEnum.STRUCTURE.L }}({{ artifactList.length }})</el-radio-button
-        >
-        <el-radio-button
-          v-if="packTypeEnum.MACHINE_PART.V & productType"
-          :label="packTypeEnum.MACHINE_PART.V"
-          :disabled="partList.length == 0"
-          >{{ packTypeEnum.MACHINE_PART.L }}({{ partList.length }})</el-radio-button
-        >
-        <el-radio-button
-          v-if="packTypeEnum.ENCLOSURE.V & productType"
-          :label="packTypeEnum.ENCLOSURE.V"
-          :disabled="enclosureList.length == 0"
-          >{{ packTypeEnum.ENCLOSURE.L }}({{ enclosureList.length }})</el-radio-button
-        >
-        <el-radio-button
-          v-if="packTypeEnum.AUXILIARY_MATERIAL.V & productType"
-          :label="packTypeEnum.AUXILIARY_MATERIAL.V"
-          :disabled="auxiliaryMaterialList.length == 0"
-          >{{ packTypeEnum.AUXILIARY_MATERIAL.L }}({{ auxiliaryMaterialList.length }})</el-radio-button
-        >
-      </el-radio-group>
-    </div>
-    <component
-      :is="currentView"
-      :measureUnit="contract?.enclosureMeasureMode === enclosureSettlementTypeEnum.AREA.V? '㎡' : 'm'"
-      v-loading="tableLoading"
-      :maxHeight="maxHeight"
-      :list="list"
-    />
+    <template v-if="projectType === projectTypeEnum.STEEL.V">
+      <div class="head-container">
+        <el-descriptions :column="2" border style="margin-bottom: 10px" v-loading="tableLoading" v-if="contract">
+          <el-descriptions-item label-class-name="contractLabel" label="项目名称">{{ contract.name }}</el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="车牌号">{{ contract.licensePlate }}</el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="本次发货额">
+            {{ toFixed(contract.deliveryAmount, decimalPrecision.shipment) }}
+          </el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="安全余额">
+            {{ toFixed(contract.safeAmount, decimalPrecision.shipment) }}
+          </el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="合同额">
+            {{ toFixed(contract.contractAmount, decimalPrecision.shipment) }}
+          </el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="累计收款">
+            {{ toFixed(contract.totalCollectionAmount, decimalPrecision.shipment) }}
+          </el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="累计发运">
+            {{ toFixed(contract.totalDeliveryAmount, decimalPrecision.shipment) }}
+          </el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="累计发运额">
+            {{ toFixed(contract.totalDeliveryAmount, decimalPrecision.shipment) }}
+          </el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="合同应收">
+            {{ toFixed(contract.contractReceivableAmount, decimalPrecision.shipment) }}
+          </el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="开票应收">
+            {{ toFixed(contract.billingReceivableAmount, decimalPrecision.shipment) }}
+          </el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="附件">
+            <div class="imgs-box">
+              <el-image
+                v-for="url in contract.attachmentDTOS"
+                :preview-src-list="contract.attachmentImgSrc"
+                :initial-index="1"
+                :key="url.id"
+                :src="url.tinyImageUrl"
+                lazy
+                style="margin: 0 2px"
+              ></el-image>
+            </div>
+          </el-descriptions-item>
+        </el-descriptions>
+        <el-radio-group v-model="curProductType" v-if="productTypeBits.length > 1" size="small" class="filter-item">
+          <el-radio-button
+            v-if="packTypeEnum.STRUCTURE.V & productType"
+            :label="packTypeEnum.STRUCTURE.V"
+            :disabled="artifactList.length == 0"
+            >{{ packTypeEnum.STRUCTURE.L }}({{ artifactList.length }})</el-radio-button
+          >
+          <el-radio-button
+            v-if="packTypeEnum.MACHINE_PART.V & productType"
+            :label="packTypeEnum.MACHINE_PART.V"
+            :disabled="partList.length == 0"
+            >{{ packTypeEnum.MACHINE_PART.L }}({{ partList.length }})</el-radio-button
+          >
+          <el-radio-button
+            v-if="packTypeEnum.ENCLOSURE.V & productType"
+            :label="packTypeEnum.ENCLOSURE.V"
+            :disabled="enclosureList.length == 0"
+            >{{ packTypeEnum.ENCLOSURE.L }}({{ enclosureList.length }})</el-radio-button
+          >
+          <el-radio-button
+            v-if="packTypeEnum.AUXILIARY_MATERIAL.V & productType"
+            :label="packTypeEnum.AUXILIARY_MATERIAL.V"
+            :disabled="auxiliaryMaterialList.length == 0"
+            >{{ packTypeEnum.AUXILIARY_MATERIAL.L }}({{ auxiliaryMaterialList.length }})</el-radio-button
+          >
+        </el-radio-group>
+      </div>
+      <component
+        :is="currentView"
+        :measureUnit="contract?.enclosureMeasureMode === enclosureSettlementTypeEnum.AREA.V ? '㎡' : 'm'"
+        v-loading="tableLoading"
+        :maxHeight="maxHeight"
+        :list="list"
+      />
+    </template>
+    <template v-if="projectType === projectTypeEnum.BRIDGE.V">
+      <div class="head-container">
+        <el-descriptions :column="2" border style="margin-bottom: 10px" v-loading="tableLoading" v-if="contract">
+          <el-descriptions-item label-class-name="contractLabel" label="项目名称">{{ contract.name }}</el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="车牌号">{{ contract.licensePlate }}</el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="本次发货额">
+            {{ toFixed(contract.deliveryAmount, decimalPrecision.shipment) }}
+          </el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="安全余额">
+            {{ toFixed(contract.safeAmount, decimalPrecision.shipment) }}
+          </el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="合同额">
+            {{ toFixed(contract.contractAmount, decimalPrecision.shipment) }}
+          </el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="累计收款">
+            {{ toFixed(contract.totalCollectionAmount, decimalPrecision.shipment) }}
+          </el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="累计发运">
+            {{ toFixed(contract.totalDeliveryAmount, decimalPrecision.shipment) }}
+          </el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="累计发运额">
+            {{ toFixed(contract.totalDeliveryAmount, decimalPrecision.shipment) }}
+          </el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="合同应收">
+            {{ toFixed(contract.contractReceivableAmount, decimalPrecision.shipment) }}
+          </el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="开票应收">
+            {{ toFixed(contract.billingReceivableAmount, decimalPrecision.shipment) }}
+          </el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="附件">
+            <div class="imgs-box">
+              <el-image
+                v-for="url in contract.attachmentDTOS"
+                :preview-src-list="contract.attachmentImgSrc"
+                :initial-index="1"
+                :key="url.id"
+                :src="url.tinyImageUrl"
+                lazy
+                style="margin: 0 2px"
+              ></el-image>
+            </div>
+          </el-descriptions-item>
+        </el-descriptions>
+        <el-radio-group v-model="bridgeCurProductType" v-if="bridgeProductTypeBits.length > 1" size="small" class="filter-item">
+          <el-radio-button
+            v-if="bridgePackTypeEnum.BOX.V & productType"
+            :label="bridgePackTypeEnum.BOX.V"
+            :disabled="boxList.length == 0"
+            >{{ bridgePackTypeEnum.BOX.L }}({{ boxList.length }})</el-radio-button
+          >
+          <el-radio-button
+            v-if="bridgePackTypeEnum.MACHINE_PART.V & productType"
+            :label="bridgePackTypeEnum.MACHINE_PART.V"
+            :disabled="partList.length == 0"
+            >{{ bridgePackTypeEnum.MACHINE_PART.L }}({{ partList.length }})</el-radio-button
+          >
+          <el-radio-button
+            v-if="bridgePackTypeEnum.AUXILIARY_MATERIAL.V & productType"
+            :label="bridgePackTypeEnum.AUXILIARY_MATERIAL.V"
+            :disabled="auxiliaryMaterialList.length == 0"
+            >{{ bridgePackTypeEnum.AUXILIARY_MATERIAL.L }}({{ auxiliaryMaterialList.length }})</el-radio-button
+          >
+        </el-radio-group>
+      </div>
+      <component
+        :is="bridgeCurrentView"
+        :measureUnit="contract?.enclosureMeasureMode === enclosureSettlementTypeEnum.AREA.V ? '㎡' : 'm'"
+        v-loading="tableLoading"
+        :maxHeight="maxHeight"
+        :list="bridgeList"
+      />
+    </template>
   </common-dialog>
 </template>
 
 <script setup>
 import { defineProps, ref, defineEmits, watch, computed } from 'vue'
 import { ElRadioGroup } from 'element-plus'
-
+import { projectTypeEnum } from '@enum-ms/contract'
 import { packTypeEnum } from '@enum-ms/mes'
 import { weightMeasurementModeEnum, enclosureSettlementTypeEnum } from '@enum-ms/finance'
 import { pricingMannerEnum } from '@enum-ms/contract'
@@ -111,7 +185,9 @@ import structureTable from './module/structure'
 import partTable from './module/part'
 import enclosureTable from './module/enclosure'
 import auxiliaryMaterialTable from './module/auxiliary-material'
+import boxTable from './module/box'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
+import { bridgePackTypeEnum } from '@/utils/enum/modules/bridge'
 
 const { decimalPrecision } = useDecimalPrecision()
 
@@ -140,6 +216,9 @@ const props = defineProps({
   quantityFelid: {
     type: String,
     default: 'shipQuantity'
+  },
+  projectType: {
+    type: Number
   }
 })
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
@@ -159,14 +238,19 @@ const artifactList = ref([])
 const partList = ref([])
 const enclosureList = ref([])
 const auxiliaryMaterialList = ref([])
+const boxList = ref([])
 const contract = ref({})
 const curProductType = ref()
+const bridgeCurProductType = ref()
 
 const productType = computed(() => {
   return props.detailInfo && props.detailInfo.productType
 })
 const productTypeBits = computed(() => {
   return EO.getBits(packTypeEnum, productType.value, 'V')
+})
+const bridgeProductTypeBits = computed(() => {
+  return EO.getBits(bridgePackTypeEnum, productType.value, 'V')
 })
 const detailId = computed(() => {
   return (props.detailInfo && props.detailInfo.id) || undefined
@@ -198,7 +282,8 @@ const list = computed(() => {
             contract.value.structureMeasureMode === weightMeasurementModeEnum.OVERWEIGHT.V
               ? convertUnits(v.totalWeight, 'kg', 't')
               : convertUnits(v.weight * v.showQuantity, 'kg', 't')
-          v.totalPrice = v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalMete * (v.unitPrice || 0) : v.totalLength * (v.unitPrice || 0)
+          v.totalPrice =
+            v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalMete * (v.unitPrice || 0) : v.totalLength * (v.unitPrice || 0)
           return v
         })
       )
@@ -213,7 +298,8 @@ const list = computed(() => {
             contract.value.structureMeasureMode === weightMeasurementModeEnum.OVERWEIGHT.V
               ? convertUnits(v.totalWeight, 'kg', 't')
               : convertUnits(v.weight * v.showQuantity, 'kg', 't')
-          v.totalPrice = v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalMete * (v.unitPrice || 0) : v.totalLength * (v.unitPrice || 0)
+          v.totalPrice =
+            v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalMete * (v.unitPrice || 0) : v.totalLength * (v.unitPrice || 0)
           return v
         })
       )
@@ -244,6 +330,66 @@ const list = computed(() => {
       return []
   }
 })
+const bridgeCurrentView = computed(() => {
+  switch (bridgeCurProductType.value) {
+    case bridgePackTypeEnum.BOX.V:
+      return boxTable
+    case bridgePackTypeEnum.MACHINE_PART.V:
+      return partTable
+    case bridgePackTypeEnum.AUXILIARY_MATERIAL.V:
+      return auxiliaryMaterialTable
+    default:
+      return ''
+  }
+})
+const bridgeList = computed(() => {
+  switch (bridgeCurProductType.value) {
+    case bridgePackTypeEnum.BOX.V:
+      return (
+        boxList.value &&
+        boxList.value.map((v) => {
+          v.showQuantity = v[props.quantityFelid]
+          v.weight = (props.weightType === weightTypeEnum.NET.V ? v.netWeight : v.grossWeight) || 0
+          v.totalLength = convertUnits(v.length * v.showQuantity || 0, 'mm', 'm')
+          v.totalMete =
+            contract.value.structureMeasureMode === weightMeasurementModeEnum.OVERWEIGHT.V
+              ? convertUnits(v.totalWeight, 'kg', 't')
+              : convertUnits(v.weight * v.showQuantity, 'kg', 't')
+          v.totalPrice =
+            v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalMete * (v.unitPrice || 0) : v.totalLength * (v.unitPrice || 0)
+          return v
+        })
+      )
+    case bridgePackTypeEnum.MACHINE_PART.V:
+      return (
+        partList.value &&
+        partList.value.map((v) => {
+          v.showQuantity = v[props.quantityFelid]
+          v.weight = (props.weightType === weightTypeEnum.NET.V ? v.netWeight : v.grossWeight) || 0
+          v.totalLength = convertUnits(v.length * v.showQuantity || 0, 'mm', 'm')
+          v.totalMete =
+            contract.value.structureMeasureMode === weightMeasurementModeEnum.OVERWEIGHT.V
+              ? convertUnits(v.totalWeight, 'kg', 't')
+              : convertUnits(v.weight * v.showQuantity, 'kg', 't')
+          v.totalPrice =
+            v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalMete * (v.unitPrice || 0) : v.totalLength * (v.unitPrice || 0)
+          return v
+        })
+      )
+    case bridgePackTypeEnum.AUXILIARY_MATERIAL.V:
+      return (
+        auxiliaryMaterialList.value &&
+        auxiliaryMaterialList.value.map((v) => {
+          v.showQuantity = v[props.quantityFelid]
+          v.fullClassName = `${v.firstName}/${v.secondName}/${v.thirdName}`
+          v.totalPrice = v.unitPrice * v.shipMete || 0
+          return v
+        })
+      )
+    default:
+      return []
+  }
+})
 
 watch(
   () => detailId.value,
@@ -259,8 +405,10 @@ function init() {
   partList.value = []
   enclosureList.value = []
   auxiliaryMaterialList.value = []
+  boxList.value = []
   contract.value = {}
   curProductType.value = undefined
+  bridgeCurProductType.value = undefined
 }
 
 async function fetchDetail() {
@@ -268,11 +416,13 @@ async function fetchDetail() {
     init()
     tableLoading.value = true
     curProductType.value = productTypeBits.value[0]
+    bridgeCurProductType.value = bridgeProductTypeBits.value[0]
     const data = await props.detailFunc(detailId.value)
     artifactList.value = data.artifactList || []
     partList.value = data.partList || []
     enclosureList.value = data.enclosureList || []
     auxiliaryMaterialList.value = data.auxiliaryMaterialList || []
+    boxList.value = data.boxList || []
     contract.value = data.review || {}
     contract.value.attachmentImgSrc = contract.value.attachmentDTOS && contract.value.attachmentDTOS.map((k) => k.imageUrl)
   } catch (error) {

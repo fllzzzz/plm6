@@ -3,7 +3,16 @@
     <div class="head-container">
       <mHeader ref="headerRef">
         <template #btn>
-          <common-button size="mini" @click="showType='addBtn';editFormVisible = true" icon="el-icon-plus" type="primary" class="filter-item">
+          <common-button
+            size="mini"
+            @click="
+              showType = 'addBtn',
+              editFormVisible = true
+            "
+            icon="el-icon-plus"
+            type="primary"
+            class="filter-item"
+          >
             新增
           </common-button>
         </template>
@@ -49,7 +58,7 @@
           <div v-if="scope.row.testingFeeList.findIndex((v) => v.month == item) > -1">
             <template v-for="value in scope.row.testingFeeList" :key="value">
               <template v-if="value.month == item">
-                <span>{{ toThousand(value.feeAmount,decimalPrecision.contract) }}</span>
+                <span>{{ toThousand(value.feeAmount, decimalPrecision.contract) }}</span>
               </template>
             </template>
           </div>
@@ -90,12 +99,13 @@ import useCRUD from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
 import useMaxHeight from '@compos/use-max-height'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
-
+import useProjectTree from '@compos/store/use-project-tree'
 import mHeader from './module/header.vue'
 import mForm from './module/form.vue'
 import mDetail from './module/detail.vue'
 
 const { decimalPrecision } = useDecimalPrecision()
+const { projectTree } = useProjectTree()
 
 const tableRef = ref()
 const detailData = ref({})
@@ -109,7 +119,7 @@ const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false
+  download: false,
 }
 
 const editFormVisible = ref(false)
@@ -124,7 +134,7 @@ const { crud, CRUD, columns } = useCRUD(
     permission: { ...permission },
     crudApi: { ...crudApi },
     requiredQuery: ['year'],
-    hasPagination: false
+    hasPagination: false,
   },
   tableRef
 )
@@ -135,14 +145,24 @@ provide('crud', crud)
 const dataFormat = computed(() => {
   return [
     ['project', 'parse-project'],
-    ['totalAmount', ['to-thousand', decimalPrecision.value.contract]]
+    ['totalAmount', ['to-thousand', decimalPrecision.value.contract]],
   ]
 })
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
-  paginate: true
+  paginate: true,
 })
+
+const projectList = computed(() => {
+  const data = projectTree.value.map(p => {
+    p.serialNumberName = p.serialNumber + ' ' + p.name
+    return p
+  })
+  return data
+})
+
+provide('projectList', projectList)
 
 // 详情
 function toDetail(row) {
