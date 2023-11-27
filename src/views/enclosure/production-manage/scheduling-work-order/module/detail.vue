@@ -115,7 +115,7 @@
               @confirm="revocation(row)"
             >
             <template #reference>
-              <common-button type="danger" size="mini">撤回</common-button>
+              <common-button type="danger" size="mini" :disabled="row.booleReport === 1">撤回</common-button>
             </template>
           </el-popconfirm>
           </template>
@@ -199,12 +199,12 @@ const cancelEdit = () => {
 }
 
 // 点击编辑时，可选择复选框
-function selectable() {
-  return !delButton.value
+function selectable(row) {
+  return !delButton.value && row.booleReport !== 1
 }
 
 const selectChange = (v) => {
-  console.log(crud)
+  console.log(v)
   if (v.length > 0) {
     selectDisable.value = false
     taskId.value = []
