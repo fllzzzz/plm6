@@ -322,7 +322,7 @@ async function handleDateChange(val) {
   fetchProcess()
   fetchProcessList()
   crud.query.groupsId = undefined
-  projectId.value = undefined
+  // projectId.value = undefined
 }
 
 CRUD.HOOK.beforeToQuery = () => {
