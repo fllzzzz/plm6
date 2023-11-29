@@ -74,7 +74,7 @@
           </el-table-column>
           <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="80">
             <template v-slot="scope">
-              <div v-if="scope.row.invoiceType !== invoiceTypeEnum.RECEIPT.V && scope.row.isModify">
+              <div v-if="scope.row.invoiceType !== invoiceTypeEnum.RECEIPT.V && currentRow.isTax !== isTaxContractEnum.NO.V && scope.row.isModify">
                 <el-input-number
                   v-model="scope.row.taxRate"
                   :step="1"
@@ -89,7 +89,7 @@
                   @change="taxMoney(scope.row)"
                 />%
               </div>
-              <div v-else>{{ scope.row.taxRate? scope.row.taxRate+'%': '' }}</div>
+              <div v-else>{{ scope.row.taxRate? scope.row.taxRate+'%': '-' }}</div>
             </template>
           </el-table-column>
           <el-table-column key="noTaxAmount" prop="noTaxAmount" label="不含税金额" align="center" width="70">
@@ -216,13 +216,11 @@ const { maxHeight } = useMaxHeight({
 
 const validateTaxRate = (value, row) => {
   if (row.invoiceType !== invoiceTypeEnum.RECEIPT.V && props.currentRow.isTax !== isTaxContractEnum.NO.V) return !!value
-
   return true
 }
 
 const validateInvoiceType = (value, row) => {
   if (props.currentRow.isTax !== isTaxContractEnum.NO.V) return !!value
-
   return true
 }
 

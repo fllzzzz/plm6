@@ -78,7 +78,7 @@
       </el-table-column>
       <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="70">
         <template v-slot="scope">
-          <div v-if="scope.row.invoiceType !== invoiceTypeEnum.RECEIPT.V && scope.row.isModify">
+          <div v-if="scope.row.invoiceType !== invoiceTypeEnum.RECEIPT.V && currentRow.isTax !== isTaxContractEnum.NO.V && scope.row.isModify">
             <el-input-number
               v-model="scope.row.taxRate"
               :step="1"
