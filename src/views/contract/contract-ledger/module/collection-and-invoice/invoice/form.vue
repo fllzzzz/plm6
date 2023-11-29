@@ -69,7 +69,7 @@
           </el-table-column>
           <el-table-column key="invoiceType" prop="invoiceType" label="*发票类型" align="center" width="120">
             <template v-slot="scope">
-              <div>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '' }}</div>
+              <div>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '-' }}</div>
             </template>
           </el-table-column>
           <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="80">
@@ -160,6 +160,7 @@ import { regForm } from '@compos/use-crud'
 import { isNotBlank } from '@data-type/index'
 import useMaxHeight from '@compos/use-max-height'
 import { digitUppercase, toThousand } from '@/utils/data-type/number'
+import { isTaxContractEnum } from '@enum-ms/contract'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import useTableValidate from '@compos/form/use-table-validate'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
@@ -214,7 +215,13 @@ const { maxHeight } = useMaxHeight({
 })
 
 const validateTaxRate = (value, row) => {
-  if (row.invoiceType !== invoiceTypeEnum.RECEIPT.V) return !!value
+  if (row.invoiceType !== invoiceTypeEnum.RECEIPT.V && props.currentRow.isTax !== isTaxContractEnum.NO.V) return !!value
+
+  return true
+}
+
+const validateInvoiceType = (value, row) => {
+  if (props.currentRow.isTax !== isTaxContractEnum.NO.V) return !!value
 
   return true
 }
@@ -229,7 +236,7 @@ const tableRules = {
   invoiceDate: [{ required: true, message: '请选择开票日期', trigger: 'change' }],
   invoiceAmount: [{ validator: validateAmount, message: '请选择开票额', trigger: 'change', type: 'number' }],
   taxRate: [{ validator: validateTaxRate, message: '请输入税率', trigger: 'blur' }],
-  invoiceType: [{ required: true, message: '请选择发票类型', trigger: 'change' }],
+  invoiceType: [{ validator: validateInvoiceType, message: '请选择发票类型', trigger: 'change' }],
   invoiceNo: [{ required: true, message: '请输入发票号', trigger: 'blur' }],
   collectionUnit: [{ required: true, message: '请输入收票单位', trigger: 'blur' }]
 }
