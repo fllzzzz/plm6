@@ -252,7 +252,7 @@ const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 const thickList = ref([])
 const materialList = ref([])
@@ -273,7 +273,7 @@ const { crud, CRUD } = useCRUD(
     crudApi: { ...crudApi },
     queryOnPresenterCreated: false,
     hasPagination: false,
-    requiredQuery: ['monthList', 'material', 'thick'],
+    requiredQuery: ['monthList', 'material', 'thick']
   },
   tableRef
 )
@@ -344,7 +344,7 @@ const boxStyle = computed(() => {
   return {
     'font-size': `${(16 * boxScale.value).toFixed(0)}px`,
     width: `${(120 * boxScale.value).toFixed(0)}px`,
-    height: `${(120 * boxScale.value).toFixed(0)}px`,
+    height: `${(120 * boxScale.value).toFixed(0)}px`
   }
 })
 

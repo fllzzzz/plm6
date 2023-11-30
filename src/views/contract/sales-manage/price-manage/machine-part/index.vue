@@ -63,9 +63,15 @@
           <span :class="row.status === 1 ? 'tc-danger' : ''" v-thousand="{val:row.totalPrice ||0, dp:(decimalPrecision.contract===2?3:decimalPrecision.contract)}" />
         </template>
       </el-table-column>
+      <el-table-column label="操作" align="center" fixed="right">
+        <template #default="{ row }">
+          <common-button icon="el-icon-view" type="info" size="mini" @click.stop="openDetail(row)" />
+        </template>
+      </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
+    <mDetail :detail-info="detailInfo" />
   </div>
 </template>
 
@@ -85,6 +91,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
+import mDetail from './module/detail'
 
 const { decimalPrecision } = useDecimalPrecision()
 
@@ -101,6 +108,7 @@ const tableRef = ref()
 const headerRef = ref()
 const showAble = ref(false)
 const submitList = ref([])
+const detailInfo = ref({})
 
 const { crud, columns } = useCRUD(
   {
@@ -118,6 +126,13 @@ const { maxHeight } = useMaxHeight({
   paginate: true,
   extraHeight: 100
 })
+
+const openDetail = (row) => {
+  console.log(row)
+  detailInfo.value = row
+  crud.toDetail(row)
+}
+
 function showVisible() {
   emit('showLog')
 }

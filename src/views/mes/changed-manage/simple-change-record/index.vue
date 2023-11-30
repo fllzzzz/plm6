@@ -126,13 +126,13 @@
         width="130"
         align="center"
       />
-      <el-table-column label="状态" width="140px" align="center" fixed="right">
+      <el-table-column label="状态" width="180px" align="center" fixed="right">
         <template #default="{ row: { sourceRow: row } }">
           <span
             v-if="row.handleStatusEnum && row.handleStatusEnum === changeHandleStatusEnum.PENDING.V && checkPermission(permission.audit)"
           >
-            <common-button size="mini" type="success" @click="toHandle(row, changeHandleStatusEnum.PASS.V)"> 通过 </common-button>
-            <common-button size="mini" type="danger" @click="toHandle(row, changeHandleStatusEnum.REJECT.V)"> 驳回 </common-button>
+            <common-button :loading="btnLoading" size="mini" type="success" @click="toHandle(row, changeHandleStatusEnum.PASS.V)"> 通过 </common-button>
+            <common-button :loading="btnLoading" size="mini" type="danger" @click="toHandle(row, changeHandleStatusEnum.REJECT.V)"> 驳回 </common-button>
           </span>
           <el-tag :type="changeHandleStatusEnum.V[row.handleStatusEnum].TAG" effect="plain" v-else>
             {{ changeHandleStatusEnum.VL[row.handleStatusEnum] }}
@@ -173,6 +173,7 @@ const dataFormat = ref([
 ])
 
 const tableRef = ref()
+const btnLoading = ref(false)
 const { crud, columns } = useCRUD(
   {
     title: '简易变更记录',
@@ -194,10 +195,13 @@ function toHandle(row, status) {
     type: 'warning'
   }).then(async () => {
     try {
+      btnLoading.value = true
       await check({ id: row.id, handleStatusEnum: status })
       row.handleStatusEnum = status
     } catch (error) {
       console.log('取消', error)
+    } finally {
+      btnLoading.value = false
     }
   })
 }
