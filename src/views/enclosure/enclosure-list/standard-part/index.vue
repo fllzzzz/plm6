@@ -172,14 +172,14 @@
     </el-table-column>
     <el-table-column prop="boolReturn" label="是否退量" align="center">
       <template v-slot="scope">
-        <el-switch
+        <!-- <el-switch
           v-if="scope.row.isModify"
           v-model="scope.row.boolReturn"
           active-color="#13ce66"
           :active-value="true"
           :inactive-value="false"
-        />
-        <span v-else :style="`color:${scope.row.boolReturn?'green':''}`">{{scope.row.boolReturn?'√':'-'}}</span>
+        /> -->
+        <span :style="`color:${scope.row.boolReturn?'green':''}`">{{scope.row.boolReturn?'√':'-'}}</span>
       </template>
     </el-table-column>
       <el-table-column

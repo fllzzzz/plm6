@@ -18,7 +18,12 @@
     <template #content>
       <common-table :data="list" :data-format="columnsDataFormat" :max-height="maxHeight" style="width: 100%;">
         <el-table-column type="index" prop="index" label="序号" align="center" min-width="60" />
-        <el-table-column prop="name" key="name" label="名称" align="center" show-overflow-tooltip min-width="80" />
+        <el-table-column prop="name" key="name" label="名称" align="center" show-overflow-tooltip min-width="80">
+          <template #default="{row}">
+            <table-cell-tag :show="row?.boolReturn" name="退量" color="#f56c6c"/>
+            <span>{{ row.name }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="serialNumber" key="serialNumber" label="编号" align="center" show-overflow-tooltip min-width="80" />
         <el-table-column prop="specification" key="specification" label="规格" align="center" show-overflow-tooltip min-width="80" />
         <el-table-column prop="material" key="material" label="材质" align="center" show-overflow-tooltip min-width="80" />
@@ -118,6 +123,11 @@ async function fetchList() {
   tableLoading.value = true
   try {
     const { content = [], totalElements } = await shipRecord({ ...params.value, ...queryPage })
+    content.forEach((row) => {
+      if (row.boolReturn) {
+        row.totalPrice = row.totalPrice * -1
+      }
+    })
     _list = content
     setTotalPage(totalElements)
   } catch (error) {

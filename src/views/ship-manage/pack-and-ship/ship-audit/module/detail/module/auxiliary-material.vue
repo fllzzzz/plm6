@@ -7,7 +7,12 @@
         <span>{{ row.monomer ? row.monomer?.name : '-' }}</span>
       </template>
     </el-table-column>
-    <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" />
+    <el-table-column :show-overflow-tooltip="true" prop="name" label="名称">
+      <template #default="{row}">
+          <table-cell-tag :show="row.boolReturn" name="退量" color="#f56c6c"/>
+          <span>{{ row.name }}</span>
+        </template>
+    </el-table-column>
     <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" />
     <el-table-column :show-overflow-tooltip="true" prop="measureUnit" label="计量单位" align="center" />
     <el-table-column prop="showQuantity" label="数量" align="center" />

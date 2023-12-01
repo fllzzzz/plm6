@@ -99,9 +99,10 @@
             label="名称"
             width="120px"
           >
-            <template v-slot="scope">
-              <table-cell-tag v-if="scope.row.workshop" :name="scope.row?.workshop?.name" />
-              <span>{{ scope.row.name }}</span>
+            <template #template="{row}">
+              <table-cell-tag v-if="row.workshop" :name="row?.workshop?.name" />
+              <table-cell-tag v-if="row?.boolReturn" name="退量" color="#f56c6c"/>
+              <span>{{ row.name }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="monomer.name" label="单体" align="center" width="100px" />
@@ -386,6 +387,7 @@ watch(
       }
     }
     packType.value = _type || packType.value
+    console.log(listObj)
   },
   { immediate: true, deep: true }
 )

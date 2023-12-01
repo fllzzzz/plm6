@@ -37,6 +37,9 @@ function filter({ header, table = [], footer, qrCode }) {
 function handleTaxRate({ header, table = [], footer, qrCode }) {
   const _table = table.map(row => {
     row.taxRate = row.taxRate || 0
+    if (row.boolReturn) {
+      row.totalPrice = row.totalPrice * -1
+    }
     return row
   })
   return {

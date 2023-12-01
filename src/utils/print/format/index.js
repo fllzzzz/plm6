@@ -29,6 +29,8 @@ const contractPlantDepreciationRecord = contract.handleDepreciationRate
 const contractDeviceDepreciationRecord = contract.handleDepreciationRate
 const materialCostRecord = contract.handleUnitPrice
 const fortuneReportList = contract.handleFortuneReport
+const contractAuxiliaryMaterialPrice = contract.handleContractAuxiliaryMaterial
+const projectWarehouseRecord = contract.handleProjectWarehouseRecord
 
 const orderPaymentLedger = contract.handleSupplierPaymentRate
 const purchaseLogisticsRecord = scm.handleOrderName
@@ -104,6 +106,8 @@ export default {
   contractDeviceDepreciationRecord,
   materialCostRecord,
   fortuneReportList,
+  contractAuxiliaryMaterialPrice,
+  projectWarehouseRecord,
   waterRecord,
   expenseReimburseSummary,
   materialLogisticsRecord,
