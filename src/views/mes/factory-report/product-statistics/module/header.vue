@@ -13,6 +13,7 @@
           value-format="x"
           style="width: 240px"
           @change="handleDateChange"
+          :clearable="false"
         />
         <common-radio-button
           type="enum"
