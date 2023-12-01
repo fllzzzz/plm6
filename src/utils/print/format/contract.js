@@ -250,6 +250,38 @@ function handleActualWeight({ header, table = [], footer, qrCode }) {
   }
 }
 
+// 商务录入处理退量
+function handleContractAuxiliaryMaterial({ header, table = [], footer, qrCode }) {
+  const _table = table.map(row => {
+    if (row.boolReturn) {
+      row.totalPrice = row.totalPrice * -1
+    }
+    return row
+  })
+  return {
+    header,
+    table: _table,
+    qrCode,
+    footer
+  }
+}
+
+// 订单跟踪-入库统计-退量
+function handleProjectWarehouseRecord({ header, table = [], footer, qrCode }) {
+  const _table = table.map(row => {
+    if (row.boolReturn) {
+      row.totalPrice = row.totalPrice * -1
+    }
+    return row
+  })
+  return {
+    header,
+    table: _table,
+    qrCode,
+    footer
+  }
+}
+
 export default {
   handleRate,
   handleAreaUnit,
@@ -263,5 +295,7 @@ export default {
   handleUnitPrice,
   handleFortuneReport,
   handleLoadingWeight,
-  handleActualWeight
+  handleActualWeight,
+  handleContractAuxiliaryMaterial,
+  handleProjectWarehouseRecord
 }

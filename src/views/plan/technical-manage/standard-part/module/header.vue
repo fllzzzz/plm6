@@ -32,6 +32,16 @@
         </template>
       </template>
       <div>
+        <common-select
+          type="enum"
+          v-model="query.boolReturn"
+          :options="whetherEnum.ENUM"
+          clearable
+          placeholder="是否退量"
+          style="width: 200px"
+          class="filter-item"
+          @change="crud.toQuery"
+        />
         <el-input
           v-model="query.name"
           size="small"
@@ -86,6 +96,8 @@ import { defineProps, ref, watch, defineEmits, computed } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import checkPermission from '@/utils/system/check-permission'
 
+import { whetherEnum } from '@enum-ms/common'
+
 import crudOperation from '@crud/CRUD.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import rrOperation from '@crud/RR.operation'
@@ -100,7 +112,8 @@ const defaultQuery = {
   projectId: { value: undefined, resetAble: false },
   name: undefined,
   specification: undefined,
-  remark: undefined
+  remark: undefined,
+  boolReturn: undefined
 }
 
 const monomerSelectRef = ref()

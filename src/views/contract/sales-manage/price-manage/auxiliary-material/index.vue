@@ -22,7 +22,12 @@
           <span>{{ row.useProperty ? auxiliaryMaterialUseTypeEnum.VL[row.useProperty] : '-' }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="名称" align="center" v-if="columns.visible('name')" :show-overflow-tooltip="true" />
+      <el-table-column prop="name" label="名称" align="center" v-if="columns.visible('name')" :show-overflow-tooltip="true">
+        <template #default="{row}">
+          <table-cell-tag :show="row.boolReturn" name="退量" color="#f56c6c" />
+          <span>{{ row.name }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('specification')"
         :show-overflow-tooltip="true"

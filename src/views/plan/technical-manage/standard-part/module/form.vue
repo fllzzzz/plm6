@@ -138,6 +138,16 @@
               />
             </template>
           </el-table-column>
+          <el-table-column prop="boolReturn" label="是否退量" align="center">
+            <template v-slot="scope">
+              <el-switch
+                v-model="scope.row.boolReturn"
+                active-color="#13ce66"
+                :active-value="true"
+                :inactive-value="false"
+              />
+            </template>
+          </el-table-column>
           <el-table-column label="操作" align="center" width="80">
             <template v-slot="scope">
               <common-button size="small" class="el-icon-delete" type="danger" @click="deleteRow(scope.$index)" />
@@ -244,7 +254,8 @@ function deleteRow(index) {
 
 function addRow() {
   form.standardPartList.push({
-    ...crud.query
+    ...crud.query,
+    boolReturn: false
   })
 }
 
@@ -261,7 +272,6 @@ CRUD.HOOK.beforeSubmit = (crud, form) => {
     return false
   }
   const { validResult } = tableValidate(crud.form.standardPartList)
-  console.log(tableValidate)
   if (!validResult) {
     return false
   }

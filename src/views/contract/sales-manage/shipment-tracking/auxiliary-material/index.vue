@@ -40,7 +40,12 @@
         label="名称"
         align="center"
         min-width="140"
-      />
+      >
+        <template #default="{row}">
+          <table-cell-tag :show="row.boolReturn" name="退量" color="#f56c6c"/>
+          <span>{{ row.name }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('specification')"
         key="specification"
@@ -196,6 +201,15 @@ const { maxHeight } = useMaxHeight({
   minHeight: 300,
   paginate: true
 })
+
+CRUD.HOOK.handleRefresh = async (crud, { data }) => {
+  console.log(data)
+  data.content.forEach((row) => {
+    if (row.boolReturn) {
+      row.totalPrice = row.totalPrice * -1
+    }
+  })
+}
 
 // 重置前
 CRUD.HOOK.beforeResetQuery = () => {

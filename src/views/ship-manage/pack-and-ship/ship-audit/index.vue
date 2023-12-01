@@ -23,6 +23,7 @@
         min-width="230"
       >
         <template v-slot="scope">
+          <table-cell-tag :show="scope.row.boolReturn" name="退量" color="#f56c6c"/>
           <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
         </template>
       </el-table-column>

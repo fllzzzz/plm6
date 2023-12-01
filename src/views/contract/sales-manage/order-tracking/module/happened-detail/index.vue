@@ -18,7 +18,12 @@
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('area.name')" prop="area.name" key="area.name" label="区域" min-width="140" show-overflow-tooltip />
-      <el-table-column v-if="columns.visible('name')" prop="name" key="name" label="名称" align="center" min-width="110" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('name')" prop="name" key="name" label="名称" align="center" min-width="110" show-overflow-tooltip>
+        <template #default="{row}">
+          <table-cell-tag :show="row?.boolReturn" name="退量" color="#f56c6c"/>
+          <span>{{ row.name }}</span>
+        </template>
+      </el-table-column>
       <el-table-column v-if="columns.visible('serialNumber')" prop="serialNumber" key="serialNumber" label="编号" align="center" min-width="110" show-overflow-tooltip />
       <el-table-column v-if="columns.visible('specification')" prop="specification" key="specification" label="规格" align="center" min-width="120" show-overflow-tooltip />
       <el-table-column v-if="columns.visible('material')" prop="material" key="material" label="材质" align="center" min-width="100" show-overflow-tooltip />
@@ -95,6 +100,9 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   data.content.forEach((row) => {
     if (row.totalMete) {
       row.totalMete = Number(row.totalMete.toFixed(2)) ? row.totalMete.toFixed(2) : Number(row.totalMete.toFixed(5))
+    }
+    if (row.boolReturn) {
+      row.totalPrice = row.totalPrice * -1
     }
   })
 }

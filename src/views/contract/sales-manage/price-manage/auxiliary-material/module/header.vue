@@ -57,6 +57,16 @@
           type="warning"
           class="filter-item"
         />
+        <common-select
+          type="enum"
+          v-model="query.boolReturn"
+          :options="whetherEnum.ENUM"
+          clearable
+          placeholder="是否退量"
+          style="width: 200px"
+          class="filter-item"
+          @change="crud.toQuery"
+        />
         <el-badge v-if="checkPermission(crud.permission.log) && priceEditMode===priceEditModeEnum.SAVE.V" :value="saveCount" :hidden="saveCount <= 0">
           <common-button type="success" size="mini" @click="handleLog">保存记录</common-button>
         </el-badge>
@@ -88,6 +98,7 @@ import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 import checkPermission from '@/utils/system/check-permission'
 import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { priceEditModeEnum, standardPartPriceSearchEnum } from '@enum-ms/contract'
+import { whetherEnum } from '@enum-ms/common'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
