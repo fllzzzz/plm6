@@ -53,7 +53,7 @@ constantize(mesProductTypeEnum)
 
 // 发运管理/桥梁-制成品入发存
 const bridgeProductTypeEnum = {
-  BOX: { L: '分段', K: 'BOX', V: 1 << 1 },
+  BOX: { L: '分段', K: 'BOX', V: 1 << 0 },
   DIRECT: { L: '直发件', K: 'DIRECT', V: 1 << 2 }
 }
 constantize(bridgeProductTypeEnum)
