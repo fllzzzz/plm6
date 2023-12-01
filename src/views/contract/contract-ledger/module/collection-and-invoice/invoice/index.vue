@@ -73,12 +73,12 @@
       </el-table-column>
       <el-table-column key="invoiceType" prop="invoiceType" label="发票类型" align="center" width="110">
         <template v-slot="scope">
-          <div>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '' }}</div>
+          <div>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="70">
         <template v-slot="scope">
-          <div v-if="scope.row.invoiceType !== invoiceTypeEnum.RECEIPT.V && scope.row.isModify">
+          <div v-if="scope.row.invoiceType !== invoiceTypeEnum.RECEIPT.V && currentRow.isTax !== isTaxContractEnum.NO.V && scope.row.isModify">
             <el-input-number
               v-model="scope.row.taxRate"
               :step="1"
@@ -212,7 +212,7 @@ import checkPermission from '@/utils/system/check-permission'
 import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import { auditTypeEnum } from '@enum-ms/contract'
+import { isTaxContractEnum, auditTypeEnum } from '@enum-ms/contract'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'
 import { toThousand, digitUppercase } from '@data-type/number'
@@ -283,7 +283,7 @@ const tableRules = {
 const otherRules = {
   invoiceDate: [{ required: true, message: '请选择开票日期', trigger: 'change' }],
   invoiceAmount: [{ required: true, message: '请选择开票额', trigger: 'change', type: 'number' }],
-  invoiceType: [{ required: true, message: '请选择发票类型', trigger: 'change' }],
+  // invoiceType: [{ required: true, message: '请选择发票类型', trigger: 'change' }],
   invoiceNo: [{ required: true, message: '请输入发票号', trigger: 'blur' }],
   collectionUnit: [{ required: true, message: '请输入收票单位', trigger: 'blur' }]
 }
@@ -291,7 +291,7 @@ const otherRules = {
 function wrongCellMask({ row, column }) {
   if (!row) return
   let rules = {}
-  if (row.invoiceType !== invoiceTypeEnum.RECEIPT.V) {
+  if (row.invoiceType !== invoiceTypeEnum.RECEIPT.V && props.currentRow.isTax !== isTaxContractEnum.NO.V) {
     rules = tableRules
   } else {
     rules = otherRules
@@ -451,7 +451,7 @@ async function rowSubmit(row) {
     return
   }
   let rules = {}
-  if (row.invoiceType !== invoiceTypeEnum.RECEIPT.V) {
+  if (row.invoiceType !== invoiceTypeEnum.RECEIPT.V && props.currentRow.isTax !== isTaxContractEnum.NO.V) {
     rules = tableRules
   } else {
     rules = otherRules

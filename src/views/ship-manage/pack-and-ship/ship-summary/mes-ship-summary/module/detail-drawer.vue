@@ -37,25 +37,25 @@
         <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="areaName" prop="areaName" label="区域" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
-        <el-table-column key="netWeight" prop="netWeight" label="单净重" align="center" :show-overflow-tooltip="true">
+        <el-table-column key="netWeight" prop="netWeight" label="单净重（kg）" align="center" :show-overflow-tooltip="true">
           <template v-slot="scope">
             <span>{{ toThousand(scope.row.netWeight, DP.COM_WT__KG) }}</span>
             <!-- <span style="margin-left: 3px">kg</span> -->
           </template>
         </el-table-column>
-        <el-table-column key="grossWeight" prop="grossWeight" label="单毛重" align="center" :show-overflow-tooltip="true">
+        <el-table-column key="grossWeight" prop="grossWeight" label="单毛重（kg）" align="center" :show-overflow-tooltip="true">
           <template v-slot="scope">
             <span>{{ toThousand(scope.row.grossWeight, DP.COM_WT__KG) }}</span>
             <!-- <span style="margin-left: 3px">kg</span> -->
           </template>
         </el-table-column>
-        <el-table-column key="totalNetWeight" prop="totalNetWeight" label="总净重" align="center" :show-overflow-tooltip="true">
+        <el-table-column key="totalNetWeight" prop="totalNetWeight" label="总净重（kg）" align="center" :show-overflow-tooltip="true">
           <template v-slot="scope">
             <span>{{ toThousand(scope.row.totalNetWeight, DP.COM_WT__KG) }}</span>
             <!-- <span style="margin-left: 3px">kg</span> -->
           </template>
         </el-table-column>
-        <el-table-column key="totalGrossWeight" prop="totalGrossWeight" label="总毛重" align="center" :show-overflow-tooltip="true">
+        <el-table-column key="totalGrossWeight" prop="totalGrossWeight" label="总毛重（kg）" align="center" :show-overflow-tooltip="true">
           <template v-slot="scope">
             <span>{{ toThousand(scope.row.totalGrossWeight, DP.COM_WT__KG) }}</span>
             <!-- <span style="margin-left: 3px">kg</span> -->
@@ -64,7 +64,7 @@
         <el-table-column key="quantity" prop="quantity" label="清单数" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="inboundQuantity" prop="inboundQuantity" label="入库数" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="cargoQuantity" prop="cargoQuantity" label="发运数" align="center" :show-overflow-tooltip="true" />
-        <el-table-column key="cargoNetWeight" prop="cargoNetWeight" label="发运量" align="center" :show-overflow-tooltip="true">
+        <el-table-column key="cargoNetWeight" prop="cargoNetWeight" label="发运量（kg）" align="center" :show-overflow-tooltip="true">
           <template v-slot="scope">
             <span>{{ toThousand(scope.row.cargoNetWeight, DP.COM_WT__KG) }}</span>
             <!-- <span style="margin-left: 3px">kg</span> -->

@@ -24,7 +24,7 @@
           <el-table-column key="rate" prop="rate" label="发运数据(吨)" align="center" min-width="160" show-overflow-tooltip>
             <template v-slot="scope">
               <div style="position: relative">
-                <el-progress :stroke-width="16" :percentage="scope.row.rate" />
+                <el-progress color="#67C23A" :stroke-width="16" :percentage="scope.row.rate" />
                 <span style="position: absolute; top: -2px; left: 0; width: 100%; text-align: right; padding-right: 60px">{{
                   crud.query.weightStatus === weightTypeEnum.NET.V
                     ? (scope.row.sendMete / 1000).toFixed(2) + ' | ' + (scope.row.mete / 1000).toFixed(2)
