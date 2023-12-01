@@ -94,12 +94,12 @@
       <el-table-column key="quantity" prop="quantity" label="数量" align="center" :show-overflow-tooltip="true" width="80px" />
       <el-table-column key="netWeight" prop="netWeight" label="单重（kg）" align="center" :show-overflow-tooltip="true">
         <template #default="{ row }">
-          <span>{{ weightStatus === weightTypeEnum.NET.V ? row.netWeight || '-' : row.grossWeight || '-' }}</span>
+          <span>{{ weightStatus === weightTypeEnum.NET.V ? row.netWeight?.toFixed(2) || '-' : row.grossWeight?.toFixed(2) || '-' }}</span>
         </template>
       </el-table-column>
       <el-table-column key="totalNetWeight" prop="totalNetWeight" label="总重（kg）" align="center" :show-overflow-tooltip="true">
         <template #default="{ row }">
-          <span>{{ weightStatus === weightTypeEnum.NET.V ? row.totalNetWeight || '-' : row.totalGrossNetWeight || '-' }}</span>
+          <span>{{ weightStatus === weightTypeEnum.NET.V ? row.totalNetWeight?.toFixed(2) || '-' : row.totalGrossNetWeight?.toFixed(2) || '-' }}</span>
         </template>
       </el-table-column>
     </common-table>

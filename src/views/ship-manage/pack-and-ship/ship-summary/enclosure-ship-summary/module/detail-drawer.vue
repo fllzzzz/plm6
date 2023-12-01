@@ -141,11 +141,44 @@ async function fetchDetail() {
 
 // 合计
 function getSummaries(param) {
-  const summary = tableSummary(param, {
-    props: ['quantity', 'inboundQuantity', 'cargoQuantity', 'cargoQuantity', 'cargoTotalLength']
+  const { columns, data } = param
+  const sums = []
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = '合计'
+      return
+    }
+    if (column.property === 'quantity' || column.property === 'inboundQuantity' || column.property === 'cargoQuantity') {
+      const values = data.map((item) => Number(item[column.property]))
+      if (!values.every((value) => isNaN(value))) {
+        sums[index] = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
+      }
+    }
+    if (column.property === 'cargoTotalLength') {
+      const values = data.map((item) => Number(item[column.property]))
+      if (!values.every((value) => isNaN(value))) {
+        sums[index] = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
+        sums[index] = convertUnits(sums[index], 'mm', 'm', DP.MES_ENCLOSURE_L__M)
+      }
+    }
   })
-  return summary
+  return sums
 }
+
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

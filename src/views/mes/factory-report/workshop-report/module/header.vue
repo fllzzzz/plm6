@@ -343,9 +343,16 @@ async function fetchChart() {
     _myChart.on('click', function (params) {
       chartYearTime.value = crud.query.dateTime === undefined ? moment().valueOf() : query.dateTime
       if (crud.query.type === timeTypeEnum.ALL_YEAR.V) {
-        chartDateTime.value = params.name?.split('')[0]
+        let paramsName = []
+        paramsName = params.name.split('')
+        paramsName.pop()
+        console.log(paramsName)
+        chartDateTime.value = paramsName.join('')
+        console.log(params.name)
+        console.log(chartDateTime.value)
       } else {
         chartDateTime.value = params.name
+        console.log(chartDateTime.value)
       }
       chartDateTime.value = Number(chartDateTime.value) < 10 ? '0' + chartDateTime.value : chartDateTime.value
       if (crud.query.type === timeTypeEnum.ALL_YEAR.V) {

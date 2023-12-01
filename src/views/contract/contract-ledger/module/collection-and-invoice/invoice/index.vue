@@ -284,7 +284,7 @@ const tableRules = {
 const otherRules = {
   invoiceDate: [{ required: true, message: '请选择开票日期', trigger: 'change' }],
   invoiceAmount: [{ required: true, message: '请选择开票额', trigger: 'change', type: 'number' }],
-  invoiceType: [{ required: true, message: '请选择发票类型', trigger: 'change' }],
+  // invoiceType: [{ required: true, message: '请选择发票类型', trigger: 'change' }],
   invoiceNo: [{ required: true, message: '请输入发票号', trigger: 'blur' }],
   collectionUnit: [{ required: true, message: '请输入收票单位', trigger: 'blur' }]
 }
