@@ -16,7 +16,7 @@
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column v-if="columns.visible('name')" key="name" prop="name" label="名称" align="center">
         <template #default="{row}">
-          <table-cell-tag :show="row.boolReturn" name="退量" color="#f56c6c"/>
+          <table-cell-tag v-if="row.boolReturn" name="退量" color="#f56c6c"/>
           <span>{{ row.name }}</span>
         </template>
       </el-table-column>
