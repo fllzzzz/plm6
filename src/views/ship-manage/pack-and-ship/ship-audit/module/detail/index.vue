@@ -13,7 +13,7 @@
     <template #titleRight>
       <slot name="titleRight" />
     </template>
-    <template v-if="projectType === projectTypeEnum.STEEL.V">
+    <template v-if="projectType !== projectTypeEnum.BRIDGE.V">
       <div class="head-container">
         <el-descriptions :column="2" border style="margin-bottom: 10px" v-loading="tableLoading" v-if="contract">
           <el-descriptions-item label-class-name="contractLabel" label="项目名称">{{ contract.name }}</el-descriptions-item>
@@ -429,6 +429,7 @@ async function fetchDetail() {
     boxList.value = data.boxList || []
     contract.value = data.review || {}
     contract.value.attachmentImgSrc = contract.value.attachmentDTOS && contract.value.attachmentDTOS.map((k) => k.imageUrl)
+    console.log(contract.value)
   } catch (error) {
     console.log('详情', error)
   } finally {

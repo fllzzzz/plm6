@@ -42,7 +42,7 @@
         min-width="140"
       >
         <template #default="{row}">
-          <table-cell-tag :show="row.boolReturn" name="退量" color="#f56c6c"/>
+          <table-cell-tag v-if="row.boolReturn" name="退量" color="#f56c6c"/>
           <span>{{ row.name }}</span>
         </template>
       </el-table-column>
