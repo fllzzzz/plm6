@@ -205,7 +205,7 @@ const { maxHeight } = useMaxHeight({
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   console.log(data)
   data.content.forEach((row) => {
-    if (row.boolReturn) {
+    if (row.boolReturn && row.totalPrice > 0) {
       row.totalPrice = row.totalPrice * -1
     }
   })

@@ -124,7 +124,7 @@ async function fetchList() {
   try {
     const { content = [], totalElements } = await shipRecord({ ...params.value, ...queryPage })
     content.forEach((row) => {
-      if (row.boolReturn) {
+      if (row.boolReturn && row.totalPrice > 0) {
         row.totalPrice = row.totalPrice * -1
       }
     })

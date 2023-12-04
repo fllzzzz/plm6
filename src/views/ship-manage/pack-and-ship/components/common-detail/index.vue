@@ -12,7 +12,7 @@
     <template #titleRight>
       <slot name="titleRight" />
     </template>
-    <template v-if="projectType === projectTypeEnum.STEEL.V">
+    <template v-if="projectType !== projectTypeEnum.BRIDGE.V">
       <div class="head-container">
         <div
           style="color: red; margin-bottom: 8px"

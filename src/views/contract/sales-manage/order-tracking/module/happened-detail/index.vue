@@ -101,7 +101,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
     if (row.totalMete) {
       row.totalMete = Number(row.totalMete.toFixed(2)) ? row.totalMete.toFixed(2) : Number(row.totalMete.toFixed(5))
     }
-    if (row.boolReturn) {
+    if (row.boolReturn && row.totalPrice > 0) {
       row.totalPrice = row.totalPrice * -1
     }
   })

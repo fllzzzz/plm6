@@ -282,6 +282,22 @@ function handleProjectWarehouseRecord({ header, table = [], footer, qrCode }) {
   }
 }
 
+// 发运跟踪-退量
+function handleContractAuxiliaryMaterialShipmentTracking({ header, table = [], footer, qrCode }) {
+  const _table = table.map(row => {
+    if (row.boolReturn) {
+      row.totalPrice = row.totalPrice * -1
+    }
+    return row
+  })
+  return {
+    header,
+    table: _table,
+    qrCode,
+    footer
+  }
+}
+
 export default {
   handleRate,
   handleAreaUnit,
@@ -297,5 +313,6 @@ export default {
   handleLoadingWeight,
   handleActualWeight,
   handleContractAuxiliaryMaterial,
-  handleProjectWarehouseRecord
+  handleProjectWarehouseRecord,
+  handleContractAuxiliaryMaterialShipmentTracking
 }

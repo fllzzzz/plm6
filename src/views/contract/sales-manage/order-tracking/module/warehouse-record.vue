@@ -137,7 +137,7 @@ async function fetchList() {
     const { content = [], totalElements } = await warehouseRecord({ ...params.value, ...queryPage })
     content.forEach((row) => {
       row.totalPrice = row.unitPrice * row.mete
-      if (row.boolReturn) {
+      if (row.boolReturn && row.totalPrice > 0) {
         row.totalPrice = row.totalPrice * -1
       }
     })
