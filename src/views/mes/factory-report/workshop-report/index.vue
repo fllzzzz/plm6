@@ -179,7 +179,7 @@ const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const { crud, CRUD, columns } = useCRUD(
@@ -190,7 +190,7 @@ const { crud, CRUD, columns } = useCRUD(
     permission: { ...permission },
     crudApi: { ...crudApi },
     invisibleColumns: ['productionLine.name', 'date'],
-    hasPagination: true,
+    hasPagination: true
   },
   tableRef
 )
@@ -205,7 +205,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['length', 'quantity', ['netWeight', 2], ['grossWeight', 2], ['totalNetWeight', 2], ['totalGrossWeight', 2]],
+    props: ['length', 'quantity', ['netWeight', 2], ['grossWeight', 2], ['totalNetWeight', 2], ['totalGrossWeight', 2]]
   })
 }
 
