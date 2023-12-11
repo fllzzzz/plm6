@@ -47,8 +47,10 @@
       <!-- 仓库信息 -->
       <warehouse-info-columns :columns="columns" :show-project="showProjectInfo" :show-monomer="showProjectInfo" :show-area="showProjectInfo" />
       <!--编辑与删除-->
-      <el-table-column label="操作" width="180px" align="center" fixed="right">
+      <el-table-column label="操作" width="220px" align="center" fixed="right">
         <template #default="{ row: { sourceRow: row } }">
+          <!-- 条板办理 -->
+          <common-button @click="handlePlate(row)" size="mini" >条板</common-button>
           <!--出库-->
           <common-button v-permission="permission.outbound" type="primary" size="mini" @click="toOutHandle(row)">
             <svg-icon icon-class="wms-outbound" />
@@ -70,6 +72,7 @@
       :basic-class="basicClass"
       :material="currentRow"
       @success="handleSuccessOut"
+      :projectWarehouseType="crud.query.projectWarehouseType"
     />
     <transfer-handling-form
       v-model:visible="transferHandlingVisible"
@@ -77,6 +80,8 @@
       :material="currentRow"
       @success="handleSuccessTransfer"
     />
+    <!-- 条板办理 -->
+    <steelCoilPlate :basic-class="basicClass" :material="currentRow" v-model:visible="plateVisible" @success="crud.toQuery" />
   </div>
 </template>
 
@@ -109,6 +114,7 @@ import MaterialUnitOperateQuantityColumns from '@/components-system/wms/table-co
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import materialPrintButton from '@/components-system/wms/material-print-button.vue'
+import steelCoilPlate from '@/views/wms/material-outbound/raw-material/components/outbound-handling-form//module/steel-coil-plate.vue'
 
 const optShow = {
   add: false,
@@ -121,6 +127,7 @@ const optShow = {
 const tableRef = ref()
 const tableSelections = ref([])
 const alreadyExitArr = ref([])
+const plateVisible = ref(false)
 
 // 表格列数据格式转换
 const columnsDataFormat = ref([...materialOperateColumns])
@@ -154,6 +161,11 @@ const {
 const showProjectInfo = computed(() => { // 是否显示项目相关信息
   return crud.query?.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V
 })
+
+function handlePlate(row) {
+  currentRow.value = row
+  plateVisible.value = true
+}
 
 function clearTableSelection() {
   tableSelections.value = []

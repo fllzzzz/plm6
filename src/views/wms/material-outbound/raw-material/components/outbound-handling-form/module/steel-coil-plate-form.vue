@@ -10,56 +10,8 @@
     style="display: flex; overflow: auto"
   >
     <div style="min-width: 800px">
-      <el-form-item label="出库方式" class="material-outbound-mode-info">
-        <template #label v-if="isPlateOut">
-          <span class="set-title">出库方式</span>
-        </template>
-        <div style="display: flex">
-          <!-- <common-radio
-            v-model="form.materialOutboundMode"
-            :options="steelCoilOutboundModeEnum"
-            type="enum"
-            size="small"
-            @change="materialOutboundModeChange"
-          /> -->
-          <common-radio
-            v-model="form.materialOutboundMode"
-            :options="steelCoilOutboundModeEnum"
-            :unshowVal="
-              material.classifyFullName.indexOf('卷板') === -1 || material.boolPartyA ? [steelCoilOutboundModeEnum.BY_PLATE.V] : []
-            "
-            type="enum"
-            size="small"
-            @change="materialOutboundModeChange"
-          />
-          <div class="tip" v-if="isPlateOut">
-            <span>* 提示：</span>
-            <span> 出库至钢板库后，无法再进行退库操作，请谨慎操作</span>
-          </div>
-        </div>
-      </el-form-item>
       <div :class="isPlateOut ? 'plate-out-form' : 'form'">
-        <div v-if="!isPlateOut" class="material-info">
-          <common-material-info :material="material" :form="form">
-            <template #afterSpec>
-              <el-form-item label="厚 * 宽">
-                <span>{{ `${material.thickness}${baseUnit.thickness.unit} * ${material.width}${baseUnit.width.unit}` }}</span>
-              </el-form-item>
-            </template>
-            <template #afterBrand>
-              <el-form-item label="炉批号">
-                <span v-empty="{ val: material.heatNoAndBatchNo }" />
-              </el-form-item>
-            </template>
-          </common-material-info>
-        </div>
-        <div v-if="!isPlateOut" class="form-info">
-          <common-form-item :material="material" :form="form" />
-        </div>
         <div v-if="isPlateOut" class="plate-out-material-info">
-          <!-- <el-descriptions-item label="厚 * 宽">
-              <span>{{ `${material.thickness}${baseUnit.thickness.unit} * ${material.width}${baseUnit.width.unit}` }}</span>
-            </el-descriptions-item> -->
           <descriptions-material-info :material="material" :form="form">
             <template #afterSpec>
               <el-descriptions-item label="厚 * 宽">
@@ -281,7 +233,7 @@
 
 <script setup>
 import { steelCoilOutboundHandling } from '@/api/wms/material-outbound/raw-material/outbound-handling'
-import { defineProps, reactive, defineExpose, provide, computed, ref, watch, watchEffect, defineEmits } from 'vue'
+import { defineProps, reactive, defineExpose, provide, computed, ref, watch, watchEffect } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { deepClone, isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 import { calcSteelCoilWeight } from '@/utils/wms/measurement-calc'
@@ -293,10 +245,10 @@ import { validate } from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useTableValidate from '@compos/form/use-table-validate'
 import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
-import commonFormItem from '../components/common-form-item.vue'
-import commonMaterialInfo from '../components/common-material-info.vue'
 import descriptionsMaterialInfo from '../components/descriptions-material-info'
 import { numFmtByUnit, numFmtByBasicClass } from '@/utils/wms/convert-unit'
+// import userDeptCascader from '@comp-base/user-dept-cascader.vue'
+// import projectSetColumns from '../components/project-set-columns.vue'
 import MarkSize from '@comp/MarkSize/index.vue'
 import { ElMessage } from 'element-plus'
 // 废料定义，退库长度应大于废料
@@ -309,8 +261,6 @@ const steelCoilOutboundModeEnum = {
   BY_LENGTH: { L: '按长度出库', K: 'BY_LENGTH ', V: 1 << 0 },
   BY_PLATE: { L: '按条板出库', K: 'BY_PLATE', V: 1 << 1 }
 }
-
-const emit = defineEmits(['confirmNext'])
 
 const previewHeight = 260
 
@@ -378,54 +328,23 @@ const rules = {
 }
 
 const plateOutRules = {
-  // singleQuantity: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
-  // segmentQuantity: [
-  //   { required: true, message: '请填写段数', trigger: 'blur' },
-  //   { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }
-  // ],
   remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }]
 }
-
-// 提交校验
-// function validatorWidth(value, row) {
-//   console.log(value, row, props.material.width)
-//   if (value > props.material.width) {
-//     return false
-//   }
-//   return true
-// }
-
-// 提交校验
-// function validatorLength(value, row) {
-//   console.log(value, row, form.value.quantity)
-//   if (value > form.value.quantity) {
-//     return false
-//   }
-//   return true
-// }
 
 const tableRules = {
   width: [
     { required: true, message: '请填写宽度', trigger: 'blur' },
-    // { validator: validatorWidth, message: '超出允许范围,不可提交', trigger: 'blr' },
     { pattern: positiveNumPattern, message: '宽度必须大于0', trigger: 'blur' }
   ],
-  // length: [
-  //   { required: true, message: '请填写长度', trigger: 'blur' },
-  //   { validator: validatorLength, message: '超出允许范围,不可提交', trigger: 'blur' },
-  //   { pattern: positiveNumPattern, message: '长度必须大于0', trigger: 'blur' }
-  // ],
   quantity: [
     { required: true, message: '请填写数量', trigger: 'blur' },
     { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }
   ]
-  // projectId: [{ required: true, message: '请选择出库项目', trigger: 'change' }]
 }
 
 const lengthTableRules = {
   singleQuantity: [
     { required: true, message: '请填写单段长度', trigger: 'blur' },
-    // { validator: validatorWidth, message: '超出允许范围,不可提交', trigger: 'blr' },
     { pattern: positiveNumPattern, message: '单段长度必须大于0', trigger: 'blur' }
   ],
   segmentQuantity: [
@@ -576,26 +495,14 @@ async function calTotalWeight() {
   submitList.value = list
 }
 
-function materialOutboundModeChange() {
-  form.value.quantity = undefined
-  if (form.value.materialOutboundMode === steelCoilOutboundModeEnum.BY_PLATE.V) {
-    emit('confirmNext', true)
-  }
-}
-
 function rowInit() {
   const _row = reactive({
     basicClass: props.basicClass,
     name: material.value.classifyFullName,
     thickness: material.value.thickness,
-    // length: undefined,
     width: undefined,
     quantity: undefined,
     outboundAddress: outboundDestinationTypeEnum.FACTORY.V, // 出库目的地
-    // projectId: form.value.list.length === 0 ? (props.projectWarehouseTypeEnum === projectWarehouseTypeEnum.PUBLIC.V ? 'common' : (material.value.project ? material.value.project.id : undefined)) : -1, // 项目id,
-    // monomerId: form.value.list.length === 0 ? material.value?.monomerId : -1,
-    // areaId: form.value.list.length === 0 ? material.value?.areaId : -1,
-    // workshopId: form.value.list.length === 0 ? material.value?.workshop?.id : -1,
     overWidth: false,
     overLength: false
   })
@@ -646,8 +553,9 @@ function delLengthRow(index) {
 
 // 表单初始化
 function formInit(data) {
+  lengthTable.value = []
   const newForm = {
-    materialOutboundMode: steelCoilOutboundModeEnum.BY_LENGTH.V, // 钢卷出库方式
+    materialOutboundMode: steelCoilOutboundModeEnum.BY_PLATE.V, // 钢卷出库方式
     materialId: data.id, // 物料id
     monomerId: data?.monomerId, // 单体id
     areaId: data?.areaId, // 区域id
@@ -723,7 +631,7 @@ function validateLengthTable() {
   return true
 }
 
-async function nextSubmit() {
+async function validateSubmit() {
   const next = validateLengthTable()
   if (!next) return false
   const valid = await formRef.value.validate()
@@ -913,7 +821,7 @@ function getSummaries(param) {
 
 defineExpose({
   submit,
-  nextSubmit,
+  validateSubmit,
   resetForm,
   clearValidate,
   enlargeWth: computed(() => isPlateOut.value)

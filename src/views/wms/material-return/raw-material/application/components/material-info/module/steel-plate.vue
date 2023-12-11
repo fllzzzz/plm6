@@ -76,6 +76,7 @@
       />
       <span>&nbsp;/&nbsp;</span>
       <span v-to-fixed="{ val: material.mete || 0, dp: baseUnit.weight.precision }" />
+      <span v-if="currentPlateRow.boolReturns" style="color: #e6a23c">(余料:<span v-to-fixed="{ val: currentPlateRow.detailMete || 0, dp: baseUnit.weight.precision }" />)</span>
     </span>
   </div>
 </template>
@@ -92,6 +93,12 @@ const props = defineProps({
     type: Number
   },
   material: {
+    type: Object,
+    default: () => {
+      return {}
+    }
+  },
+  currentPlateRow: {
     type: Object,
     default: () => {
       return {}

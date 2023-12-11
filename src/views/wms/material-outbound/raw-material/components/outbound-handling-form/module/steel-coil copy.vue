@@ -297,6 +297,8 @@ import commonFormItem from '../components/common-form-item.vue'
 import commonMaterialInfo from '../components/common-material-info.vue'
 import descriptionsMaterialInfo from '../components/descriptions-material-info'
 import { numFmtByUnit, numFmtByBasicClass } from '@/utils/wms/convert-unit'
+// import userDeptCascader from '@comp-base/user-dept-cascader.vue'
+// import projectSetColumns from '../components/project-set-columns.vue'
 import MarkSize from '@comp/MarkSize/index.vue'
 import { ElMessage } from 'element-plus'
 // 废料定义，退库长度应大于废料

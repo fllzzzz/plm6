@@ -1,6 +1,6 @@
 <template>
   <div class="head-container">
-    <material-info class="filter-item" :basic-class="basicClass" :material="currentSource" />
+    <material-info class="filter-item" :basic-class="basicClass" :material="currentSource" :currentPlateRow="currentPlateRow"/>
     <div class="filter-container">
       <div class="filter-left-box">
         <span class="total-info">
@@ -41,7 +41,7 @@
             <i class="el-icon-info" style="margin-left: 4px" />
           </el-checkbox>
         </el-tooltip>
-        <common-button :loading="cu.status.edit === FORM.STATUS.PROCESSING" size="mini" type="primary" @click="cu.submit">
+        <common-button :loading="cu.status.edit === FORM.STATUS.PROCESSING" size="mini" type="primary" @click="submitSave">
           提 交
         </common-button>
         <common-button type="success" @click="openReturnableList" size="mini">检索可退库材料</common-button>
@@ -79,7 +79,7 @@ import ReturnableListDrawer from '@/views/wms/material-return/raw-material/appli
 import StoreOperation from '@crud/STORE.operation.vue'
 // import AbnormalList from '../components/abnormal-list'
 
-const emit = defineEmits(['add'])
+const emit = defineEmits(['add', 'submit'])
 const { cu, form, FORM } = regExtra() // 表单
 
 const props = defineProps({
@@ -103,6 +103,12 @@ const props = defineProps({
   list: {
     type: Array,
     default: () => []
+  },
+  currentPlateRow: {
+    type: Object,
+    default: () => {
+      return {}
+    }
   }
 })
 
@@ -193,6 +199,14 @@ function toReturnRecord() {
   router.push({ name: 'RawMatReturnApplicationRecord', params: { basicClass: props.basicClass }})
 }
 
+// 提交
+function submitSave() {
+  if (props.basicClass & rawMatClsEnum.STEEL_PLATE.V) {
+    emit('submit')
+  } else {
+    cu.submit()
+  }
+}
 // 清除
 function handleClear() {}
 

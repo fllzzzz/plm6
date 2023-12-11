@@ -86,7 +86,7 @@
     />
     <template v-if="showTip && basicClass===rawMatClsEnum.STEEL_PLATE.V">
       <el-table-column
-        prop="mete"
+        prop="actualMete"
         :label="`余料 | 总重(${unitInfo?.weight.unit})`"
         align="right"
         width="120px"

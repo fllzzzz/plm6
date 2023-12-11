@@ -378,6 +378,11 @@ export const reportRawMaterialHighTechRDFeePM = {
   setRdRate: ['wms_report_rawMat_highTechRDFee:setRdRate'] // 设置研发费占比
 }
 
+// 报表中心/存货转换单
+export const rawMaterialConvertListPM = {
+  get: ['wms_rawMat_convertList:get'], // 查看
+  detail: ['wms_rawMat_convertList:detail'] // 详情
+}
 // ---------------------------- 报表中心 end -------------------------------
 
 // ########################################################################

@@ -19,7 +19,7 @@
   <el-table-column prop="monomerId" align="center" min-width="170px" label="单体">
     <template #default="{ row, $index }">
       <common-select
-        v-if="row"
+        v-if="row && row.projectId!=='common'"
         :key="Math.random()"
         v-model="row.monomerId"
         :options="projectMap?.[getProjectVal($index)]?.children || []"
@@ -35,7 +35,7 @@
   <el-table-column prop="areaId" align="center" min-width="170px" label="区域">
     <template #default="{ row, $index }">
       <common-select
-        v-if="row"
+        v-if="row && row.projectId!=='common'"
         :key="Math.random()"
         v-model="row.areaId"
         :options="monomerMap?.[getMonomerVal($index)]?.children || []"
@@ -111,9 +111,11 @@ const monomerDittoableIndex = computed(() => {
 // 项目选择
 const projectOptions = computed(() => {
   if (isNotBlank(projectTree.value)) {
-    return projectTree.value.map((p) => {
-      return { id: p.id, name: projectNameFormatter(p, { showSerialNumber: false }) }
+    const arr = projectTree.value.map((p) => {
+      return { id: p.id, name: p.id !== 'common' ? projectNameFormatter(p, { showSerialNumber: false }) : '公共库' }
     })
+    arr.unshift({ id: 'common', name: '公共库' })
+    return arr
   } else {
     return null
   }

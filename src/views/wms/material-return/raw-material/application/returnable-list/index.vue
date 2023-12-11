@@ -80,11 +80,14 @@
         width="100"
         sortable="custom"
       />
-      <el-table-column class="return-btn-column" v-if="props.isComponent" label="退库" align="center" width="100" sortable="custom" fixed="right">
+      <el-table-column class="return-btn-column" v-if="props.isComponent" label="退库" align="center" width="170" sortable="custom" fixed="right">
         <template #default="{ row: { sourceRow: row } }">
           <el-badge :value="returnNumber[row.id]" :hidden="returnNumber[row.id] === 0" class="badge-item">
-            <!-- 编辑状态下， -->
-            <common-button :disabled="row.showReviewPending" type="warning" size="mini" @click="handleAddReturn(row)"> 退库 </common-button>
+            <common-button :disabled="row.showReviewPending || row.ableQuantity<=0" type="warning" size="mini" @click="handleAddReturn(row,false)"> 退整料 </common-button>
+          </el-badge>
+          <!-- <span>{{boolReturnsNumber[row.id]}}</span> -->
+          <el-badge :value="boolReturnsNumber[row.id]" :hidden="boolReturnsNumber[row.id] === 0" class="badge-item" v-if="basicClass & rawMatClsEnum.STEEL_PLATE.V">
+            <common-button type="danger" size="mini" v-if="basicClass & rawMatClsEnum.STEEL_PLATE.V" :disabled="row.showReviewPending || row.ableQuantity<=0" @click="handleAddReturn(row,true)" style="margin-left:5px;">退余料</common-button>
           </el-badge>
           <table-cell-tag v-if="row.showReviewPending" name="退库中" color="#909399" />
         </template>
@@ -166,6 +169,9 @@ const optShow = {
 // 展开行
 const expandRowKeys = ref([])
 const returnNumber = ref({})
+const boolReturnsNumber = ref({}) // 退余料
+const rowIndex = ref(1)
+
 // 表格ref
 const tableRef = ref()
 // 表格列格式化
@@ -255,20 +261,30 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
 }
 
 // 添加退库信息
-function handleAddReturn(row) {
+function handleAddReturn(row, val) {
+  // if (row.quantity === 1 && returnNumber[row.id] === 1) {
+  //   return
+  // }
   const selectList = props.selectList
+  row.boolReturns = val
+  row.list = []
+  row.index = rowIndex.value
   const newData = reactive({
     uid: createUniqueString(), // 当前退库记录唯一id
     // id: row.id, // 物料id
-    source: row,
+    source: JSON.parse(JSON.stringify(row)),
     basicClass: row.basicClass, // 基础类型
     measureUnit: row.measureUnit, // 计量单位
     accountingUnit: row.accountingUnit, // 核算单位
     accountingPrecision: row.accountingPrecision, // 核算单位小数精度
     outboundUnitType: row.outboundUnitType, // 出库单位类型
-    measurePrecision: row.measurePrecision // 计量单位小数精度
+    measurePrecision: row.measurePrecision, // 计量单位小数精度
+    boolReturns: val,
+    index: rowIndex.value,
+    list: []
   })
-  if (selectList.length > 0) {
+  newData.quantity = 1
+  if (selectList.length > 0 && !val) {
     newData.factoryId = -1 // 工厂 同上
     newData.warehouseId = -1 // 仓库 同上
   }
@@ -284,34 +300,55 @@ function handleAddReturn(row) {
   const message = `${row.classifyFullName}${specInfo ? ' - ' + specInfo : ''} 加入退库列表`
   ElMessage.success(message)
   emit('add', newData)
+  rowIndex.value++
 }
 
 // 计算退库信息
 function calcReturnInfo() {
   const number = {}
+  const boolNumber = {}
   const mete = {}
+  const quantityObj = {}
   // 遍历退库列表，计算相同物料的可退库量及可退库数
   for (const scRow of props.selectList) {
     const source = scRow.source
     const sourceId = source ? source.id : undefined
+    quantityObj[sourceId] = quantityObj[sourceId] || 0
     if (!sourceId) continue
-    if (number[sourceId]) {
-      number[sourceId]++
-      mete[sourceId] += scRow.mete || 0
+    if (!scRow?.boolReturns) {
+      if (number[sourceId]) {
+        number[sourceId]++
+        mete[sourceId] += scRow.mete || 0
+        quantityObj[sourceId] += scRow.quantity || 0
+      } else {
+        number[sourceId] = 1
+        mete[sourceId] = scRow.mete || 0
+        quantityObj[sourceId] += scRow.quantity || 0
+      }
     } else {
-      number[sourceId] = 1
-      mete[sourceId] = scRow.mete || 0
+      if (boolNumber[sourceId]) {
+        boolNumber[sourceId]++
+        mete[sourceId] += scRow.mete || 0
+        quantityObj[sourceId] += scRow.quantity || 0
+      } else {
+        boolNumber[sourceId] = 1
+        mete[sourceId] = scRow.mete || 0
+        quantityObj[sourceId] += scRow.quantity || 0
+      }
     }
   }
   // 遍历当前列表，设置可退库量
   crud.data.forEach((row) => {
     row.returnableMete = row.sourceReturnableMete - (mete[row.id] || 0)
+    row.ableQuantity = row.quantity - (quantityObj[row.id] || 0)
   })
   returnNumber.value = number
+  boolReturnsNumber.value = boolNumber
 }
 
 // 刷新
 function refresh() {
+  rowIndex.value = 1
   crud.refresh()
 }
 
