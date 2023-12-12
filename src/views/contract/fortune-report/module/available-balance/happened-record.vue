@@ -45,6 +45,10 @@ const props = defineProps({
   maxHeight: {
     type: Number,
     default: 400
+  },
+  secondPickerTime: {
+    type: Object,
+    default: () => {}
   }
 })
 
@@ -53,7 +57,9 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 
 const params = computed(() => {
   return {
-    projectId: props.detailRow.id
+    projectId: props.detailRow.id,
+    secondStartDate: props.secondPickerTime.startDate,
+    secondEndDate: props.secondPickerTime.endDate
   }
 })
 

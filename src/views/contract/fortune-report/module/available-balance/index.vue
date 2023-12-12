@@ -102,6 +102,7 @@
             :is="currentView"
             :maxHeight="maxHeight"
             :detail-row="{ ...props.detailRow, costAscription: { ...currentRow } }"
+            :secondPickerTime="props.secondPickerTime"
           />
           <div class="hint" v-else>可通过点击【收款】、【出口退税】、【期间费用】、【累计发货金额】表格行进行对应项的明细查看</div>
         </div>
@@ -128,6 +129,10 @@ const props = defineProps({
     require: true
   },
   detailRow: {
+    type: Object,
+    default: () => {}
+  },
+  secondPickerTime: {
     type: Object,
     default: () => {}
   }

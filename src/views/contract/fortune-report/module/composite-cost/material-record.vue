@@ -73,6 +73,10 @@ const props = defineProps({
   maxHeight: {
     type: Number,
     default: 400
+  },
+  secondPickerTime: {
+    type: Object,
+    default: () => {}
   }
 })
 
@@ -81,7 +85,9 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 
 const params = computed(() => {
   const data = {
-    projectId: props.detailRow?.projectId
+    projectId: props.detailRow?.projectId,
+    secondStartDate: props.secondPickerTime.startDate,
+    secondEndDate: props.secondPickerTime.endDate
   }
   if (props.detailRow.expenseClassEnum === expenseClassEnum.MAIN_MATERIAL.V) {
     data.basicClassEnum = materialPurchaseClsEnum.STEEL.V
@@ -119,6 +125,7 @@ const columnsDataFormat = ref([
 async function fetchList() {
   let _list = []
   totalAmount.value = 0
+  console.log(props.detailRow)
   try {
     tableLoading.value = true
     const { content = [], totalElements } = await getOutDetail({

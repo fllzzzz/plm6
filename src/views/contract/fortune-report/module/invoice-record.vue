@@ -53,6 +53,10 @@ const props = defineProps({
   detailRow: {
     type: Object,
     default: () => {}
+  },
+  secondPickerTime: {
+    type: Object,
+    default: () => {}
   }
 })
 
@@ -94,7 +98,7 @@ const { maxHeight } = useMaxHeight(
 async function getList() {
   try {
     listLoading.value = true
-    list.value = (await getInvoiceList({ projectId: props.detailRow.id })) || []
+    list.value = (await getInvoiceList({ projectId: props.detailRow.id, secondStartDate: props.secondPickerTime.startDate, secondEndDate: props.secondPickerTime.endDate })) || []
   } catch (error) {
     console.log('获取开票记录失败', error)
   } finally {
