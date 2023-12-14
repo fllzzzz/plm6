@@ -124,7 +124,7 @@
         <print-table
           v-permission="permission.print"
           api-key="mesFactoryWorkshopReport"
-          :params="{ startTime: query.startTime, endTime: query.endTime, projectId: query.projectId }"
+          :params="{ startTime: query.startTime, endTime: query.endTime, projectId: query.projectId, workShopId: query.workShopId, productionLineId: query.productionLineId }"
           size="mini"
           type="warning"
           class="filter-item"
@@ -216,6 +216,8 @@ async function workshopSummary() {
     const data = await workshopProduction({
       startTime: query.startTime ? query.startTime : moment().startOf('month').valueOf(),
       endTime: query.endTime ? query.endTime : moment().valueOf(),
+      workShopId: query.workShopId,
+      productionLineId: query.productionLineId,
       projectId: query.projectId
     })
     summaryList.mete = data || {}

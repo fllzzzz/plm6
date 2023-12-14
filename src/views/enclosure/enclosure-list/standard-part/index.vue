@@ -184,7 +184,7 @@
           </template>
           <template v-else>
             <common-button size="small" class="el-icon-edit" type="primary" @click="editRow(scope.row)" v-permission="permission.edit"/>
-            <!-- <el-popconfirm
+            <el-popconfirm
               confirm-button-text="确定"
               cancel-button-text="取消"
               icon-color="red"
@@ -195,8 +195,8 @@
               <template #reference>
                 <common-button size="small" class="el-icon-delete" type="danger"/>
               </template>
-            </el-popconfirm> -->
-            <common-button size="small" class="el-icon-view" type="success" @click="deleteRow(scope.row)"></common-button>
+            </el-popconfirm>
+            <!-- <common-button size="small" class="el-icon-view" type="success" @click="deleteRow(scope.row)"></common-button> -->
           </template>
         </template>
       </el-table-column>
@@ -373,20 +373,20 @@ function editRow(row) {
   originRow.value = JSON.parse(JSON.stringify(row))
   row.isModify = true
 }
-// async function deleteRow(row) {
-//   try {
-//     await crudApi.del([row.id])
-//     crud.notify(`删除成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
-//     crud.toQuery()
-//   } catch (e) {
-//     console.log('删除', e)
-//   }
-// }
-
-const deleteRow = (row) => {
-  currentRow.value = row
-  deleteVisible.value = true
+async function deleteRow(row) {
+  try {
+    await crudApi.del([row.id])
+    crud.notify(`删除成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
+    crud.toQuery()
+  } catch (e) {
+    console.log('删除', e)
+  }
 }
+
+// const deleteRow = (row) => {
+//   currentRow.value = row
+//   deleteVisible.value = true
+// }
 function rowCancel(row) {
   row = Object.assign(row, JSON.parse(JSON.stringify(originRow.value)))
   row.isModify = false

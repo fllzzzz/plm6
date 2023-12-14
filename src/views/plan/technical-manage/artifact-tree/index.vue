@@ -284,20 +284,20 @@
         <el-table-column
           v-if="checkPermission([...permission.editNum, ...permission.productionStatus])"
           label="操作"
-          width="160px"
+          width="100px"
           align="center"
           fixed="right"
         >
           <template v-slot="scope">
             <template v-if="scope.row.dataType === 2">
               <common-button size="mini" @click="handleNum(scope.row)" icon="el-icon-edit" v-permission="permission.editNum" />
-              <common-button
+              <!-- <common-button
 size="mini"
 @click="viewState(scope.row)"
 v-permission="permission.productionStatus"
                 ><svg-icon
 icon-class="document"
-              /></common-button>
+              /></common-button> -->
             </template>
           </template>
         </el-table-column>
@@ -470,10 +470,10 @@ function handleNum(row) {
   numVisible.value = true
 }
 
-function viewState(row) {
-  currentRow.value = row
-  stateVisible.value = true
-}
+// function viewState(row) {
+//   currentRow.value = row
+//   stateVisible.value = true
+// }
 
 function handleRowClassName({ row, rowIndex }) {
   if (row.abnormal === 1) {
