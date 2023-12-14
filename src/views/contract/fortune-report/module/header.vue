@@ -11,7 +11,7 @@
       value-format="YYYY"
       @change="crud.toQuery"
     />
-    <project-radio-button size="small" :type="'all'" v-model="query.projectType" class="filter-item" @change="crud.toQuery" />
+    <project-radio-button size="small" :type="'all'" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
     <!-- <project-cascader
       v-model="query.projectId"
       clearable
@@ -19,7 +19,7 @@
       class="filter-item"
       @change="crud.toQuery"
     /> -->
-    <project-cascader v-model="query.projectId" clearable style="width: 270px" class="filter-item" @change="crud.toQuery" />
+    <!-- <project-cascader v-model="query.projectId" clearable style="width: 270px" class="filter-item" @change="crud.toQuery" /> -->
     <!-- <common-select
       v-model="query.projectId"
       :options="projectTree"
@@ -71,26 +71,39 @@
   <crudOperation>
     <template #optLeft>
       <time-range-select :query="query" clearable class="filter-item" style="width: 270px" @change="crud.toQuery" />
+      <el-date-picker
+        class="filter-item"
+        type="daterange"
+        v-model="date"
+        :disabled-date="disabledDate"
+        value-format="x"
+        @change="handleDateChange"
+        start-placeholder="开始时间"
+        end-placeholder="结束时间"
+        :shortcuts="query.dateQueryFormat === dateQueryTypeEnum.YEAR.V ? PICKER_OPTIONS_DATE : PICKER_OPTIONS_SHORTCUTS"
+        :disabled="query.dateQueryFormat === dateQueryTypeEnum.DAY.V"
+      ></el-date-picker>
     </template>
     <template #viewLeft>
-      <print-table
-        v-permission="crud.permission.print"
-        api-key="fortuneReportList"
-        :params="{ ...query }"
-        size="mini"
-        type="warning"
-      />
+      <print-table v-permission="crud.permission.print" api-key="fortuneReportList" :params="{ ...query }" size="mini" type="warning" />
     </template>
   </crudOperation>
 </template>
 <script setup>
+<<<<<<< HEAD
 import { inject } from 'vue'
 
 import { businessTypeEnum, projectStatusEnum } from '@enum-ms/contract'
 
+=======
+import { ref } from 'vue'
+import { businessTypeEnum, projectStatusEnum, dateQueryTypeEnum } from '@enum-ms/contract'
+import { inject } from 'vue'
+>>>>>>> feature/fortune
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
+import { PICKER_OPTIONS_SHORTCUTS, PICKER_OPTIONS_DATE } from '@/settings/config'
 // import projectCascader from '@comp-base/project-cascader.vue'
 import timeRangeSelect from '@comp-common/time-range-select/index'
 // import projectCascader from '@comp-base/project-cascader.vue'
@@ -102,6 +115,8 @@ const defaultQuery = {
   settlementStatus: undefined,
   customerUnit: undefined,
   projectManager: undefined,
+  secondStartDate: undefined,
+  secondEndDate: undefined,
   dateQueryFormat: { value: undefined, resetAble: false },
   startDate: { value: undefined, resetAble: false },
   endDate: { value: undefined, resetAble: false }
@@ -109,5 +124,36 @@ const defaultQuery = {
 const { crud, query } = regHeader(defaultQuery)
 
 const projectTree = inject('projectTree')
+const date = ref([])
 console.log(projectTree)
+
+// 监听第一次日期筛选
+// watch(
+//   [() => query.startDate, () => query.endDate],
+//   () => {
+//     date.value[0] = query.startDate
+//     date.value[1] = query.endDate
+//     console.log(date.value)
+//   }
+// )
+
+// 根据第一次筛选日期判定警用日期
+const disabledDate = (date) => {
+  if (query.dateQueryFormat === dateQueryTypeEnum.YEAR.V) {
+    return date.getTime() < query.startDate || date.getTime() > query.endDate
+  } else if (query.dateQueryFormat === dateQueryTypeEnum.MONTH.V) {
+    return date.getTime() < query.startDate || date.getTime() > query.endDate
+  }
+}
+
+const handleDateChange = (v) => {
+  if (v) {
+    query.secondStartDate = v[0]
+    query.secondEndDate = v[1]
+  } else {
+    query.secondStartDate = undefined
+    query.secondEndDate = undefined
+  }
+  crud.toQuery()
+}
 </script>

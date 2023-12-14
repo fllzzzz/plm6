@@ -124,7 +124,7 @@
         <print-table
           v-permission="permission.print"
           api-key="mesFactoryWorkshopReport"
-          :params="{ startTime: query.startTime, endTime: query.endTime, projectId: query.projectId }"
+          :params="{ startTime: query.startTime, endTime: query.endTime, projectId: query.projectId, workShopId: query.workShopId, productionLineId: query.productionLineId }"
           size="mini"
           type="warning"
           class="filter-item"

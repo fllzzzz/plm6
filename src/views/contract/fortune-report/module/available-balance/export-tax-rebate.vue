@@ -34,13 +34,19 @@ const props = defineProps({
   maxHeight: {
     type: Number,
     default: 400
+  },
+  secondPickerTime: {
+    type: Object,
+    default: () => {}
   }
 })
 
 const params = computed(() => {
   return {
     projectId: props.detailRow.id,
-    auditStatus: auditTypeEnum.PASS.V
+    auditStatus: auditTypeEnum.PASS.V,
+    secondStartDate: props.secondPickerTime.startDate,
+    secondEndDate: props.secondPickerTime.endDate
   }
 })
 

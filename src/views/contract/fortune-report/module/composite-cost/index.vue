@@ -26,6 +26,12 @@
               </span>
             </el-card>
             <el-card body-style="padding: 10px 20px" class="amount-info">
+              <span>主营收入</span>
+              <span>
+                <span style="color: #ff5600">{{ props.detailRow.mainRevenue }}</span> 元
+              </span>
+            </el-card>
+            <el-card body-style="padding: 10px 20px" class="amount-info">
               <span>综合成本</span>
               <span>
                 <span style="color: #ff5600">{{ props.detailRow.costAmount }}</span> 元
@@ -68,6 +74,7 @@
             :is="currentView"
             :maxHeight="maxHeight"
             :detail-row="{ ...currentRow, projectId: props.detailRow.id, costAmount: props.detailRow.sourceRow.costAmount }"
+            :secondPickerTime="props.secondPickerTime"
           />
           <div class="hint" v-else-if="costList.length">点击左侧表格行查看详情</div>
           <div class="hint" v-else>暂无数据</div>
@@ -96,6 +103,10 @@ const props = defineProps({
     require: true
   },
   detailRow: {
+    type: Object,
+    default: () => {}
+  },
+  secondPickerTime: {
     type: Object,
     default: () => {}
   }
