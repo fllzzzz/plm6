@@ -90,16 +90,9 @@
   </crudOperation>
 </template>
 <script setup>
-<<<<<<< HEAD
-import { inject } from 'vue'
-
-import { businessTypeEnum, projectStatusEnum } from '@enum-ms/contract'
-
-=======
 import { ref } from 'vue'
 import { businessTypeEnum, projectStatusEnum, dateQueryTypeEnum } from '@enum-ms/contract'
 import { inject } from 'vue'
->>>>>>> feature/fortune
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
