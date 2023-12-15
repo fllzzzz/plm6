@@ -87,7 +87,7 @@
           </el-badge>
           <!-- <span>{{boolReturnsNumber[row.id]}}</span> -->
           <el-badge :value="boolReturnsNumber[row.id]" :hidden="boolReturnsNumber[row.id] === 0" class="badge-item" v-if="basicClass & rawMatClsEnum.STEEL_PLATE.V">
-            <common-button type="danger" size="mini" v-if="basicClass & rawMatClsEnum.STEEL_PLATE.V" :disabled="row.showReviewPending || row.ableQuantity<=0" @click="handleAddReturn(row,true)" style="margin-left:5px;">退余料</common-button>
+            <common-button type="danger" size="mini" v-if="basicClass & rawMatClsEnum.STEEL_PLATE.V" :disabled="row.showReviewPending || row.ableQuantity<=0" @click="handleAddReturn(row,true)" style="margin-left:10px;">退余料</common-button>
           </el-badge>
           <table-cell-tag v-if="row.showReviewPending" name="退库中" color="#909399" />
         </template>

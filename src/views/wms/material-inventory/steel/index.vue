@@ -50,7 +50,7 @@
       <el-table-column label="操作" width="220px" align="center" fixed="right">
         <template #default="{ row: { sourceRow: row } }">
           <!-- 条板办理 -->
-          <common-button @click="handlePlate(row)" size="mini" >条板</common-button>
+          <!-- <common-button @click="handlePlate(row)" size="mini" >条板</common-button> -->
           <!--出库-->
           <common-button v-permission="permission.outbound" type="primary" size="mini" @click="toOutHandle(row)">
             <svg-icon icon-class="wms-outbound" />

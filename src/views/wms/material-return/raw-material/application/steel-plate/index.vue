@@ -25,9 +25,9 @@
         highlight-current-row
         @row-click="handlePlateRowClick"
       >
-        <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" :stripe="false" row-key="uid" style="background:#d7ffef;">
+        <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" :stripe="false" row-key="uid" style="background:#f4f4f5;">
           <template #default="{ row: { sourceRow: row } }">
-            <div class="mtb-10" :style="`padding-right:20px;padding-left:20px;background:${errorKey.includes(row.uid)?'#ff000021':(currentUid===row.uid?'#d7ffef':'')};`">
+            <div class="mtb-10" :style="`padding-right:20px;padding-left:20px;background:${errorKey.includes(row.uid)?'#ff000021':(currentUid===row.uid?'#f4f4f5':'')};`">
               <common-table :class="errorKey.includes(row.uid)?'error-table':(currentUid===row.uid?'child-table':'')" :key="row.uid" :data="row.list" style="margin-bottom:10px;" :stripe="false" v-if="row.boolReturns && (row.uid || row.id)">
                 <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
                  <material-base-info-columns
@@ -109,13 +109,12 @@
               </common-table>
               <el-input
                 v-model="row.remark"
-                :rows="1"
-                :autosize="{ minRows: 1, maxRows: 1 }"
+                :autosize="{ minRows:2, maxRows: 3 }"
                 type="textarea"
                 placeholder="备注"
                 maxlength="200"
                 show-word-limit
-                style="width: 400px"
+                style="width: 50%"
               />
             </div>
           </template>
@@ -403,7 +402,7 @@ function rowWatch(row) {
   },
   { immediate: true })
   watch(
-    () => row.mete,
+    [() => row.mete, () => row.detailMete],
     () => {
       checkOverSource(row)
     },
@@ -517,6 +516,11 @@ function calcTotalWeight(row) {
     if (row.mete > row.maxMete && row.mete > row.singleMete) {
       row.mete = toPrecision(Math.min(row.maxMete, row.singleMete), baseUnit.value.weight.precision)
     }
+    if (!row.pid) {
+      if (row.source.returnableMete < row.singleMete) {
+        row.mete = row.source.returnableMete
+      }
+    }
   } else {
     row.mete = undefined
   }
@@ -589,7 +593,7 @@ function meteOver() {
   errorKey.value = []
   form.list.forEach(v => {
     if (v.boolReturns) {
-      if (v.detailMete > v.mete) {
+      if (v.detailMete > v.singleMete || v.detailMete > v.mete) {
         if (!key.includes(v.uid)) {
           key.push(v.uid)
         }
@@ -599,7 +603,7 @@ function meteOver() {
   if (isNotBlank(key)) {
     errorKey.value = key
     expandRowKeys.value = key
-    ElMessage.error('表格展开项余料不能超过总量，请修正')
+    ElMessage.error('表格展开项余料总重量不能超过钢板单量，请修正')
     return false
   } else {
     return true
@@ -620,18 +624,18 @@ function formSubmit() {
 <style lang="scss" scoped>
 .el-table {
   ::v-deep(.current-row > td.el-table__cell) {
-    --el-table-current-row-background-color: #d7ffef;
+    --el-table-current-row-background-color: #f4f4f5;
   }
 }
 .child-table{
  ::v-deep(th.el-table__cell.is-leaf) {
-    background: #e5f9f1 !important;
+    background: #f2f3f5 !important;
   }
   ::v-deep(.el-table__empty-block){
-    background: #e5f9f1 !important;
+    background: #f2f3f5 !important;
   }
   ::v-deep(td.el-table__cell){
-    background: #e5f9f1 !important;
+    background: #f2f3f5 !important;
   }
 }
 .error-table{
@@ -649,7 +653,7 @@ function formSubmit() {
   padding-right:0;
   padding-left:0;
 }
-::v-deep(.el-textarea__inner){
-  background:none;
-}
+// ::v-deep(.el-textarea__inner){
+//   background:none;
+// }
 </style>

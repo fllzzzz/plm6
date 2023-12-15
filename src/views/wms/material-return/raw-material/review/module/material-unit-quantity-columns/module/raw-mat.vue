@@ -85,16 +85,28 @@
       show-overflow-tooltip
     />
     <template v-if="showTip && basicClass===rawMatClsEnum.STEEL_PLATE.V">
-      <el-table-column
-        prop="actualMete"
-        :label="`余料 | 总重(${unitInfo?.weight.unit})`"
+       <el-table-column
+        prop="detailMete"
+        :label="`余料(${unitInfo?.weight.unit})`"
         align="right"
         width="120px"
         show-overflow-tooltip
         :fixed="fixed"
       >
         <template #default="{ row }">
-          {{ row.boolReturns ? row.detailMete+' | '+row.mete : row.mete }}
+          {{ row.boolReturns ? row.detailMete: '-' }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="actualMete"
+        :label="`总重(${unitInfo?.weight.unit})`"
+        align="right"
+        width="120px"
+        show-overflow-tooltip
+        :fixed="fixed"
+      >
+        <template #default="{ row }">
+          {{ row.mete }}
         </template>
       </el-table-column>
     </template>
