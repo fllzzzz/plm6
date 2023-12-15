@@ -26,12 +26,22 @@
             v-model="form.materialOutboundMode"
             :options="steelCoilOutboundModeEnum"
             :unshowVal="
-              material.classifyFullName.indexOf('卷板') === -1 || material.boolPartyA ? [steelCoilOutboundModeEnum.BY_PLATE.V] : []
+              [steelCoilOutboundModeEnum.BY_PLATE.V]
             "
             type="enum"
             size="small"
             @change="materialOutboundModeChange"
           />
+          <!-- <common-radio
+            v-model="form.materialOutboundMode"
+            :options="steelCoilOutboundModeEnum"
+            :unshowVal="
+              material.classifyFullName.indexOf('卷板') === -1 || material.boolPartyA ? [steelCoilOutboundModeEnum.BY_PLATE.V] : []
+            "
+            type="enum"
+            size="small"
+            @change="materialOutboundModeChange"
+          /> -->
           <div class="tip" v-if="isPlateOut">
             <span>* 提示：</span>
             <span> 出库至钢板库后，无法再进行退库操作，请谨慎操作</span>
@@ -329,11 +339,11 @@ const props = defineProps({
   },
   maxHeight: {
     type: Number
-  },
-  projectWarehouseType: {
-    type: [Number, String],
-    default: undefined
   }
+  // projectWarehouseType: {
+  //   type: [Number, String],
+  //   default: undefined
+  // }
 })
 
 const formRef = ref()

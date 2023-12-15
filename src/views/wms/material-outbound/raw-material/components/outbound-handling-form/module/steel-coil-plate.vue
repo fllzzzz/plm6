@@ -111,18 +111,18 @@ function showHook() {
 }
 
 // // 表单提交
-// async function submit() {
-//   try {
-//     submitLoading.value = true
-//     await outboundFormRef.value.submit()
-//     ElMessage.success('已加入出库清单')
-//     emit('success')
-//     handleClose()
-//     resetForm()
-//   } catch (error) {
-//     console.log('出库办理', error)
-//   } finally {
-//     submitLoading.value = false
-//   }
-// }
+async function submit() {
+  // try {
+  //   submitLoading.value = true
+  //   await outboundFormRef.value.submit()
+  //   ElMessage.success('已加入出库清单')
+  //   emit('success')
+  //   handleClose()
+  //   resetForm()
+  // } catch (error) {
+  //   console.log('出库办理', error)
+  // } finally {
+  //   submitLoading.value = false
+  // }
+}
 </script>

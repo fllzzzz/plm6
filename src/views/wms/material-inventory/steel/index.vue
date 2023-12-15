@@ -72,7 +72,6 @@
       :basic-class="basicClass"
       :material="currentRow"
       @success="handleSuccessOut"
-      :projectWarehouseType="crud.query.projectWarehouseType"
     />
     <transfer-handling-form
       v-model:visible="transferHandlingVisible"
@@ -162,10 +161,10 @@ const showProjectInfo = computed(() => { // 是否显示项目相关信息
   return crud.query?.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V
 })
 
-function handlePlate(row) {
-  currentRow.value = row
-  plateVisible.value = true
-}
+// function handlePlate(row) {
+//   currentRow.value = row
+//   plateVisible.value = true
+// }
 
 function clearTableSelection() {
   tableSelections.value = []
