@@ -1,6 +1,7 @@
 import useTableValidate from '@/composables/form/use-table-validate'
 import { uniqueArr } from '@/utils/data-type/array'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 
 import { ElMessage } from 'element-plus'
 import { ref } from 'vue'
@@ -24,7 +25,18 @@ export default function useFormSet({ FORM, form, cu, emit, isEdit, tableRules, i
 
   // 表单提交数据清理
   cu.submitFormFormat = async (form) => {
+    form.list.map(v => {
+      if ((v.basicClass & rawMatClsEnum.STEEL_PLATE.V) && v.list?.length > 0) {
+        cleanUpData(v.list)
+      }
+      return v
+    })
     cleanUpData(form.list)
+    form.list.map(async (v) => {
+      if ((v.basicClass & rawMatClsEnum.STEEL_PLATE.V) && v.list?.length > 0) {
+        v.list = await numFmtByBasicClass(v.list, { toSmallest: true, toNum: true })
+      }
+    })
     form.list = await numFmtByBasicClass(form.list, { toSmallest: true, toNum: true })
     if (isEdit) {
       return form

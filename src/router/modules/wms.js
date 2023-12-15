@@ -421,6 +421,13 @@ export default {
           hidden: false,
           component: '/wms/report/raw-material/high-tech-rd-fee/index',
           meta: { title: '高新研发费', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSReportRawMaterialConvertList',
+          path: 'report/raw-material/convert-list',
+          hidden: false,
+          component: '/wms/report/raw-material/convert-list/index',
+          meta: { title: '存货转换单', icon: 'project', noCache: true }
         }
       ]
     },

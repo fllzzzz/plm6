@@ -6,286 +6,122 @@
     :rules="formRules"
     size="small"
     label-position="left"
-    label-width="120px"
+    label-width="80px"
     style="display: flex; overflow: auto"
   >
-    <div style="min-width: 800px">
-      <el-form-item label="出库方式" class="material-outbound-mode-info">
-        <template #label v-if="isPlateOut">
-          <span class="set-title">出库方式</span>
-        </template>
-        <div style="display: flex">
-          <!-- <common-radio
-            v-model="form.materialOutboundMode"
-            :options="steelCoilOutboundModeEnum"
-            type="enum"
-            size="small"
-            @change="materialOutboundModeChange"
-          /> -->
-          <common-radio
-            v-model="form.materialOutboundMode"
-            :options="steelCoilOutboundModeEnum"
-            :unshowVal="
-              [steelCoilOutboundModeEnum.BY_PLATE.V]
-            "
-            type="enum"
-            size="small"
-            @change="materialOutboundModeChange"
-          />
-          <!-- <common-radio
-            v-model="form.materialOutboundMode"
-            :options="steelCoilOutboundModeEnum"
-            :unshowVal="
-              material.classifyFullName.indexOf('卷板') === -1 || material.boolPartyA ? [steelCoilOutboundModeEnum.BY_PLATE.V] : []
-            "
-            type="enum"
-            size="small"
-            @change="materialOutboundModeChange"
-          /> -->
-          <div class="tip" v-if="isPlateOut">
-            <span>* 提示：</span>
-            <span> 出库至钢板库后，无法再进行退库操作，请谨慎操作</span>
+    <el-card class="box-card">
+      <template #header>
+        <div class="card-header">
+          <span>开平钢板</span>
+        </div>
+      </template>
+      <div style="background:#eee;padding:10px;">
+        <div style="display:flex;">
+          <div style="min-width:200px;">
+            <el-form-item label="规格" label-width="10">
+              <span>Q355B</span>
+            </el-form-item>
+          </div>
+          <div style="min-width:200px;">
+            <el-form-item label="开平段数">
+              8段
+            </el-form-item>
           </div>
         </div>
+        <div style="display:flex;">
+          <div style="min-width:200px;">
+            <el-form-item label="厚度" label-width="10">
+              11.75 mm
+            </el-form-item>
+          </div>
+          <div style="min-width:200px;">
+            <el-form-item label="开平数量">
+              870mm
+            </el-form-item>
+          </div>
+        </div>
+        <div style="display:flex;">
+          <div style="min-width:200px;">
+            <el-form-item label="宽度" label-width="10">
+              870mm
+            </el-form-item>
+          </div>
+          <div style="min-width:200px;">
+            <el-form-item label="开平总重">
+              34782.22kg
+            </el-form-item>
+          </div>
+        </div>
+      </div>
+      <el-form-item prop="boolOutbound" label="是否出库" style="margin-top: 10px">
+        <el-checkbox v-model="form.boolOutbound" size="large" />
       </el-form-item>
-      <div :class="isPlateOut ? 'plate-out-form' : 'form'">
-        <div v-if="!isPlateOut" class="material-info">
-          <common-material-info :material="material" :form="form">
-            <template #afterSpec>
-              <el-form-item label="厚 * 宽">
-                <span>{{ `${material.thickness}${baseUnit.thickness.unit} * ${material.width}${baseUnit.width.unit}` }}</span>
-              </el-form-item>
-            </template>
-            <template #afterBrand>
-              <el-form-item label="炉批号">
-                <span v-empty="{ val: material.heatNoAndBatchNo }" />
-              </el-form-item>
-            </template>
-          </common-material-info>
-        </div>
-        <div v-if="!isPlateOut" class="form-info">
-          <common-form-item :material="material" :form="form" />
-        </div>
-        <div v-if="isPlateOut" class="plate-out-material-info">
-          <!-- <el-descriptions-item label="厚 * 宽">
-              <span>{{ `${material.thickness}${baseUnit.thickness.unit} * ${material.width}${baseUnit.width.unit}` }}</span>
-            </el-descriptions-item> -->
-          <descriptions-material-info :material="material" :form="form">
-            <template #afterSpec>
-              <el-descriptions-item label="厚 * 宽">
-                <span>{{ `${material.thickness}${baseUnit.thickness.unit} * ${material.width}${baseUnit.width.unit}` }}</span>
-              </el-descriptions-item>
-            </template>
-            <template #afterBrand>
-              <el-descriptions-item label="炉批号">
-                <span v-empty="{ val: material.heatNoAndBatchNo }" />
-              </el-descriptions-item>
-            </template>
-          </descriptions-material-info>
-        </div>
-        <template v-if="isPlateOut">
-          <div class="divider"></div>
-          <span class="set-title">单段配置</span>
-          <common-table
-            :data="form.list"
-            :max-height="maxHeight"
-            :cell-class-name="wrongCellMask"
-            style="width: 100%; margin-top: 15px"
-            show-summary
-            :summary-method="getSummaries"
-            return-source-data
-            :show-empty-symbol="false"
-          >
-            <el-table-column label="序号" type="index" align="center" width="60" />
-            <el-table-column prop="width" align="center" :label="`宽 (${baseUnit.width.unit})`">
-              <template #default="{ row }">
-                <common-input-number
-                  v-model="row.width"
-                  :min="minLength"
-                  :max="999999999"
-                  controls-position="right"
-                  :controls="false"
-                  :class="{ 'over-weight-tip': row.overWidth }"
-                  :precision="baseUnit.width.precision"
-                  size="mini"
-                  placeholder="宽"
-                />
-              </template>
-            </el-table-column>
-            <el-table-column prop="quantity" align="center" label="数量 (张)">
-              <template #default="{ row }">
-                <common-input-number
-                  v-model="row.quantity"
-                  :min="1"
-                  :max="999999999"
-                  controls-position="right"
-                  :controls="false"
-                  :step="1"
-                  :precision="baseUnit.measure.precision"
-                  size="mini"
-                  placeholder="数量"
-                />
-              </template>
-            </el-table-column>
-            <!-- 项目设置 -->
-            <el-table-column label="操作" width="100px" align="center" fixed="right">
-              <template #default="{ $index }">
-                <common-button icon="el-icon-delete" type="danger" size="mini" class="icon-button" @click="delRow($index)" />
-                <common-button icon="el-icon-plus" type="success" size="mini" class="icon-button" @click="addRow($index)" />
-              </template>
-            </el-table-column>
-          </common-table>
-          <div class="tip" style="margin-top:10px;" v-if="surplusMaterial.width < 0">
-            <span>* 错误提示：</span>
-            <span> 条板总宽不可大于开平宽度</span>
-          </div>
-          <div>
-          <span class="set-title" style="margin-top:10px;">单段开平预览（横向）</span>
-          <div style="display: flex; margin-bottom: 15px; margin-top: 15px">
-            <div class="preview-info" :style="`height:${previewHeight}px;`">
-              <div
-                v-if="
-                  ((surplusMaterial.width && plateTotalQuantity > 1) || (!surplusMaterial.width && plateTotalQuantity))
-                "
-                :style="`height:${previewHeight}px;overflow:hidden;`"
-              >
-                <div v-for="(item, index) in form.list" :key="index">
-                  <template v-if="item.quantity && item.width">
-                    <div
-                      v-for="x of item.quantity"
-                      :key="x"
-                      class="plate-item"
-                      :style="{
-                        marginBottom: index === form.list.length - 1 && !surplusMaterial.width ? '0px' : '1px',
-                        height: ((previewHeight - (plateTotalQuantity - 1)) * item.width) / material.width + 'px',
-                        lineHeight: ((previewHeight - (plateTotalQuantity - 1)) * item.width) / material.width + 'px',
-                      }"
-                    >
-                      {{ item.width }}{{ baseUnit.width.unit }}
-                    </div>
-                  </template>
-                </div>
-                <div
-                  v-if="surplusMaterial.width"
-                  class="plate-item"
-                  :style="{
-                    backgroundColor: '#c45656',
-                    height: ((previewHeight - (plateTotalQuantity - 1)) * surplusMaterial.width) / material.width + 'px',
-                    lineHeight: ((previewHeight - (plateTotalQuantity - 1)) * surplusMaterial.width) / material.width + 'px',
-                  }"
-                >
-                  {{ surplusMaterial.width }}{{ baseUnit.width.unit }}
-                </div>
-              </div>
-              <div
-                v-else
-                :style="`height:${previewHeight}px;line-height:${previewHeight}px;text-align:center;color: #9e9ea1;border: 1px solid;`"
-              >
-                <span>请配置单段配置！</span>
-              </div>
-              <mark-size
-                :sizeInfo="`${material.width}${baseUnit.width.unit}`"
-                direction="vertical"
-                :customStyle="`height:${previewHeight}px;right:-12px;top:0px;`"
-              />
-              <mark-size
-                :sizeInfo="`${form.singleQuantity || 0}${material.outboundUnit}`"
-                direction="horizontal"
-                :customStyle="`width:100%;bottom:-30px;left:0px;`"
-              />
-            </div>
-            <div class="total-info">
-              <div class="total-item">
-                <span class="total-label">开平总长</span>
-                <span class="total-value">{{ form.quantity || 0 }} {{ material.outboundUnit }}</span>
-              </div>
-              <div class="total-item">
-                <span class="total-label">开平总重</span>
-                <span class="total-value">{{ form.totalWeight || 0 }} {{ baseUnit.weight.unit }}</span>
-              </div>
-              <div class="total-item total-item-surplus">
-                <span class="total-label">剩余长度</span>
-                <span class="total-value">{{ surplusQuantity || 0 }} {{ material.outboundUnit }}</span>
-              </div>
-              <div class="total-item total-item-surplus">
-                <span class="total-label">剩余重量</span>
-                <span class="total-value">{{ surplusWeight || 0 }} {{ baseUnit.weight.unit }}</span>
-              </div>
-            </div>
-          </div>
-          </div>
-        </template>
-      </div>
-    </div>
-    <div v-if="isPlateOut" style="margin-left: 30px">
-      <div class="other-info">
-        <div style="width: 530px">
-          <div style="margin-bottom:10px;"><span class="set-title">单段长度配置</span> <common-button icon="el-icon-plus" style="float:right;" type="success" size="mini" class="icon-button" @click="addLengthRow" /></div>
-          <common-table :data="lengthTable" :max-height="maxHeight" :cell-class-name="lengthWrongCellMask" return-source-data :show-empty-symbol="false">
-            <el-table-column label="序号" type="index" align="center" width="55" />
-            <el-table-column prop="singleQuantity" align="center" :label="`单段长度(${material.outboundUnit})`" min-width="120">
-              <template #default="{ row }">
-                <common-input-number
-                  v-model="row.singleQuantity"
-                  :min="minLength"
-                  :max="maxQuantity"
-                  controls-position="right"
-                  :controls="false"
-                  :precision="material.outboundUnitPrecision"
-                  size="mini"
-                  placeholder="单段长度"
-                  @blur="checkTotalLength(row,'singleQuantity')"
-                />
-              </template>
-            </el-table-column>
-            <el-table-column prop="segmentQuantity" align="center" :label="`段数(段)`" min-width="120">
-              <template #default="{ row }">
-                <common-input-number
-                  v-model="row.segmentQuantity"
-                  :min="0"
-                  :max="row.singleQuantity ? parseInt(maxQuantity / row.singleQuantity) : 1"
-                  controls-position="right"
-                  :controls="false"
-                  :precision="0"
-                  size="mini"
-                  placeholder="段数(段)"
-                  @blur="checkTotalLength(row,'segmentQuantity')"
-                />
-              </template>
-            </el-table-column>
-            <!-- <el-table-column prop="recipientId" align="center" :label="`领用人`" min-width="135">
-              <template #default="{ row }">
-                <user-dept-cascader
-                  v-model="row.recipientId"
-                  :collapse-tags="false"
-                  clearable
-                  filterable
-                  show-all-levels
-                  placeholder="领用人"
-                  style="width: 100%"
-                />
-              </template>
-            </el-table-column> -->
-            <el-table-column label="操作" width="60px" align="center" fixed="right">
-              <template #default="{ $index }">
-                <common-button icon="el-icon-delete" type="danger" size="mini" class="icon-button" @click="delLengthRow($index)" />
-              </template>
-            </el-table-column>
-          </common-table>
-          <el-form-item prop="remark" label-width="0" style="margin-top: 10px">
-            <el-input
-              v-model.trim="form.remark"
-              type="textarea"
-              :autosize="{ minRows: 6, maxRows: 6 }"
-              maxlength="200"
-              show-word-limit
-              placeholder="备注"
-              style="width: 100%"
-            />
-          </el-form-item>
-        </div>
-      </div>
-    </div>
+      <el-form-item prop="type" label="钢板类型" style="margin-top: 10px">
+        <common-radio
+          v-model="form.materialOutboundMode"
+          :options="steelCoilOutboundModeEnum"
+          type="enum"
+          size="small"
+          disabled
+        />
+      </el-form-item>
+      <el-form-item prop="remark" label="所属项目" style="margin-top: 10px">
+        <common-select
+          v-model="form.projectId"
+          :options="projectOptions"
+          :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+          clearable
+          type="other"
+          placeholder="所属项目"
+          @change="handleProjectChange($event, $index, row)"
+        />
+      </el-form-item>
+      <el-form-item prop="remark" label="区域" style="margin-top: 10px">
+        <common-select
+          v-model="form.projectId"
+          :options="projectMap[form.projectId]?.children || []"
+          :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+          clearable
+          type="other"
+          placeholder="所属项目"
+          @change="handleProjectChange($event, $index, row)"
+        />
+      </el-form-item>
+      <el-form-item prop="remark" label="区域" style="margin-top: 10px">
+        <common-select
+          v-model="form.projectId"
+          :options="monomerMap?.[form.monomerId]?.children || []"
+          :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+          clearable
+          type="other"
+          placeholder="所属项目"
+          @change="handleProjectChange($event, $index, row)"
+        />
+      </el-form-item>
+      <el-form-item prop="workshopId" label="领用车间" style="margin-top: 10px">
+       <workshop-select v-model="form.workshopId" :factory-id="material.factory?.id" placeholder="可选择车间" style="width: 200px" clearable />
+      </el-form-item>
+      <el-form-item prop="recipientId" label="领用人" style="margin-top: 10px">
+        <user-dept-cascader
+          v-model="form.recipientId"
+          :collapse-tags="false"
+          clearable
+          filterable
+          show-all-levels
+          placeholder="领用人"
+          style="width: 200px;"
+        />
+      </el-form-item>
+      <el-form-item prop="date" label="出库日期" style="margin-top: 10px">
+        <el-date-picker
+          v-model="form.date"
+          type="date"
+          value-format="x"
+          placeholder="出库日期"
+          style="width: 200px;"
+        />
+      </el-form-item>
+    </el-card>
   </el-form>
 </template>
 
@@ -296,22 +132,22 @@ import { mapGetters } from '@/store/lib'
 import { deepClone, isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 import { calcSteelCoilWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
-import { outboundDestinationTypeEnum } from '@/utils/enum/modules/wms'
 // import { outboundDestinationTypeEnum, projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 
+import { projectNameFormatter } from '@/utils/project'
 import { validate } from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useTableValidate from '@compos/form/use-table-validate'
 import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
-import commonFormItem from '../components/common-form-item.vue'
-import commonMaterialInfo from '../components/common-material-info.vue'
-import descriptionsMaterialInfo from '../components/descriptions-material-info'
 import { numFmtByUnit, numFmtByBasicClass } from '@/utils/wms/convert-unit'
-import MarkSize from '@comp/MarkSize/index.vue'
 import { ElMessage } from 'element-plus'
 // 废料定义，退库长度应大于废料
 import useSteelMinLengthConfig from '@compos/store/use-steel-minlength-config'
 import { convertUnits } from '@/utils/convert/unit'
+
+import useProjectTree from '@compos/store/use-project-tree'
+import workshopSelect from '@comp-mes/workshop-select'
+import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 
 const { steelMinLengthConfig } = useSteelMinLengthConfig()
 
@@ -320,9 +156,20 @@ const steelCoilOutboundModeEnum = {
   BY_PLATE: { L: '按条板出库', K: 'BY_PLATE', V: 1 << 1 }
 }
 
-const emit = defineEmits(['confirmNext'])
+const { projectTree, projectMap, monomerMap } = useProjectTree()
 
-const previewHeight = 260
+// 项目选择
+const projectOptions = computed(() => {
+  if (isNotBlank(projectTree.value)) {
+    const arr = projectTree.value.map((p) => {
+      return { id: p.id, name: p.id !== 'common' ? projectNameFormatter(p, { showSerialNumber: false }) : '公共库' }
+    })
+    arr.unshift({ id: 'common', name: '公共库' })
+    return arr
+  } else {
+    return null
+  }
+})
 
 const minLength = computed(() => {
   return steelMinLengthConfig.value?.steelPlateShortestSideMinLength ? convertUnits(steelMinLengthConfig.value?.steelPlateShortestSideMinLength, 'mm', 'm') : 0
@@ -339,11 +186,11 @@ const props = defineProps({
   },
   maxHeight: {
     type: Number
+  },
+  projectWarehouseType: {
+    type: [Number, String],
+    default: undefined
   }
-  // projectWarehouseType: {
-  //   type: [Number, String],
-  //   default: undefined
-  // }
 })
 
 const formRef = ref()
@@ -461,16 +308,6 @@ const maxQuantity = computed(() => {
 })
 provide('maxQuantity', maxQuantity)
 
-const surplusQuantity = computed(() => {
-  return toPrecision(maxQuantity.value - form.value.quantity, material.value.outboundUnitPrecision)
-})
-
-const surplusWeight = computed(() => {
-  return form.value.quantity === maxQuantity.value
-    ? 0
-    : toPrecision(material.value.operableMete - form.value.totalWeight, baseUnit.value?.weight?.precision)
-})
-
 // 余料
 const surplusMaterial = computed(() => {
   let _width = material.value.width
@@ -483,18 +320,6 @@ const surplusMaterial = computed(() => {
     width: _width,
     mete: _mete > 0 ? _mete : 0
   }
-})
-
-// 开平总数
-const plateTotalQuantity = computed(() => {
-  let _total = 0
-  form.value.list.forEach((item) => {
-    _total += item.quantity || 0
-  })
-  if (surplusMaterial.value.width > 0) {
-    _total += 1
-  }
-  return _total
 })
 
 watch(
@@ -586,13 +411,6 @@ async function calTotalWeight() {
   submitList.value = list
 }
 
-function materialOutboundModeChange() {
-  form.value.quantity = undefined
-  if (form.value.materialOutboundMode === steelCoilOutboundModeEnum.BY_PLATE.V) {
-    emit('confirmNext', true)
-  }
-}
-
 function rowInit() {
   const _row = reactive({
     basicClass: props.basicClass,
@@ -639,21 +457,6 @@ watchEffect(async () => {
   //     thickness: material.value.thickness
   //   })) || 0
 })
-
-function addRow(index) {
-  const _row = rowInit()
-  form.value.list.splice(index + 1, 0, _row)
-}
-
-// 删除行
-function delRow(index) {
-  form.value.list.splice(index, 1)
-}
-
-function delLengthRow(index) {
-  lengthTable.value.splice(index, 1)
-}
-
 // 表单初始化
 function formInit(data) {
   const newForm = {
@@ -981,7 +784,7 @@ defineExpose({
   margin-left: 20px;
 
   .total-item {
-    width: 120px;
+    width: 150px;
     display: flex;
     flex-direction: column;
     align-items: center;
