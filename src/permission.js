@@ -4,22 +4,22 @@ import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css' // Progress 进度条样式
 import { ElMessage } from 'element-plus'
 import { getToken, getRequestUrl } from '@/utils/storage'
-// import { fetchMenus } from '@/api/user' // 获取菜单
+import { fetchMenus } from '@/api/user' // 获取菜单
 import { specialPath } from '@/settings/config'
-import configRouter from '@/router/modules/config'
-import mesRouter from '@/router/modules/mes'
-import enclosureRouter from '@/router/modules/enclosure'
-import bridgeRouter from '@/router/modules/bridge'
-import wmsRouter from '@/router/modules/wms'
-import planRouter from '@/router/modules/plan'
-import contractRouter from '@/router/modules/contract'
-import supplyChainRouter from '@/router/modules/supply-chain'
-import userRouter from '@/router/modules/user'
-import cuttingRouter from '@/router/modules/cutting'
-import bimRouter from '@/router/modules/bim'
-import operationRouter from '@/router/modules/operation'
-import projectManage from '@/router/modules/project'
-import shipManage from '@/router/modules/ship-manage'
+// import configRouter from '@/router/modules/config'
+// import mesRouter from '@/router/modules/mes'
+// import enclosureRouter from '@/router/modules/enclosure'
+// import bridgeRouter from '@/router/modules/bridge'
+// import wmsRouter from '@/router/modules/wms'
+// import planRouter from '@/router/modules/plan'
+// import contractRouter from '@/router/modules/contract'
+// import supplyChainRouter from '@/router/modules/supply-chain'
+// import userRouter from '@/router/modules/user'
+// import cuttingRouter from '@/router/modules/cutting'
+// import bimRouter from '@/router/modules/bim'
+// import operationRouter from '@/router/modules/operation'
+// import projectManage from '@/router/modules/project'
+// import shipManage from '@/router/modules/ship-manage'
 
 import { validRequestUrl } from '@/utils/validate' // 请求路径验证规则
 
@@ -132,8 +132,8 @@ const loadMenus = async (next, to) => {
   let success = false
   try {
     // 菜单：content
-    // const menus = await fetchMenus()
-    const menus = [configRouter, wmsRouter, mesRouter, enclosureRouter, bridgeRouter, planRouter, contractRouter, supplyChainRouter, userRouter, cuttingRouter, bimRouter, operationRouter, projectManage, shipManage]
+    const menus = await fetchMenus()
+    // const menus = [configRouter, wmsRouter, mesRouter, enclosureRouter, bridgeRouter, planRouter, contractRouter, supplyChainRouter, userRouter, cuttingRouter, bimRouter, operationRouter, projectManage, shipManage]
     await store.dispatch('permission/generateRoutes', menus)
     const asyncRoutes = await store.dispatch('permission/setRoutes', to.path)
     addRoutes(asyncRoutes)
