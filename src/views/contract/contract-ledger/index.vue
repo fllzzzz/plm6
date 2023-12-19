@@ -101,7 +101,7 @@
               <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
             </el-badge>
           </span>
-          <span style="color:#409eff;text-align:right;margin-left:8px;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount,decimalPrecision.contract): '-' }}</span>
+          <span style="color:#409eff;text-align:right;margin-left:8px;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount,DP.YUAN): '-' }}</span>
         </div>
       </template>
     </el-table-column>
@@ -112,7 +112,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('extraInvoice')" key="extraInvoice" prop="extraInvoice" label="超额开票" align="right" min-width="80px">
       <template v-slot="scope">
-        <div :style="`color:${scope.row.extraInvoice<0?'red':''}`">{{ toThousand(scope.row.extraInvoice,decimalPrecision.contract) || '-' }}</div>
+        <div :style="`color:${scope.row.extraInvoice<0?'red':''}`">{{ toThousand(scope.row.extraInvoice,DP.YUAN) || '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('deliverInstallAmount')" key="deliverInstallAmount" prop="deliverInstallAmount" label="累计发货额" align="center"  min-width="80px">
@@ -157,6 +157,7 @@ import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { isNotBlank } from '@data-type/index'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
