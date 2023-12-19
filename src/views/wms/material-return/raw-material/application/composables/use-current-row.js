@@ -18,7 +18,6 @@ export default function useCurrentRow({ form, tableRef, delCallback }) {
   function handleRowClick(row, column, event) {
     currentUid.value = row.uid
     currentSource.value = row.source
-    console.log(currentSource.value)
   }
 
   // 删除当前行
