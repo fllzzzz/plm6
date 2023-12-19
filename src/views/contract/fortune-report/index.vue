@@ -87,6 +87,15 @@
         min-width="100"
       />
       <el-table-column
+        v-if="columns.visible('mainRevenue')"
+        align="right"
+        key="mainRevenue"
+        prop="mainRevenue"
+        show-overflow-tooltip
+        label="主营收入"
+        min-width="100"
+      />
+      <el-table-column
         v-if="columns.visible('settlementAmount')"
         align="right"
         key="settlementAmount"
@@ -310,14 +319,14 @@
     </common-table>
     <!-- 分页 -->
     <pagination />
-    <invoice-record v-model="invoiceVisible" :detail-row="detailRow" />
-    <collection-record v-model="collectionVisible" :detail-row="detailRow" />
-    <export-record v-model="exportVisible" :detail-row="detailRow" />
-    <freight-record v-model="freightVisible" :detail-row="detailRow" />
-    <happened-record v-model="happenedVisible" :detail-row="detailRow" />
-    <available-balance v-model="availableBalanceVisible" :detail-row="detailRow" />
-    <composite-cost v-model="compositeCostVisible" :detail-row="detailRow" />
-    <cost-ascription v-model="costAscriptionVisible" :detail-row="detailRow" />
+    <invoice-record v-model="invoiceVisible" :detail-row="detailRow" :secondPickerTime="{startDate: crud.query.secondStartDate, endDate: crud.query.secondEndDate}" />
+    <collection-record v-model="collectionVisible" :detail-row="detailRow" :secondPickerTime="{startDate: crud.query.secondStartDate, endDate: crud.query.secondEndDate}" />
+    <export-record v-model="exportVisible" :detail-row="detailRow" :secondPickerTime="{startDate: crud.query.secondStartDate, endDate: crud.query.secondEndDate}" />
+    <freight-record v-model="freightVisible" :detail-row="detailRow" :secondPickerTime="{startDate: crud.query.secondStartDate, endDate: crud.query.secondEndDate}" />
+    <happened-record v-model="happenedVisible" :detail-row="detailRow" :secondPickerTime="{startDate: crud.query.secondStartDate, endDate: crud.query.secondEndDate}" />
+    <available-balance v-model="availableBalanceVisible" :detail-row="detailRow" :secondPickerTime="{startDate: crud.query.secondStartDate, endDate: crud.query.secondEndDate}" />
+    <composite-cost v-model="compositeCostVisible" :detail-row="detailRow" :secondPickerTime="{startDate: crud.query.secondStartDate, endDate: crud.query.secondEndDate}" />
+    <cost-ascription v-model="costAscriptionVisible" :detail-row="detailRow" :secondPickerTime="{startDate: crud.query.secondStartDate, endDate: crud.query.secondEndDate}" />
     <cost-page-dialog :detail-row="detailRow" v-model:visible="drawerVisible" :settlementStatus="crud.query.settlementStatus" />
   </div>
 </template>
@@ -373,6 +382,7 @@ const drawerVisible = ref(false)
 const columnsDataFormat = ref([
   ['contractAmount', 'to-thousand'],
   ['settlementAmount', 'to-thousand'],
+  ['mainRevenue', 'to-thousand'],
   ['costAmount', 'to-thousand'],
   ['grossProfit', 'to-thousand'],
   ['collectionAmount', 'to-thousand'],
@@ -449,6 +459,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     v.safetyBalance = (v.contractAmount - v.happenedAmount) * 0.3
     // 净利润 = 收款金额 - 综合成本 - 期间费用
     v.retainedProfit = v.collectionAmount ? v.collectionAmount - v.costAmount - v.periodExpense : '-'
+
     return v
   })
 }

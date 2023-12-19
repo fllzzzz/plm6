@@ -102,13 +102,19 @@ const props = defineProps({
   maxHeight: {
     type: Number,
     default: 400
+  },
+  secondPickerTime: {
+    type: Object,
+    default: () => {}
   }
 })
 
 const params = computed(() => {
   return {
     projectId: props.detailRow.id,
-    costAscriptionEnum: props.detailRow.costAscription.costAscriptionEnum
+    costAscriptionEnum: props.detailRow.costAscription.costAscriptionEnum,
+    secondStartDate: props.secondPickerTime.startDate,
+    secondEndDate: props.secondPickerTime.endDate
   }
 })
 

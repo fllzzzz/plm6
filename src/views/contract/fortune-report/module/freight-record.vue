@@ -67,6 +67,10 @@ const props = defineProps({
   detailRow: {
     type: Object,
     default: () => {}
+  },
+  secondPickerTime: {
+    type: Object,
+    default: () => {}
   }
 })
 
@@ -82,7 +86,9 @@ const permission = inject('permission')
 const params = computed(() => {
   return {
     id: props.detailRow.id,
-    type: logisticsSearchTypeEnum.PRODUCT.V
+    type: logisticsSearchTypeEnum.PRODUCT.V,
+    secondStartDate: props.secondPickerTime.startDate,
+    secondEndDate: props.secondPickerTime.endDate
   }
 })
 
