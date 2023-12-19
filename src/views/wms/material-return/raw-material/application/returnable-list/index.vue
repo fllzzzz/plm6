@@ -283,7 +283,9 @@ function handleAddReturn(row, val) {
     index: rowIndex.value,
     list: []
   })
-  newData.quantity = 1
+  if (props.basicClass & rawMatClsEnum.STEEL_PLATE.V) {
+    newData.quantity = 1
+  }
   if (selectList.length > 0 && !val) {
     newData.factoryId = -1 // 工厂 同上
     newData.warehouseId = -1 // 仓库 同上
