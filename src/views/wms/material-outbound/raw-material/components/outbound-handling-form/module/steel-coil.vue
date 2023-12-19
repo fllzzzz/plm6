@@ -805,8 +805,8 @@ async function nextSubmit() {
 
 // 出库办理，表单提交
 async function submit() {
-  const next = validateLengthTable()
-  if (!next) return false
+  // const next = validateLengthTable()
+  // if (!next) return false
   const valid = await formRef.value.validate()
   if (!valid) return false
   const formData = deepClone(form.value)
