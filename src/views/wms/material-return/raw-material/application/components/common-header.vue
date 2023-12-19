@@ -7,7 +7,7 @@
           <template v-if="basicClass & STEEL_ENUM">
             <span class="info-item">
               <span>总数({{ baseUnit.measure.unit }})</span>
-              <span v-to-fixed="{ val: allQuantity || 0, dp: baseUnit.measure.precision }" />
+              <span v-to-fixed="{ val: allQuantity || 0, dp: currentSource?.measurePrecision || baseUnit.measure.precision }" />
             </span>
             <span class="info-item">
               <span>总重量({{ baseUnit.weight.unit }})</span>
@@ -183,7 +183,7 @@ function calcAllWeight() {
 // 计算所有退库钢材总数量
 function calcAllQuantity() {
   allQuantity.value = form.list.reduce((sum, { quantity = 0 }) => {
-    return +toFixed(sum + quantity, baseUnit.value.measure.precision)
+    return sum + quantity
   }, 0)
 }
 
