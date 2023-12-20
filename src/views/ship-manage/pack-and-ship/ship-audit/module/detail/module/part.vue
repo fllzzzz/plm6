@@ -3,7 +3,12 @@
     <el-table-column label="序号" type="index" align="center" width="60" />
     <!-- <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" /> -->
     <!-- <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" /> -->
-    <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" />
+    <el-table-column :show-overflow-tooltip="true" align="center" prop="serialNumber" label="编号">
+      <template #default="{row}">
+        <table-cell-tag :show="row.boolAllPartSendDirectly" name="檩条直发" color="#f56c6c" />
+        <span>{{ row.serialNumber }}</span>
+      </template>
+    </el-table-column>
     <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" min-width="120" />
     <el-table-column prop="showQuantity" label="数量" align="center" />
     <!-- <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" /> -->

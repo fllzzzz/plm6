@@ -53,7 +53,12 @@
         class="project-summary"
       >
         <el-descriptions-item align="center" label="清单总量（吨）">
-          <span class="tc-primary" style="cursor: pointer" @click="openDetail('INVENTORY')">{{
+          <span v-if="category === mesShipStatisticsTypeEnum.STRUCTURE.V" class="tc-primary" style="cursor: pointer" @click="openDetail('INVENTORY')">{{
+            props.weightStatus === weightTypeEnum.NET.V
+              ? convertUnits(summaryData?.mete || 0, 'kg', 't', 2)
+              : convertUnits(summaryData?.grossMete || 0, 'kg', 't', 2)
+          }}</span>
+          <span v-else class="tc-primary" style="cursor: pointer;" @click="openDetail('INVENTORY')">{{
             props.weightStatus === weightTypeEnum.NET.V
               ? convertUnits(summaryData?.mete || 0, 'kg', 't', 2)
               : convertUnits(summaryData?.grossMete || 0, 'kg', 't', 2)
@@ -65,6 +70,7 @@
               ? convertUnits(summaryData?.schedulingMete || 0, 'kg', 't', 2)
               : convertUnits(summaryData?.schedulingGrossMete || 0, 'kg', 't', 2)
           }}</span>
+          <span v-else-if="category === mesShipStatisticsTypeEnum.DIRECT.V && summaryData?.schedulingQuantity" class="tc-primary" style="cursor: pointer" @click="openDetail('ASSIGNMENT')">{{ convertUnits(summaryData?.schedulingQuantity || 0, 'kg', 't', 2) }}</span>
           <span v-else>-</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="入库量（吨）">
@@ -75,20 +81,24 @@
           }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="累计发运">
-          <span class="tc-primary" style="cursor: pointer" @click="openDetail('CUMULATIVE_SHIPMENT')">{{
+          <span v-if="category === mesShipStatisticsTypeEnum.STRUCTURE.V" class="tc-primary" style="cursor: pointer" @click="openDetail('CUMULATIVE_SHIPMENT')">{{
             props.weightStatus === weightTypeEnum.NET.V
               ? convertUnits(summaryData?.outBoundMete || 0, 'kg', 't', 2)
               : convertUnits(summaryData?.outBoundGrossMete || 0, 'kg', 't', 2)
           }}</span>
+          <span v-else class="tc-primary" style="cursor: pointer" @click="openDetail('CUMULATIVE_SHIPMENT')">{{ convertUnits(summaryData?.outBoundQuantity || 0, 'kg', 't', 2) }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="本月发运">
-          <span class="tc-primary" style="cursor: pointer" @click="openDetail('SHIPMENT_MONTH')">
+          <span v-if="category === mesShipStatisticsTypeEnum.STRUCTURE.V" class="tc-primary" style="cursor: pointer" @click="openDetail('SHIPMENT_MONTH')">
             {{
               props.weightStatus === weightTypeEnum.NET.V
                 ? convertUnits(summaryData?.outMounthBoundMete || 0, 'kg', 't', 2)
                 : convertUnits(summaryData?.outMounthBoundGrossMete || 0, 'kg', 't', 2)
             }}
           </span>
+          <span v-else class="tc-primary" style="cursor: pointer" @click="openDetail('SHIPMENT_MONTH')">{{
+          convertUnits(summaryData?.outMounthBoundQuantity || 0, 'kg', 't', 2)
+          }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="库存（吨）">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('IN_STOCK')">{{

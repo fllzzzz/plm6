@@ -74,7 +74,8 @@
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column key="monomer.name" prop="monomer.name" label="单体" align="center" :show-overflow-tooltip="true">
           <template #default="{ row }">
-            <table-cell-tag :show="!!row.typeName" :name="row.typeName" :color="row.typeName === '构件' ? '#67C23A' : '#409EFF'" />
+            <table-cell-tag v-if="row.boolAllPartSendDirectly"  name="檩条直发" color="#f56c6c" />
+            <table-cell-tag v-else :show="!!row.typeName" :name="row.typeName" :color="row.typeName === '构件' ? '#67C23A' : '#409EFF'" />
             <span>{{ row.monomer ? row.monomer?.name : '-' }}</span>
           </template>
         </el-table-column>

@@ -75,7 +75,7 @@ const emit = defineEmits(['toQuery'])
 const query = ref({})
 
 const groupLoad = ref(false)
-const schedulingGroups = ref({ list: [], obj: {} })
+const schedulingGroups = ref({ list: [], obj: {}})
 
 fetchGroups()
 

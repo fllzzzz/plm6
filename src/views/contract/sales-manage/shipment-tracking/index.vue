@@ -170,6 +170,7 @@ import box from './box'
 import structure from './structure'
 import enclosure from './enclosure'
 import auxiliaryMaterial from './auxiliary-material'
+import straightener from './straightener'
 import Panel from '@/components/Panel'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
@@ -184,6 +185,8 @@ const currentView = computed(() => {
       return enclosure
     case installProjectTypeEnum.AUXILIARY.V:
       return auxiliaryMaterial
+    case installProjectTypeEnum.STRAIGHTENER.V:
+      return straightener
     default:
       return structure
   }
@@ -208,6 +211,7 @@ const productEnum = computed(() => {
     if (globalProject.value?.productCategory === TechnologyMainTypeEnum.BOX.V) {
       return [TechnologyMainTypeEnum.BOX]
     }
+    console.log(installTypeEnumArr.value)
     return installTypeEnumArr.value
   }
   // 是否有桥梁菜单
@@ -224,7 +228,7 @@ const isBox = computed(() => {
 
 // 是否为辅材
 const isAuxiliary = computed(() => {
-  return productType.value === installProjectTypeEnum.AUXILIARY.V
+  return productType.value === installProjectTypeEnum.AUXILIARY.V && installProjectTypeEnum.STRAIGHTENER.V === productType.value
 })
 
 // 公共参数
