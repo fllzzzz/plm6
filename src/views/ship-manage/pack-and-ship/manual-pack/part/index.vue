@@ -27,7 +27,13 @@
         sortable="custom"
         align="center"
         width="100px"
-      />
+      >
+      <template #default="{row}">
+        <table-cell-tag v-show="row.boolAllPartSendDirectly" name="檩条直发" color="#f56c6c"></table-cell-tag>
+        <span>{{ row.monomer.name }}</span>
+      </template>
+
+    </el-table-column>
       <el-table-column
         v-if="columns.visible('area.name')"
         :show-overflow-tooltip="true"

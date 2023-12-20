@@ -31,6 +31,7 @@ const contractEnclosureProduct = contract.structurePrice
 const contractAuxiliaryMaterialProduct = contract.structurePrice
 const contractBoxShipmentTracking = contract.bridgeShipmentTracking
 const contractStructureShipmentTracking = contract.shipmentTracking
+const StraighthairShipmentTracking = contract.shipmentTracking
 const contractEnclosureShipmentTracking = contract.shipmentTracking
 const contractAuxiliaryMaterialShipmentTracking = contract.shipmentTracking
 
@@ -358,6 +359,7 @@ export default {
   contractAuxiliaryMaterialProduct, // 配套制品
   contractBoxShipmentTracking, // 分段发运跟踪
   contractStructureShipmentTracking, // 结构发运跟踪
+  StraighthairShipmentTracking, // 直发件发运跟踪
   contractEnclosureShipmentTracking, // 围护发运跟踪
   contractAuxiliaryMaterialShipmentTracking, // 配套件发运跟踪
   projectWarehouseRecord, // 销售管理入库记录

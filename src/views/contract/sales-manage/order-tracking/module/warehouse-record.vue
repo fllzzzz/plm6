@@ -22,12 +22,13 @@
     </template>
     <template #content>
       <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight">
-        <el-table-column key="monomer.name" prop="monomer.name" label="单体" min-width="140" show-overflow-tooltip>
+        <el-table-column align="center" key="monomer.name" prop="monomer.name" label="单体" min-width="140" show-overflow-tooltip>
           <template #default="{ row }">
+            <table-cell-tag :show="row.boolAllPartSendDirectly" name="檩条直发" color="#f56c6c" />
             <span v-empty-text>{{ row.monomer?.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="area.name" key="area.name" label="区域" min-width="140" show-overflow-tooltip />
+        <el-table-column prop="area.name" key="area.name" label="区域" align="center" min-width="140" show-overflow-tooltip />
         <el-table-column prop="name" key="name" label="名称" align="center" min-width="110" show-overflow-tooltip />
         <el-table-column prop="serialNumber" key="serialNumber" label="编号" align="center" min-width="110" show-overflow-tooltip />
         <el-table-column prop="specification" key="specification" label="规格" align="center" min-width="120" show-overflow-tooltip />
