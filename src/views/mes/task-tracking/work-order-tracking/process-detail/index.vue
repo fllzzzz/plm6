@@ -52,6 +52,7 @@
                 <el-icon v-if="scope.row.status === workOrderTypeEnum.DELAY.V" :size="20" style="top: 5px; color: red">
                   <BellFilled />
                 </el-icon>
+                <table-cell-tag :show="scope.row.id === -1" color="#e64242" name="特殊" />
                 <span>{{ scope.row.name }}</span>
               </template>
             </el-table-column>
@@ -117,6 +118,7 @@
                 <el-icon v-if="scope.row.status === workOrderTypeEnum.DELAY.V" :size="20" style="top: 5px; color: red">
                   <BellFilled />
                 </el-icon>
+                <table-cell-tag :show="scope.row.id === -1" color="#e64242" name="特殊" />
                 <span>{{ scope.row.name }}</span>
               </template>
             </el-table-column>
@@ -254,20 +256,20 @@ import productionLineDetail from '../production-line-detail/index.vue'
 const componentTypeTag = {
   [componentTypeEnum.ARTIFACT.K]: 'success',
   [componentTypeEnum.ASSEMBLE.K]: 'warning',
-  [componentTypeEnum.MACHINE_PART.K]: '',
+  [componentTypeEnum.MACHINE_PART.K]: ''
 }
 
 const props = defineProps({
   processList: {
     type: Object,
-    default: () => {},
+    default: () => {}
   },
   weightStatus: {
-    type: Number,
+    type: Number
   },
   query: {
-    type: Object,
-  },
+    type: Object
+  }
 })
 
 const tableRef = ref()
@@ -323,7 +325,7 @@ async function processGet() {
       productionLineId: productionLineId.value,
       projectId: props.query?.projectId,
       monomerId: props.query?.monomerId,
-      areaId: props.query?.areaId,
+      areaId: props.query?.areaId
     })
     if (props.processList?.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V) {
       const { content = [], totalElements } = await smartLineProcess({
@@ -333,7 +335,7 @@ async function processGet() {
         projectId: props.query?.projectId,
         monomerId: props.query?.monomerId,
         areaId: props.query?.areaId,
-        ...queryPage,
+        ...queryPage
       })
       processData.value = content || []
       setTotalPage(totalElements)
@@ -359,7 +361,7 @@ async function machineProcessGet() {
       productionLineId: productionLineId.value,
       projectId: props.query?.projectId,
       monomerId: props.query?.monomerId,
-      areaId: props.query?.areaId,
+      areaId: props.query?.areaId
     })
     processData.value = data || []
   } catch (e) {
@@ -377,7 +379,7 @@ async function machineProcessGet() {
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
-  paginate: true,
+  paginate: true
 })
 
 function handleRowChange(row) {

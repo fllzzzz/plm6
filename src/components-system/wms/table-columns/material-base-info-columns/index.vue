@@ -82,6 +82,8 @@
           @click="openMatRejectDetail(row)"
         />
       </template>
+      <!-- 钢板-退整料退余料 -->
+      <table-cell-tag v-if="showTip && row.basicClass===rawMatClsEnum.STEEL_PLATE.V" :show="row.boolReturns" name="退余料" :offset="15" :color="'#f23c3c'"/>
       <span>{{ row.serialNumber }}</span>
     </template>
   </el-table-column>
@@ -284,6 +286,10 @@ const props = defineProps({
   classifyNameAlias: {
     type: String,
     default: '物料种类' // wms/报表中心：需要拆分成分类、名称两列
+  },
+  showTip: {
+    type: Boolean,
+    default: false
   }
 })
 

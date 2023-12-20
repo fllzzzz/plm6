@@ -84,15 +84,31 @@
       :fixed="fixed"
       show-overflow-tooltip
     />
-    <el-table-column
-      v-if="showMete"
-      :prop="meteField"
-      :label="mateLabel"
-      align="right"
-      width="100px"
-      show-overflow-tooltip
-      :fixed="fixed"
-    />
+    <template v-if="showTip && basicClass===rawMatClsEnum.STEEL_PLATE.V">
+      <el-table-column
+        prop="mete"
+        :label="`余料 | 总重(${unitInfo?.weight.unit})`"
+        align="right"
+        width="120px"
+        show-overflow-tooltip
+        :fixed="fixed"
+      >
+        <template #default="{ row }">
+          {{ row.boolReturns ? row.detailMete+' | '+row.mete : row.mete }}
+        </template>
+      </el-table-column>
+    </template>
+    <template v-else>
+      <el-table-column
+        v-if="showMete"
+        :prop="meteField"
+        :label="mateLabel"
+        align="right"
+        width="100px"
+        show-overflow-tooltip
+        :fixed="fixed"
+      />
+    </template>
   </template>
   <!-- </template> -->
 </template>
@@ -170,6 +186,11 @@ const props = defineProps({
     // 核算量字段
     type: String,
     default: 'mete'
+  },
+  showTip: {
+    // 退库 是否显示余料
+    type: Boolean,
+    default: false
   }
 })
 

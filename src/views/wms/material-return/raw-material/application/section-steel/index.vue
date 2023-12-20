@@ -83,7 +83,7 @@
             <common-input-number
               v-model="row.mete"
               :min="0"
-              :max="+(row.singleMete * row.quantity)"
+              :max="+row.source.mete"
               controls-position="right"
               :controls="false"
               :precision="baseUnit.weight.precision"
@@ -231,6 +231,7 @@ function init() {
 
 // 添加材质
 function rowWatch(row) {
+  console.log(row)
   setRow(row, row.source)
   // 计算最大总重
   watch([() => row.quantity], () => {
@@ -297,6 +298,9 @@ function calcTotalWeight(row) {
     row.mete = toPrecision(row.singleMete * row.quantity, baseUnit.value.weight.precision)
     if (row.mete > row.maxMete && row.mete > row.singleMete) {
       row.mete = toPrecision(Math.min(row.maxMete, row.singleMete), baseUnit.value.weight.precision)
+    }
+    if (row.quantity === row.source.quantity && row.source.returnableMete > 0) {
+      row.mete = +(row.source.mete)
     }
   } else {
     row.mete = undefined

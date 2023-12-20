@@ -1,7 +1,12 @@
 <template>
   <common-table :data="list" :max-height="maxHeight" empty-text="暂无数据" style="width: 100%">
     <el-table-column label="序号" type="index" align="center" width="60" />
-    <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" />
+    <el-table-column :show-overflow-tooltip="true" prop="monomer.name" align="center" label="单体">
+      <template #default="{row}">
+        <table-cell-tag :show="row.boolAllPartSendDirectly" name="檩条直发" color="#f56c6c"></table-cell-tag>
+        <span>{{ row.monomer.name }}</span>
+      </template>
+    </el-table-column>
     <el-table-column v-if="isSuspend" :show-overflow-tooltip="true" prop="area.name" label="区域" />
     <!-- <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" /> -->
     <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" />

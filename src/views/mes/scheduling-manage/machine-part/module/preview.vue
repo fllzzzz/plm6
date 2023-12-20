@@ -11,8 +11,9 @@
       <div style="display: flex">
         <div v-if="type === 1" style="display: flex">
           <el-radio-group v-model="nestingType">
-            <el-radio :label="1" :disabled="Boolean(props.padBlockData?.length) && !props.checkedNodes?.length"> 使用新工单 </el-radio>
-            <el-radio :label="0">使用原有工单</el-radio>
+            <!-- 原disable判断 Boolean(props.padBlockData?.length) && !props.checkedNodes?.length -->
+            <el-radio :label="1" :disabled="true"> 使用新工单 </el-radio>
+            <el-radio :label="0" :disabled="true">使用原有工单</el-radio>
             <el-radio :label="2" :disabled="Boolean(props.padBlockData?.length) && !props.checkedNodes?.length">线下套料</el-radio>
           </el-radio-group>
           <div style="margin-left: 15px" v-if="nestingType === 0">
@@ -316,7 +317,7 @@ const schedulingId = ref()
 const saveType = ref(machinePartIssuedWayEnum.NESTING_ISSUED.V)
 const drillDialogVisible = ref(false)
 const orderList = ref([])
-const nestingType = ref(1)
+const nestingType = ref(2)
 const isNew = ref(true)
 const underLine = ref(0)
 const productionLineId = ref()
@@ -390,7 +391,7 @@ function showHook() {
   schedulingId.value = undefined
   fetchGroups()
   fetchOrder()
-  nestingType.value = 1
+  nestingType.value = 2
   saveType.value = machinePartIssuedWayEnum.NESTING_ISSUED.V
   if (props.type === 1) {
     if (Boolean(props.padBlockData?.length) && !props.checkedNodes?.length) {

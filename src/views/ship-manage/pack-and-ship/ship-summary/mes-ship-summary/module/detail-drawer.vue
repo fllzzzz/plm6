@@ -34,7 +34,12 @@
       <!--表格渲染-->
       <common-table :data="list" v-loading="tableLoading" show-summary :summary-method="getSummaries" :max-height="maxHeight - 70">
         <el-table-column prop="index" label="序号" align="center" width="45" type="index" />
-        <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" :show-overflow-tooltip="true">
+          <template #default="{row}">
+            <table-cell-tag :show="row.boolAllPartSendDirectly" name="檩条直发" color="#f56c6c" />
+            <span>{{ row.monomerName }}</span>
+          </template>
+        </el-table-column>
         <el-table-column key="areaName" prop="areaName" label="区域" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="netWeight" prop="netWeight" label="单净重（kg）" align="center" :show-overflow-tooltip="true">
