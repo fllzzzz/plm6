@@ -28,7 +28,6 @@
             <span v-empty-text>{{ row.monomer?.name }}</span>
           </template>
         </el-table-column>
-<<<<<<< HEAD
         <el-table-column prop="area.name" key="area.name" label="区域" min-width="140" show-overflow-tooltip />
         <el-table-column prop="name" key="name" label="名称" align="center" min-width="110" show-overflow-tooltip>
           <template #default="{row}">
@@ -36,10 +35,6 @@
             <span>{{ row.name }}</span>
         </template>
         </el-table-column>
-=======
-        <el-table-column prop="area.name" key="area.name" label="区域" align="center" min-width="140" show-overflow-tooltip />
-        <el-table-column prop="name" key="name" label="名称" align="center" min-width="110" show-overflow-tooltip />
->>>>>>> 8ba6d78024640c162479ed2a3860105b0a15c7d4
         <el-table-column prop="serialNumber" key="serialNumber" label="编号" align="center" min-width="110" show-overflow-tooltip />
         <el-table-column prop="specification" key="specification" label="规格" align="center" min-width="120" show-overflow-tooltip />
         <el-table-column prop="material" key="material" label="材质" align="center" min-width="100" show-overflow-tooltip />
