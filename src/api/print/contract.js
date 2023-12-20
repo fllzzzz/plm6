@@ -169,6 +169,17 @@ export function machinePartPrice(params) {
 }
 
 /**
+ * 散发制品详情打印
+ */
+export function machinePartDetail(businessId) {
+  return request({
+    module: 'contract',
+    url: `business/machine-part/${businessId}/print`,
+    method: 'get'
+  })
+}
+
+/**
  * 围护件计价表
  */
 export function enclosurePrice(params) {
@@ -531,6 +542,7 @@ export default {
   structurePrice, // 结构计价表
   enclosurePrice, // 围护计价表
   machinePartPrice, // 散发件计价表
+  machinePartDetail, // 散发件详情打印
   auxiliaryMaterialPrice, // 配套件计价表
   logisticsLedger, // 物流台账
   payableSummary, // 应付汇总

@@ -59,6 +59,8 @@
           @click="openMatRejectDetail(row)"
         />
       </template>
+      <!-- 钢板-退整料退余料 -->
+      <table-cell-tag v-if="showTip && row.basicClass===rawMatClsEnum.STEEL_PLATE.V" :show="row.boolReturns" name="退余料" :offset="15" :color="'#f23c3c'"/>
       <span>{{ getInfo(row, 'serialNumber') }}</span>
     </template>
   </el-table-column>
@@ -226,6 +228,10 @@ const props = defineProps({
     // 字段
     type: String,
     default: 'material'
+  },
+  showTip: {
+    type: Boolean,
+    default: true
   }
 })
 

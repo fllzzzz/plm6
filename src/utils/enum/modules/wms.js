@@ -161,7 +161,8 @@ const receiptTypeEnum = {
   RETURN: { L: '退库', K: 'RETURN', V: 16, DOC: '退库单' },
   REJECTED: { L: '退货', K: 'REJECTED', V: 17, DOC: '退货单' },
   SUPPLEMENT: { L: '调整', K: 'SUPPLEMENT', V: 25, DOC: '调整单' },
-  CUT_SURPLUS: { L: '切割余料', K: 'CUT_SURPLUS', V: 26, DOC: '切割余料' }
+  CUT_SURPLUS: { L: '切割余料', K: 'CUT_SURPLUS', V: 26, DOC: '切割余料' },
+  CONVERT: { L: '转换', K: 'CONVERT', V: 22, DOC: '转换' }
 }
 constantize(receiptTypeEnum)
 

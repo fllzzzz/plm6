@@ -64,9 +64,9 @@
     </span>
     <span class="info-item">
       <span>单重({{ baseUnit.weight.unit }})</span>
-      <span class="returnable-number" v-to-fixed="{ val: material.singleReturnableMete || 0, dp: 5 }" />
+      <span class="returnable-number" v-to-fixed="{ val: material.singleReturnableMete || 0, dp: 0 }" />
       <span>&nbsp;/&nbsp;</span>
-      <span v-to-fixed="{ val: material.singleMete || 0, dp: 5 }" />
+      <span v-to-fixed="{ val: material.singleMete || 0, dp: 0 }" />
     </span>
     <span class="info-item">
       <span>总重({{ baseUnit.weight.unit }})</span>
@@ -76,6 +76,7 @@
       />
       <span>&nbsp;/&nbsp;</span>
       <span v-to-fixed="{ val: material.mete || 0, dp: baseUnit.weight.precision }" />
+      <span v-if="currentPlateRow.boolReturns" style="color: #e6a23c">(余料:<span v-to-fixed="{ val: currentPlateRow.detailMete || 0, dp: baseUnit.weight.precision }" />)</span>
     </span>
   </div>
 </template>
@@ -92,6 +93,12 @@ const props = defineProps({
     type: Number
   },
   material: {
+    type: Object,
+    default: () => {
+      return {}
+    }
+  },
+  currentPlateRow: {
     type: Object,
     default: () => {
       return {}

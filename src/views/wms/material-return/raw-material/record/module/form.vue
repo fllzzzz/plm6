@@ -21,6 +21,7 @@ import { regForm } from '@compos/use-crud'
 import { matClsEnum, rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { isNotBlank } from '@data-type/index'
 
 import SteelPlateApplication from '@/views/wms/material-return/raw-material/application/steel-plate/index.vue'
 import SectionSteelApplication from '@/views/wms/material-return/raw-material/application/section-steel/index.vue'
@@ -52,6 +53,33 @@ const comp = computed(() => {
 CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
   // 真实退库状态
   crud.updateProp('boolRealReturn', detail.boolRealReturn || true)
+  const allArr = []
+  const allArr1 = []
+  if (detail.basicClass === rawMatClsEnum.STEEL_PLATE.V) {
+    detail.list.forEach(async (v) => {
+      if (v.boolReturns && isNotBlank(v.list)) {
+        await setSpecInfoToList(v.list)
+        const ps = await numFmtByBasicClass(v.list, { toNum: true })
+        await calcTheoryWeight(v.list)
+        // source 原出库信息转换
+        const childSourceList = v.list.map((row) => row.source)
+        await setSpecInfoToList(childSourceList)
+        const ps1 = await numFmtByBasicClass(
+          childSourceList,
+          { toNum: true },
+          {
+            mete: ['mete', 'returnableMete', 'singleMete', 'singleReturnableMete']
+          }
+        )
+        // 计算source 理论重量
+        await calcTheoryWeight(childSourceList)
+        allArr.push(ps)
+        allArr1.push(ps1)
+      }
+    })
+  }
+  await Promise.all(allArr1)
+  await Promise.all(allArr)
   await setSpecInfoToList(detail.list)
   await numFmtByBasicClass(detail.list, { toNum: true })
   await calcTheoryWeight(detail.list)
@@ -82,6 +110,21 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
     // 计算单重
     row.singleMete = +toFixed((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete)
   })
+  if (detail.basicClass === rawMatClsEnum.STEEL_PLATE.V) {
+    detail.list.forEach(async (v) => {
+      v.uid = v.id
+      if (v.boolReturns && isNotBlank(v.list)) {
+        v.list.forEach(k => {
+          k.pid = v.id
+          k.uid = k.id
+          k.warehouseId = k.warehouse ? k.warehouse.id : k.warehouseId
+          k.factoryId = k.factory ? k.factory.id : k.factoryId
+          // 计算单重
+          k.singleMete = +toFixed((k.theoryWeight / k.source.theoryWeight) * k.source.singleMete)
+        })
+      }
+    })
+  }
 }
 
 function handleSuccess() {

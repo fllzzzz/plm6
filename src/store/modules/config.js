@@ -21,6 +21,7 @@ import { getUnclosedRequisitionsBrief } from '@/api/wms/requisitions'
 import { getPurchasingPurchaseOrderBrief, getPurchaseOrder } from '@/api/supply-chain/purchase-order'
 import { getWarehouseBrief } from '@/api/config/wms/warehouse'
 import { getSteelClassifyConfBrief } from '@/api/config/system-config/steel-classic'
+import { getSteelScrapDefinitionConf } from '@/api/config/wms/scrap-definition'
 
 import { unitTypeEnum } from '@enum-ms/common'
 import { matClsEnum } from '@enum-ms/classification'
@@ -122,6 +123,7 @@ const state = {
   qualityProblemType: [],
   visaReason: [],
   decimalPrecision: {},
+  steelMinLengthConfig: {},
   loaded: {
     // 接口是否加载
     company: false,
@@ -158,7 +160,8 @@ const state = {
     subcontractType: false,
     qualityProblemType: false,
     visaReason: false,
-    decimalPrecision: false
+    decimalPrecision: false,
+    steelMinLengthConfig: false
   }
 }
 
@@ -338,6 +341,9 @@ const mutations = {
   },
   SET_DECIMAL_PRECISION(state, decimalPrecision) {
     state.decimalPrecision = decimalPrecision
+  },
+  SET_STEEL_MINLENGTH_CONFIG(state, steelMinLengthConfig) {
+    state.steelMinLengthConfig = steelMinLengthConfig
   }
 }
 
@@ -837,10 +843,16 @@ const actions = {
         moduleDecimal[v.key] = val.scale
       }
     })
-    console.log(moduleDecimal)
     commit('SET_DECIMAL_PRECISION', moduleDecimal)
     commit('SET_LOADED', { key: 'decimalPrecision' })
     return content
+  },
+  // 获取废料定义
+  async fetchSteelMinLengthConfig({ commit }) {
+    const data = await getSteelScrapDefinitionConf()
+    commit('SET_STEEL_MINLENGTH_CONFIG', data)
+    commit('SET_LOADED', { key: 'steelMinLengthConfig' })
+    return data
   }
 }
 

@@ -22,6 +22,7 @@ const contractStructurePrice = contract.structurePrice
 const contractEnclosurePrice = contract.enclosurePrice
 const contractAuxiliaryMaterialPrice = contract.auxiliaryMaterialPrice
 const contractMachinePartPrice = contract.machinePartPrice
+const machinePartDetail = contract.machinePartDetail
 const projectCollectionDetail = contract.collectionDetail
 const projectInvoiceDetail = contract.invoiceDetail
 const projectHappenedDetail = contract.happenedDetail
@@ -31,6 +32,7 @@ const contractEnclosureProduct = contract.structurePrice
 const contractAuxiliaryMaterialProduct = contract.structurePrice
 const contractBoxShipmentTracking = contract.bridgeShipmentTracking
 const contractStructureShipmentTracking = contract.shipmentTracking
+const StraighthairShipmentTracking = contract.shipmentTracking
 const contractEnclosureShipmentTracking = contract.shipmentTracking
 const contractAuxiliaryMaterialShipmentTracking = contract.shipmentTracking
 
@@ -357,6 +359,7 @@ export default {
   contractEnclosurePrice, // 围护计价表
   contractAuxiliaryMaterialPrice, // 配套件计价表
   contractMachinePartPrice, // 散发制品计价表
+  machinePartDetail, // 散发制品详情
   projectCollectionDetail, // 项目收款详情
   projectInvoiceDetail, // 项目开票详情
   projectHappenedDetail, // 项目发运详情
@@ -367,6 +370,7 @@ export default {
   contractAuxiliaryMaterialProduct, // 配套制品
   contractBoxShipmentTracking, // 分段发运跟踪
   contractStructureShipmentTracking, // 结构发运跟踪
+  StraighthairShipmentTracking, // 直发件发运跟踪
   contractEnclosureShipmentTracking, // 围护发运跟踪
   contractAuxiliaryMaterialShipmentTracking, // 配套件发运跟踪
   projectWarehouseRecord, // 销售管理入库记录

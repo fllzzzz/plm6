@@ -57,7 +57,7 @@
         <el-table-column prop="index" label="序号" align="center" width="60px" type="index" />
         <el-table-column align="center" key="name" prop="name" :show-overflow-tooltip="true" label="涉及工序" width="100px">
           <template v-slot="scope">
-            <table-cell-tag :show="!scope.row.id" color="#e64242" name="特殊" />
+            <table-cell-tag :show="scope.row.id === -1" color="#e64242" name="特殊" />
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>

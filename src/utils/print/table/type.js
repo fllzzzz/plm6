@@ -98,6 +98,7 @@ const tableType = {
   contractBoxPrice: { L: '分段计价表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   contractStructurePrice: { L: '结构计价表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   contractMachinePartPrice: { L: '散发制品计价表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  machinePartDetail: { L: '散发制品详情', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   contractEnclosurePrice: { L: '围护计价表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   contractAuxiliaryMaterialPrice: { L: '配套件计价表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   projectCollectionDetail: { L: '项目收款明细表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
