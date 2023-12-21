@@ -99,13 +99,17 @@
             label="名称"
             width="120px"
           >
-            <template #template="{row}">
-              <table-cell-tag v-if="row.workshop" :name="row?.workshop?.name" />
-              <table-cell-tag v-if="row?.boolReturn" name="退量" color="#f56c6c"/>
-              <span>{{ row.name }}</span>
+            <template #template="{ row }">
+              <table-cell-tag v-if="row?.workshop" :name="row?.workshop?.name" />
+              <span>{{ row?.name }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="monomer.name" label="单体" align="center" width="100px" />
+          <el-table-column prop="monomer.name" label="单体" align="center" width="100px">
+            <template #default="{ row }">
+              <table-cell-tag v-if="row?.boolReturn" name="退量" color="#f56c6c" />
+              <span>{{ row.monomer?.name }}</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="area.name" label="区域" align="center" width="100px" />
           <el-table-column prop="serialNumber" label="编号" align="center" width="120px" />
           <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="规格" min-width="140px" />
