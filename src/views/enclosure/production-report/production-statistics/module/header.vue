@@ -217,7 +217,7 @@ async function fetchChart() {
         const xIndex = pointInGrid[0]
 
         chartYearTime.value = query.time
-        chartDateTime.value = xIndex < 9 ? `0${xIndex + 1}` : xIndex
+        chartDateTime.value = xIndex < 9 ? `0${xIndex + 1}` : xIndex + 1
 
         if (crud.query.type === timeTypeEnum.ALL_YEAR.V) {
           const _date = parseTime(chartYearTime.value, '{y}') + '-' + chartDateTime.value
