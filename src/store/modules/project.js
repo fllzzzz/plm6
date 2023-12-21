@@ -137,6 +137,7 @@ const mutations = {
     state.userBusinessTypeProjectMap = map
   },
   SET_USER_BUSINESS_PROJECTS_CASCADE_MAP: (state, map) => {
+    console.log(map)
     state.userBusinessTypeProjectsCascadeMap = map
   },
   SET_ROUTE_BUSINESS_TYPE: (state, type) => {
@@ -176,7 +177,7 @@ const actions = {
     })
     projectsMap[allPT] = projects || []
     businessTypeProjectMap[businessTypeEnum.MACHINING.V + '_' + allPT] = projects.filter(p => p.businessType === businessTypeEnum.MACHINING.V && p.status === projectStatusEnum.PROCESS.V) || []
-    businessTypeProjectMap[businessTypeEnum.INSTALLATION.V + '_' + allPT] = projects.filter(p => p.businessType === businessTypeEnum.INSTALLATION.V && p.status === projectStatusEnum.PROCESS.V) || []
+    businessTypeProjectMap[businessTypeEnum.INSTALLATION.V + '_' + allPT] = projects.filter(p => p.businessType === businessTypeEnum.INSTALLATION.V) || []
     projectsCascadeMap[allPT] = projectsToCascade(projects) || []
     businessTypeProjectsCascadeMap[businessTypeEnum.MACHINING.V + '_' + allPT] = projectsToCascade(businessTypeProjectMap[businessTypeEnum.MACHINING.V + '_' + allPT]) || []
     businessTypeProjectsCascadeMap[businessTypeEnum.INSTALLATION.V + '_' + allPT] = projectsToCascade(businessTypeProjectMap[businessTypeEnum.INSTALLATION.V + '_' + allPT]) || []

@@ -131,7 +131,7 @@ const showable = computed(() => isNotBlank(routeProjectType.value))
 const { projectsCascade, processProjects, projects, businessTypeProjectMap, userBusinessTypeProjectsCascadeMap } = useUserProjects()
 
 const options = computed(() => {
-  const projectTypeVal = projectType.value || allPT
+  const projectTypeVal = allPT || projectType.value
   if (navbarShowAll.value) {
     return routeBusinessType.value ? userBusinessTypeProjectsCascadeMap.value[routeBusinessType.value + '_' + projectTypeVal] : projectsCascade.value
   }
