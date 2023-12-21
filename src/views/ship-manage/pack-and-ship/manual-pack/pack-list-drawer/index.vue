@@ -133,7 +133,7 @@
             min-width="80px"
           >
             <template v-slot="scope">
-              {{ toFixed(scope.row.netWeight, DP.COM_WT__KG) }}
+              {{ toFixed(scope.row?.netWeight, DP.COM_WT__KG) }}
             </template>
           </el-table-column>
           <el-table-column
@@ -145,7 +145,7 @@
             min-width="80px"
           >
             <template v-slot="scope">
-              {{ toFixed(scope.row.grossWeight, DP.COM_WT__KG) }}
+              {{ toFixed(scope.row?.grossWeight, DP.COM_WT__KG) }}
             </template>
           </el-table-column>
         </template>
@@ -162,7 +162,7 @@
           <el-table-column key="plate" align="center" prop="plate" :show-overflow-tooltip="true" label="板型" min-width="100px" />
           <el-table-column key="weight" prop="weight" :show-overflow-tooltip="true" :label="`单重\n(kg)`" align="center" min-width="85px">
             <template v-slot="scope">
-              {{ scope.row.weight }}
+              {{ scope.row?.weight }}
             </template>
           </el-table-column>
           <el-table-column
@@ -174,7 +174,7 @@
             min-width="85px"
           >
             <template v-slot="scope">
-              {{ convertUnits(scope.row.surfaceArea, 'mm²', 'm²', DP.COM_AREA__M2) }}
+              {{ convertUnits(scope.row?.surfaceArea, 'mm²', 'm²', DP.COM_AREA__M2) }}
             </template>
           </el-table-column>
           <el-table-column key="length" prop="length" :show-overflow-tooltip="true" :label="`单长\n(mm)`" align="center" min-width="85px">
