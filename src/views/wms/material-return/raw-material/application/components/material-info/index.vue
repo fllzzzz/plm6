@@ -1,5 +1,5 @@
 <template>
-  <component :is="comp" :basicClass="basicClass" :material="material" />
+  <component :is="comp" :basicClass="basicClass" :material="material" :currentPlateRow="currentPlateRow"/>
 </template>
 
 <script setup>
@@ -17,6 +17,12 @@ const props = defineProps({
     type: Number
   },
   material: {
+    type: Object,
+    default: () => {
+      return {}
+    }
+  },
+  currentPlateRow: {
     type: Object,
     default: () => {
       return {}

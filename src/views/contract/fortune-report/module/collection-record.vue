@@ -15,7 +15,7 @@
         <print-table
           v-permission="permission.printDetail"
           api-key="projectCollectionRecord"
-          :params="{ projectId: props.detailRow.id }"
+          :params="{ projectId: props.detailRow.id, secondStartDate: props.secondPickerTime.startDate, secondEndDate: props.secondPickerTime.endDate }"
           size="mini"
           type="warning"
         />
@@ -56,6 +56,10 @@ const props = defineProps({
     require: true
   },
   detailRow: {
+    type: Object,
+    default: () => {}
+  },
+  secondPickerTime: {
     type: Object,
     default: () => {}
   }
@@ -100,7 +104,7 @@ const { maxHeight } = useMaxHeight(
 async function getList() {
   try {
     listLoading.value = true
-    list.value = (await getCollectionList({ projectId: props.detailRow.id })) || []
+    list.value = (await getCollectionList({ projectId: props.detailRow.id, secondStartDate: props.secondPickerTime.startDate, secondEndDate: props.secondPickerTime.endDate })) || []
   } catch (error) {
     console.log('获取收款记录失败', error)
   } finally {

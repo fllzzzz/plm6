@@ -98,6 +98,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
       monomerIds.push(v.id)
     })
     v.monomerIds = monomerIds
+    v.attachmentIds = v.attachments?.map((v) => v.id) || []
     return v
   })
 }

@@ -7,6 +7,8 @@ import { DP } from '@/settings/config'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 
+import { parseTime } from '@/utils/date'
+
 import moment from 'moment'
 
 // 计算用时天数
@@ -282,6 +284,34 @@ function handleProjectWarehouseRecord({ header, table = [], footer, qrCode }) {
   }
 }
 
+// 发运跟踪-退量
+function handleContractAuxiliaryMaterialShipmentTracking({ header, table = [], footer, qrCode }) {
+  const _table = table.map(row => {
+    if (row.boolReturn) {
+      row.totalPrice = row.totalPrice * -1
+    }
+    return row
+  })
+  return {
+    header,
+    table: _table,
+    qrCode,
+    footer
+  }
+}
+
+// 经典定制-原材料台账-加筛选时间
+
+function handleSearchTime({ header, table = [], footer, qrCode }) {
+  header.searchDate = header.startDate && header.endDate ? parseTime(header.startDate, '{y}-{m}-{d}') + '~' + parseTime(header.endDate, '{y}-{m}-{d}') : undefined
+  return {
+    header,
+    table,
+    qrCode,
+    footer
+  }
+}
+
 export default {
   handleRate,
   handleAreaUnit,
@@ -297,5 +327,7 @@ export default {
   handleLoadingWeight,
   handleActualWeight,
   handleContractAuxiliaryMaterial,
-  handleProjectWarehouseRecord
+  handleProjectWarehouseRecord,
+  handleContractAuxiliaryMaterialShipmentTracking,
+  handleSearchTime
 }

@@ -53,12 +53,12 @@
                     :min="-9999999999"
                     :max="currentRow.settlementAmount?currentRow.settlementAmount-totalAmount:9999999999"
                     :step="100"
-                    :precision="decimalPrecision.contract"
+                    :precision="DP.YUAN"
                     placeholder="开票额(元)"
                     controls-position="right"
                     @change="moneyChange(scope.row)"
                   />
-                  <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount,decimalPrecision.contract): scope.row.invoiceAmount }}</div>
+                  <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount,DP.YUAN): scope.row.invoiceAmount }}</div>
               </template>
             </el-table-column>
             <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
@@ -94,7 +94,7 @@
           </el-table-column>
           <el-table-column key="noTaxAmount" prop="noTaxAmount" label="不含税金额" align="center" width="70">
             <template v-slot="scope">
-              <span>{{scope.row.noTaxAmount && scope.row.noTaxAmount>0? toThousand(scope.row.noTaxAmount,decimalPrecision.contract): scope.row.noTaxAmount}}</span>
+              <span>{{scope.row.noTaxAmount && scope.row.noTaxAmount>0? toThousand(scope.row.noTaxAmount,DP.YUAN): scope.row.noTaxAmount}}</span>
             </template>
           </el-table-column>
           <el-table-column key="invoiceUnit" prop="invoiceUnit" label="*开票单位" align="center" min-width="120" :show-overflow-tooltip="true">
@@ -156,6 +156,7 @@
 import { ref, inject, defineProps, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 
+import { DP } from '@/settings/config'
 import { regForm } from '@compos/use-crud'
 import { isNotBlank } from '@data-type/index'
 import useMaxHeight from '@compos/use-max-height'
@@ -292,7 +293,7 @@ function moneyChange(row) {
 function taxMoney(row) {
   if (isNotBlank(row.invoiceAmount) && row.taxRate) {
     row.tax = row.invoiceAmount * row.taxRate / 100
-    row.noTaxAmount = (row.invoiceAmount / (1 + row.taxRate / 100)).toFixed(decimalPrecision.value.contract)
+    row.noTaxAmount = (row.invoiceAmount / (1 + row.taxRate / 100)).toFixed(DP.YUAN)
   } else {
     if (row.invoiceType === invoiceTypeEnum.RECEIPT.V) {
       row.noTaxAmount = row.invoiceAmount

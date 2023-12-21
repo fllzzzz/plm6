@@ -57,12 +57,12 @@
                 :min="-9999999999"
                 :max="9999999999"
                 :step="100"
-                :precision="decimalPrecision.contract"
+                :precision="DP.YUAN"
                 placeholder="开票额(元)"
                 controls-position="right"
                 @change="moneyChange(scope.row)"
               />
-              <div v-else>{{ isNotBlank(scope.row.invoiceAmount) ? toThousand(scope.row.invoiceAmount,decimalPrecision.contract): '-' }}</div>
+              <div v-else>{{ isNotBlank(scope.row.invoiceAmount) ? toThousand(scope.row.invoiceAmount,DP.YUAN): '-' }}</div>
           </template>
         </el-table-column>
         <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="大写" align="center" min-width="110" :show-overflow-tooltip="true">
@@ -98,7 +98,7 @@
       </el-table-column>
       <el-table-column key="noTaxAmount" prop="noTaxAmount" label="不含税金额" align="center" width="85" show-overflow-tooltip>
         <template v-slot="scope">
-          <span>{{isNotBlank(scope.row.noTaxAmount) ? toThousand(scope.row.noTaxAmount,decimalPrecision.contract): '-'}}</span>
+          <span>{{isNotBlank(scope.row.noTaxAmount) ? toThousand(scope.row.noTaxAmount,DP.YUAN): '-'}}</span>
         </template>
       </el-table-column>
       <el-table-column key="invoiceUnit" prop="invoiceUnit" label="开票单位" align="center" min-width="120" :show-overflow-tooltip="true">
@@ -209,6 +209,7 @@ import crudApi, { editStatus } from '@/api/contract/collection-and-invoice/invoi
 import { ref, defineEmits, defineProps, watch, provide, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 
+import { DP } from '@/settings/config'
 import checkPermission from '@/utils/system/check-permission'
 import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
@@ -381,7 +382,7 @@ function moneyChange(row) {
 function taxMoney(row) {
   if (isNotBlank(row.invoiceAmount) && row.taxRate) {
     row.tax = row.invoiceAmount * row.taxRate / 100
-    row.noTaxAmount = (row.invoiceAmount / (1 + row.taxRate / 100)).toFixed(decimalPrecision.value.contract)
+    row.noTaxAmount = (row.invoiceAmount / (1 + row.taxRate / 100)).toFixed(DP.YUAN)
   } else {
     if (row.invoiceType === invoiceTypeEnum.RECEIPT.V) {
       row.noTaxAmount = row.invoiceAmount
@@ -488,7 +489,7 @@ async function rowSubmit(row) {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['invoiceAmount', decimalPrecision.value.contract]],
+    props: [['invoiceAmount', DP.YUAN]],
     toThousandFields: ['invoiceAmount']
   })
 }
@@ -512,7 +513,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
         dataIndex: v.dataIndex
       })
     }
-    v.noTaxAmount = v.invoiceType !== invoiceTypeEnum.RECEIPT.V ? (v.invoiceAmount / (1 + v.taxRate / 100)).toFixed(decimalPrecision.value.contract) : v.invoiceAmount
+    v.noTaxAmount = v.invoiceType !== invoiceTypeEnum.RECEIPT.V ? (v.invoiceAmount / (1 + v.taxRate / 100)).toFixed(DP.YUAN) : v.invoiceAmount
   })
 }
 

@@ -22,8 +22,9 @@
     </template>
     <template #content>
       <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight">
-        <el-table-column key="monomer.name" prop="monomer.name" label="单体" min-width="140" show-overflow-tooltip>
+        <el-table-column align="center" key="monomer.name" prop="monomer.name" label="单体" min-width="140" show-overflow-tooltip>
           <template #default="{ row }">
+            <table-cell-tag :show="row.boolAllPartSendDirectly" name="檩条直发" color="#f56c6c" />
             <span v-empty-text>{{ row.monomer?.name }}</span>
           </template>
         </el-table-column>
@@ -137,7 +138,7 @@ async function fetchList() {
     const { content = [], totalElements } = await warehouseRecord({ ...params.value, ...queryPage })
     content.forEach((row) => {
       row.totalPrice = row.unitPrice * row.mete
-      if (row.boolReturn) {
+      if (row.boolReturn && row.totalPrice > 0) {
         row.totalPrice = row.totalPrice * -1
       }
     })

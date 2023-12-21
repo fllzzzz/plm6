@@ -52,6 +52,10 @@ const props = defineProps({
   maxHeight: {
     type: Number,
     default: 400
+  },
+  secondPickerTime: {
+    type: Object,
+    default: () => {}
   }
 })
 
@@ -60,7 +64,9 @@ const permission = inject('permission')
 const params = computed(() => {
   const data = {
     projectId: props.detailRow.projectId,
-    expenseClassEnum: props.detailRow.expenseClassEnum
+    expenseClassEnum: props.detailRow.expenseClassEnum,
+    secondStartDate: props.secondPickerTime.startDate,
+    secondEndDate: props.secondPickerTime.endDate
   }
   // 这三种类型需要bizId
   if (

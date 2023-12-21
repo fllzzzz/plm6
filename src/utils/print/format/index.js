@@ -31,7 +31,8 @@ const materialCostRecord = contract.handleUnitPrice
 const fortuneReportList = contract.handleFortuneReport
 const contractAuxiliaryMaterialPrice = contract.handleContractAuxiliaryMaterial
 const projectWarehouseRecord = contract.handleProjectWarehouseRecord
-
+const contractAuxiliaryMaterialShipmentTracking = contract.handleContractAuxiliaryMaterialShipmentTracking
+const scmSupplierPaymentLedger = contract.handleSearchTime
 const orderPaymentLedger = contract.handleSupplierPaymentRate
 const purchaseLogisticsRecord = scm.handleOrderName
 const productLogisticsRecord = scm.handleOrderName
@@ -108,10 +109,12 @@ export default {
   fortuneReportList,
   contractAuxiliaryMaterialPrice,
   projectWarehouseRecord,
+  contractAuxiliaryMaterialShipmentTracking,
   waterRecord,
   expenseReimburseSummary,
   materialLogisticsRecord,
   productLogisticsPaymentLedger,
+  scmSupplierPaymentLedger,
 
   mesAssembleNestingOrder,
 

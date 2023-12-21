@@ -44,7 +44,7 @@
           <td class="col-1">{{ item.serialNumber }}</td>
           <td class="col-1">{{ props.showMaterial ? item.material : '' }}</td>
           <td class="col-1">{{ item.quantity }}</td>
-          <td class="col-1">{{ props.showWidth ? item.totalWeight : '' }}</td>
+          <td class="col-1">{{ props.showWidth ? item.totalNetWeight : '' }}</td>
         </tr>
       </template>
       <template v-if="packageInfo.productType === packTypeEnum.AUXILIARY_MATERIAL.V">

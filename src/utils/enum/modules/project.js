@@ -36,7 +36,8 @@ constantize(installSetEnum)
 const installProjectTypeEnum = {
   ARTIFACT: { L: '结构制品', SL: '结构', K: 'ARTIFACT', V: 1 << 1, unit: '件', accountUnit: 'kg' },
   ENCLOSURE: { L: '围护制品', SL: '围护', K: 'ENCLOSURE', V: 1 << 2, unit: '张', accountUnit: 'm' },
-  AUXILIARY: { L: '配套件', SL: '配套件', K: 'AUXILIARY', V: 1 << 3, unit: '', accountUnit: '' }
+  AUXILIARY: { L: '配套件', SL: '配套件', K: 'AUXILIARY', V: 1 << 3, unit: '', accountUnit: '' },
+  STRAIGHTENER: { L: '直发件', SL: '直发件', K: 'STRAIGHTENER', V: 17, unit: '', accountUnit: '' }
 }
 constantize(installProjectTypeEnum)
 

@@ -47,6 +47,10 @@ const props = defineProps({
   detailRow: {
     type: Object,
     default: () => {}
+  },
+  secondPickerTime: {
+    type: Object,
+    default: () => {}
   }
 })
 
@@ -61,7 +65,9 @@ const permission = inject('permission')
 const params = computed(() => {
   return {
     projectId: props.detailRow.id,
-    auditStatus: auditTypeEnum.PASS.V
+    auditStatus: auditTypeEnum.PASS.V,
+    secondStartDate: props.secondPickerTime.startDate,
+    secondEndDate: props.secondPickerTime.endDate
   }
 })
 

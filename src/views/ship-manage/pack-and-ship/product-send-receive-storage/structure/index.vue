@@ -23,6 +23,7 @@
         align="left"
       >
         <template #default="{ row }">
+        <!-- <table-cell-tag v-if="row" /> -->
           <span>{{ row.project?.contractNo || '' }}-{{row.project?.shortName || ''}}</span>
         </template>
       </el-table-column>

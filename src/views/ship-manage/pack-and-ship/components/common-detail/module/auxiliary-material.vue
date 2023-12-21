@@ -14,7 +14,7 @@
     <!-- <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" /> -->
     <el-table-column :show-overflow-tooltip="true" prop="name" label="名称">
       <template #default="{row}">
-        <table-cell-tag :show="row.boolReturn" name="退量" color="#f56c6c"/>
+        <table-cell-tag v-if="row.boolReturn" name="退量" color="#f56c6c"/>
         <span>{{ row.name }}</span>
       </template>
     </el-table-column>

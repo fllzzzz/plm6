@@ -21,6 +21,7 @@
         <el-table-column prop="name" key="name" label="名称" align="center" show-overflow-tooltip min-width="80">
           <template #default="{row}">
             <table-cell-tag :show="row?.boolReturn" name="退量" color="#f56c6c"/>
+            <table-cell-tag :show="row?.boolAllPartSendDirectly" name="檩条直发" color="#f56c6c"/>
             <span>{{ row.name }}</span>
           </template>
         </el-table-column>
@@ -74,6 +75,10 @@ const props = defineProps({
   detailRow: {
     type: Object,
     default: () => {}
+  },
+  secondPickerTime: {
+    type: Object,
+    default: () => {}
   }
 })
 
@@ -88,7 +93,9 @@ const permission = inject('permission')
 
 const params = computed(() => {
   return {
-    projectId: props.detailRow.id
+    projectId: props.detailRow.id,
+    secondStartDate: props.secondPickerTime.startDate,
+    secondEndDate: props.secondPickerTime.endDate
   }
 })
 
@@ -124,7 +131,7 @@ async function fetchList() {
   try {
     const { content = [], totalElements } = await shipRecord({ ...params.value, ...queryPage })
     content.forEach((row) => {
-      if (row.boolReturn) {
+      if (row.boolReturn && row.totalPrice > 0) {
         row.totalPrice = row.totalPrice * -1
       }
     })

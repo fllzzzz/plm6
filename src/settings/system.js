@@ -111,7 +111,7 @@ export const showProjectSearch = [
   { component: '/mes/pack-and-ship/ship-audit/index', type: pt.STEEL.V, required: false },
   { component: '/mes/craft-manage/artifact-specification-revise/index', type: pt.STEEL.V, required: true },
   { component: '/mes/production-line-wage-statistics/wage-adjust/index', type: pt.STEEL.V, required: true },
-  { component: '/mes/changed-manage/finished-product-change/index', type: pt.STEEL.V, required: false },
+  { component: '/mes/changed-manage/finished-product-change/index', type: pt.STEEL.V, required: true },
   // 计划管理
   { component: '/plan/technical-data-manage/technical-achievement/model/index', type: allPT, required: true },
   { component: '/plan/technical-data-manage/technical-achievement/drawing/index', type: allPT, required: true },
@@ -146,6 +146,7 @@ export const showProjectSearch = [
   { component: '/contract/contract-ledger/index', type: allPT, required: false },
   { component: '/contract/collection-ledger/index', type: allPT, required: false },
   { component: '/contract/collection-warn/index', type: allPT, required: false },
+  { component: '/contract/fortune-report/index', type: allPT, required: false },
   { component: '/contract/sales-manage/shipment-tracking/index', type: allPT, required: false },
   { component: '/contract/sales-manage/price-manage/index', type: allPT, required: true },
   { component: '/project-manage/progress-manage/project-progress/index', type: allPT, required: true, businessType: businessTypeEnum.INSTALLATION.V },

@@ -49,11 +49,11 @@ export default function useCommonCalc({ cu, form, basicClass, baseUnit }) {
         }
         if (isNotBlank(mete[sourceId])) {
           quantity[sourceId] += Number(v.quantity) || 0
-          mete[sourceId] += v.mete || 0
+          mete[sourceId] += v.boolReturns ? (v.detailMete || 0) : (v.mete || 0)
           length[sourceId] += v.length * Number(v.quantity) || 0
         } else {
           quantity[sourceId] = Number(v.quantity) || 0
-          mete[sourceId] = v.mete || 0
+          mete[sourceId] = v.boolReturns ? (v.detailMete || 0) : (v.mete || 0)
           length[sourceId] = v.length * Number(v.quantity) || 0
         }
       }
