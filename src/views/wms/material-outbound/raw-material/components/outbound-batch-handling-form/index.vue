@@ -141,7 +141,7 @@
                 :max="row.corProjectOperableQuantity"
                 controls-position="right"
               />
-              <span style="flex: none; margin-left: 10px;text-align:left;">{{ row.outboundUnit }}<span style="display:inline-block;width:50px;"><el-tag v-if="(basicClass & materialPurchaseClsEnum.STEEL.V) && (errorList.findIndex(v=>v.id===row.id)>-1 && !(row.batchOutboundQuantity<errorList.find(v=>v.id===row.id)?.quantity))" class="ml-2" type="danger" style="margin-left:2px;">不足</el-tag></span></span>
+              <span style="flex: none; margin-left: 10px;text-align:left;">{{ row.outboundUnit }}<span style="display:inline-block;width:50px;"><el-tag v-if="(basicClass & materialPurchaseClsEnum.STEEL.V || (basicClass & materialPurchaseClsEnum.MATERIAL.V) || (basicClass & materialPurchaseClsEnum.OTHER.V)) && (errorList.findIndex(v=>v.id===row.id)>-1 && !(row.batchOutboundQuantity<errorList.find(v=>v.id===row.id)?.quantity))" class="ml-2" type="danger" style="margin-left:2px;">不足</el-tag></span></span>
             </span>
           </template>
         </el-table-column>
@@ -449,8 +449,7 @@ async function submit() {
       return
     }
     errorList.value = []
-    console.log(data.list)
-    if (props.basicClass & materialPurchaseClsEnum.STEEL.V) {
+    if ((props.basicClass & materialPurchaseClsEnum.STEEL.V || (props.basicClass & materialPurchaseClsEnum.MATERIAL.V) || (props.basicClass & materialPurchaseClsEnum.OTHER.V))) {
       const ids = data.list.map(v => v.id)
       const { content } = await getStock({ ids })
       data.list.map(v => {
@@ -461,7 +460,6 @@ async function submit() {
         }
       })
     }
-    console.log(errorList.value)
     if (errorList.value.length > 0) {
       ElMessage.error('标红部分库存不足')
       return
