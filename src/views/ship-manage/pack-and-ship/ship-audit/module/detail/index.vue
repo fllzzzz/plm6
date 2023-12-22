@@ -294,12 +294,12 @@ const list = computed(() => {
           v.showQuantity = v[props.quantityFelid]
           v.weight = (props.weightType === weightTypeEnum.NET.V ? v.netWeight : v.grossWeight) || 0
           v.totalLength = convertUnits(v.length * v.showQuantity || 0, 'mm', 'm')
-          v.totalMete =
+          v.totalNetWeight =
             contract.value.structureMeasureMode === weightMeasurementModeEnum.OVERWEIGHT.V
-              ? convertUnits(v.totalWeight, 'kg', 't')
+              ? convertUnits(v.totalNetWeight, 'kg', 't')
               : convertUnits(v.weight * v.showQuantity, 'kg', 't')
           v.totalPrice =
-            v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalMete * (v.unitPrice || 0) : v.totalLength * (v.unitPrice || 0)
+            v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalNetWeight * (v.unitPrice || 0) : v.totalLength * (v.unitPrice || 0)
           return v
         })
       )

@@ -24,7 +24,8 @@
       <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight">
         <el-table-column align="center" key="monomer.name" prop="monomer.name" label="单体" min-width="140" show-overflow-tooltip>
           <template #default="{ row }">
-            <table-cell-tag :show="row.boolAllPartSendDirectly" name="檩条直发" color="#f56c6c" />
+            <table-cell-tag v-if="row.boolAllPartSendDirectly" name="檩条直发" color="#f56c6c" />
+            <table-cell-tag v-if="row.boolAllPartSendDirectly === false" name="直发件" />
             <span v-empty-text>{{ row.monomer?.name }}</span>
           </template>
         </el-table-column>

@@ -12,13 +12,14 @@
       :max-height="maxHeight"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column v-if="columns.visible('monomer.name')" key="monomer.name" prop="monomer.name" label="单体" min-width="140" show-overflow-tooltip>
+      <el-table-column v-if="columns.visible('monomer.name')" align="center" key="monomer.name" prop="monomer.name" label="单体" min-width="140" show-overflow-tooltip>
         <template #default="{ row }">
-          <table-cell-tag :show="row.boolAllPartSendDirectly" name="檩条直发" color="#f56c6c" />
+          <table-cell-tag v-if="row.boolPurLineSendDirectly" name="檩条直发" color="#f56c6c" />
+          <table-cell-tag v-if="row.boolPurLineSendDirectly === false" name="直发件" />
           <span v-empty-text>{{ row.monomer?.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('area.name')" prop="area.name" key="area.name" label="区域" min-width="140" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('area.name')" prop="area.name" key="area.name" align="center" label="区域" min-width="140" show-overflow-tooltip />
       <el-table-column v-if="columns.visible('name')" prop="name" key="name" label="名称" align="center" min-width="110" show-overflow-tooltip>
         <template #default="{row}">
           <table-cell-tag :show="row?.boolReturn" name="退量" color="#f56c6c"/>

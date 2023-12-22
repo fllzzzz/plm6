@@ -36,9 +36,9 @@
         {{ toFixed(scope.row.totalLength, DP.MES_ARTIFACT_L__M) }}
       </template>
     </el-table-column>
-    <el-table-column :show-overflow-tooltip="true" prop="totalMete" :label="`总重\n（t）`" align="center">
+    <el-table-column :show-overflow-tooltip="true" prop="totalNetWeight" :label="`总重\n（t）`" align="center">
       <template v-slot="scope">
-        {{ toFixed(scope.row.totalMete, DP.COM_WT__T) }}
+        {{ toFixed(scope.row.totalNetWeight, DP.COM_WT__T) }}
       </template>
     </el-table-column>
     <el-table-column :show-overflow-tooltip="true" prop="unitPrice" :label="`单价\n（元）`" align="center">

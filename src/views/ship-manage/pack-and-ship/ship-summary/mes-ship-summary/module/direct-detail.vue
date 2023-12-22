@@ -164,7 +164,8 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 watch(
   () => props.showType,
   (val) => {
-    if (val) {
+    if (val && val !== 'ASSIGNMENT') {
+      console.log(val)
       fetchDetail()
     }
   },
