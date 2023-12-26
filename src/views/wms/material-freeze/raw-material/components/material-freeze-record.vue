@@ -9,7 +9,7 @@
     </el-table-column>
     <el-table-column key="receipt" :show-overflow-tooltip="true" prop="receipt" label="单据编号" align="center" min-width="120">
       <template #default="{ row }">
-        <receipt-sn-clickable :receipt-types="['PREPARATION', 'OUTBOUND_APPLY', 'TRANSFER', 'REJECTED']" :receipt="row.receipt" />
+        <receipt-sn-clickable :receipt-types="['PREPARATION', 'OUTBOUND_APPLY', 'TRANSFER', 'REJECTED','CONVERT']" :receipt="row.receipt" />
       </template>
     </el-table-column>
     <el-table-column show-overflow-tooltip key="project" prop="project" label="单据项目" min-width="170" />

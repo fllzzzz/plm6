@@ -30,7 +30,7 @@
           <span class="set-title">单段配置</span>
           <common-table
             :data="form.list"
-            :max-height="maxHeight"
+            :max-height="280"
             :cell-class-name="wrongCellMask"
             style="width: 100%; margin-top: 15px"
             show-summary
@@ -133,6 +133,7 @@
               <mark-size
                 :sizeInfo="`${form.singleQuantity || 0}${material.outboundUnit}`"
                 direction="horizontal"
+                :showType="'unshow'"
                 :customStyle="`width:100%;bottom:-30px;left:0px;`"
               />
             </div>
@@ -163,7 +164,7 @@
       <div class="other-info">
         <div style="width: 530px">
           <div style="margin-bottom:10px;"><span class="set-title">单段长度配置</span> <common-button icon="el-icon-plus" style="float:right;" type="success" size="mini" class="icon-button" @click="addLengthRow" /></div>
-          <common-table :data="lengthTable" :max-height="maxHeight" :cell-class-name="lengthWrongCellMask" return-source-data :show-empty-symbol="false">
+          <common-table :data="lengthTable" :max-height="maxHeight-150" :cell-class-name="lengthWrongCellMask" return-source-data :show-empty-symbol="false">
             <el-table-column label="序号" type="index" align="center" width="55" />
             <el-table-column prop="singleQuantity" align="center" :label="`单段长度(${material.outboundUnit})`" min-width="120">
               <template #default="{ row }">
@@ -195,19 +196,6 @@
                 />
               </template>
             </el-table-column>
-            <!-- <el-table-column prop="recipientId" align="center" :label="`领用人`" min-width="135">
-              <template #default="{ row }">
-                <user-dept-cascader
-                  v-model="row.recipientId"
-                  :collapse-tags="false"
-                  clearable
-                  filterable
-                  show-all-levels
-                  placeholder="领用人"
-                  style="width: 100%"
-                />
-              </template>
-            </el-table-column> -->
             <el-table-column label="操作" width="60px" align="center" fixed="right">
               <template #default="{ $index }">
                 <common-button icon="el-icon-delete" type="danger" size="mini" class="icon-button" @click="delLengthRow($index)" />
@@ -265,7 +253,7 @@ const steelCoilOutboundModeEnum = {
 const previewHeight = 260
 
 const minLength = computed(() => {
-  return steelMinLengthConfig.value?.steelPlateShortestSideMinLength ? convertUnits(steelMinLengthConfig.value?.steelPlateShortestSideMinLength, 'mm', 'm') : 0
+  return steelMinLengthConfig.value?.steelPlateShortestSideMinLength ? steelMinLengthConfig.value?.steelPlateShortestSideMinLength + 1 : 0
 })
 
 const props = defineProps({
@@ -283,6 +271,10 @@ const props = defineProps({
   projectWarehouseType: {
     type: [Number, String],
     default: undefined
+  },
+  formData: {
+    type: Object,
+    default: () => {}
   }
 })
 
@@ -300,11 +292,20 @@ useWatchFormValidate(formRef, form, ['quantity'])
 // 当前用户
 const { user } = mapGetters('user')
 // 材料
-const material = computed(() => props.material || {})
+const material = computed(() => {
+  const obj = JSON.parse(JSON.stringify(props.material)) || {}
+  obj.corQuantity = convertUnits(obj.corQuantity, 'm', 'mm')
+  obj.corOperableQuantity = convertUnits(obj.corOperableQuantity, 'm', 'mm')
+  if (obj.projectFrozenForUnitKV?.[form.value.projectId]) {
+    obj.projectFrozenForUnitKV[form.value.projectId] = convertUnits(obj.projectFrozenForUnitKV[form.value.projectId], 'm', 'mm')
+  }
+  obj.outboundUnit = 'mm'
+  obj.outboundUnitPrecision = 0
+  return obj
+})
 const lengthTable = ref([{}])
 const submitList = ref([])
 
-// const isPlateOut = computed(() => { return false })
 const isPlateOut = computed(() => form.value.materialOutboundMode === steelCoilOutboundModeEnum.BY_PLATE.V)
 
 const validateQuantity = (rule, value, callback) => {
@@ -410,52 +411,42 @@ watch(
   material,
   (val) => {
     formInit(val)
-  },
-  { immediate: true }
-)
-
-watch(
-  () => isPlateOut.value,
-  (val) => {
-    if (val) {
-      const _row = rowInit()
-      form.value.list = []
-      form.value.list.push(_row)
-    }
-  },
-  { immediate: true }
-)
-
-watch([() => form.value.singleQuantity, () => form.value.segmentQuantity], () => {
-  if (isPlateOut.value) {
-    form.value.quantity = toPrecision(
-      form.value.singleQuantity && form.value.segmentQuantity ? form.value.singleQuantity * form.value.segmentQuantity : 0,
-      material.value.outboundUnitPrecision
-    )
-  }
-})
-
-watch(
-  lengthTable.value,
-  (val) => {
-    let totalLength = 0
-    if (isNotBlank(val)) {
-      val.forEach(v => {
-        if (v.singleQuantity && v.segmentQuantity) {
-          totalLength += (v.singleQuantity * v.segmentQuantity)
-        }
-      })
-    }
-    form.value.quantity = totalLength
-    calTotalWeight()
+    const _row = rowInit()
+    form.value.list = []
+    form.value.list.push(_row)
   },
   { immediate: true, deep: true }
 )
 
+// watch([() => form.value.singleQuantity, () => form.value.segmentQuantity], () => {
+//   if (isPlateOut.value) {
+//     form.value.quantity = toPrecision(
+//       form.value.singleQuantity && form.value.segmentQuantity ? form.value.singleQuantity * form.value.segmentQuantity : 0,
+//       material.value.outboundUnitPrecision
+//     )
+//   }
+// })
+
+// watch(
+//   lengthTable.value,
+//   (val) => {
+//     let totalLength = 0
+//     if (isNotBlank(val)) {
+//       val.forEach(v => {
+//         if (v.singleQuantity && v.segmentQuantity) {
+//           totalLength += (v.singleQuantity * v.segmentQuantity)
+//         }
+//       })
+//     }
+//     form.value.quantity = totalLength
+//     calTotalWeight()
+//   },
+//   { immediate: true, deep: true }
+// )
+
 async function calTotalWeight() {
   const list = []
   const allArr = []
-  form.value.totalWeight = 0
   if (isNotBlank(form.value.list) && isNotBlank(lengthTable.value)) {
     form.value.list.forEach(v => {
       lengthTable.value.forEach(k => {
@@ -463,7 +454,8 @@ async function calTotalWeight() {
           list.push({
             ...v,
             quantity: (v.quantity || 0),
-            length: k.singleQuantity || 0
+            length: k.singleQuantity || 0,
+            mete: 0
           })
         }
       })
@@ -472,6 +464,7 @@ async function calTotalWeight() {
   for (let i = 0; i < list.length; i++) {
     const row = list[i]
     row.mete = 0
+    row.length = row.length ? convertUnits(row.length, 'mm', 'm') : 0
     if (isNotBlank(row.quantity) && isNotBlank(row.length) && isNotBlank(row.width)) {
       const p = await calcSteelCoilWeight({
         name: row.name,
@@ -486,12 +479,54 @@ async function calTotalWeight() {
       if (p) allArr.push(p)
     }
   }
+  const surplusMaterialListArr = []
+  if (surplusMaterial.value?.width > 0) {
+    for (let i = 0; i < lengthTable.value.length; i++) {
+      for (let k = 0; k < lengthTable.value[i].segmentQuantity; k++) {
+        surplusMaterialListArr.push({
+          basicClass: props.basicClass,
+          name: material.value.classifyFullName,
+          thickness: material.value.thickness,
+          width: surplusMaterial.value.width,
+          length: convertUnits(lengthTable.value[i].singleQuantity, 'mm', 'm'),
+          quantity: 1,
+          boolSurplus: true, // 是否余料
+          boolOutbound: false
+        })
+      }
+    }
+  }
+  const allArr1 = []
+  for (let i = 0; i < surplusMaterialListArr.length; i++) {
+    const row = surplusMaterialListArr[i]
+    row.mete = 0
+    if (isNotBlank(row.quantity) && isNotBlank(row.length) && isNotBlank(row.width)) {
+      const p1 = await calcSteelCoilWeight({
+        name: row.name,
+        length: row.length,
+        width: row.width,
+        thickness: row.thickness,
+        quantity: row.quantity
+      }).then((val) => {
+        row.theoryWeight = val
+        row.mete = row.mete || row.theoryWeight
+      })
+      if (p1) allArr1.push(p1)
+    }
+  }
   await Promise.all(allArr)
+  await Promise.all(allArr1)
+  let totalWeight = 0
   list.forEach(v => {
     v.boolSurplus = false
     v.boolOutbound = true
-    form.value.totalWeight += (v.mete || 0)
+    totalWeight += (v.mete || 0)
   })
+  surplusMaterialListArr.forEach(v => {
+    totalWeight += (v.mete || 0)
+  })
+  console.log(list, surplusMaterialListArr)
+  form.value.totalWeight = totalWeight
   submitList.value = list
 }
 
@@ -510,6 +545,15 @@ function rowInit() {
   return _row
 }
 
+function lengthRowInit() {
+  const _row = reactive({
+    singleQuantity: undefined,
+    segmentQuantity: undefined
+  })
+  lengthWatch(_row)
+  return _row
+}
+
 function rowWatch(row) {
   // watchEffect(() => {
   //   row.overWidth = Boolean(row.width > material.value.width)
@@ -519,6 +563,23 @@ function rowWatch(row) {
   watch([() => row], () => {
     calTotalWeight()
     // calcMete(row)
+  },
+  { immediate: true, deep: true })
+}
+
+function lengthWatch(row) {
+  // 计算单件理论重量
+  watch([() => row], () => {
+    let totalLength = 0
+    if (isNotBlank(lengthTable.value)) {
+      lengthTable.value.forEach(v => {
+        if (v.singleQuantity && v.segmentQuantity) {
+          totalLength += (v.singleQuantity * v.segmentQuantity)
+        }
+      })
+    }
+    form.value.quantity = totalLength
+    calTotalWeight()
   },
   { immediate: true, deep: true })
 }
@@ -573,7 +634,8 @@ function formInit(data) {
 }
 
 function addLengthRow() {
-  lengthTable.value.push({})
+  const _row = lengthRowInit()
+  lengthTable.value.push(_row)
 }
 
 function checkTotalLength(row, key) {
@@ -666,16 +728,18 @@ async function validateSubmit() {
   const surplusMaterialList = []
   if (surplusMaterial.value?.width > 0) {
     for (let i = 0; i < lengthTable.value.length; i++) {
-      surplusMaterialList.push({
-        basicClass: props.basicClass,
-        name: material.value.classifyFullName,
-        thickness: material.value.thickness,
-        width: surplusMaterial.value.width,
-        length: lengthTable.value[i].singleQuantity,
-        quantity: lengthTable.value[i].segmentQuantity,
-        boolSurplus: true, // 是否余料
-        boolOutbound: false
-      })
+      for (let k = 0; k < lengthTable.value[i].segmentQuantity; k++) {
+        surplusMaterialList.push({
+          basicClass: props.basicClass,
+          name: material.value.classifyFullName,
+          thickness: material.value.thickness,
+          width: surplusMaterial.value.width,
+          length: convertUnits(lengthTable.value[i].singleQuantity, 'mm', 'm'),
+          quantity: 1,
+          boolSurplus: true, // 是否余料
+          boolOutbound: false
+        })
+      }
     }
   }
   const allArr = []
@@ -698,7 +762,11 @@ async function validateSubmit() {
   }
   await Promise.all(allArr)
   _list = [..._list, ...surplusMaterialList]
-  return isNotBlank(_list) ? _list : undefined
+  const data = JSON.parse(JSON.stringify(form.value))
+  delete data.list
+  data.list = _list
+  Object.assign(props.formData, data)
+  return true
 }
 
 // 出库办理，表单提交
@@ -788,6 +856,10 @@ function resetForm() {
 // 清空校验
 function clearValidate() {
   formRef.value && formRef.value.clearValidate()
+  formInit(props.material)
+  const _row = rowInit()
+  form.value.list = []
+  form.value.list.push(_row)
 }
 
 function getSummaries(param) {

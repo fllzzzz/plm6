@@ -250,6 +250,13 @@ export default {
           meta: { title: '出库审核', icon: 'project', noCache: true }
         },
         {
+          name: 'WMSSteelCoilConvertConfirm',
+          path: 'steel-coil-convert-confirm',
+          hidden: false,
+          component: '/wms/material-inventory/steel/module/convert-confirm-list/index',
+          meta: { title: '转换单审核', icon: 'project', noCache: true }
+        },
+        {
           name: 'WMSOutboundRecord',
           path: 'material-outbound/raw-material/record',
           hidden: false,

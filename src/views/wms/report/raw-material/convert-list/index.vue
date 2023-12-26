@@ -14,48 +14,55 @@
       :stripe="false"
     >
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
-      <el-table-column key="receiptSerialNumber" prop="receiptSerialNumber" v-if="columns.visible('receiptSerialNumber')" label="转换单号" align="center" min-width="150" show-overflow-tooltip />
-      <el-table-column key="createTime" v-if="columns.visible('createTime')" prop="createTime" label="转换时间" align="center" show-overflow-tooltip />
-      <el-table-column key="outSerialNumber" prop="outSerialNumber" v-if="columns.visible('outSerialNumber')" label="出库单号" align="center" show-overflow-tooltip />
-      <el-table-column key="serialNumber" prop="serialNumber" v-if="columns.visible('serialNumber')" label="物料编号" align="center" show-overflow-tooltip width="100"/>
+      <el-table-column key="project" prop="project" v-if="columns.visible('project')" label="项目名称" align="left" min-width="150" show-overflow-tooltip />
       <el-table-column key="classifyName" prop="classifyName" v-if="columns.visible('classifyName')" label="物料名称" align="center" show-overflow-tooltip width="100" />
-      <el-table-column key="specification" prop="specification" v-if="columns.visible('specification')" label="规格" align="center" show-overflow-tooltip/>
-      <el-table-column key="widthThick" prop="widthThick" v-if="columns.visible('widthThick')" label="厚(mm)*宽(mm)" align="center" show-overflow-tooltip/>
-      <el-table-column key="brand" prop="brand" v-if="columns.visible('brand')" label="品牌" align="center" show-overflow-tooltip/>
-      <el-table-column key="color" prop="color" v-if="columns.visible('color')" label="颜色" align="center" show-overflow-tooltip/>
-      <el-table-column key="heatNoAndBatchNo" prop="heatNoAndBatchNo" v-if="columns.visible('heatNoAndBatchNo')" label="卷号" align="center" show-overflow-tooltip/>
-      <el-table-column key="project" prop="project" v-if="columns.visible('project')" label="项目" align="center" show-overflow-tooltip/>
-      <el-table-column key="warehouse.name" prop="warehouse.name" v-if="columns.visible('warehouse.name')" label="仓库" align="center" show-overflow-tooltip/>
+      <el-table-column key="quantity" prop="quantity" v-if="columns.visible('quantity')" label="转换总长度(m)" align="right" show-overflow-tooltip />
+      <el-table-column key="mete" prop="mete" v-if="columns.visible('mete')" label="转换总重(kg))" align="right" show-overflow-tooltip />
+      <el-table-column key="amountExcludingVat" v-if="columns.visible('amountExcludingVat')" prop="amountExcludingVat" label="转换总金额(不含税)" align="right" show-overflow-tooltip />
+      <el-table-column key="date" prop="date" v-if="columns.visible('date')" label="转化时间" align="center" show-overflow-tooltip min-width="150" />
       <!--编辑与删除-->
       <el-table-column
-        v-if="checkPermission([...permission.detail])"
+        v-if="checkPermission([...permission.list?.get])"
         label="操作"
-        width="190px"
+        width="80px"
         align="center"
       >
         <template v-slot="scope">
-          <common-button icon="el-icon-view" type="primary" size="mini" @click="openDetail(scope.row)" v-permission="permission.detail"/>
+          <common-button icon="el-icon-view" type="primary" size="mini" @click="openDetail(scope.row)" v-permission="permission.list?.get"/>
         </template>
       </el-table-column>
     </common-table>
-    <mDetail :detail-info="currentRow" v-model="detailVisible" />
+    <common-drawer title="条板转换列表" v-model="detailVisible" size="95%">
+      <template #titleAfter>
+        <el-tag>{{currentRow.project?.id?'项目：'+projectNameFormatter(currentRow.project):'公共库'}}{{}}</el-tag>
+      </template>
+      <template #content>
+        <convert-list :showType="'coilPlate'" :currentInfo="currentRow" />
+      </template>
+    </common-drawer>
   <!--分页组件-->
-  <pagination />
+  <!-- <pagination /> -->
   </div>
 </template>
 
 <script setup>
-import crudApi from '@/api/wms/report/raw-material/convert-list'
+import { convertListReport as get } from '@/api/wms/report/raw-material/convert-list'
 import { ref, computed } from 'vue'
 
+import { projectNameFormatter } from '@/utils/project'
+import { parseTime } from '@/utils/date'
 import checkPermission from '@/utils/system/check-permission'
-import { rawMaterialConvertListPM as permission } from '@/page-permission/wms'
+import { reportRawMaterialConvertListPM as permission } from '@/page-permission/wms'
+import { DP } from '@/settings/config'
+import { setSpecInfoToList } from '@/utils/wms/spec'
+import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
+// import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-import mDetail from './module/detail'
+import convertList from './module/list/index'
+// import mDetail from './module/detail'
 
 const optShow = {
   add: false,
@@ -66,7 +73,7 @@ const optShow = {
 
 const dataFormat = computed(() => {
   return [
-    ['createTime', ['parse-time', '{y}-{m}-{d}']],
+    ['amountExcludingVat', ['to-thousand', DP.YUAN]],
     ['project', 'parse-project']
   ]
 })
@@ -77,12 +84,13 @@ const currentRow = ref({})
 
 const { crud, CRUD, columns } = useCRUD(
   {
-    title: '存货转换单',
+    title: '存货转换单报表',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi },
-    hasPagination: true
+    crudApi: { get },
+    hasPagination: false,
+    dataPath: ''
   },
   tableRef
 )
@@ -93,13 +101,15 @@ const { maxHeight } = useMaxHeight({
 })
 
 function openDetail(row) {
-  currentRow.value = row
+  currentRow.value = row?.sourceRow
   detailVisible.value = true
 }
 
-CRUD.HOOK.handleRefresh = (crud, { data }) => {
-  data.content.forEach(v => {
-    v.widthThick = (v.thickness || v.width) ? (v.thickness || '-') + '*' + (v.width || '-') : '-'
+CRUD.HOOK.handleRefresh = async (crud, { data }) => {
+  await setSpecInfoToList(data)
+  data = await numFmtByBasicClass(data, { toSmallest: false, toNum: true })
+  data.forEach(v => {
+    v.date = (v.startTime && v.endTime) ? parseTime(v.startTime, '{y}-{m}-{d}') + '~' + parseTime(v.endTime, '{y}-{m}-{d}') : undefined
   })
 }
 </script>

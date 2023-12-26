@@ -253,19 +253,6 @@
                 />
               </template>
             </el-table-column>
-            <!-- <el-table-column prop="recipientId" align="center" :label="`领用人`" min-width="135">
-              <template #default="{ row }">
-                <user-dept-cascader
-                  v-model="row.recipientId"
-                  :collapse-tags="false"
-                  clearable
-                  filterable
-                  show-all-levels
-                  placeholder="领用人"
-                  style="width: 100%"
-                />
-              </template>
-            </el-table-column> -->
             <el-table-column label="操作" width="60px" align="center" fixed="right">
               <template #default="{ $index }">
                 <common-button icon="el-icon-delete" type="danger" size="mini" class="icon-button" @click="delLengthRow($index)" />
