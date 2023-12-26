@@ -525,7 +525,6 @@ async function calTotalWeight() {
   surplusMaterialListArr.forEach(v => {
     totalWeight += (v.mete || 0)
   })
-  console.log(list, surplusMaterialListArr)
   form.value.totalWeight = totalWeight
   submitList.value = list
 }
