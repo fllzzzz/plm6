@@ -95,17 +95,18 @@
   </div>
 </template>
 <script setup>
-import { ref, provide, watch } from 'vue'
+import { ref, provide, watch, onMounted } from 'vue'
 import {
   get as artifactTrack,
   assembleTrack,
   artifactAssembleList,
-  getLines
+  getLines,
+  getProcess
 } from '@/api/mes/production-manage/dashboard/production-tracking'
 import useCRUD from '@compos/use-crud'
 import { mesProductionTrackingPM as permission } from '@/page-permission/mes'
 import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
-import useProcess from '@compos/store/use-process'
+// import useProcess from '@compos/store/use-process'
 import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header.vue'
@@ -135,9 +136,18 @@ const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
   paginate: true
 })
+const process = ref()
 
-const { loaded, process } = useProcess()
+onMounted(async () => {
+  try {
+    const res = await getProcess()
+    process.value = res || []
+  } catch (error) {
+    console.log(error)
+  }
+})
 
+// const { loaded, process } = useProcess()
 const artifactTypeList = ref([])
 
 provide('artifactTypeList', artifactTypeList)
