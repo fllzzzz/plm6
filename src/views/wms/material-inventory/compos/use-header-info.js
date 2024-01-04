@@ -15,7 +15,7 @@ export default function useIndexInfo({ defaultBasicClass }) {
     basicClass: { value: defaultBasicClass, resetAble: false }
   }
 
-  const { crud, query } = regHeader(defaultQuery)
+  const { CRUD, crud, query } = regHeader(defaultQuery)
 
   // 出库清单组件
   const currentUserOutboundListRef = ref()
@@ -61,6 +61,7 @@ export default function useIndexInfo({ defaultBasicClass }) {
   }
 
   return {
+    CRUD,
     crud,
     query,
     permission,

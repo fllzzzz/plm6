@@ -40,6 +40,18 @@ export function steelCoilOutboundHandling(data) {
 }
 
 /**
+ * 钢卷条板转换
+ * @returns
+ */
+export function steelCoilConvertHandling(data) {
+  return request({
+    module: 'wms',
+    url: 'convert/saveConvert',
+    method: 'put',
+    data
+  })
+}
+/**
  * 辅材出库办理
  * @returns
  */

@@ -383,6 +383,7 @@ function init() {
 
 // 添加材质
 function rowWatch(row) {
+  console.log(row)
   // 计算最大总重
   watch([() => row.quantity], () => {
     if (!row.boolReturns) {
