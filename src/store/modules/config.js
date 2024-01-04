@@ -21,7 +21,7 @@ import { getUnclosedRequisitionsBrief } from '@/api/wms/requisitions'
 import { getPurchasingPurchaseOrderBrief, getPurchaseOrder } from '@/api/supply-chain/purchase-order'
 import { getWarehouseBrief } from '@/api/config/wms/warehouse'
 import { getSteelClassifyConfBrief } from '@/api/config/system-config/steel-classic'
-import { getSteelScrapDefinitionConf } from '@/api/config/wms/scrap-definition'
+import { getSteelScrapDefinitionConfCommon as getSteelScrapDefinitionConf } from '@/api/config/wms/scrap-definition'
 
 import { unitTypeEnum } from '@enum-ms/common'
 import { matClsEnum } from '@enum-ms/classification'

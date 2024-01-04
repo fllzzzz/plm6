@@ -40,6 +40,9 @@
       </template>
       <template #viewLeft>
         <!-- <common-button class="filter-item" type="success" size="mini" icon="el-icon-printer" @click="toBatchPrint">批量打印</common-button> -->
+        <el-badge v-permission="permission.convertListBtn" :value="unAuditNum" :hidden="unAuditNum <= 0" style="z-index: 2">
+          <common-button class="filter-item" type="warning" size="mini" @click="convertClick">条板转换清单</common-button>
+        </el-badge>
         <el-badge v-permission="permission.labelPrint" :value="notPrintedMaterialQuantity" :hidden="notPrintedMaterialQuantity <= 0" style="z-index: 1">
           <common-button class="filter-item" type="primary" size="mini" icon="el-icon-printer" @click="toPrintNotPrintedLabel">
             标签打印
@@ -69,10 +72,16 @@
         <material-label-print-view @printed-success="notPrintedMaterialRefresh" />
       </template>
     </common-drawer>
+    <common-drawer title="条板转换列表" v-model="convertConfirmVisible" size="95%">
+      <template #content>
+        <convert-confirm-list @success="fetchAuditNum();crud.toQuery()" :showType="'coilPlate'" :visible="convertConfirmVisible"/>
+      </template>
+    </common-drawer>
   </div>
 </template>
 
 <script setup>
+import { auditNum } from '@/api/wms/report/raw-material/convert-list'
 import { getSteelPlateInventory, getSectionSteelInventory, getSteelCoilInventory } from '@/api/wms/material-inventory'
 import { computed, defineExpose, onMounted, ref, defineProps, defineEmits } from 'vue'
 import { steelClsEnum } from '@/utils/enum/modules/classification'
@@ -89,8 +98,10 @@ import OutboundBatchHandlingForm from '@/views/wms/material-outbound/raw-materia
 import TransferBatchHandlingForm from '@/views/wms/material-transfer/raw-material/components/transfer-batch-handling-form/index.vue'
 import materialLabelPrintView from '@/views/wms/material-label-print/index.vue'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
+import convertConfirmList from './convert-confirm-list/index.vue'
 
 const {
+  CRUD,
   crud,
   query,
   permission,
@@ -107,6 +118,8 @@ const {
 } = useHeaderInfo({ defaultBasicClass: steelClsEnum.STEEL_PLATE.V })
 
 const materialPrintViewVisible = ref(false)
+const convertConfirmVisible = ref(false)
+const unAuditNum = ref(0)
 const { notPrintedMaterialNumber, refresh: notPrintedMaterialRefresh } = useGetNotPrintedMaterial()
 
 const props = defineProps({
@@ -196,7 +209,32 @@ function toPrintNotPrintedLabel() {
   materialPrintViewVisible.value = true
 }
 
+function convertClick() {
+  convertConfirmVisible.value = true
+}
+
+CRUD.HOOK.afterRefresh = async (crud) => {
+  if (crud.query.basicClass === steelClsEnum.STEEL_COIL.V) {
+    fetchAuditNum()
+  }
+}
+
+async function fetchAuditNum() {
+  unAuditNum.value = 0
+  try {
+    unAuditNum.value = await auditNum() || 0
+  } catch (error) {
+    console.log('未审核数量', error)
+  }
+}
+
+function headerRefreshNum() {
+  fetchAuditNum()
+  updateListNumber()
+}
+
 defineExpose({
-  updateListNumber
+  updateListNumber,
+  headerRefreshNum
 })
 </script>

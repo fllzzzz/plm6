@@ -1,34 +1,18 @@
 <template>
   <div class="head-container">
-    <div v-show="crud.searchToggle">
-      <el-date-picker
-        v-model="query.date"
-        type="daterange"
-        range-separator=":"
+    <crudOperation>
+      <template #optLeft>
+        <common-radio-button
+        v-model="query.projectWarehouseType"
+        :options="projectWarehouseTypeEnum.ENUM"
+        show-option-all
+        type="enum"
         size="small"
-        class="filter-item date-item"
-        start-placeholder="开始时间"
-        end-placeholder="结束时间"
-        style="width: 240px"
-        @change="handleDateChange"
-      />
-      <el-input
-        v-model.trim="query.serialNumber"
-        placeholder="转换单号"
         class="filter-item"
-        style="width: 200px"
-        size="small"
-        clearable
-      />
-      <el-input
-        v-model.trim="query.outSerialNumber"
-        placeholder="出库单号"
-        class="filter-item"
-        style="width: 200px"
-        size="small"
-        clearable
+        @change="handleTypeChange"
       />
       <project-cascader
+        v-if="query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V"
         v-model="query.projectId"
         placeholder="所属项目"
         clearable
@@ -36,56 +20,28 @@
         class="filter-item"
         style="width: 300px"
       />
-      <el-input
-        v-model.trim="query.specification"
-        placeholder="规格"
-        class="filter-item"
-        style="width: 200px"
-        size="small"
-        clearable
-      />
-      <el-input
-        v-model.trim="query.brand"
-        placeholder="品牌"
-        class="filter-item"
-        style="width: 200px"
-        size="small"
-        clearable
-      />
-      <rrOperation />
-    </div>
-    <crudOperation />
+      </template>
+    </crudOperation>
   </div>
 </template>
 
 <script setup>
-import moment from 'moment'
+import { projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
+
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
-import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {
-  date: [],
-  startDate: undefined,
-  endDate: undefined,
-  projectId: undefined,
-  serialNumber: undefined,
-  outSerialNumber: undefined,
-  specification: undefined,
-  brand: undefined
+  projectWarehouseType: undefined,
+  projectId: undefined
 }
 
 const { crud, query } = regHeader(defaultQuery)
-// 时间变动
-function handleDateChange() {
-  if (query.date && query.date.length > 1) {
-    query.startDate = moment(query.date[0]).valueOf()
-    query.endDate = moment(query.date[1]).valueOf()
-  } else {
-    query.startDate = undefined
-    query.endDate = undefined
+
+function handleTypeChange(val) {
+  if (val === projectWarehouseTypeEnum.PUBLIC.V) {
+    query.projectId = undefined
   }
   crud.toQuery()
 }
-
 </script>

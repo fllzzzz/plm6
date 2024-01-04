@@ -32,6 +32,7 @@
         :max-height="maxHeight"
         show-summary
         :summary-method="getSummaries"
+        default-expand-all
         :expand-row-keys="expandRowKeys"
         row-key="id"
         highlight-current-row
@@ -45,7 +46,9 @@
                 <!-- 次要信息 -->
                 <material-secondary-info-columns :basic-class="row.basicClass" />
                 <!-- 单位及其数量 -->
-                <material-unit-quantity-columns :basic-class="row.basicClass" />
+                <el-table-column prop="singleQuantity" align="center" width="110px" :label="`数量 (${baseUnit[row.basicClass]?.measure?.unit})`" />
+                <el-table-column key="singleReturnMete" prop="singleReturnMete" align="center" :label="`总重 (${baseUnit[row.basicClass]?.weight?.unit})`" width="120px" />
+                <!-- <material-unit-quantity-columns :basic-class="row.basicClass" /> -->
                 <!-- 仓库信息 -->
                 <warehouse-info-columns />
               </common-table>
@@ -132,7 +135,11 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
     detail.list.forEach(async (v) => {
       if (v.boolReturns && isNotBlank(v.list)) {
         await setSpecInfoToList(v.list)
-        const ps = await numFmtByBasicClass(v.list, { toNum: true })
+        const ps = await numFmtByBasicClass(v.list, { toNum: true },
+          {
+            mete: ['mete', 'returnableMete', 'singleMete', 'singleReturnableMete', 'singleReturnMete']
+          }
+        )
         // source 原出库信息转换
         const childSourceList = v.list.map((row) => row.source)
         await setSpecInfoToList(childSourceList)
@@ -140,7 +147,7 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
           childSourceList,
           { toNum: true },
           {
-            mete: ['mete', 'returnableMete', 'singleMete', 'singleReturnableMete']
+            mete: ['mete', 'returnableMete', 'singleMete', 'singleReturnableMete', 'singleReturnMete']
           }
         )
         allArr.push(ps)
@@ -172,11 +179,11 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
         v.list.forEach(k => {
           k.pid = v.id
           k.uid = k.id
-          if (k.mete) {
-            detailMete += k.mete
+          if (k.singleReturnMete) {
+            detailMete += k.singleReturnMete
           }
         })
-        v.detailMete = toPrecision(detailMete, baseUnit.value[detail.basicClass].weight.precision)
+        v.detailMete = toPrecision(detailMete, baseUnit.value[detail.basicClass].weight.precision) * (v.quantity || 0)
         v.actualMete = v.detailMete
       }
     })

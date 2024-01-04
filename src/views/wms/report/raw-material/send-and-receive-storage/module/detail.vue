@@ -81,7 +81,7 @@
       <el-table-column key="receipt" prop="receipt" show-overflow-tooltip label="单据编号" align="center" min-width="120">
         <template #default="{ row: { sourceRow: row } }">
           <receipt-sn-clickable
-            :receipt-types="['INBOUND', 'OUTBOUND', 'TRANSFER', 'RETURN', 'REJECTED', 'SUPPLEMENT']"
+            :receipt-types="['INBOUND', 'OUTBOUND', 'TRANSFER', 'RETURN', 'REJECTED', 'SUPPLEMENT','CONVERT']"
             :receipt="row?.receipt"
           />
         </template>
