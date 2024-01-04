@@ -298,7 +298,10 @@ const rules = {
   orderSourceType: [{ required: true, message: '请选择订单来源', trigger: 'change' }],
   signAmount: [{ required: true, validator: validateMoney, trigger: 'blur' }],
   address: [{ max: 220, message: '长度不超过 220 个字符', trigger: 'blur' }],
-  signingAddress: [{ max: 220, message: '长度不超过 220 个字符', trigger: 'blur' }]
+  signingAddress: [{ max: 220, message: '长度不超过 220 个字符', trigger: 'blur' }],
+  projectManagerId: [{ required: true, message: '请选择项目经理', trigger: 'change' }], // 项目经理
+  signerId: [{ required: true, message: '请选择销售负责人', trigger: 'change' }], // 销售负责人
+  relationDeptId: [{ required: true, message: '请选择所属部门', trigger: 'change' }] // 所属部门
 }
 
 const props = defineProps({

@@ -27,6 +27,11 @@
         <span>{{ scope.row.relationDept?.name || '-' }}</span>
       </template>
     </el-table-column>
+    <el-table-column v-if="columns.visible('customerUnit')" key="customerUnit" prop="customerUnit" :show-overflow-tooltip="true" label="客户名称" align="left">
+      <template v-slot="scope">
+        <span>{{ scope.row.customerUnit || '-' }}</span>
+      </template>
+    </el-table-column>
     <el-table-column v-if="columns.visible('project')" key="project.serialNumber" prop="project" :show-overflow-tooltip="true" label="所属项目" min-width="150">
       <template v-slot="scope">
         <span>{{ projectNameFormatter(scope.row.project) }}</span>

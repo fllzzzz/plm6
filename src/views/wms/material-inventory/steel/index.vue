@@ -50,8 +50,8 @@
       <el-table-column label="操作" width="220px" align="left" fixed="right">
         <template #default="{ row: { sourceRow: row } }">
           <!-- 条板办理 -->
-          <el-tooltip content="条板转换" placement="top" v-if="checkPermission(permission.convert) && row.classifyFullName==='卷板' && basicClass===rawMatClsEnum.STEEL_COIL.V">
-            <common-button @click="handlePlate(row)" type="info" size="mini" v-if="row.classifyFullName.indexOf('卷板')>-1 && basicClass===rawMatClsEnum.STEEL_COIL.V">
+          <el-tooltip content="条板转换" placement="top" v-if="checkPermission(permission.convert) && basicClass===rawMatClsEnum.STEEL_COIL.V">
+            <common-button @click="handlePlate(row)" type="info" size="mini" :disabled="!(row.classifyFullName.indexOf('卷板')>-1 && basicClass===rawMatClsEnum.STEEL_COIL.V)">
               <svg-icon icon-class="switch" />
             </common-button>
           </el-tooltip>
