@@ -57,10 +57,18 @@
             label="使用量"
           />
           <el-table-column
-            v-if="columns.visible('totalAmount')"
+            v-if="columns.visible('avgUnitPrice')"
             align="center"
-            key="totalAmount"
-            prop="totalAmount"
+            key="avgUnitPrice"
+            prop="avgUnitPrice"
+            :show-overflow-tooltip="true"
+            label="结存量"
+          />
+          <el-table-column
+            v-if="columns.visible('stockMete')"
+            align="center"
+            key="stockMete"
+            prop="stockMete"
             :show-overflow-tooltip="true"
             label="总额"
           />
