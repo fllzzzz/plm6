@@ -71,10 +71,10 @@
                     />
                   </template>
                 </el-table-column>
-                <el-table-column prop="quantity" align="center" width="110px" :label="`数量 (${baseUnit.measure.unit})`">
+                <el-table-column prop="singleQuantity" align="center" width="110px" :label="`数量 (${baseUnit.measure.unit})`">
                   <template #default="{ row: { sourceRow: row } }">
                     <common-input-number
-                      v-model="row.quantity"
+                      v-model="row.singleQuantity"
                       :min="1"
                       :max="9999999"
                       controls-position="right"
@@ -86,10 +86,10 @@
                     />
                   </template>
                 </el-table-column>
-                <el-table-column key="mete" prop="mete" align="center" :label="`总重 (${baseUnit.weight.unit})`" width="120px">
+                <el-table-column key="singleReturnMete" prop="singleReturnMete" align="center" :label="`总重 (${baseUnit.weight.unit})`" width="120px">
                   <template #default="{ row: { sourceRow: row } }">
                     <common-input-number
-                      v-model="row.mete"
+                      v-model="row.singleReturnMete"
                       :min="0"
                       :max="9999999"
                       controls-position="right"
@@ -183,7 +183,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column key="detailMete" prop="detailMete" align="center" :label="`余料(${baseUnit.weight.unit})`" width="120px">
+        <el-table-column key="detailMete" prop="detailMete" align="center" :label="`余料总重(${baseUnit.weight.unit})`" width="120px">
            <template #default="{ row: { sourceRow: row } }">
             <span>{{ row.boolReturns?row.detailMete || '-':'-'}}</span>
           </template>
@@ -230,6 +230,7 @@ import { isNotBlank, toPrecision } from '@/utils/data-type'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 import { createUniqueString } from '@/utils/data-type/string'
 import { ElMessage } from 'element-plus'
+// import { tableSummary } from '@/utils/el-extra'
 
 import useMaxHeight from '@compos/use-max-height'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
@@ -398,6 +399,9 @@ function rowWatch(row) {
   // 计算总重
   watch([() => row.singleMete, () => row.quantity], () => {
     calcTotalWeight(row)
+    if (row.boolReturns) {
+      calcTotalMete(row)
+    }
     headerRef.value && headerRef.value.calcAllWeight()
   },
   { immediate: true })
@@ -412,23 +416,25 @@ function rowWatch(row) {
   const filterVal = form.list.filter(v => v.boolReturns) || []
   const filterArr = filterVal.map(v => v.uid) || []
   expandRowKeys.value = filterArr
+  if (row.boolReturns && row.list?.length > 0) {
+    row.list.map(v => {
+      childrenWatch(v)
+    })
+  }
 }
 function childrenWatch(row) {
   // 计算理论及单重
   watch([() => row.length, () => row.width, baseUnit], () => {
     calcTheoryWeight(row)
-  },
-  { immediate: true })
+  })
   // 计算总重
-  watch([() => row.singleMete, () => row.quantity], () => {
-    calcTotalWeight(row)
-  },
-  { immediate: true })
+  watch([() => row.singleMete, () => row.singleQuantity], () => {
+    calcChildrenTotalWeight(row)
+  })
   // 计算表格总重
-  watch([() => row.mete], () => {
+  watch([() => row.singleReturnMete], () => {
     calcTableTotalWeight(row)
-  },
-  { immediate: true })
+  })
 }
 
 // 设置行默认值
@@ -454,8 +460,12 @@ function addChildren(row) {
   const pushVal = reactive({
     ...val,
     pid: val.uid,
-    quantity: 1,
-    mete: val.singleMete,
+    singleQuantity: undefined,
+    singleReturnMete: undefined,
+    quantity: undefined,
+    mete: undefined,
+    width: undefined,
+    length: undefined,
     uid: createUniqueString()
   })
   row.list.push(pushVal)
@@ -465,7 +475,7 @@ function addChildren(row) {
 function delChildRow(row, index) {
   const findVal = form.list.find(v => v.uid === row.pid) || {}
   if (isNotBlank(findVal.list)) {
-    findVal.detailMete = toPrecision(findVal.detailMete - row.mete, baseUnit.value.weight.precision)
+    findVal.detailMete = toPrecision(findVal.detailMete - (row.mete || 0), baseUnit.value.weight.precision)
     findVal.list.splice(index, 1)
   }
 }
@@ -478,17 +488,35 @@ function checkLength(row) {
 
 // 计算单件理论重量
 async function calcTheoryWeight(row) {
-  row.theoryWeight = await calcSteelPlateWeight({
-    name: row.source.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
-    length: row.length,
-    width: row.width,
-    thickness: row.source.thickness
-  })
-  if (row.theoryWeight) {
+  if (row.length && row.width && row.source?.classifyFullName && row.source?.thickness) {
+    row.theoryWeight = await calcSteelPlateWeight({
+      name: row.source.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
+      length: row.length,
+      width: row.width,
+      thickness: row.source.thickness
+    })
+    if (row.theoryWeight) {
     // 将小数精度提高一位计算，计算总重与实际总重出现误差
-    row.singleMete = toPrecision((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete, 5)
+      row.singleMete = toPrecision((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete, 5)
+    } else {
+      row.singleMete = undefined
+    }
+  }
+}
+
+// 计算余料总重
+function calcTotalMete(row) {
+  const findVal = form.list.find(v => v.uid === row.uid) || {}
+  if (isNotBlank(findVal.list)) {
+    let detailMete = 0
+    findVal.list.forEach(v => {
+      if (v.singleReturnMete) {
+        detailMete += v.singleReturnMete
+      }
+    })
+    findVal.detailMete = detailMete ? toPrecision(detailMete, baseUnit.value.weight.precision) * (findVal.quantity || 0) : 0
   } else {
-    row.singleMete = undefined
+    findVal.detailMete = 0
   }
 }
 
@@ -497,11 +525,27 @@ function calcTableTotalWeight(row) {
   if (isNotBlank(findVal.list)) {
     let detailMete = 0
     findVal.list.forEach(v => {
-      if (v.mete) {
-        detailMete += v.mete
+      if (v.singleReturnMete) {
+        detailMete += v.singleReturnMete
       }
     })
-    findVal.detailMete = toPrecision(detailMete, baseUnit.value.weight.precision)
+    findVal.detailMete = detailMete ? toPrecision(detailMete, baseUnit.value.weight.precision) * (findVal.quantity || 0) : 0
+  }
+}
+
+// 计算余料总重
+function calcChildrenTotalWeight(row) {
+  if (isNotBlank(row.singleMete) && row.singleQuantity) {
+    // row.mete = toPrecision(
+    //   row.maxMete * (row.singleMete / row.source.singleMete) * (row.quantity / row.maxQuantity),
+    //   baseUnit.value.weight.precision
+    // )
+    row.singleReturnMete = toPrecision(row.singleMete * row.singleQuantity, baseUnit.value.weight.precision)
+    if (row.singleReturnMete > row.maxMete && row.singleReturnMete > row.singleMete) {
+      row.singleReturnMete = toPrecision(Math.min(row.maxMete, row.singleMete), baseUnit.value.weight.precision)
+    }
+  } else {
+    row.singleReturnMete = undefined
   }
 }
 
@@ -565,7 +609,7 @@ function childrenValidate() {
     if (v.boolReturns) {
       if (isNotBlank(v.list)) {
         v.list.forEach(k => {
-          if (!k.length || !k.width || !k.quantity || !k.mete) {
+          if (!k.length || !k.width || !k.singleQuantity || !k.singleMete || !k.warehouseId) {
             if (!key.includes(k.pid)) {
               key.push(k.pid)
             }
@@ -593,7 +637,7 @@ function meteOver() {
   errorKey.value = []
   form.list.forEach(v => {
     if (v.boolReturns) {
-      if (v.detailMete > v.singleMete || v.detailMete > v.mete) {
+      if (v.detailMete > v.mete) {
         if (!key.includes(v.uid)) {
           key.push(v.uid)
         }
@@ -603,7 +647,7 @@ function meteOver() {
   if (isNotBlank(key)) {
     errorKey.value = key
     expandRowKeys.value = key
-    ElMessage.error('表格展开项余料总重量不能超过钢板单量，请修正')
+    ElMessage.error('表格展开项余料总重量不能超过钢板总量，请修正')
     return false
   } else {
     return true
@@ -619,6 +663,13 @@ function formSubmit() {
     cu.submit()
   }
 }
+
+// function getSummaries(param) {
+//   return tableSummary(param, {
+//     props: ['singleReturnMete'],
+//     toThousandFields: ['singleReturnMete']
+//   })
+// }
 </script>
 
 <style lang="scss" scoped>

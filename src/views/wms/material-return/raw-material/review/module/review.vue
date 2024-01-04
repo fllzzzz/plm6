@@ -40,6 +40,7 @@
           :max-height="maxHeight"
           show-summary
           :summary-method="getSummaries"
+          default-expand-all
           :expand-row-keys="expandRowKeys"
           row-key="id"
           highlight-current-row
@@ -53,7 +54,9 @@
                   <!-- 次要信息 -->
                   <material-secondary-info-columns :basic-class="row.basicClass" />
                   <!-- 单位及其数量 -->
-                  <material-unit-quantity-columns :basic-class="row.basicClass" />
+                <el-table-column prop="singleQuantity" align="center" width="110px" :label="`数量 (${baseUnit[form.basicClass].measure.unit})`" />
+                <el-table-column key="singleReturnMete" prop="singleReturnMete" align="center" :label="`总重 (${baseUnit[form.basicClass].weight.unit})`" width="120px" />
+                  <!-- <material-unit-quantity-columns :basic-class="row.basicClass" /> -->
                   <!-- 仓库信息 -->
                   <warehouse-info-columns />
                 </common-table>
@@ -242,7 +245,11 @@ async function detailFormat(form) {
     form.list.forEach(async (v) => {
       if (v.boolReturns && isNotBlank(v.list)) {
         await setSpecInfoToList(v.list)
-        const ps = await numFmtByBasicClass(v.list, { toNum: true })
+        const ps = await numFmtByBasicClass(v.list, { toNum: true },
+          {
+            mete: ['mete', 'returnableMete', 'singleMete', 'singleReturnableMete', 'singleReturnMete']
+          }
+        )
         // source 原出库信息转换
         const childSourceList = v.list.map((row) => row.source)
         await setSpecInfoToList(childSourceList)
@@ -250,7 +257,7 @@ async function detailFormat(form) {
           childSourceList,
           { toNum: true },
           {
-            mete: ['mete', 'returnableMete', 'singleMete', 'singleReturnableMete']
+            mete: ['mete', 'returnableMete', 'singleMete', 'singleReturnableMete', 'singleReturnMete']
           }
         )
         allArr.push(ps)
@@ -282,11 +289,11 @@ async function detailFormat(form) {
         v.list.forEach(k => {
           k.pid = v.id
           k.uid = k.id
-          if (k.mete) {
-            detailMete += k.mete
+          if (k.singleReturnMete) {
+            detailMete += k.singleReturnMete
           }
         })
-        v.detailMete = toPrecision(detailMete, baseUnit.value[form.basicClass].weight.precision)
+        v.detailMete = toPrecision(detailMete, baseUnit.value[form.basicClass].weight.precision) * (v.quantity || 0)
         v.actualMete = v.detailMete
       }
     })
@@ -307,7 +314,7 @@ function getSummaries(param) {
   // 获取单位精度
   const dp =
     form.value.basicClass && baseUnit.value && baseUnit.value[form.value.basicClass]
-      ? baseUnit.value[form.value.basicClass].measure.precision
+      ? baseUnit.value[form.value.basicClass]?.measure.precision
       : 0
   return tableSummary(param, { props: [['quantity', dp], 'actualMete'] })
 }

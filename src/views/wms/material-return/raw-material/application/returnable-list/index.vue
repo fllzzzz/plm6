@@ -285,6 +285,24 @@ function handleAddReturn(row, val) {
   })
   if (props.basicClass & rawMatClsEnum.STEEL_PLATE.V) {
     newData.quantity = 1
+    if (val) {
+      const pushValue = JSON.parse(JSON.stringify(newData))
+      delete pushValue.list
+      const pushVal = ({
+        ...pushValue,
+        pid: pushValue.uid,
+        singleQuantity: undefined,
+        singleReturnMete: undefined,
+        quantity: undefined,
+        mete: undefined,
+        width: undefined,
+        length: undefined,
+        uid: createUniqueString()
+      })
+      newData.list.push({
+        ...pushVal
+      })
+    }
   }
   if (selectList.length > 0 && !val) {
     newData.factoryId = -1 // 工厂 同上
