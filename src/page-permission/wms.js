@@ -28,7 +28,9 @@ export const commonPM = {
   // 调拨解冻
   rawMatTransferUnFreeze: ['wms_rawMat_freeze_list:unfreeze_transfer'],
   // 退货解冻
-  rawMatRejectUnFreeze: ['wms_rawMat_freeze_list:unfreeze_reject']
+  rawMatRejectUnFreeze: ['wms_rawMat_freeze_list:unfreeze_reject'],
+  // 转换单详情
+  convertListDetail: ['wms_rawMat_convertList:detail']
 }
 
 // --------------------------- 公共权限 end --------------------------------
@@ -121,9 +123,10 @@ export const steelMaterialWarehousePM = {
   outboundRecord: rawMaterialOutboundRecordPM.get, // 出库记录
   freezeRecord: rawMaterialFreezeListPM.get, // 冻结记录
   convert: ['wms_matWarehouse_steel:convert'], // 钢卷条板转换
+  convertListBtn: ['wms_matWarehouse_steel:convertListBtn'], // 条板转换清单按钮
   list: {
-    get: ['wms_rawMat_convertList:get'], // 条板转换清单,
-    detail: ['wms_rawMat_convertList:detail'], // 详情
+    get: ['wms_rawMat_convertList:get'], // 条板转换清单列表,
+    detail: commonPM.convertListDetail, // 详情
     audit: ['wms_rawMat_convertList:audit'] // 审核
   }
 }
@@ -167,7 +170,7 @@ export const rawMaterialOutboundReviewPM = {
 // 钢材/存货转换单
 export const rawMaterialConvertListPM = {
   get: ['wms_rawMat_convertList:get'], // 查看,
-  detail: ['wms_rawMat_convertList:detail'], // 详情
+  detail: commonPM.convertListDetail, // 详情
   audit: ['wms_rawMat_convertList:audit'] // 审核
 }
 
@@ -395,8 +398,8 @@ export const reportRawMaterialHighTechRDFeePM = {
 export const reportRawMaterialConvertListPM = {
   get: ['wms_report_convertList:get'], // 列表
   list: {
-    get: ['wms_rawMat_convertList:get'], // 查看,
-    detail: ['wms_rawMat_convertList:detail'] // 详情
+    get: ['wms_rawMat_convertList:list'], // 查看,
+    detail: commonPM.convertListDetail // 详情
   }
 }
 
@@ -446,7 +449,7 @@ export const receiptDetailCPM = {
   returnReceiptDetail: commonPM.rawMatReturnReceiptDetail, // 退库详情
   supplementReceiptDetail: commonPM.rawMatSupplementReceiptDetail, // 调整单详情
   rejectReceiptDetail: commonPM.rawMatRejectReceiptDetail, // 退货单详情
-  convertListDetail: rawMaterialConvertListPM.detail // 转换单详情
+  convertListDetail: commonPM.detail // 转换单详情
 }
 
 // 组件·高新研发费设置（目前以组件形式展示，后期可能为页面）

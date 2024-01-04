@@ -14,7 +14,13 @@
       :stripe="false"
     >
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
-      <el-table-column key="receiptSerialNumber" prop="receiptSerialNumber" v-if="columns.visible('receiptSerialNumber')" label="转换单号" align="center" min-width="150" show-overflow-tooltip />
+      <el-table-column key="receiptSerialNumber" prop="receiptSerialNumber" v-if="columns.visible('receiptSerialNumber')" label="转换单号" align="center" min-width="150" show-overflow-tooltip>
+        <template #default="{ row}">
+            <!-- 是否甲供材料 -->
+            <table-cell-tag :show="!!row.boolPartyA" name="甲供" type="partyA" />
+            <span>{{ row.receiptSerialNumber }}</span>
+          </template>
+      </el-table-column>
       <el-table-column key="outSerialNumber" prop="outSerialNumber" v-if="columns.visible('outSerialNumber') && showType !== 'coilPlate'" label="出库单号" align="center" show-overflow-tooltip />
       <el-table-column key="serialNumber" prop="serialNumber" v-if="columns.visible('serialNumber')" label="物料编号" align="center" show-overflow-tooltip width="100"/>
       <el-table-column key="classifyName" prop="classifyName" v-if="columns.visible('classifyName')" label="物料名称" align="center" show-overflow-tooltip width="100" />

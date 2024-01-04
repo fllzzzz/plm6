@@ -12,6 +12,7 @@
   >
     <template #titleAfter>
       <el-tag type="success">条板转换单：{{detail.receiptSerialNumber}}</el-tag>
+      <el-tag type="danger" v-if="detail.boolPartyA">甲供</el-tag>
     </template>
     <template #titleRight>
       <!-- 审核按钮 -->
@@ -75,10 +76,10 @@
         <el-table-column key="specification" prop="specification" label="规格" align="center" show-overflow-tooltip />
         <el-table-column key="quantity" prop="quantity" label="数量（张）" align="center" show-overflow-tooltip />
         <el-table-column key="mete" prop="mete" label="重量（kg）" align="center" show-overflow-tooltip />
-        <el-table-column key="project" prop="project" label="所属项目" align="center" min-width="120" show-overflow-tooltip />
+        <el-table-column key="project" prop="project" label="所属项目" align="center" min-width="150" show-overflow-tooltip />
         <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" show-overflow-tooltip />
         <el-table-column key="areaName" prop="areaName" label="区域" align="center" show-overflow-tooltip />
-        <el-table-column key="warehouse.name" prop="warehouse.name" label="车间" align="center" show-overflow-tooltip />
+        <el-table-column key="workshopName" prop="workshopName" label="车间" align="center" show-overflow-tooltip />
         <el-table-column key="warehouse.name" prop="warehouse.name" label="仓库" align="center" show-overflow-tooltip />
         <el-table-column key="recipientName" prop="recipientName" label="领用人" align="center" show-overflow-tooltip />
         <el-table-column key="outboundTime" prop="outboundTime" label="出库时间" align="center" show-overflow-tooltip width="150" />

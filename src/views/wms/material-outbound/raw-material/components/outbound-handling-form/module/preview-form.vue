@@ -8,7 +8,7 @@
     label-width="100px"
   >
       <el-form-item prop="boolOutbound" label="是否出库" style="margin-top: 10px">
-        <el-checkbox v-model="form.boolOutbound" size="large" />
+        <el-checkbox v-model="form.boolOutbound" size="large" @change="boolOutboundChange"/>
       </el-form-item>
       <el-form-item label="出库目的地" prop="outboundAddress" v-if="form.boolOutbound">
         <common-radio v-model="form.outboundAddress" :options="outboundDestinationTypeEnum.ENUM" type="enum" size="small" />
@@ -26,6 +26,7 @@
         <common-select
           v-model="form.projectId"
           :options="projectOptions"
+          :disabled-val="form.boolOutbound?['common']:[]"
           :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
           clearable
           type="other"
@@ -35,7 +36,7 @@
           :disabled="!showProjectSelect"
         >
           <template #view="{ data }">
-            <span :style="`color:${data.id==='common'?'#e6a23c':''}`">{{data.name}}</span>
+            <span :style="`color:${(!form.boolOutbound && data.id==='common')?'#e6a23c':''}`">{{data.name}}</span>
           </template>
       </common-select>
       </el-form-item>
@@ -72,7 +73,7 @@
         <warehouse-select
           v-model="form.warehouseId"
           :factory-id="form.factoryId"
-          :basic-class="form.basicClass"
+          :basic-class="rawMatClsEnum.STEEL_PLATE.V"
           style="width:100%;"
           placeholder="仓库位置"
         />
@@ -91,7 +92,7 @@
       <el-form-item prop="outboundTime" label="出库日期" style="margin-top: 10px" v-if="form.boolOutbound">
         <el-date-picker
           v-model="form.outboundTime"
-          type="date"
+          type="datetime"
           value-format="x"
           placeholder="出库日期"
           style="width:100%;"
@@ -107,6 +108,7 @@ import { isNotBlank } from '@/utils/data-type'
 import { projectNameFormatter } from '@/utils/project'
 import { outboundDestinationTypeEnum } from '@/utils/enum/modules/wms'
 import useWmsConfig from '@/composables/store/use-wms-config'
+import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 
 import useProjectTree from '@compos/store/use-project-tree'
 import workshopSelect from '@comp-mes/workshop-select'
@@ -136,16 +138,20 @@ const projectOptions = computed(() => {
   }
 })
 
-// 显示项目选择组件(false:显示项目名称)： 公共库 或者 配置=>项目库可以出库给其他项目
-const showProjectSelect = computed(() => {
-  return outboundCfg.value?.boolCanOutToOtherProject === true
-})
-
 const props = defineProps({
   formData: {
     type: Object,
     default: () => {}
+  },
+  material: {
+    // 物料信息
+    type: Object
   }
+})
+
+// 显示项目选择组件(false:显示项目名称)： 公共库 或者 配置=>项目库可以出库给其他项目
+const showProjectSelect = computed(() => {
+  return outboundCfg.value?.boolCanOutToOtherProject === true && !props.material?.boolPartyA
 })
 
 const formRef = ref()
@@ -218,16 +224,24 @@ function assignForm() {
 }
 
 function handleProjectChange() {
-  console.log(1)
   form.value.monomerId = undefined
   form.value.areaId = undefined
 }
 
 function handleMonomerChange() {
-  console.log(2)
   form.value.areaId = undefined
 }
 
+function boolOutboundChange() {
+  if (form.value.boolOutbound) {
+    if (form.value.projectId === 'common') {
+      form.value.projectId = undefined
+      form.value.outboundAddress = outboundDestinationTypeEnum.FACTORY.V
+    }
+  } else {
+    form.value.outboundAddress = undefined
+  }
+}
 // 出库办理，表单提交
 async function validateForm() {
   const valid = await formRef.value.validate()

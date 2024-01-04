@@ -49,6 +49,7 @@
 import { convertListReport as get } from '@/api/wms/report/raw-material/convert-list'
 import { ref, computed } from 'vue'
 
+import { projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 import { projectNameFormatter } from '@/utils/project'
 import { parseTime } from '@/utils/date'
 import checkPermission from '@/utils/system/check-permission'
@@ -110,6 +111,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   data = await numFmtByBasicClass(data, { toSmallest: false, toNum: true })
   data.forEach(v => {
     v.date = (v.startTime && v.endTime) ? parseTime(v.startTime, '{y}-{m}-{d}') + '~' + parseTime(v.endTime, '{y}-{m}-{d}') : undefined
+    v.projectWarehouseType = v.project?.id ? projectWarehouseTypeEnum.PROJECT.V : projectWarehouseTypeEnum.PUBLIC.V
   })
 }
 </script>

@@ -209,7 +209,7 @@
         <warehouse-set-columns :list="form.list" />
         <el-table-column label="操作" width="120" align="center" fixed="right">
           <template #default="{ row: { sourceRow: row }, $index }">
-            <common-button icon="el-icon-plus" type="primary" size="mini" @click="addChildren(row)" v-if="row.boolReturns"/>
+            <common-button icon="el-icon-plus" type="primary" size="mini" @click="addChildren(row)" v-if="row.boolReturns" :disabled="row.detailMete>=row.mete" />
             <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row, $index)" />
           </template>
         </el-table-column>
@@ -382,6 +382,7 @@ function init() {
 
 // 添加材质
 function rowWatch(row) {
+  console.log(row)
   // 计算最大总重
   watch([() => row.quantity], () => {
     if (!row.boolReturns) {
@@ -517,8 +518,8 @@ function calcTotalWeight(row) {
       row.mete = toPrecision(Math.min(row.maxMete, row.singleMete), baseUnit.value.weight.precision)
     }
     if (!row.pid) {
-      if (row.source.returnableMete < row.singleMete) {
-        row.mete = row.source.returnableMete
+      if (row.quantity === row.source.quantity && row.source.returnableMete > 0) {
+        row.mete = +(row.source.mete)
       }
     }
   } else {

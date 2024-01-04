@@ -70,12 +70,12 @@ const defaultQuery = {
   date: [],
   startDate: undefined,
   endDate: undefined,
-  projectId: undefined,
   receiptSerialNumber: undefined,
   outSerialNumber: undefined,
   specification: undefined,
   brand: undefined,
-  status: { value: reviewStatusEnum.PASS.V, resetAble: false }
+  status: { value: reviewStatusEnum.PASS.V, resetAble: false },
+  boolAll: { value: 1, resetAble: false }
 }
 
 const { crud, query } = regHeader(defaultQuery)

@@ -104,7 +104,8 @@ const defaultQuery = {
   receiptSerialNumber: undefined,
   outSerialNumber: undefined,
   specification: undefined,
-  brand: undefined
+  brand: undefined,
+  boolAll: props.showType === 'coilPlate' ? { value: 0, resetAble: false } : { value: 1, resetAble: false }
 }
 
 const { crud, query } = regHeader(defaultQuery)

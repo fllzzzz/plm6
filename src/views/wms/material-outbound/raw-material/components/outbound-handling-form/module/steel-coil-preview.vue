@@ -14,7 +14,7 @@
           </div>
           <div class="flex-div">
             <span class="el-form-item__label span-label span-label-left">开平段数</span>
-            <span class="span-content"> {{form.plateForm.totalObj.segmentQuantity}}</span>
+            <span class="span-content"> {{form.plateForm.totalObj.segmentQuantity}} 段</span>
           </div>
         </div>
         <div style="display:flex;">
@@ -24,7 +24,7 @@
           </div>
           <div class="flex-div">
             <span class="el-form-item__label span-label span-label-left">开平板数量</span>
-            <span class="span-content"> {{form.plateForm.totalObj.quantity}}</span>
+            <span class="span-content"> {{form.plateForm.totalObj.quantity}} 张</span>
           </div>
         </div>
         <div style="display:flex;">
@@ -38,7 +38,7 @@
           </div>
         </div>
       </div>
-      <previewForm ref="plateForm" key="plateForm" :form-data="form.plateForm" />
+      <previewForm ref="plateForm" key="plateForm" :form-data="form.plateForm" :material="props.material" />
     </el-card>
     <el-card class="box-card" style="margin-left:10px;">
       <template #header>
@@ -46,40 +46,45 @@
           <span style="font-weight:600;">开平-余料钢板</span>
         </div>
       </template>
-      <div style="background:#eee;padding:5px;">
-        <div style="display:flex;">
-          <div class="flex-div">
-            <span class="el-form-item__label span-label">规格</span>
-            <span class="span-content">{{form.surplusForm.totalObj.specification}}</span>
+      <div v-if="form.surplusForm.totalObj.width>0">
+        <div style="background:#eee;padding:5px;">
+          <div style="display:flex;">
+            <div class="flex-div">
+              <span class="el-form-item__label span-label">规格</span>
+              <span class="span-content">{{form.surplusForm.totalObj.specification}}</span>
+            </div>
+            <div class="flex-div">
+              <span class="el-form-item__label span-label span-label-left">开平段数</span>
+              <span class="span-content">{{form.surplusForm.totalObj.segmentQuantity}}段</span>
+            </div>
           </div>
-          <div class="flex-div">
-            <span class="el-form-item__label span-label span-label-left">开平段数</span>
-            <span class="span-content">{{form.surplusForm.totalObj.segmentQuantity}}段</span>
+          <div style="display:flex;">
+            <div class="flex-div">
+              <span class="el-form-item__label span-label">厚度</span>
+              <span class="span-content">{{form.surplusForm.totalObj.thickness}} mm</span>
+            </div>
+            <div class="flex-div">
+              <span class="el-form-item__label span-label span-label-left">余料板数量</span>
+              <span class="span-content">{{form.surplusForm.totalObj.quantity}} 张</span>
+            </div>
+          </div>
+          <div style="display:flex;">
+            <div class="flex-div">
+              <span class="el-form-item__label span-label">宽度</span>
+              <span class="span-content">{{form.surplusForm.totalObj.width}} mm</span>
+            </div>
+            <div class="flex-div">
+              <span class="el-form-item__label span-label span-label-left">余料总重</span>
+              <span class="span-content">{{form.surplusForm.totalObj.mete}} kg</span>
+            </div>
           </div>
         </div>
-        <div style="display:flex;">
-          <div class="flex-div">
-            <span class="el-form-item__label span-label">厚度</span>
-            <span class="span-content">{{form.surplusForm.totalObj.thickness}} mm</span>
-          </div>
-          <div class="flex-div">
-            <span class="el-form-item__label span-label span-label-left">余料板数量</span>
-            <span class="span-content">{{form.surplusForm.totalObj.quantity}}</span>
-          </div>
-        </div>
-        <div style="display:flex;">
-          <div class="flex-div">
-            <span class="el-form-item__label span-label">宽度</span>
-            <span class="span-content">{{form.surplusForm.totalObj.width}} mm</span>
-          </div>
-          <div class="flex-div">
-            <span class="el-form-item__label span-label span-label-left">余料总重</span>
-            <span class="span-content">{{form.surplusForm.totalObj.mete}} kg</span>
-          </div>
-        </div>
+        <previewForm ref="surplusForm" key="surplusForm" :form-data="form.surplusForm" v-if="form.surplusForm.totalObj.width>steelMinLengthConfig?.steelPlateShortestSideMinLength" :material="props.material" />
+        <div v-else style="color:red;">根据系统配置，剩余余料规格属于“废料”范围，将纳入废料列表</div>
       </div>
-      <previewForm ref="surplusForm" key="surplusForm" :form-data="form.surplusForm" v-if="form.surplusForm.totalObj.width>steelMinLengthConfig?.steelPlateShortestSideMinLength" />
-      <div v-else style="color:red;">根据系统配置，剩余余料规格属于“废料”范围，将纳入废料列表</div>
+      <div v-else style="width:400px">
+        本次无余料
+      </div>
     </el-card>
   </div>
 </template>
@@ -156,7 +161,9 @@ function reset(data) {
   }
   form.value = JSON.parse(JSON.stringify(formVal))
   nextTick(() => {
-    surplusForm.value && surplusForm.value.clearValidate()
+    if (surplusForm.value) {
+      surplusForm.value && surplusForm.value.clearValidate()
+    }
     plateForm.value && plateForm.value.clearValidate()
   })
 }
@@ -176,7 +183,9 @@ async function validateSubmit() {
 
 function assignForm() {
   plateForm.value && plateForm.value.assignForm()
-  surplusForm.value && surplusForm.value.assignForm()
+  if (surplusForm.value) {
+    surplusForm.value && surplusForm.value.assignForm()
+  }
   const data = JSON.parse(JSON.stringify(form.value))
   Object.assign(props.formData, data)
 }
@@ -190,7 +199,9 @@ function assignForm() {
 // 清空校验
 function clearValidate() {
   plateForm.value && plateForm.value.clearValidate()
-  surplusForm.value && surplusForm.value.clearValidate()
+  if (surplusForm.value) {
+    surplusForm.value && surplusForm.value.clearValidate()
+  }
 }
 
 defineExpose({
@@ -296,18 +307,20 @@ defineExpose({
   font-weight:600;
   width:60px;
   line-height:30px;
+  font-size:14px;
   text-align:center;
   &.span-label-left{
     text-align: left;
-    width:90px;
+    width:100px;
   }
 }
 
 .span-content{
+  flex:1;
   line-height:30px;
 }
 .flex-div{
-  min-width:200px;
+  min-width:220px;
   display:flex;
 }
 </style>

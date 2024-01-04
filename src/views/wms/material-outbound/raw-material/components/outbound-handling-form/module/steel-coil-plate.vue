@@ -1,13 +1,14 @@
 <template>
-  <common-dialog
+  <common-drawer
     ref="dialogRef"
     title="条板转换办理"
     v-model="dialogVisible"
-    :width="step===0 ? '80%' : '900px'"
+    :size="step===0 ? '80%' : '960'"
     :before-close="handleClose"
-    :show-close="true"
+    append-to-body
+    :close-on-click-modal="false"
+     :wrapper-closable="false"
     custom-class="wms-outbound-handling"
-    :top="'1vh'"
   >
     <template #titleRight>
       <span class="step-btn">
@@ -18,15 +19,17 @@
         </common-button>
       </span>
     </template>
-    <template v-if="dialogVisible">
-      <div v-show="step === 0">
-        <steelCoilPlateForm ref="plateRef" :visibleVal="dialogVisible" :basic-class="props.basicClass" :material="props.material" :max-height="maxHeight" :form-data="form.plateObj"/>
-      </div>
-      <div v-show="step === 1">
-        <steelCoilPreview ref="previewRef" :visibleVal="dialogVisible" :basic-class="props.basicClass" :material="props.material" :max-height="maxHeight" :form-data="form.outbound"/>
-      </div>
+    <template #content>
+      <template v-if="dialogVisible">
+        <div v-show="step === 0">
+          <steelCoilPlateForm ref="plateRef" :visibleVal="dialogVisible" :basic-class="props.basicClass" :material="props.material" :max-height="maxHeight" :form-data="form.plateObj"/>
+        </div>
+        <div v-show="step === 1">
+          <steelCoilPreview ref="previewRef" :visibleVal="dialogVisible" :basic-class="props.basicClass" :material="props.material" :max-height="maxHeight" :form-data="form.outbound"/>
+        </div>
+      </template>
     </template>
-  </common-dialog>
+  </common-drawer>
 </template>
 
 <script setup>
@@ -185,10 +188,10 @@ async function handleNextStep() {
     form.value.outbound.plateForm.totalObj.segmentQuantity = form.value.outbound.plateForm.totalObj.segmentQuantity / widthArr.length
     form.value.outbound.plateForm.totalObj.width = form.value.outbound.plateForm.totalObj.width / form.value.outbound.plateForm.totalObj.segmentQuantity
     form.value.outbound.plateForm.basicClass = props.basicClass
-    form.value.outbound.plateForm.monomerId = form.value.outbound.plateForm.monomerId || (props.material?.monomer?.id || props.material?.monomerId)
-    form.value.outbound.plateForm.areaId = form.value.outbound.plateForm.areaId || (props.material?.area?.id || props.material?.areaId)
     form.value.outbound.plateForm.factoryId = props.material?.factory?.id
-    form.value.outbound.plateForm.projectId = form.value.outbound.plateForm.projectId || props.material?.project?.id || 'common'
+    form.value.outbound.plateForm.projectId = form.value.outbound.plateForm.projectId || props.material?.project?.id || (form.value.outbound.plateForm?.boolOutbound ? undefined : 'common')
+    form.value.outbound.plateForm.monomerId = (form.value.outbound.plateForm.projectId && form.value.outbound.plateForm.projectId !== 'common') ? form.value.outbound.plateForm.monomerId || (form.value.outbound.plateForm.projectId === props.material?.project?.id ? (props.material?.monomer?.id || props.material?.monomerId) : undefined) : undefined
+    form.value.outbound.plateForm.areaId = form.value.outbound.plateForm.monomerId ? (form.value.outbound.plateForm.areaId || (form.value.outbound.plateForm.monomerId === (props.material?.monomer?.id || props.material?.monomerId) ? (props.material?.area?.id || props.material?.areaId) : undefined)) : undefined
     form.value.outbound.plateForm.recipientId = form.value.outbound.plateForm.recipientId || formVal.recipientId
     form.value.outbound.plateForm.outboundAddress = form.value.outbound.plateForm.outboundAddress || (form.value.outbound.plateForm.boolOutbound ? outboundDestinationTypeEnum.FACTORY.V : undefined)
     form.value.outbound.surplusForm.totalObj.segmentQuantity = 0
@@ -209,13 +212,14 @@ async function handleNextStep() {
     form.value.outbound.surplusForm.boolOutbound = isNotBlank(form.value.outbound.surplusForm.boolOutbound) ? form.value.outbound.surplusForm.boolOutbound : false
     form.value.outbound.surplusForm.basicClass = props.basicClass
     form.value.outbound.surplusForm.basicClass = props.basicClass
-    form.value.outbound.surplusForm.monomerId = form.value.outbound.surplusForm.monomerId || (props.material?.monomer?.id || props.material?.monomerId)
-    form.value.outbound.surplusForm.areaId = form.value.outbound.surplusForm.areaId || (props.material?.area?.id || props.material?.areaId)
     form.value.outbound.surplusForm.factoryId = props.material?.factory?.id
-    form.value.outbound.surplusForm.projectId = form.value.outbound.surplusForm.projectId || props.material?.project?.id || 'common'
+    form.value.outbound.surplusForm.projectId = form.value.outbound.surplusForm.projectId || props.material?.project?.id || (form.value.outbound.surplusForm?.boolOutbound ? undefined : 'common')
+    form.value.outbound.surplusForm.monomerId = (form.value.outbound.surplusForm.projectId && form.value.outbound.surplusForm.projectId !== 'common') ? form.value.outbound.surplusForm.monomerId || (form.value.outbound.surplusForm.projectId === props.material?.project?.id ? (props.material?.monomer?.id || props.material?.monomerId) : undefined) : undefined
+    form.value.outbound.surplusForm.areaId = form.value.outbound.surplusForm.monomerId ? (form.value.outbound.surplusForm.areaId || (form.value.outbound.surplusForm.monomerId === (props.material?.monomer?.id || props.material?.monomerId) ? (props.material?.area?.id || props.material?.areaId) : undefined)) : undefined
     form.value.outbound.surplusForm.recipientId = form.value.outbound.surplusForm.recipientId || formVal.recipientId
     form.value.outbound.surplusForm.outboundAddress = form.value.outbound.surplusForm.outboundAddress || (form.value.outbound.surplusForm.boolOutbound ? outboundDestinationTypeEnum.FACTORY.V : undefined)
   }
+  console.log(form.value.outbound)
   step.value++
 }
 
@@ -250,16 +254,21 @@ async function submit() {
       v.projectId = form.value.outbound.plateForm.projectId === 'common' ? null : form.value.outbound.plateForm.projectId
       v.monomerId = form.value.outbound.plateForm.monomerId
       v.areaId = form.value.outbound.plateForm.areaId
-      v.workshopId = form.value.outbound.plateForm.workshopId
-      v.recipientId = form.value.outbound.plateForm.recipientId
-      v.outboundTime = form.value.outbound.plateForm.outboundTime
+      v.workshopId = v.boolOutbound ? form.value.outbound.plateForm.workshopId : undefined
+      v.recipientId = v.boolOutbound ? form.value.outbound.plateForm.recipientId : undefined
+      v.outboundTime = v.boolOutbound ? form.value.outbound.plateForm.outboundTime : undefined
+      v.warehouseId = form.value.outbound.plateForm?.warehouseId
+      v.outboundAddress = v.boolOutbound ? form.value.outbound.plateForm.outboundAddress : undefined
     } else {
       v.boolOutbound = form.value.outbound.surplusForm?.boolOutbound
-      v.projectId = form.value.outbound.surplusForm?.projectId === 'common' ? null : form.value.outbound.surplusForm.projectId
-      v.monomerId = form.value.outbound.surplusForm?.monomerId
-      v.areaId = form.value.outbound.surplusForm?.areaId
-      v.workshopId = form.value.outbound.surplusForm?.workshopId
+      v.projectId = form.value.outbound.surplusForm.projectId === 'common' ? null : form.value.outbound.surplusForm.projectId
+      v.monomerId = form.value.outbound.surplusForm.monomerId
+      v.areaId = form.value.outbound.surplusForm.areaId
+      v.workshopId = v.boolOutbound ? form.value.outbound.surplusForm.workshopId : undefined
+      v.recipientId = v.boolOutbound ? form.value.outbound.surplusForm.recipientId : undefined
+      v.outboundTime = v.boolOutbound ? form.value.outbound.surplusForm.outboundTime : undefined
       v.warehouseId = form.value.outbound.surplusForm?.warehouseId
+      v.outboundAddress = v.boolOutbound ? form.value.outbound.surplusForm.outboundAddress : undefined
     }
   })
   submitData.battenList = submitData.list

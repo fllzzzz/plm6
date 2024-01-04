@@ -14,7 +14,13 @@
       :stripe="false"
     >
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
-      <el-table-column key="receiptSerialNumber" prop="receiptSerialNumber" v-if="columns.visible('receiptSerialNumber')" label="转换单号" align="center" min-width="150" show-overflow-tooltip />
+      <el-table-column key="receiptSerialNumber" prop="receiptSerialNumber" v-if="columns.visible('receiptSerialNumber')" label="转换单号" align="center" min-width="150" show-overflow-tooltip>
+        <template #default="{ row}">
+            <!-- 是否甲供材料 -->
+            <table-cell-tag :show="!!row.boolPartyA" name="甲供" type="partyA" />
+            <span>{{ row.receiptSerialNumber }}</span>
+          </template>
+      </el-table-column>
       <el-table-column key="applyTime" v-if="columns.visible('applyTime')" prop="applyTime" label="转换时间" align="center" show-overflow-tooltip />
       <el-table-column key="outSerialNumber" prop="outSerialNumber" v-if="columns.visible('outSerialNumber')" label="出库单号" align="center" show-overflow-tooltip />
       <el-table-column key="serialNumber" prop="serialNumber" v-if="columns.visible('serialNumber')" label="物料编号" align="center" show-overflow-tooltip width="100"/>
@@ -22,12 +28,12 @@
       <el-table-column key="specification" prop="specification" v-if="columns.visible('specification')" label="规格" align="center" show-overflow-tooltip/>
       <el-table-column key="widthThick" prop="widthThick" v-if="columns.visible('widthThick')" label="厚(mm)*宽(mm)" align="center" show-overflow-tooltip min-width="120" />
       <el-table-column key="quantity" prop="quantity" v-if="columns.visible('quantity')" label="转换总长度(m)" align="center" show-overflow-tooltip min-width="120" />
-      <el-table-column key="mete" prop="mete" v-if="columns.visible('mete')" label="转换总重(kg))" align="center" show-overflow-tooltip min-width="120" />
+      <el-table-column key="mete" prop="mete" v-if="columns.visible('mete')" label="转换总重(kg)" align="center" show-overflow-tooltip min-width="120" />
       <el-table-column key="amountExcludingVat" v-if="columns.visible('amountExcludingVat')" prop="amountExcludingVat" label="转换总金额(不含税)" align="center" show-overflow-tooltip min-width="120" />
       <el-table-column key="brand" prop="brand" v-if="columns.visible('brand')" label="品牌" align="center" show-overflow-tooltip/>
       <el-table-column key="color" prop="color" v-if="columns.visible('color')" label="颜色" align="center" show-overflow-tooltip/>
       <el-table-column key="heatNoAndBatchNo" prop="heatNoAndBatchNo" v-if="columns.visible('heatNoAndBatchNo')" label="卷号" align="center" show-overflow-tooltip/>
-      <el-table-column key="project" prop="project" v-if="columns.visible('project')" label="项目" align="center" show-overflow-tooltip/>
+      <!-- <el-table-column key="project" prop="project" v-if="columns.visible('project')" label="项目" align="center" show-overflow-tooltip/> -->
       <el-table-column key="warehouse.name" prop="warehouse.name" v-if="columns.visible('warehouse.name')" label="仓库" align="center" show-overflow-tooltip/>
       <!--编辑与删除-->
       <el-table-column
@@ -54,7 +60,7 @@ import { ref, computed, defineProps, watch } from 'vue'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import checkPermission from '@/utils/system/check-permission'
-import { rawMaterialConvertListPM as permission } from '@/page-permission/wms'
+import { reportRawMaterialConvertListPM } from '@/page-permission/wms'
 import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -69,6 +75,8 @@ const optShow = {
   del: false,
   download: false
 }
+
+const permission = reportRawMaterialConvertListPM.list
 
 const dataFormat = computed(() => {
   return [
@@ -107,6 +115,7 @@ watch(
   (val) => {
     if (val) {
       crud.query.projectId = props.currentInfo?.project?.id
+      crud.query.projectWarehouseType = props.currentInfo.projectWarehouseType
       crud.toQuery()
     }
   },

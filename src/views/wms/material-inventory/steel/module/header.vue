@@ -40,7 +40,7 @@
       </template>
       <template #viewLeft>
         <!-- <common-button class="filter-item" type="success" size="mini" icon="el-icon-printer" @click="toBatchPrint">批量打印</common-button> -->
-        <el-badge v-permission="permission.list?.get" :value="unAuditNum" :hidden="unAuditNum <= 0" style="z-index: 2">
+        <el-badge v-permission="permission.convertListBtn" :value="unAuditNum" :hidden="unAuditNum <= 0" style="z-index: 2">
           <common-button class="filter-item" type="warning" size="mini" @click="convertClick">条板转换清单</common-button>
         </el-badge>
         <el-badge v-permission="permission.labelPrint" :value="notPrintedMaterialQuantity" :hidden="notPrintedMaterialQuantity <= 0" style="z-index: 1">
@@ -234,6 +234,7 @@ function headerRefreshNum() {
 }
 
 defineExpose({
+  updateListNumber,
   headerRefreshNum
 })
 </script>

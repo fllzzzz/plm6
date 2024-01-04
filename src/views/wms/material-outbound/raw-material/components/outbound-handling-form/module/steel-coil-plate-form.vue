@@ -517,12 +517,58 @@ async function calTotalWeight() {
   await Promise.all(allArr)
   await Promise.all(allArr1)
   let totalWeight = 0
+  let extraWeight = props.material.operableMete
+  let extraLength = maxQuantity.value
+  let extraWidth = props.material.width
+  form.value.list.forEach(v => {
+    extraWidth -= v.width
+  })
   list.forEach(v => {
     v.boolSurplus = false
     v.boolOutbound = true
+    const convertLength = convertUnits(v.length, 'm', 'mm')
+    extraLength -= convertLength
+    if (extraWeight > 0) {
+      if (extraWeight > v.mete) {
+        if (extraLength > 0) {
+          extraWeight -= v.mete
+        } else {
+          if (extraWidth > 0) {
+            extraWeight -= v.mete
+          } else {
+            v.mete = extraWeight
+            extraWeight = 0
+          }
+        }
+      } else {
+        v.mete = extraWeight
+        extraWeight = 0
+      }
+    } else {
+      v.mete = 0
+    }
     totalWeight += (v.mete || 0)
   })
-  surplusMaterialListArr.forEach(v => {
+  surplusMaterialListArr.forEach((v, index) => {
+    if (extraWeight > 0) {
+      if (extraWeight > v.mete) {
+        if (extraLength > 0) {
+          extraWeight -= v.mete
+        } else {
+          if ((index < surplusMaterialListArr.length - 1)) {
+            extraWeight -= v.mete
+          } else {
+            v.mete = extraWeight
+            extraWeight = 0
+          }
+        }
+      } else {
+        v.mete = extraWeight
+        extraWeight = 0
+      }
+    } else {
+      v.mete = 0
+    }
     totalWeight += (v.mete || 0)
   })
   form.value.totalWeight = totalWeight
@@ -760,6 +806,56 @@ async function validateSubmit() {
     }
   }
   await Promise.all(allArr)
+  let extraWeight = props.material.operableMete
+  let extraLength = maxQuantity.value
+  let extraWidth = props.material.width
+  form.value.list.forEach(v => {
+    extraWidth -= v.width
+  })
+  _list.forEach(v => {
+    const convertLength = convertUnits(v.length, 'm', 'mm')
+    extraLength -= convertLength
+    if (extraWeight > 0) {
+      if (extraWeight > v.mete) {
+        if (extraLength > 0) {
+          extraWeight -= v.mete
+        } else {
+          if (extraWidth > 0) {
+            extraWeight -= v.mete
+          } else {
+            v.mete = extraWeight
+            extraWeight = 0
+          }
+        }
+      } else {
+        v.mete = extraWeight
+        extraWeight = 0
+      }
+    } else {
+      v.mete = 0
+    }
+  })
+  surplusMaterialList.forEach((v, index) => {
+    if (extraWeight > 0) {
+      if (extraWeight > v.mete) {
+        if (extraLength > 0) {
+          extraWeight -= v.mete
+        } else {
+          if ((index < surplusMaterialList.length - 1)) {
+            extraWeight -= v.mete
+          } else {
+            v.mete = extraWeight
+            extraWeight = 0
+          }
+        }
+      } else {
+        v.mete = extraWeight
+        extraWeight = 0
+      }
+    } else {
+      v.mete = 0
+    }
+  })
   _list = [..._list, ...surplusMaterialList]
   const data = JSON.parse(JSON.stringify(form.value))
   delete data.list
@@ -864,16 +960,16 @@ function clearValidate() {
 function getSummaries(param) {
   const { columns, data } = param
   const sums = []
+  let _width = material.value.width
+  data.forEach((item) => {
+    _width -= item.width * (item.quantity || 1) || 0
+  })
   columns.forEach((column, index) => {
     if (index === 0) {
       sums[index] = '余料'
       return
     }
     if (column.property === 'width') {
-      let _width = material.value.width
-      data.forEach((item) => {
-        _width -= item.width * (item.quantity || 1) || 0
-      })
       sums[index] = _width
     }
     if (column.property === 'mete') {
@@ -884,7 +980,11 @@ function getSummaries(param) {
       sums[index] = _mete > 0 ? _mete : 0
     }
     if (column.property === 'quantity') {
-      sums[index] = 1
+      let _width = material.value.width
+      data.forEach((item) => {
+        _width -= item.width * (item.quantity || 1) || 0
+      })
+      sums[index] = _width <= 0 ? 0 : 1
     }
   })
   return sums
