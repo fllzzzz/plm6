@@ -343,9 +343,10 @@ const setRecipientId = watch(
 watchEffect(() => {
   errorList.value = []
   materialList.value = props.materialList.filter((v) => v.corOperableQuantity > 0) // 过滤不可操作的列表
-  form.value.list = materialList.value
+  const list = JSON.parse(JSON.stringify(materialList.value))
+  setDitto(list)
+  form.value.list = list
   dataFormat()
-  setDitto(form.value.list)
 })
 
 // watch(

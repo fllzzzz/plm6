@@ -24,6 +24,19 @@
           style="width: 150px"
         />
       </el-form-item>
+      <el-form-item label="运输重量（kg）" prop="freightWeight" label-width="120px">
+        <common-input-number
+          class="input-underline"
+          v-model="currentForm.freightWeight"
+          type="text"
+          :min="0"
+          :max="999999999"
+          :precision="DP.COM_WT__KG"
+          :controls="false"
+          placeholder="运输重量"
+          style="width: 150px"
+        />
+      </el-form-item>
       <!-- <el-form-item label="装车费" prop="loadingFee">
         <common-input-number
           class="input-underline"
@@ -115,6 +128,15 @@ const validateFreight = (rule, value, callback) => {
   callback()
 }
 
+const validateFreightWeight = (rule, value, callback) => {
+  if (isNotBlank(currentForm.value.freightWeight)) {
+    if (!currentForm.value.freightWeight) {
+      callback(new Error('运输重量必须大于0'))
+    }
+  }
+  callback()
+}
+
 const validateSupplierId = (rule, value, callback) => {
   if (isNotBlank(currentForm.value.freight) && isBlank(currentForm.value.supplierId)) {
     callback(new Error('请选择供应商'))
@@ -126,6 +148,9 @@ const rules = {
   freight: [
     { required: true, message: '请输入运费', trigger: 'blur' },
     { validator: validateFreight, trigger: 'blur' }
+  ],
+  freightWeight: [
+    { validator: validateFreightWeight, trigger: 'blur' }
   ],
   supplierId: [{ validator: validateSupplierId, trigger: 'change' }]
 }
