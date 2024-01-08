@@ -83,7 +83,7 @@
       <el-table-column class="return-btn-column" v-if="props.isComponent" label="退库" align="center" width="170" sortable="custom" fixed="right">
         <template #default="{ row: { sourceRow: row } }">
           <el-badge :value="returnNumber[row.id]" :hidden="returnNumber[row.id] === 0" class="badge-item">
-            <common-button :disabled="row.showReviewPending || row.ableQuantity<=0" type="warning" size="mini" @click="handleAddReturn(row,false)"> 退整料 </common-button>
+            <common-button :disabled="row.showReviewPending || ((basicClass & STEEL_ENUM) && row.ableQuantity<=0)" type="warning" size="mini" @click="handleAddReturn(row,false)"> 退整料 </common-button>
           </el-badge>
           <!-- <span>{{boolReturnsNumber[row.id]}}</span> -->
           <el-badge :value="boolReturnsNumber[row.id]" :hidden="boolReturnsNumber[row.id] === 0" class="badge-item" v-if="basicClass & rawMatClsEnum.STEEL_PLATE.V">
