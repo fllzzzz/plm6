@@ -40,6 +40,15 @@ export function artifactAssembleList(params) {
   })
 }
 
+export function getProcess(params) {
+  return request({
+    module: 'mes',
+    url: 'process/find',
+    method: 'get',
+    params
+  })
+}
+
 /**
  *
  * 生产线筛选列表

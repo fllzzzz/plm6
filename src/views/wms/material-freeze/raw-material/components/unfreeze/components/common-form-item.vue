@@ -24,6 +24,7 @@
         :min="0"
         :precision="material.outboundUnitPrecision"
         :max="maxQuantity"
+        :disabled="record.freezeType===materialFreezeTypeEnum.CONVERT.V"
         controls-position="right"
         style="flex: auto"
       />

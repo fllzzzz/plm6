@@ -33,6 +33,16 @@
         width="140"
         sortable="custom"
       />
+      <el-table-column
+        v-if="columns.visible('convertNumber')"
+        key="convertNumber"
+        :show-overflow-tooltip="true"
+        prop="convertNumber"
+        label="来源"
+        align="center"
+        width="120"
+        sortable="custom"
+      />
     </common-table>
     <!--分页组件-->
     <pagination />

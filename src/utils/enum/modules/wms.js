@@ -172,7 +172,8 @@ const materialFreezeTypeEnum = {
   OUTBOUND_APPLY: { L: '出库', K: 'OUTBOUND_APPLY', V: receiptTypeEnum.OUTBOUND_APPLY.V, DOC: '出库申请单' },
   TRANSFER: receiptTypeEnum.TRANSFER,
   REJECTED: receiptTypeEnum.REJECTED,
-  NESTING: { L: '套料', K: 'NESTING', V: 18, DOC: '套料工单' }
+  NESTING: { L: '套料', K: 'NESTING', V: 18, DOC: '套料工单' },
+  CONVERT: receiptTypeEnum.CONVERT
 }
 constantize(materialFreezeTypeEnum)
 
