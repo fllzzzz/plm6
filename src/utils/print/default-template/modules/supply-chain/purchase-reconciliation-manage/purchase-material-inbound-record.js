@@ -202,19 +202,20 @@ const purchaseMaterialInboundRecord = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'inboundTime', title: '入库日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
+      { show: true, key: 'inboundTime', title: '入库日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
       { show: true, key: 'purchaseSn', title: '采购单号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 12, type: typeEnum.GUID.K },
-      { show: true, key: 'materialSn', title: '物料编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 16, type: typeEnum.SERIAL_NUMBER.K },
-      { show: true, key: 'classifyName', title: '物料种类', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 14, type: typeEnum.MATERIAL_CLASS_FULL_NAME.K },
+      { show: true, key: 'materialSn', title: '物料编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 14, type: typeEnum.SERIAL_NUMBER.K },
+      { show: true, key: 'classifyName', title: '物料种类', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 12, type: typeEnum.MATERIAL_CLASS_FULL_NAME.K },
       { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 14, type: typeEnum.SPECIFICATION.K },
       { show: true, key: 'measureUnit', title: '计量单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.MEASUREMENT_UNIT.K },
-      { show: true, key: 'quantity', title: '入库数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
+      { show: true, key: 'quantity', title: '入库数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, format: { toThousand: false }, sum: true },
       { show: true, key: 'accountingUnit', title: '核算单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.ACCOUNTING_UNIT.K },
       { show: true, key: 'mete', title: '入库量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 12, type: typeEnum.METE.K, format: { toThousand: false, rowUnit: 'accountingUnit' }, sum: true },
       { show: true, key: 'unitPrice', title: '含税单价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 12, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
       { show: true, key: 'amount', title: '含税总额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 16, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
       { show: true, key: 'amountExcludingVat', title: '不含税总额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 16, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
-      { show: true, key: 'inputVAT', title: '进项税', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 12, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true }
+      { show: true, key: 'inputVat', title: '进项税', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 12, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
+      { show: true, key: 'inboundSerialNumber', title: '入库单号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 12, type: typeEnum.SERIAL_NUMBER.K }
     ]
   }
 }

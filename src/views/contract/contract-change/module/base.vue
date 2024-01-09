@@ -108,7 +108,10 @@
             </div>
           </el-form-item>
           <el-form-item label="所属部门" prop="relationDeptId">
-            <span>{{ detail.relationDeptName || '-' }}</span>
+            <template v-if="(detail.relationDeptName || originContractInfo.relationDeptName) && detail.relationDeptName!==originContractInfo.relationDeptName">
+              <cell-change-preview :old="originContractInfo.relationDeptName" :new="detail.relationDeptName" />
+            </template>
+            <span v-else>{{ detail.relationDeptName || '-' }}</span>
           </el-form-item>
         </div>
         <el-divider><span class="title">合同金额</span></el-divider>
