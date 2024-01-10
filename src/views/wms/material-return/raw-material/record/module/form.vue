@@ -59,7 +59,11 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
     detail.list.forEach(async (v) => {
       if (v.boolReturns && isNotBlank(v.list)) {
         await setSpecInfoToList(v.list)
-        const ps = await numFmtByBasicClass(v.list, { toNum: true })
+        const ps = await numFmtByBasicClass(v.list, { toNum: true },
+          {
+            mete: ['mete', 'returnableMete', 'singleMete', 'singleReturnableMete', 'singleReturnMete']
+          }
+        )
         await calcTheoryWeight(v.list)
         // source 原出库信息转换
         const childSourceList = v.list.map((row) => row.source)
@@ -68,7 +72,7 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
           childSourceList,
           { toNum: true },
           {
-            mete: ['mete', 'returnableMete', 'singleMete', 'singleReturnableMete']
+            mete: ['mete', 'returnableMete', 'singleMete', 'singleReturnableMete', 'singleReturnMete']
           }
         )
         // 计算source 理论重量

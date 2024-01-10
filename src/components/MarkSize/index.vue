@@ -3,11 +3,13 @@
     class="mark-size"
     :style="props.customStyle + `${props.direction === 'horizontal' ? 'flex-direction: row;' : 'flex-direction: column;'}`"
   >
-    <div :class="`line ${props.direction === 'horizontal' ? 'line-horizontal' : 'line-vertical'}`"></div>
-    <div :class="`arrow ${props.direction === 'horizontal' ? 'arrow-horizontal arrow-horizontal-left' : 'arrow-vertical arrow-horizontal-top'}`"></div>
-    <div>{{ props.sizeInfo }}</div>
-    <div :class="`arrow ${props.direction === 'horizontal' ? 'arrow-horizontal arrow-horizontal-right' : 'arrow-vertical arrow-horizontal-bottom'}`"></div>
-    <div :class="`line ${props.direction === 'horizontal' ? 'line-horizontal' : 'line-vertical'}`"></div>
+    <template v-if="showType!=='unshow'">
+      <div :class="`line ${props.direction === 'horizontal' ? 'line-horizontal' : 'line-vertical'}`"></div>
+      <div :class="`arrow ${props.direction === 'horizontal' ? 'arrow-horizontal arrow-horizontal-left' : 'arrow-vertical arrow-horizontal-top'}`"></div>
+      <div>{{ props.sizeInfo }}</div>
+      <div :class="`arrow ${props.direction === 'horizontal' ? 'arrow-horizontal arrow-horizontal-right' : 'arrow-vertical arrow-horizontal-bottom'}`"></div>
+      <div :class="`line ${props.direction === 'horizontal' ? 'line-horizontal' : 'line-vertical'}`"></div>
+    </template>
   </div>
 </template>
 
@@ -25,6 +27,10 @@ const props = defineProps({
   },
   customStyle: {
     type: String
+  },
+  showType: {
+    type: String,
+    default: undefined
   }
 })
 </script>

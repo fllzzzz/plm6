@@ -149,12 +149,13 @@ const wmsRmInboundReceipt = {
         source: dataSourceEnum.SYSTEM.V,
         key: 'inboundTime',
         title: '入库时间：',
-        width: 55,
+        width: 135,
         type: typeEnum.DATE.K,
         format: 'YY/MM/DD kk:mm'
       },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'logisticsSupplierName', title: '运输公司：', width: 80, type: typeEnum.COMPANY_NAME.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'freight', title: '物流费：', width: 55, type: typeEnum.AMOUNT.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'freightWeight', title: '运输重量(kg)：', width: 55, type: typeEnum.METE.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'logisticsSupplierName', title: '运输公司：', width: 80, type: typeEnum.COMPANY_NAME.K },
       {
         show: false,
         source: dataSourceEnum.SYSTEM.V,

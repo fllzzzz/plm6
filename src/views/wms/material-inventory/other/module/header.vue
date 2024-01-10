@@ -2,7 +2,7 @@
   <div class="head-container">
     <div v-if="crud.searchToggle">
       <!-- 物料查询相关 -->
-      <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery" multiple show-project-Warehouse-type>
+      <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery" @searchQuery="searchQuery" multiple show-project-Warehouse-type>
         <template #afterProjectWarehouseType>
           <monomer-select-area-select
             v-if="query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V"
@@ -18,15 +18,15 @@
           />
         </template>
       </mat-header-query>
-      <rr-operation />
+      <rr-operation @resetClick="resetClick" />
     </div>
     <crud-operation>
       <!-- TODO:打印 -->
       <template #optLeft>
-        <common-button class="filter-item" v-permission="permission.outbound" type="primary" size="mini" @click="toBatchOutbound">
+        <common-button class="filter-item" v-permission="permission.outbound" type="primary" size="mini"  @click="handleOut">
           <svg-icon icon-class="wms-outbound" /> 批量出库
         </common-button>
-        <common-button class="filter-item" v-permission="permission.transfer" type="warning" size="mini" @click="toBatchTransfer">
+        <common-button class="filter-item" v-permission="permission.transfer" type="warning" size="mini"  @click="handleTransfer">
           <svg-icon icon-class="wms-transfer" /> 批量调拨
         </common-button>
       </template>
@@ -43,20 +43,20 @@
       :project-warehouse-type="query.projectWarehouseType"
       :project-id="query.projectId"
       :basic-class="query.basicClass"
-      :material-list="crud.selections"
-      @success="handleBatchOutbound"
+      :material-list="props.tableSelections"
+      @success="handleSuccessOut"
     />
     <transfer-batch-handling-form
       v-model:visible="batchTransferHandlingVisible"
       :basic-class="query.basicClass"
-      :material-list="crud.selections"
-      @success="handleTransferOutbound"
+      :material-list="props.tableSelections"
+      @success="handleSuccessTransfer"
     />
   </div>
 </template>
 
 <script setup>
-import { defineExpose } from 'vue'
+import { defineExpose, defineProps, defineEmits } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 
@@ -84,6 +84,47 @@ const {
   handleTransferOutbound,
   openFreezeRecords
 } = useHeaderInfo({ defaultBasicClass: rawMatClsEnum.OTHER.V })
+
+const props = defineProps({
+  tableSelections: {
+    type: Array,
+    default: () => []
+  }
+})
+
+const emit = defineEmits(['clearTableSelection', 'getSelections', 'handleClearSelection'])
+
+function handleOut() {
+  emit('getSelections')
+  toBatchOutbound()
+}
+
+function handleTransfer() {
+  emit('getSelections')
+  toBatchTransfer()
+}
+
+function searchQuery() {
+  emit('clearTableSelection')
+  emit('handleClearSelection')
+}
+
+function handleSuccessOut() {
+  emit('clearTableSelection')
+  emit('handleClearSelection')
+  handleBatchOutbound()
+}
+
+function handleSuccessTransfer() {
+  emit('clearTableSelection')
+  emit('handleClearSelection')
+  handleTransferOutbound()
+}
+
+function resetClick() {
+  emit('clearTableSelection')
+  emit('handleClearSelection')
+}
 
 defineExpose({
   updateListNumber

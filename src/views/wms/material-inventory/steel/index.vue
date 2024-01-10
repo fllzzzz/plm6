@@ -47,18 +47,26 @@
       <!-- 仓库信息 -->
       <warehouse-info-columns :columns="columns" :show-project="showProjectInfo" :show-monomer="showProjectInfo" :show-area="showProjectInfo" />
       <!--编辑与删除-->
-      <el-table-column label="操作" width="220px" align="center" fixed="right">
+      <el-table-column label="操作" width="220px" align="left" fixed="right">
         <template #default="{ row: { sourceRow: row } }">
           <!-- 条板办理 -->
-          <!-- <common-button @click="handlePlate(row)" size="mini" >条板</common-button> -->
+          <el-tooltip content="条板转换" placement="top" v-if="checkPermission(permission.convert) && basicClass===rawMatClsEnum.STEEL_COIL.V">
+            <common-button @click="handlePlate(row)" type="info" size="mini" :disabled="!(row.classifyFullName.indexOf('卷板')>-1 && basicClass===rawMatClsEnum.STEEL_COIL.V)">
+              <svg-icon icon-class="switch" />
+            </common-button>
+          </el-tooltip>
           <!--出库-->
-          <common-button v-permission="permission.outbound" type="primary" size="mini" @click="toOutHandle(row)">
-            <svg-icon icon-class="wms-outbound" />
-          </common-button>
+          <el-tooltip content="出库" placement="top" v-if="checkPermission(permission.outbound)">
+            <common-button v-permission="permission.outbound" type="primary" size="mini" @click="toOutHandle(row)">
+              <svg-icon icon-class="wms-outbound" />
+            </common-button>
+          </el-tooltip>
           <!--调拨-->
-          <common-button v-permission="permission.transfer" type="warning" size="mini" @click="toTransfer(row)">
-            <svg-icon icon-class="wms-transfer" />
-          </common-button>
+          <el-tooltip content="调拨" placement="top" v-if="checkPermission(permission.transfer)">
+            <common-button v-permission="permission.transfer" type="warning" size="mini" @click="toTransfer(row)">
+              <svg-icon icon-class="wms-transfer" />
+            </common-button>
+          </el-tooltip>
           <!--打印-->
           <material-print-button  v-if="checkPermission(permission.labelPrint)" :material="row" />
         </template>
@@ -113,7 +121,7 @@ import MaterialUnitOperateQuantityColumns from '@/components-system/wms/table-co
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import materialPrintButton from '@/components-system/wms/material-print-button.vue'
-import steelCoilPlate from '@/views/wms/material-outbound/raw-material/components/outbound-handling-form//module/steel-coil-plate.vue'
+import steelCoilPlate from '@/views/wms/material-outbound/raw-material/components/outbound-handling-form/module/steel-coil-plate.vue'
 
 const optShow = {
   add: false,
@@ -161,10 +169,11 @@ const showProjectInfo = computed(() => { // 是否显示项目相关信息
   return crud.query?.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V
 })
 
-// function handlePlate(row) {
-//   currentRow.value = row
-//   plateVisible.value = true
-// }
+function handlePlate(row) {
+  currentRow.value = row
+  console.log(currentRow.value)
+  plateVisible.value = true
+}
 
 function clearTableSelection() {
   tableSelections.value = []
@@ -217,7 +226,7 @@ CRUD.HOOK.beforeRefresh = async (crud) => {
 }
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
-  headerRef.value && headerRef.value.updateListNumber()
+  headerRef.value && headerRef.value.headerRefreshNum()
   await setSpecInfoToList(data.content)
   const allArr = []
   data.content = await numFmtByBasicClass(data.content, {

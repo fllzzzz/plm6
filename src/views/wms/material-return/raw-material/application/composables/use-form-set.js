@@ -34,7 +34,9 @@ export default function useFormSet({ FORM, form, cu, emit, isEdit, tableRules, i
     cleanUpData(form.list)
     form.list.map(async (v) => {
       if ((v.basicClass & rawMatClsEnum.STEEL_PLATE.V) && v.list?.length > 0) {
-        v.list = await numFmtByBasicClass(v.list, { toSmallest: true, toNum: true })
+        v.list = await numFmtByBasicClass(v.list, { toSmallest: true, toNum: true }, {
+          mete: ['singleReturnMete']
+        })
       }
     })
     form.list = await numFmtByBasicClass(form.list, { toSmallest: true, toNum: true })
