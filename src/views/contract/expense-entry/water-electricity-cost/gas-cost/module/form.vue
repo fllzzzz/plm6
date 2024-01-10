@@ -69,6 +69,9 @@
             :max="9999999999"
           />
         </el-form-item>
+        <el-form-item label="结存量" prop="stockMete">
+          <el-input-number v-model="form.stockMete" style="width: 270px" placeholder="请输入结存量" controls-position="right" :min="0" />
+        </el-form-item>
       </el-form>
     </div>
   </common-dialog>
@@ -107,6 +110,7 @@ const defaultForm = {
   usedMete: undefined,
   totalAmount: undefined,
   startDate: undefined,
+  stockMete: undefined,
   endDate: undefined
 }
 

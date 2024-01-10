@@ -19,6 +19,15 @@
         clearable
         @keyup.enter="crud.toQuery"
       />
+      <el-input
+        v-model="query.specification"
+        placeholder="输入规格搜索"
+        class="filter-item"
+        style="width: 200px"
+        size="small"
+        clearable
+        @keyup.enter="crud.toQuery"
+      />
       <rrOperation />
     </div>
     <crudOperation>
@@ -33,7 +42,7 @@
         <print-table
           v-permission="crud.permission.print"
           api-key="contractStructurePrice"
-          :params="{ ...query }"
+          :params="{ ...query, ids: props.rowIds}"
           size="mini"
           type="warning"
           class="filter-item"
@@ -99,6 +108,10 @@ const props = defineProps({
   submitList: {
     type: Array,
     default: () => []
+  },
+  rowIds: {
+    type: Array,
+    default: () => []
   }
 })
 
@@ -148,6 +161,8 @@ const monomerCost = ref({ ...costData })
 const defaultQuery = {
   name: undefined,
   material: undefined,
+  specification: undefined,
+  ids: [],
   monomerId: { value: undefined, resetAble: false }
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
