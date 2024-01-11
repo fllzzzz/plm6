@@ -20,6 +20,7 @@
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="shipDate" label="运输日期" align="center" show-overflow-tooltip />
         <el-table-column prop="type" label="运输属性" align="center" show-overflow-tooltip />
+        <el-table-column prop="supplierName" label="物流公司" align="center" show-overflow-tooltip />
         <el-table-column prop="licensePlate" label="车牌号" align="center" show-overflow-tooltip>
           <template #default="{ row }">
             <table-cell-tag :show="Boolean(row.boolPersonalEnum)" name="个人" :offset="15" />
