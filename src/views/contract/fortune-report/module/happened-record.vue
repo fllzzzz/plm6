@@ -12,7 +12,7 @@
     <template #titleRight>
       <el-tag effect="plain" type="warning" size="medium">发货总额：{{ props.detailRow.happenedAmount }}</el-tag>
       <div class="print-wrap">
-        <print-table v-permission="permission.printDetail" api-key="projectHappenedDetail" :params="params" size="mini" type="warning" />
+        <print-table v-permission="permission.printDetail" api-key="projectHappenedDetail" :params="{projectId: params.projectId, auditStartDate: params.auditStartDate, auditEndDate: params.auditEndDate}" size="mini" type="warning" />
       </div>
     </template>
     <template #content>
@@ -29,6 +29,7 @@
         <el-table-column prop="specification" key="specification" label="规格" align="center" show-overflow-tooltip min-width="80" />
         <el-table-column prop="material" key="material" label="材质" align="center" show-overflow-tooltip min-width="80" />
         <el-table-column prop="nuclear" key="nuclear" label="核算单位" align="center" show-overflow-tooltip min-width="120" />
+        <el-table-column prop="quantity" key="quantity" label="数量" align="center" show-overflow-tooltip min-width="120" />
         <el-table-column prop="totalMete" key="totalMete" label="总量" align="center" show-overflow-tooltip min-width="150" />
         <el-table-column prop="unitPrice" key="unitPrice" label="单价" align="right" show-overflow-tooltip min-width="80" />
         <el-table-column prop="totalPrice" key="totalPrice" label="总价" align="right" show-overflow-tooltip min-width="120" />
@@ -94,8 +95,8 @@ const permission = inject('permission')
 const params = computed(() => {
   return {
     projectId: props.detailRow.id,
-    secondStartDate: props.secondPickerTime.startDate,
-    secondEndDate: props.secondPickerTime.endDate
+    auditStartDate: props.secondPickerTime.startDate,
+    auditEndDate: props.secondPickerTime.endDate
   }
 })
 
