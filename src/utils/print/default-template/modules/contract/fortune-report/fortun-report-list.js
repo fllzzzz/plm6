@@ -1,5 +1,5 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, amountUnitEnum } from '@/utils/print/enum'
-import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
+// import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 import { DP } from '@/settings/config'
 
 // 业财报表
@@ -201,7 +201,8 @@ const fortuneReportList = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'project', title: '项目', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 22, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V, lineBreak: false }},
+      { show: true, key: 'name', title: '项目', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 22, type: typeEnum.OTHER.K },
+      { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 22, type: typeEnum.OTHER.K },
       { show: false, key: 'customerUnit', title: '业主名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K },
       { show: false, key: 'businessType', title: '业务类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'businessTypeEnum', key: 'L' }},
       { show: false, key: 'signingDate', title: '签订日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
