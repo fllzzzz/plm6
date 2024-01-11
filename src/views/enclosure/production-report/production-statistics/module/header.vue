@@ -58,6 +58,7 @@
           class="filter-item date-item"
           @change="handleDateChange"
         />
+        <projectCascader v-model="query.projectId" class="filter-item" @change="crud.toQuery()" />
         <rrOperation />
       </template>
       <template #viewLeft>
@@ -76,6 +77,7 @@
 <script setup>
 import { fullYearProduction, workshopEcharts } from '@/api/enclosure/production-report/production-statistics'
 import { ref, watch } from 'vue'
+import projectCascader from '@comp-base/project-cascader'
 
 import moment from 'moment'
 import { parseTime } from '@/utils/date'
