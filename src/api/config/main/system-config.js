@@ -6,7 +6,7 @@ import request from '@/utils/request'
 export function getCompanyConfig(params) {
   return request({
     module: 'config',
-    url: 'company',
+    url: 'company/name',
     method: 'get',
     params
   })
@@ -54,7 +54,7 @@ export function setProjectConfig(data) {
 export function getLogoConfig(params) {
   return request({
     module: 'config',
-    url: 'company/logo',
+    url: 'company/logo/all',
     method: 'get',
     params
   })

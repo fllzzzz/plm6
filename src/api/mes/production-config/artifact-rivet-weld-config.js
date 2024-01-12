@@ -4,7 +4,7 @@ import request from '@/utils/request'
 export function getRivetWeld(params) {
   return request({
     module: 'mes',
-    url: 'rivetWeld/artifact/type',
+    url: 'rivetWeld/artifact/type/find',
     method: 'get',
     params
   })
