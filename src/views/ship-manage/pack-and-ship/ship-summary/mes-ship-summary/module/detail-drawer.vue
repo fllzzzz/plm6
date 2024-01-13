@@ -41,6 +41,7 @@
           </template>
         </el-table-column>
         <el-table-column key="areaName" prop="areaName" label="区域" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="name" prop="name" label="名称" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="netWeight" prop="netWeight" label="单净重（kg）" align="center" :show-overflow-tooltip="true">
           <template v-slot="scope">

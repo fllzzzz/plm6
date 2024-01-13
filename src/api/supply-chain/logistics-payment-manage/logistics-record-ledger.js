@@ -38,4 +38,13 @@ export function invoiceRecord(params) {
     params
   })
 }
+
+// 获取供应商列表
+export function getSupplier(projectId) {
+  return request({
+    module: 'mes',
+    url: `supper/price/listAllSupplier/${projectId}`,
+    method: 'get'
+  })
+}
 export default { get }
