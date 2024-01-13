@@ -81,7 +81,7 @@ async function fetchData() {
 
 const { crud, query } = regHeader(defaultQuery)
 
-watch([() => query.createTime, () => query.businessType, () => query.name, () => query.auditStatus], () => {
+watch([() => query.projectId, () => query.createTime, () => query.businessType, () => query.name, () => query.auditStatus], () => {
   fetchData()
 }, { immediate: true })
 </script>
