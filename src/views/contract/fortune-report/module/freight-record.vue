@@ -12,7 +12,7 @@
     <template #titleRight>
       <el-tag effect="plain" type="warning" size="medium">成品运费：{{ props.detailRow.freight }}</el-tag>
       <div class="print-wrap">
-        <print-table v-permission="permission.printDetail" api-key="purchaseLogisticsRecord" :params="params" size="mini" type="warning" />
+        <print-table v-permission="permission.printDetail" api-key="purchaseLogisticsRecord" :params="params" size="mini" type="warning"  />
       </div>
     </template>
     <template #content>
@@ -23,6 +23,7 @@
         v-model="supplierId"
         :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
         @change="changeSupplier"
+        clearable
       />
       <common-table :data="list" :data-format="columnsDataFormat" :max-height="maxHeight">
         <el-table-column label="序号" type="index" align="center" width="60" />
