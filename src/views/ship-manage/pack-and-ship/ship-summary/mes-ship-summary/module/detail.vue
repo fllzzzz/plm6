@@ -85,6 +85,7 @@
         </template>
       </el-table-column>
       <el-table-column key="area.name" prop="area.name" label="区域" align="center" :show-overflow-tooltip="true" min-width="100px" />
+      <el-table-column key="name" prop="name" label="名称" align="center" :show-overflow-tooltip="true" />
       <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
       <el-table-column
         key="specification"
