@@ -16,6 +16,14 @@
       </div>
     </template>
     <template #content>
+      <common-select
+        placeholder="请选择供货商"
+        style="margin-bottom: 10px"
+        :options="supplierOptions"
+        v-model="supplierId"
+        :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+        @change="changeSupplier"
+      />
       <common-table :data="list" :data-format="columnsDataFormat" :max-height="maxHeight">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="shipDate" label="运输日期" align="center" show-overflow-tooltip />
@@ -49,7 +57,7 @@
 </template>
 
 <script setup>
-import { logisticsRecordDetail } from '@/api/supply-chain/logistics-payment-manage/logistics-record-ledger'
+import { logisticsRecordDetail, getSupplier } from '@/api/supply-chain/logistics-payment-manage/logistics-record-ledger'
 import { ref, defineEmits, defineProps, watch, computed, inject } from 'vue'
 
 import { logisticsSearchTypeEnum } from '@enum-ms/contract'
@@ -77,6 +85,8 @@ const props = defineProps({
 
 const list = ref([])
 const tableLoading = ref(false)
+const supplierOptions = ref()
+const supplierId = ref()
 
 const emit = defineEmits(['update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
@@ -98,6 +108,7 @@ watch(
   (val) => {
     if (val) {
       fetchList()
+      fetchSupplier()
     }
   }
 )
@@ -128,7 +139,7 @@ async function fetchList() {
   let _list = []
   tableLoading.value = true
   try {
-    const { content = [], totalElements } = await logisticsRecordDetail({ ...params.value, ...queryPage })
+    const { content = [], totalElements } = await logisticsRecordDetail({ ...params.value, ...queryPage, supplierId: supplierId.value })
     _list = content
     setTotalPage(totalElements)
   } catch (error) {
@@ -136,6 +147,20 @@ async function fetchList() {
   } finally {
     list.value = _list
     tableLoading.value = false
+  }
+}
+
+const changeSupplier = (v) => {
+  supplierId.value === v
+  fetchList()
+}
+
+async function fetchSupplier() {
+  try {
+    const { content } = await getSupplier(props.detailRow.id)
+    supplierOptions.value = content
+  } catch (error) {
+    console.log(error)
   }
 }
 </script>
