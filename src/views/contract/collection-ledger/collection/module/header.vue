@@ -83,7 +83,7 @@ const defaultQuery = {
 const totalNumber = ref()
 
 async function fetchData() {
-  const res = await getTotalNumber({ ...query })
+  const res = await getTotalNumber({ ...query, startDate: query.createTime[0], endDate: query.createTime[1] })
   totalNumber.value = res
 }
 
