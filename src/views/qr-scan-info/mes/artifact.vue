@@ -9,7 +9,7 @@
       <span>名称：{{ component.name }}</span>
       <span>编号：{{ component.serialNumber }}</span>
       <span>图号：{{ component.drawingNumber }}</span>
-      <span>材质：{{ component.material }}</span>
+      <!-- <span>材质：{{ component.material }}</span> -->
       <span>规格：{{ component.specification }}</span>
       <span>长度：{{ component.length }}{{ component.length ? ' mm' : '' }}</span>
       <span v-if="printWeightTypeEnum.NONE.V !== weightType">重量：{{ component.weight }}{{ component.weight ? ' kg' : '' }}</span>
