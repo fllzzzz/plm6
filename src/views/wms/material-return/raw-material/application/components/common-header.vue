@@ -35,6 +35,7 @@
             size="mini"
             border
             style="margin-right: 6px"
+            disabled
             @change="boolRealReturnChange"
           >
             <span>真实退库</span>
