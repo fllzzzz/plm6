@@ -54,4 +54,13 @@ export function del(id) {
   })
 }
 
+export function getTotalNumber(params) {
+  return request({
+    module: 'contract',
+    url: 'contract/invoice/getInvoiceSum',
+    method: 'get',
+    params
+  })
+}
+
 export default { get, add, edit, del }

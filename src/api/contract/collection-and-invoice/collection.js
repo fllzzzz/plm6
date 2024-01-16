@@ -71,4 +71,13 @@ export function bankData(companyId) {
   })
 }
 
+export function getTotalNumber(params) {
+  return request({
+    module: 'contract',
+    url: 'contract/collection/getCollectionSum',
+    method: 'get',
+    params
+  })
+}
+
 export default { get, add, edit, del }

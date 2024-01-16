@@ -49,16 +49,19 @@
           type="warning"
           class="filter-item"
         />
+        <el-tag class="filter-item" size="medium"><span>开票合计：</span>{{ totalNumber }}</el-tag>
       </template>
     </crudOperation>
   </div>
 </template>
 
 <script setup>
+import { ref, watch } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import { businessTypeEnum, auditTypeEnum } from '@enum-ms/contract'
+import { getTotalNumber } from '@/api/contract/collection-and-invoice/invoice'
 
 const defaultQuery = {
   createTime: [],
@@ -69,6 +72,17 @@ const defaultQuery = {
   auditStatus: { value: auditTypeEnum.PASS.V, resetAble: false }
 }
 
+const totalNumber = ref()
+
+async function fetchData() {
+  const res = await getTotalNumber({ ...query, startDate: query.createTime[0], endDate: query.createTime[1] })
+  totalNumber.value = res
+}
+
 const { crud, query } = regHeader(defaultQuery)
+
+watch([() => query.projectId, () => query.createTime, () => query.businessType, () => query.name, () => query.auditStatus], () => {
+  fetchData()
+}, { immediate: true })
 
 </script>
