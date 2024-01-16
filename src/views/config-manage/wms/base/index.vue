@@ -22,6 +22,8 @@
         <party-a-borrow-return v-if="checkPermission(permission.partyABorrowReturnGet)" class="card" />
          <!-- 退库审核 -->
         <basic-return v-if="checkPermission(permission.basicReturnGet)" class="card" />
+        <!-- 调拨审核 -->
+        <transfer v-if="checkPermission(permission.transferGet)" class="card" />
       </el-col>
     </el-row>
   </div>
@@ -40,6 +42,7 @@ import ReportCenter from './module/report-center.vue'
 import PartyABorrowReturn from './module/party-a-borrow-return.vue'
 import MaterialWeighting from './module/material-weighting.vue'
 import basicReturn from './module/basic-return.vue'
+import transfer from './module/transfer'
 
 provide('permission', permission)
 </script>
