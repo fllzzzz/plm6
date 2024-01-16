@@ -619,7 +619,9 @@ export const configWmsBasicForPM = {
   // basicRejectGet: ['config_wms_basicReject:get'], // 查看 基础退货信息
   // basicRejectEdit: ['config_wms_basicReject:edit'] // 编辑 基础退货信息
   basicReturnGet: ['config_wms_basicReturn:get'], // 查看 退库审核配置
-  basicReturnEdit: ['config_wms_basicReturn:edit'] // 编辑 退库审核配置
+  basicReturnEdit: ['config_wms_basicReturn:edit'], // 编辑 退库审核配置
+  transferGet: ['config_wms_transfer:get'], // 查看 调拨审核配置
+  transferEdit: ['config_wms_transfer:edit'] // 编辑 调拨审核配置
 }
 
 // WMS-配置管理/仓库设置

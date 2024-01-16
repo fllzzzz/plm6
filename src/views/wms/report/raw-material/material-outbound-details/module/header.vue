@@ -105,6 +105,9 @@
         <export-button v-permission="permission.get" :params="query" :fn="exportDetailsExcel" response-header-result>
           下载出库明细（根据查询条件）
         </export-button>
+         <export-button v-permission="permission.get" :params="query" :fn="exportReturnDetailsExcel" type="primary" response-header-result>
+          下载出库明细（体现退库，根据查询条件）
+        </export-button>
       </template>
       <template #viewLeft v-if="query.basicClass & STEEL_ENUM">
         <span v-permission="permission.get">
@@ -123,7 +126,7 @@
 </template>
 
 <script setup>
-import { exportDetailsExcel, getSummary } from '@/api/wms/report/raw-material/outbound'
+import { exportDetailsExcel, getSummary, exportReturnDetailsExcel } from '@/api/wms/report/raw-material/outbound'
 import { ref, inject } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { rawMatClsEnum } from '@enum-ms/classification'

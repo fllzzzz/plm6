@@ -17,7 +17,7 @@
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
         <template #default="{ row }">
-          <expand-secondary-info v-if="!basicClass" :basic-class="row.basicClass" :row="row" />
+          <expand-secondary-info v-if="!basicClass" :basic-class="row.basicClass" :row="row" showRemark/>
         </template>
       </el-expand-table-column>
       <!-- 基础信息 -->
@@ -107,6 +107,24 @@
         align="center"
         width="125"
       />
+       <el-table-column
+        v-if="columns.visible('departmentName')"
+        key="departmentName"
+        :show-overflow-tooltip="true"
+        prop="departmentName"
+        label="退库部门"
+        align="center"
+        min-width="100"
+      />
+      <el-table-column
+        v-if="columns.visible('recipient')"
+        key="recipient"
+        :show-overflow-tooltip="true"
+        prop="recipient"
+        label="退库人"
+        align="center"
+        min-width="100"
+      />
     </common-table>
     <!--分页组件-->
     <pagination />
@@ -190,7 +208,9 @@ const { CRUD, crud, columns } = useCRUD(
       'unitPriceExcludingVAT',
       'amount',
       'amountExcludingVAT',
-      'inputVAT'
+      'inputVAT',
+      'recipient',
+      'departmentName'
     ],
     permission: { ...permission },
     optShow: { ...optShow },

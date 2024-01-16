@@ -160,3 +160,22 @@ export function setReturnBasicConf(data) {
     data
   })
 }
+
+// 获取调拨审核配置
+export function getTransferBasicConf() {
+  return request({
+    module: 'wms',
+    url: 'config/transfer',
+    method: 'get'
+  })
+}
+
+// 保存调拨审核配置
+export function setTransferBasicConf(data) {
+  return request({
+    module: 'wms',
+    url: 'config/transfer',
+    method: 'put',
+    data
+  })
+}
