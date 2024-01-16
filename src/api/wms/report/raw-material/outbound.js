@@ -37,3 +37,17 @@ export function exportDetailsExcel(params) {
     params
   })
 }
+
+/**
+ * 退库明细体现出库excel导出
+ */
+export function exportReturnDetailsExcel(params) {
+  return request({
+    module: 'wms',
+    url: `report/raw-materials/outboundAndReturn/details/excel`,
+    method: 'get',
+    responseType: 'blob',
+    timeout: 60000000,
+    params
+  })
+}

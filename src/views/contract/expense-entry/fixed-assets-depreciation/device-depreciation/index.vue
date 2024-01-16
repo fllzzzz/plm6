@@ -5,6 +5,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="dataFormat"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       @selection-change="crud.selectionChangeHandler"
@@ -92,6 +93,22 @@
         label="月折旧额"
       />
       <el-table-column
+        v-if="columns.visible('startDate')"
+        align="center"
+        key="startDate"
+        prop="startDate"
+        :show-overflow-tooltip="true"
+        label="开始时间"
+      />
+      <el-table-column
+        v-if="columns.visible('endDate')"
+        align="center"
+        key="endDate"
+        prop="endDate"
+        :show-overflow-tooltip="true"
+        label="结束时间"
+      />
+      <el-table-column
         v-if="columns.visible('startDepreciation')"
         align="center"
         key="startDepreciation"
@@ -149,6 +166,11 @@ import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mForm from './module/form.vue'
 import mHeader from './module/header.vue'
+
+const dataFormat = ref([
+  ['startDate', ['parse-time', '{y}-{m}-{d}']],
+  ['endDate', ['parse-time', '{y}-{m}-{d}']]
+])
 
 const optShow = {
   add: true,

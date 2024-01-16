@@ -216,7 +216,7 @@ const mesFactoryWorkshopReport = {
         show: true, key: 'date', title: '入库日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 24, type: typeEnum.DATE.K,
         format: 'YY/MM/DD'
       },
-      { show: true, key: 'groupName', title: '班组', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.OTHER.K }
+      { show: true, key: 'teamName', title: '班组', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.TEAM_NAME.K }
     ]
   }
 }
