@@ -39,16 +39,16 @@
           全部工单撤回
         </common-button>
         <div style="float: right">
-          <!-- <print-table
+          <print-table
             v-permission="permission.print"
             v-if="props.detailData.productType === componentTypeEnum.ARTIFACT.V"
             api-key="mesProductionTaskOrder"
-            :params="{ ...params }"
+            :params="{ ...params, productionLineTypeEnum: props.detailData.productionLine?.productionLineTypeEnum }"
             @print-success="addPrintRecord"
             size="mini"
             type="warning"
             class="filter-item"
-          /> -->
+          />
           <!-- <print-table
             v-permission="permission.print"
             v-show="props.detailData.productType === componentTypeEnum.ASSEMBLE.V"
@@ -59,8 +59,8 @@
             type="warning"
             class="filter-item"
           /> -->
-          <common-button v-permission="permission.cancelEdit" v-show="isEdit" size="mini" type="warning" @click="cancelEdit">取消编辑</common-button>
-          <common-button v-permission="permission.edit" v-show="!processId && isEdit === false && props.detailData.productType === componentTypeEnum.ARTIFACT.V" size="mini" type="primary" @click="editMode">编辑</common-button>
+          <common-button v-permission="permission.cancelEdit" v-show="isEdit" size="mini" type="warning" @click="cancelEdit" class="filter-item">取消编辑</common-button>
+          <common-button v-permission="permission.edit" v-show="!processId && isEdit === false && props.detailData.productType === componentTypeEnum.ARTIFACT.V" size="mini" type="primary" @click="editMode" class="filter-item">编辑</common-button>
           <el-popover
             v-model:visible="delBtn"
             placement="bottom"
@@ -71,16 +71,16 @@
           >
             <p>是否确认批量撤回操作？</p>
             <div style="text-align: right; margin: 0">
-              <common-button size="mini" type="text" @click.stop="cancelBatch">取消</common-button>
-              <common-button size="mini" type="danger" @click="batchBack">确定</common-button>
+              <common-button size="mini" type="text" @click.stop="cancelBatch" class="filter-item">取消</common-button>
+              <common-button size="mini" type="danger" @click="batchBack" class="filter-item">确定</common-button>
             </div>
             <template #reference>
-              <common-button v-permission="permission.batchRevoke" :loading="submitLoading" v-show="isEdit === true" size="mini" type="danger" :disabled="!selectionList.length" @click.stop="handleBatch">
+              <common-button v-permission="permission.batchRevoke" :loading="submitLoading" v-show="isEdit === true" size="mini" type="danger" class="filter-item" :disabled="!selectionList.length" @click.stop="handleBatch">
                 批量撤回
               </common-button>
             </template>
           </el-popover>
-          <common-button v-permission="permission.print" icon="el-icon-printer" size="mini" type="success" @click="printIt">
+          <common-button v-permission="permission.print" class="filter-item" icon="el-icon-printer" size="mini" type="success" @click="printIt">
             打印{{
               props.detailData.productType === componentTypeEnum.ARTIFACT.V
                 ? '【任务清单】'
@@ -287,13 +287,14 @@ import { constantize } from '@/utils/enum/base'
 import { parseTime } from '@/utils/date'
 import { codeWait } from '@/utils'
 // import formatFn from '@/utils/print/format/index'
-import { printTable } from '@/utils/print/table'
+import { printTable as printPdf } from '@/utils/print/table'
 
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
 import useVisible from '@compos/use-visible'
 import useDefaultTableTemplate from '@compos/use-default-table-template'
 
+// const printPdf = ref()
 const permission = inject('permission')
 const drawerRef = ref()
 const isEdit = ref(false)
@@ -672,7 +673,7 @@ async function printIt() {
     await codeWait(500)
     printLoading.value.text = `已全部加入打印队列`
     await codeWait(500)
-    const result = await printTable({
+    const result = await printPdf({
       printMode: printModeEnum.QUEUE.V,
       header,
       footer,
