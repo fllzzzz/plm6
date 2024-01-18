@@ -53,9 +53,8 @@ const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, printConfig
         <td>规格：${emptyTextFormatter(component.specification)}</td>
         <td rowspan="3" class="qr-content"></td>
       </tr>
-      <tr class="artifact-table">
+      <tr>
         <td colspan="${printConfig?.showArea && component?.oneCode ? 1 : 2}" style="${printConfig?.showArea ? '' : 'display:none;'}">区域：${emptyTextFormatter(component.areaName)}</td>
-        <td colspan="${printConfig?.showArea && component?.oneCode ? 1 : 2}" style="${printConfig?.showArea ? 'display:none;' : ''}"></td>
         <td colspan="${printConfig?.showArea && component?.oneCode ? 1 : 2}" style="${component?.oneCode ? '' : 'display:none;'}">编码：${component.oneCode}</td>
       </tr>
       <tr>
@@ -88,13 +87,13 @@ const ARTIFACT_SIMPLE_L_HTML = function ({ component = defComponent, printConfig
         <td rowspan="2" class="qr-content"></td>
       </tr>
       <tr>
-        <td style="width:66.66%">
+        <td style="overflow: hidden">
           <div style="${printConfig?.dateInProduced ? '' : 'display:none;'}">
             生产日期：${emptyTextFormatter(component.printTime)}
           </div>
-          <div style="${component?.oneCode ? '' : 'display:none;'}">
+          <span style="${component?.oneCode ? '' : 'display:none;'}">
             编码：${component.oneCode}
-          </div>
+          </span>
         </td>
       </tr>
     </table>
