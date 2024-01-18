@@ -54,8 +54,8 @@ const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, printConfig
         <td rowspan="3" class="qr-content"></td>
       </tr>
       <tr>
+        <td colspan="2" style="${!printConfig?.showArea && !component?.oneCode ? '' : 'display:none;'}"></td>
         <td colspan="${printConfig?.showArea && component?.oneCode ? 1 : 2}" style="${printConfig?.showArea ? '' : 'display:none;'}">区域：${emptyTextFormatter(component.areaName)}</td>
-        <td colspan="${printConfig?.showArea && component?.oneCode ? 1 : 2}" style="${printConfig?.showArea ? 'display:none;' : ''}"></td>
         <td colspan="${printConfig?.showArea && component?.oneCode ? 1 : 2}" style="${component?.oneCode ? '' : 'display:none;'}">编码：${component.oneCode}</td>
       </tr>
       <tr>
