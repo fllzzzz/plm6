@@ -621,7 +621,7 @@ export const PRINT_LABEL_STYLE = {
     [labelTypeEnum.SIMPLE.V]: ARTIFACT_STYLE({
       fClass: 'print-sim-al',
       // rowHeight: 32,
-      rowHeight: 17,
+      rowHeight: 16,
       colPadding: 1,
       colContent: 'center',
       unit: 'mm'
@@ -643,7 +643,7 @@ export const PRINT_LABEL_STYLE = {
     [labelTypeEnum.SIMPLE.V]: ARTIFACT_STYLE({
       fClass: 'print-sim-al',
       // rowHeight: 32,
-      rowHeight: 17,
+      rowHeight: 16,
       colPadding: 1,
       colContent: 'center',
       unit: 'mm'
