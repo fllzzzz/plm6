@@ -53,8 +53,9 @@ const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, printConfig
         <td>规格：${emptyTextFormatter(component.specification)}</td>
         <td rowspan="3" class="qr-content"></td>
       </tr>
-      <tr style="${!printConfig?.showArea && !component?.oneCode ? 'border-bottom:1px solid #000;' : ''}">
+      <tr class="artifact-table">
         <td colspan="${printConfig?.showArea && component?.oneCode ? 1 : 2}" style="${printConfig?.showArea ? '' : 'display:none;'}">区域：${emptyTextFormatter(component.areaName)}</td>
+        <td colspan="${printConfig?.showArea && component?.oneCode ? 1 : 2}" style="${printConfig?.showArea ? 'display:none;' : ''}"></td>
         <td colspan="${printConfig?.showArea && component?.oneCode ? 1 : 2}" style="${component?.oneCode ? '' : 'display:none;'}">编码：${component.oneCode}</td>
       </tr>
       <tr>
@@ -64,6 +65,7 @@ const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, printConfig
   </div>
 `
 }
+// style="${!printConfig?.showArea && !component?.oneCode ? 'border-bottom:1px solid #000;' : ''}" xp系统样式，因此样式产品标签打印会有一条横线贯穿
 
 // 构件-简约标签
 const ARTIFACT_SIMPLE_L_HTML = function ({ component = defComponent, printConfig }) {
@@ -86,7 +88,7 @@ const ARTIFACT_SIMPLE_L_HTML = function ({ component = defComponent, printConfig
         <td rowspan="2" class="qr-content"></td>
       </tr>
       <tr>
-        <td>
+        <td style="width:66.66%">
           <div style="${printConfig?.dateInProduced ? '' : 'display:none;'}">
             生产日期：${emptyTextFormatter(component.printTime)}
           </div>
