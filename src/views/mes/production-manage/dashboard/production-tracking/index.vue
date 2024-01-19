@@ -5,7 +5,7 @@
     </div>
     <common-table
       ref="tableRef"
-      v-loading="crud.loading || !loaded"
+      v-loading="crud.loading"
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
