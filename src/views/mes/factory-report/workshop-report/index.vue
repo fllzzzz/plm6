@@ -142,7 +142,7 @@
         label="总面积"
       >
         <template #default="{row}">
-          {{ row.totalSurfaceArea }}
+          {{ row.totalSurfaceArea.toFixed(2) }}
         </template>
       </el-table-column>
       <el-table-column
