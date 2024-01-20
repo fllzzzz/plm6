@@ -207,6 +207,8 @@ const mesFactoryWorkshopReport = {
       { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.SPECIFICATION.K },
       { show: true, key: 'length', title: '长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 15, type: typeEnum.LENGTH.K, sum: true },
       { show: true, key: 'material', title: '材质', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 15, type: typeEnum.MATERIAL.K },
+      // { show: true, key: 'surfaceArea', title: '单面积', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 15, type: typeEnum.MATERIAL.K },
+      { show: true, key: 'totalSurfaceArea', title: '总面积', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 15, type: typeEnum.METE.K },
       { show: true, key: 'quantity', title: '生产数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 13, type: typeEnum.QUANTITY.K, sum: true },
       {
         show: true, key: 'totalNetWeight', title: '总重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.WEIGHT.K,

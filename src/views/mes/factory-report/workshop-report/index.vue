@@ -121,6 +121,30 @@
           <span>{{ scope.row.quantity }}</span>
         </template>
       </el-table-column>
+      <!-- <el-table-column
+         v-if="columns.visible('surfaceArea')"
+        align="center"
+        key="surfaceArea"
+        prop="surfaceArea"
+        :show-overflow-tooltip="true"
+        label="单面积"
+      >
+        <template #default="{row}">
+          {{ row.surfaceArea }}
+        </template>
+      </el-table-column> -->
+      <el-table-column
+         v-if="columns.visible('totalSurfaceArea')"
+        align="center"
+        key="totalSurfaceArea"
+        prop="totalSurfaceArea"
+        :show-overflow-tooltip="true"
+        label="总面积"
+      >
+        <template #default="{row}">
+          {{ row.totalSurfaceArea }}
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('netWeight')"
         align="center"
