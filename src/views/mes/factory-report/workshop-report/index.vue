@@ -139,7 +139,7 @@
         key="totalSurfaceArea"
         prop="totalSurfaceArea"
         :show-overflow-tooltip="true"
-        label="总面积"
+        label="总面积（㎡）"
       >
         <template #default="{row}">
           {{ row.totalSurfaceArea.toFixed(2) }}
