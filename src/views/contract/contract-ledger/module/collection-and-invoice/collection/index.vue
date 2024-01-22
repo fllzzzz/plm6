@@ -303,8 +303,8 @@ const { crud, CRUD } = useCRUD(
 const tableRules = {
   collectionDate: [{ required: true, message: '请选择收款日期', trigger: 'change' }],
   collectionAmount: [{ required: true, message: '请选择收款金额', trigger: 'change', type: 'number' }],
-  collectionBankAccountId: [{ required: true, message: '请选择收款银行', trigger: 'change' }],
-  collectionBankAccount: [{ required: true, message: '请输入银行卡号', trigger: 'change' }],
+  collectionBankAccountId: [{ required: paymentMethod.value === paymentFineModeEnum.CASH, message: '请选择收款银行', trigger: 'change' }],
+  collectionBankAccount: [{ required: paymentMethod.value === paymentFineModeEnum.CASH, message: '请输入银行卡号', trigger: 'change' }],
   collectionMode: [{ required: true, message: '请选择收款方式', trigger: 'change' }],
   collectionReason: [{ required: true, message: '请选择收款事由', trigger: 'change' }],
   paymentUnit: [{ required: true, message: '请输入付款单位', trigger: 'blur' }]
