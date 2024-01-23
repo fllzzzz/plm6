@@ -63,8 +63,8 @@
           </el-table-column>
           <el-table-column label="单体" align="center" min-width="100" prop="monomer.name">
             <template #default="{row}">
-              <table-cell-tag v-if="row.boolAllPartSendDirectly" name="檩条直发" color="#f56c6c" />
-              <table-cell-tag v-else name="直发件" />
+              <table-cell-tag v-if="row.boolAllPartSendDirectly && row.boolShowSign" name="檩条直发" color="#f56c6c" />
+              <table-cell-tag v-if="!row.boolAllPartSendDirectly && row.boolShowSign" name="直发件" />
               <span>{{ row.monomer.name }}</span>
             </template>
           </el-table-column>
