@@ -87,8 +87,9 @@
         <el-table-column label="序号" type="index" align="center" width="60" />
         <template
           v-if="
-            packType &
-            (packTypeEnum.STRUCTURE.V | packTypeEnum.MACHINE_PART.V | bridgePackTypeEnum.BOX.V | bridgePackTypeEnum.MACHINE_PART.V)
+            typeVal === packEnum.BOX.V
+              ? packType & (bridgePackTypeEnum.BOX.V | bridgePackTypeEnum.MACHINE_PART.V)
+              : packType & (packTypeEnum.STRUCTURE.V | packTypeEnum.MACHINE_PART.V)
           "
         >
           <el-table-column
@@ -105,9 +106,9 @@
             </template>
           </el-table-column>
           <el-table-column prop="monomer.name" label="单体" align="center" width="100px">
-            <template #default="{row}">
+            <template #default="{ row }">
               <table-cell-tag :show="row.boolAllPartSendDirectly" name="檩条直发" color="#f56c6c"></table-cell-tag>
-              <span>{{ row.monomer.name }}</span>
+              <span>{{ row.monomer?.name }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="area.name" label="区域" align="center" width="100px" />

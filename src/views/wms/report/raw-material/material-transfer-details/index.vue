@@ -14,6 +14,8 @@
       highlight-current-row
       @sort-change="crud.handleSortChange"
       row-key="id"
+      show-summary
+      :summary-method="getSummaries"
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
         <template #default="{ row }">
@@ -154,6 +156,7 @@ import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import Pagination from '@crud/Pagination'
 import MHeader from './module/header'
+import { tableSummary } from '@/utils/el-extra'
 
 import SourceTextInfo from '@/views/wms/material-transfer/raw-material/review/module/source-text-info.vue'
 import DirectionTextInfo from '@/views/wms/material-transfer/raw-material/review/module/direction-text-info.vue'
@@ -265,6 +268,14 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
         row.projects.push(row.transferReceipt.direction.project)
       }
     }
+  })
+}
+
+// 合计
+function getSummaries(param) {
+  return tableSummary(param, {
+    props: ['quantity', 'mete', ['amount', DP.YUAN], ['amountExcludingVAT', DP.YUAN]],
+    toThousandFields: ['amount', 'amountExcludingVAT']
   })
 }
 </script>

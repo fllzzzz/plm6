@@ -279,7 +279,7 @@
 <script setup>
 import { steelCoilOutboundHandling } from '@/api/wms/material-outbound/raw-material/outbound-handling'
 import { defineProps, reactive, defineExpose, provide, computed, ref, watch, watchEffect, defineEmits } from 'vue'
-import { mapGetters } from '@/store/lib'
+// import { mapGetters } from '@/store/lib'
 import { deepClone, isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 import { calcSteelCoilWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
@@ -345,7 +345,7 @@ const { loaded: unitLoaded, baseUnit } = useMatBaseUnit(props.basicClass)
 // 监听校验
 useWatchFormValidate(formRef, form, ['quantity'])
 // 当前用户
-const { user } = mapGetters('user')
+// const { user } = mapGetters('user')
 // 材料
 const material = computed(() => props.material || {})
 const lengthTable = ref([{}])
@@ -652,7 +652,8 @@ function formInit(data) {
     outboundUnit: data.outboundUnit, // 出库单位
     outboundUnitPrecision: data.outboundUnitPrecision, // 出库单位精度
     projectId: data.project ? data.project.id : undefined, // 项目id
-    recipientId: user.value.id, // 领用人id
+    recipientId: undefined, // 领用人id
+    // recipientId: user.value.id, // 领用人id
     // segmentQuantity: 1, // 段数
     // quantity: undefined, // 长度
     list: [],
