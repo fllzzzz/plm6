@@ -161,7 +161,7 @@ import {
 } from '@/api/wms/material-outbound/raw-material/outbound-handling'
 import { getStock } from '@/api/wms/material-inventory'
 import { defineEmits, defineProps, watch, ref, computed, nextTick, watchEffect } from 'vue'
-import { mapGetters } from '@/store/lib'
+// import { mapGetters } from '@/store/lib'
 import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum, materialPurchaseClsEnum } from '@/utils/enum/modules/classification'
 import { measureTypeEnum, projectWarehouseTypeEnum, outboundDestinationTypeEnum } from '@/utils/enum/modules/wms'
@@ -277,7 +277,7 @@ const { maxHeight } = useMaxHeight(
 const { outboundCfg } = useWmsConfig()
 
 // 当前用户
-const { user } = mapGetters('user')
+// const { user } = mapGetters('user')
 
 const boolPublicWare = computed(() => props.projectWarehouseType === projectWarehouseTypeEnum.PUBLIC.V)
 
@@ -327,7 +327,8 @@ const setRecipientId = watch(
   dialogVisible,
   (visible) => {
     if (visible) {
-      form.value.recipientId = user.value.id // 领用人id
+      form.value.recipientId = undefined
+      // form.value.recipientId = user.value.id // 领用人id
       nextTick(() => {
         // 首次设置默认领用人
         setRecipientId()
@@ -378,7 +379,8 @@ function formInit() {
   errorList.value = []
   form.value = { list: [] }
   formRef.value && formRef.value.resetFields()
-  form.value.recipientId = user.value.id // 领用人id
+  form.value.recipientId = undefined
+  // form.value.recipientId = user.value.id // 领用人id
   form.value.outboundAddress = outboundDestinationTypeEnum.FACTORY.V // 出库目的地
 }
 

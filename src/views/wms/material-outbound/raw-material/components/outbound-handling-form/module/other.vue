@@ -12,7 +12,7 @@
 <script setup>
 import { otherOutboundHandling } from '@/api/wms/material-outbound/raw-material/outbound-handling'
 import { defineProps, defineExpose, provide, computed, ref, watch } from 'vue'
-import { mapGetters } from '@/store/lib'
+// import { mapGetters } from '@/store/lib'
 import { deepClone, isBlank } from '@/utils/data-type'
 import { outboundDestinationTypeEnum } from '@/utils/enum/modules/wms'
 
@@ -54,7 +54,7 @@ const formRef = ref()
 // 表单
 const form = ref({})
 // 当前用户
-const { user } = mapGetters('user')
+// const { user } = mapGetters('user')
 // 材料
 const material = computed(() => props.material || {})
 // 监听校验
@@ -85,7 +85,8 @@ function formInit(data) {
     outboundUnitPrecision: data.outboundUnitPrecision, // 出库单位精度
     outboundAddress: outboundDestinationTypeEnum.FACTORY.V, // 出库目的地
     projectId: data.project ? data.project.id : undefined, // 项目id
-    recipientId: user.value.id, // 领用人id
+    recipientId: undefined, // 领用人id
+    // recipientId: user.value.id, // 领用人id
     quantity: undefined, // 数量
     remark: undefined // 备注
   }

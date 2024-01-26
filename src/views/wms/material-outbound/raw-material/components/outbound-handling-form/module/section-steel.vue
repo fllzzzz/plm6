@@ -37,7 +37,7 @@
 <script setup>
 import { sectionSteelOutboundHandling } from '@/api/wms/material-outbound/raw-material/outbound-handling'
 import { defineProps, defineExpose, provide, computed, ref, watch } from 'vue'
-import { mapGetters } from '@/store/lib'
+// import { mapGetters } from '@/store/lib'
 import { materialOutboundModeEnum } from '@/utils/enum/modules/wms'
 import { deepClone, isBlank } from '@/utils/data-type'
 import { numFmtByUnit } from '@/utils/wms/convert-unit'
@@ -98,7 +98,7 @@ const formRef = ref()
 // 表单
 const form = ref({})
 // 当前用户
-const { user } = mapGetters('user')
+// const { user } = mapGetters('user')
 // 材料
 const material = computed(() => props.material || {})
 
@@ -134,7 +134,8 @@ function formInit(data) {
     outboundAddress: outboundDestinationTypeEnum.FACTORY.V, // 出库目的地
     projectId: data.project ? data.project.id : undefined, // 项目id
     materialOutboundMode: materialOutboundModeEnum.WHOLE.V, // 出库方式 整出/半出
-    recipientId: user.value.id, // 领用人id
+    recipientId: undefined, // 领用人id
+    // recipientId: user.value.id, // 领用人id
     quantity: undefined, // 数量
     remark: undefined // 备注
   }
