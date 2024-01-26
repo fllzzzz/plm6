@@ -87,8 +87,9 @@
         <el-table-column label="序号" type="index" align="center" width="60" />
         <template
           v-if="
-            packType &
-            (packTypeEnum.STRUCTURE.V | packTypeEnum.MACHINE_PART.V | bridgePackTypeEnum.BOX.V | bridgePackTypeEnum.MACHINE_PART.V)
+            typeVal === packEnum.BOX.V
+              ? packType & (bridgePackTypeEnum.BOX.V | bridgePackTypeEnum.MACHINE_PART.V)
+              : packType & (packTypeEnum.STRUCTURE.V | packTypeEnum.MACHINE_PART.V)
           "
         >
           <el-table-column
