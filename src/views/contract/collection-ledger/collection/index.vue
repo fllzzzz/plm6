@@ -19,12 +19,13 @@
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
     <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" :show-overflow-tooltip="true" label="业务类型" align="center">
       <template v-slot="scope">
-        <span>{{ scope.row.businessType?businessTypeEnum.VL[scope.row.businessType]:'-'}}</span>
+        <span>{{ scope.row.businessType?businessTypeEnum.VL[scope.row.businessType]:'废料出售'}}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('project')" key="project.serialNumber" prop="project" :show-overflow-tooltip="true" label="所属项目" min-width="150">
+    <el-table-column v-if="columns.visible('project')" key="project.serialNumber" prop="project" :show-overflow-tooltip="true" label="所属项目/购买方" min-width="150">
       <template v-slot="scope">
-        <span>{{ projectNameFormatter(scope.row.project) }}</span>
+        <span v-if="scope.row.type === 1">{{ projectNameFormatter(scope.row.project) }}</span>
+        <span v-else>{{ scope.row.paymentUnit }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('collectionUnit')" key="collectionUnit" prop="collectionUnit" :show-overflow-tooltip="true" label="签约主体" align="center">

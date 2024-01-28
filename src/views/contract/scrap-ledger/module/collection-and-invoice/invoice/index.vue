@@ -3,11 +3,11 @@
     <!--表格渲染-->
     <div>
       <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right:10px;" v-permission="permission.add">添加</common-button>
-      <el-tag type="success" size="medium" v-if="contractInfo.contractAmount">{{'合同金额:'+toThousand(contractInfo.contractAmount,decimalPrecision.contract)}}</el-tag>
-      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{'结算金额:'+toThousand(currentRow.settlementAmount,decimalPrecision.contract)}}</el-tag>
+      <!-- <el-tag type="success" size="medium" v-if="contractInfo.contractAmount">{{'合同金额:'+toThousand(contractInfo.contractAmount,decimalPrecision.contract)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{'结算金额:'+toThousand(currentRow.settlementAmount,decimalPrecision.contract)}}</el-tag> -->
       <print-table
         v-permission="crud.permission.print"
-        api-key="invoiceRecord"
+        api-key="scrapInvoice"
         :params="crud.query"
         style="float: right"
         size="mini"
@@ -203,8 +203,8 @@
 </template>
 
 <script setup>
-import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
-import crudApi, { editStatus } from '@/api/contract/collection-and-invoice/invoice'
+// import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
+import crudApi, { editStatus } from '@/api/contract/scrap-collection-invoice/invoice'
 import { ref, defineEmits, defineProps, watch, provide, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 
@@ -266,7 +266,8 @@ const { crud, CRUD } = useCRUD(
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     invisibleColumns: ['haveInvoiceAmount', 'collectionMode', 'invoiceType', 'collectionDepositBank', 'collectionBankAccount', 'paymentBankAccount', 'paymentDepositBank', 'auditorName', 'auditTime'],
-    hasPagination: true
+    hasPagination: true,
+    params: {}
   },
   tableRef
 )
@@ -315,12 +316,13 @@ const { maxHeight } = useMaxHeight({
 })
 
 watch(
-  () => props.projectId,
+  () => props.currentRow,
   (val) => {
+    console.log(val)
     bankList.value = []
     contractInfo.value = {}
     if (val) {
-      getContractInfo(val)
+      getContractInfo(val.branchCompanyId)
     }
     crud.toQuery()
   },
@@ -338,13 +340,13 @@ watch(
 )
 
 async function getContractInfo(id) {
-  let data = {}
+  // let data = {}
   try {
-    data = await contractCollectionInfo({ projectId: id })
+    // data = await contractCollectionInfo({ projectId: id })
   } catch (e) {
     console.log('获取合同信息', e)
   } finally {
-    contractInfo.value = data
+    contractInfo.value = props.currentRow
   }
 }
 
@@ -491,14 +493,16 @@ function getSummaries(param) {
 }
 
 CRUD.HOOK.beforeRefresh = () => {
-  crud.query.projectId = props.projectId
+  // crud.query.projectId = props.projectId
+  crud.query.branchCompanyId = props.currentRow.branchCompanyId
+  crud.query.contractWasteId = props.currentRow.contractWasteId
 }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {
   totalAmount.value = 0
   invoiceNoArr.value = []
   data.data.content.map(v => {
-    v.projectId = v.project.id
+    // v.projectId = v.project.id
     v.dataIndex = v.id + 'id'
     if (v.invoiceAmount) {
       totalAmount.value += v.invoiceAmount

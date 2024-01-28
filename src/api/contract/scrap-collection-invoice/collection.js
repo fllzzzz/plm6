@@ -3,25 +3,16 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'contract',
-    url: 'contract/collection/project',
+    url: 'contract/collection/waste',
     method: 'get',
     params
   })
 }
 
-// export function add(data) {
-//   return request({
-//     module: 'contract',
-//     url: 'contract/collection/save',
-//     method: 'post',
-//     data
-//   })
-// }
-
 export function add(data) {
   return request({
     module: 'contract',
-    url: 'contract/collection/project',
+    url: 'contract/collection/waste',
     method: 'post',
     params: { projectId: data.projectId },
     data: data.list
@@ -31,8 +22,8 @@ export function add(data) {
 export function edit(data) {
   return request({
     module: 'contract',
-    url: 'contract/collection/project',
-    method: 'post',
+    url: 'contract/collection/waste',
+    method: 'put',
     data
   })
 }
@@ -40,25 +31,15 @@ export function edit(data) {
 export function del(id) {
   return request({
     module: 'contract',
-    url: `contract/collection/deleteById/${id}/project`,
+    url: `contract/collection/deleteById/${id}/waste`,
     method: 'delete'
-  })
-}
-
-export function contractCollectionInfo(params) {
-  return request({
-    module: 'contract',
-    url: 'contract/collection/getFinanceInfo',
-    method: 'get',
-    params,
-    cancelKey: false
   })
 }
 
 export function editStatus(data) {
   return request({
     module: 'contract',
-    url: `contract/collection/audit/project`,
+    url: `contract/collection/audit/waste`,
     method: 'put',
     data
   })
@@ -69,15 +50,6 @@ export function bankData(companyId) {
     module: 'contract',
     url: `branchCompany/listBankAccountByCompanyId/${companyId}`,
     method: 'get'
-  })
-}
-
-export function getTotalNumber(params) {
-  return request({
-    module: 'contract',
-    url: 'contract/collection/getCollectionSum',
-    method: 'get',
-    params
   })
 }
 

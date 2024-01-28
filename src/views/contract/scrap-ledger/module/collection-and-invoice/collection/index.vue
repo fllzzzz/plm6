@@ -3,11 +3,11 @@
     <!--表格渲染-->
     <div>
       <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right:10px;" v-permission="permission.add">添加</common-button>
-      <el-tag type="success" size="medium" v-if="contractInfo.contractAmount">{{'合同金额:'+toThousand(contractInfo.contractAmount,decimalPrecision.contract)}}</el-tag>
-      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{'结算金额:'+toThousand(currentRow.settlementAmount,decimalPrecision.contract)}}</el-tag>
+      <!-- <el-tag type="success" size="medium" v-if="contractInfo?.contractAmount">{{'合同金额:'+toThousand(contractInfo?.contractAmount,decimalPrecision.contract)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{'结算金额:'+toThousand(currentRow.settlementAmount,decimalPrecision.contract)}}</el-tag> -->
       <print-table
         v-permission="crud.permission.print"
-        api-key="collectionRecord"
+        api-key="scrapCollection"
         :params="crud.query"
         style="float: right"
         size="mini"
@@ -138,14 +138,14 @@
       </el-table-column>
       <el-table-column key="paymentUnit" prop="paymentUnit" label="付款单位" align="center" min-width="120" :show-overflow-tooltip="true">
         <template v-slot="scope">
-          <el-input
+          <!-- <el-input
             v-if="scope.row.isModify"
             v-model.trim="scope.row.paymentUnit"
             placeholder="付款单位"
             style="width:100%;"
             maxlength="50"
-          />
-          <div v-else>{{ scope.row.paymentUnit  }}</div>
+          /> -->
+          <div>{{ scope.row.paymentUnit  }}</div>
         </template>
       </el-table-column>
       <el-table-column key="remark" prop="remark" label="备注" align="center" min-width="90" :show-overflow-tooltip="true">
@@ -228,7 +228,7 @@
 </template>
 
 <script setup>
-import crudApi, { contractCollectionInfo, bankData, editStatus } from '@/api/contract/collection-and-invoice/collection'
+import crudApi, { bankData, editStatus } from '@/api/contract/scrap-collection-invoice/collection'
 import { ref, defineEmits, defineProps, watch, provide, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 
@@ -282,6 +282,8 @@ const originRow = ref({})
 const bankList = ref([])
 const typeProp = { key: 'id', label: 'depositBank', value: 'id' }
 const totalAmount = ref(0)
+// const branchCompanyId = ref()
+// const contractWasteId = ref()
 const emit = defineEmits(['success'])
 const paymentMethod = ref()
 provide('bankList', bankList)
@@ -296,6 +298,7 @@ const { crud, CRUD } = useCRUD(
     crudApi: { ...crudApi },
     invisibleColumns: ['haveCollectionAmount', 'collectionMode', 'collectionReason', 'collectionDepositBank', 'paymentBankAccount', 'paymentDepositBank', 'auditorName', 'auditTime'],
     hasPagination: true
+    // params: { branchCompanyId: props.currentRow.branchCompanyId, contractWasteId: props.currentRow.contractWasteId }
   },
   tableRef
 )
@@ -338,12 +341,13 @@ const { maxHeight } = useMaxHeight({
 })
 
 watch(
-  () => props.projectId,
+  () => props.currentRow,
   (val) => {
+    console.log(val)
     bankList.value = []
     contractInfo.value = {}
     if (val) {
-      getContractInfo(val)
+      getContractInfo(val.branchCompanyId)
     }
     crud.toQuery()
   },
@@ -383,14 +387,14 @@ function moneyChange(row) {
   }
 }
 async function getContractInfo(id) {
-  let data = {}
+  // const data = {}
   try {
-    data = await contractCollectionInfo({ projectId: id })
-    getBankData(data.companyBankAccountList[0].companyId)
+    // data = await contractCollectionInfo({ projectId: id })
+    getBankData(id)
   } catch (e) {
     console.log('获取合同信息', e)
   } finally {
-    contractInfo.value = data
+    contractInfo.value = props.currentRow
   }
 }
 
@@ -494,7 +498,9 @@ function collectionModeChange(row) {
 }
 
 CRUD.HOOK.beforeRefresh = () => {
-  crud.query.projectId = props.projectId
+  // crud.query.projectId = props.projectId
+  crud.query.branchCompanyId = props.currentRow.branchCompanyId
+  crud.query.contractWasteId = props.currentRow.contractWasteId
 }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {
@@ -506,6 +512,12 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
     }
   })
 }
+
+// CRUD.HOOK.beforeToQuery = () => {
+//   branchCompanyId.value = props.currentRow.branchCompanyId
+//   contractWasteId.value = props.currentRow.contractWasteId
+// }
+
 </script>
 
 <style lang="scss" scoped>

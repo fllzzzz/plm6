@@ -392,6 +392,13 @@ const priceEditModeEnum = {
 }
 constantize(priceEditModeEnum)
 
+// 收款开票查项目或废料
+const projectOrScrapEnum = {
+  PROJECT: { L: '项目', K: 'PROJECT', V: 1 },
+  SCRAP: { L: '废料', K: 'SCRAP', V: 2 }
+}
+constantize(projectOrScrapEnum)
+
 export {
   projectStatusEnum, // 项目状态
   projectTypeEnum, // 项目类型
@@ -438,7 +445,8 @@ export {
   structureTypeEnum,
   isEnclosureContainEnum,
   priceEditModeEnum,
-  standardPartPriceSearchEnum
+  standardPartPriceSearchEnum,
+  projectOrScrapEnum
 }
 
 export default {
@@ -487,5 +495,6 @@ export default {
   structureTypeEnum,
   isEnclosureContainEnum,
   priceEditModeEnum,
-  standardPartPriceSearchEnum
+  standardPartPriceSearchEnum,
+  projectOrScrapEnum
 }

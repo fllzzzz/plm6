@@ -11,9 +11,11 @@ import enclosure from '@/api/print/enclosure'
 const myProject = contract.myProject
 const projectList = contract.projectList
 const contractLedger = contract.contractLedger
-const collectionRecord = contract.collectionLedger
+const collectionRecord = contract.collectionProject
+const scrapCollection = contract.scrapCollection
 const collectionLedger = contract.collectionLedger
-const invoiceRecord = contract.invoiceLedger
+const invoiceRecord = contract.invoiceProject
+const scrapInvoice = contract.scrapInvoice
 const invoiceLedger = contract.invoiceLedger
 const arrearsList = contract.arrearsList
 const contractBoxPrice = contract.contractBoxPrice
@@ -63,6 +65,9 @@ const managementFee = contract.managementFee
 const waterElectricFee = contract.waterElectricFee
 const depreciationFee = contract.depreciationFee
 const fortuneReportList = contract.fortuneReportList
+const scrapDate = contract.scrapDate
+const scrapPurchaser = contract.scrapPurchaser
+const totalScrapDetaile = contract.totalScrapDetaile
 
 // 供应链
 const purchaseInvoiceRecord = supply.invoiceDetail
@@ -310,6 +315,7 @@ const wmsRmReturnReceipt = wms.wmsRmReturnReceipt // 退库
 const wmsRmRejectReceipt = wms.wmsRmRejectReceipt // 退货
 const wmsRmTransferReceipt = wms.wmsRmTransferReceipt // 调拨
 const wmsRmSupplementReceipt = wms.wmsRmSupplementReceipt // 调整
+const wmsScrapSell = wms.wmsScrapSell // 废料出售
 
 // project
 const deliveryCargoList = project.deliveryCargoList // 自制收货记录
@@ -336,7 +342,10 @@ export default {
   collectionRecord, // 项目收款记录
   invoiceLedger, // 开票台账
   invoiceRecord, // 项目开票记录
+  scrapInvoice, // 废料开票
+  scrapCollection, // 废料收款
   arrearsList, // 欠款清单
+  totalScrapDetaile, // 累计出售额详情
 
   logisticsPaymentLedger, // 物流台账
   supplierPayableSummary, // 供应商应付汇总
@@ -383,6 +392,8 @@ export default {
   depreciationFee, // 折旧费
   auxiliaryMaterialList, // 辅材费用清单
   fortuneReportList, // 业财报表
+  scrapDate, // 按日期查废料
+  scrapPurchaser, // 按购买方查废料
 
   // 供应链
   purchaseInvoiceRecord, // 收票记录
@@ -631,6 +642,7 @@ export default {
   wmsRmRejectReceipt, // 退货单
   wmsRmTransferReceipt, // 调拨单
   wmsRmSupplementReceipt, // 调整记录
+  wmsScrapSell, // 废料出售
 
   // 项目管理
   deliveryCargoList, // 自制收货记录
