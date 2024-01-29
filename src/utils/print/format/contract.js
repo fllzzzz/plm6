@@ -93,10 +93,31 @@ function handleAreaUnit({ header, table = [], footer, qrCode }) {
   }
 }
 
+function collectionLedger({ header, table = [], footer, qrCode }) {
+  const _table = table.map(row => {
+    if (row.type === 2) {
+      row.projectOrName = row.paymentUnit
+      row.seller = row.collectionUnit
+      row.businessType = 9
+    } else {
+      row.projectOrName = row.project.name
+      row.seller = row.collectionUnit
+    }
+    return row
+  })
+  return {
+    header,
+    table: _table,
+    qrCode,
+    footer
+  }
+}
+
 export default {
   handleRate,
   handleAreaUnit,
   handleSupplierPaymentRate,
   durationCalculation,
-  handleSupplierPaymentOrder
+  handleSupplierPaymentOrder,
+  collectionLedger
 }

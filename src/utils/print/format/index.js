@@ -16,6 +16,7 @@ const supplierPayableSummary = contract.handleSupplierPaymentRate
 const logisticsPaymentLedger = contract.handleSupplierPaymentRate
 const supplierPaymentLedger = contract.handleSupplierPaymentOrder
 const saleOrderTracking = contract.handleRate
+const collectionLedger = contract.collectionLedger
 
 const orderPaymentLedger = contract.handleSupplierPaymentRate
 const scmSupplierPaymentLedger = contract.handleSupplierPaymentRate
@@ -85,6 +86,7 @@ export default {
   projectList,
   contractLedger,
   saleOrderTracking,
+  collectionLedger, // 收款台账收款列表
 
   mesAssembleNestingOrder,
 
