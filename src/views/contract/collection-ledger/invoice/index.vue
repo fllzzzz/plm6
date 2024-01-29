@@ -28,7 +28,7 @@
         <span v-else>{{ scope.row.collectionUnit }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceUnit')" key="invoiceUnit" prop="invoiceUnit" :show-overflow-tooltip="true" label="签约主体" align="center">
+    <el-table-column v-if="columns.visible('invoiceUnit')" key="invoiceUnit" prop="invoiceUnit" :show-overflow-tooltip="true" label="签约主体/出售方" align="center">
       <template v-slot="scope">
         <div>{{ scope.row.invoiceUnit }}</div>
       </template>
@@ -66,7 +66,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/contract/collection-and-invoice/invoice'
+import crudApi, { getInvoiceList } from '@/api/contract/collection-and-invoice/invoice'
 import { ref } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -100,7 +100,7 @@ const { crud, columns, CRUD } = useCRUD(
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi },
+    crudApi: { ...crudApi, get: getInvoiceList },
     invisibleColumns: ['contractAmount'],
     hasPagination: true
   },

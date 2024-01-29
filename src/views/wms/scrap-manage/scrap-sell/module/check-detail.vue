@@ -1,5 +1,5 @@
 <template>
-  <common-drawer v-model="visible" :before-close="handleClose" size="60%" title="废料出售审核">
+  <common-drawer v-model="visible" :before-close="handleClose" size="70%" title="废料出售审核">
     <template #titleRight>
       <common-button type="success" size="mini" @click="pass" :disabled="props.rowData.auditStatusEnum !== 1">通过</common-button>
       <common-button type="danger" size="mini" @click="noPass" :disabled="props.rowData.auditStatusEnum !== 1">驳回</common-button>
@@ -31,7 +31,7 @@
           <el-input type="textarea" maxlength="200" style="width: 700px" v-model="form.creatorRemark" />
         </el-form-item>
       </el-form> -->
-      <el-descriptions :column="2" border style="margin-bottom: 20px;">
+      <el-descriptions :column="2" border style="margin-bottom: 20px">
         <el-descriptions-item label="创建日期">{{ form?.createTime }}</el-descriptions-item>
         <el-descriptions-item label="创建人">{{ form.createUserName }}</el-descriptions-item>
         <el-descriptions-item label="出售单位">{{ form.branchCompanyName }}</el-descriptions-item>
@@ -58,21 +58,36 @@
               <span>{{ row.measureUnit }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="数量" align="center" width="80">
+          <el-table-column label="数量" align="center" width="100">
             <template #default="{ row }">
               <!-- <el-input-number v-model="row.saleMete" :controls="false" /> -->
               <span>{{ row.saleMete }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="单价" align="center" width="100">
+          <el-table-column label="单价" align="center" width="125">
             <template #default="{ row }">
-              <el-input-number v-if="priceType !== 1 || !row.price" v-model="row.price" :controls="false" />
+              <el-input-number
+                v-if="priceType !== 1 || !row.price"
+                v-model="row.price"
+                :controls="false"
+                :step="0.01"
+                :max="9999999.99"
+                :precision="2"
+                @blur="priceBlur(row)"
+              />
               <span v-else>{{ row.price }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="金额" align="center" width="100">
+          <el-table-column label="金额" align="center" width="125">
             <template #default="{ row }">
-              <el-input-number v-if="priceType !== 1 || !row.amount" v-model="row.amount" :controls="false" />
+              <el-input-number
+                v-if="priceType !== 1 || !row.amount"
+                v-model="row.amount"
+                :controls="false"
+                :step="0.01"
+                :max="9999999.99"
+                :precision="2"
+              />
               <span v-else>{{ row.amount }}</span>
             </template>
           </el-table-column>
@@ -91,9 +106,13 @@
       <!-- <div style="margin-top: 10px">
         <common-button type="success" icon="el-icon-plus" @click="addColumn">添加一行</common-button>
       </div> -->
-      <div style="margin-top: 20px; display: flex; align-items: center;">
-        <span style="font-size: 16px; font-weight: bold;">审核备注：</span>
-        <el-input style="width: 750px;" type="textarea" maxlength="200" v-model="checkRemark" />
+      <div style="margin-top: 20px; display: flex; align-items: center">
+        <span style="font-size: 16px; font-weight: bold">创建备注：</span>
+        <el-input style="width: 750px" type="textarea" maxlength="200" :disabled="editBoolean" v-model="creatRemark" />
+      </div>
+      <div style="margin-top: 20px; display: flex; align-items: center">
+        <span style="font-size: 16px; font-weight: bold">审核备注：</span>
+        <el-input style="width: 750px" type="textarea" maxlength="200" v-model="checkRemark" />
       </div>
     </template>
   </common-drawer>
@@ -132,12 +151,19 @@ const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const tableData = ref([])
 const priceType = ref()
 const checkRemark = ref()
+const creatRemark = ref()
+const editBoolean = ref(true)
 
 async function fetchData() {
   tableData.value = []
   console.log(props.rowData)
   form.value = props.rowData
-  tableData.value = props.rowData.wasteSaleDetailList
+  creatRemark.value = props.rowData.creatorRemark
+  props.rowData.wasteSaleDetailList.forEach((v) => {
+    if (v?.id) {
+      tableData.value.push(v)
+    }
+  })
   try {
     priceType.value = await getPriceType()
     console.log(priceType.value)
@@ -192,7 +218,7 @@ async function pass() {
   updata.id = props.rowData.id
   updata.auditorRemark = checkRemark.value
   updata.auditStatusEnum = 2
-  updata.wasteSaleDetailList = tableData.value.map(v => {
+  updata.wasteSaleDetailList = tableData.value.map((v) => {
     const obj = {}
     obj.amount = v.amount
     obj.id = v.id
@@ -209,12 +235,17 @@ async function pass() {
   }
 }
 
+function priceBlur(row) {
+  // rowWatch(row)
+  row.amount = row.saleMete * row.price
+}
+
 async function noPass() {
   const updata = {}
   updata.id = props.rowData.id
   updata.auditorRemark = checkRemark.value
   updata.auditStatusEnum = 4
-  updata.wasteSaleDetailList = tableData.value.map(v => {
+  updata.wasteSaleDetailList = tableData.value.map((v) => {
     const obj = {}
     obj.amount = v.amount
     obj.id = v.id
@@ -230,5 +261,4 @@ async function noPass() {
     console.log(error, '驳回废料出售')
   }
 }
-
 </script>

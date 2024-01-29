@@ -18,10 +18,10 @@
       </el-table-column>
       <el-table-column label="操作" width="220" align="center" fixed="right">
         <template #default="{row}">
-          <common-button type="primary" icon="el-icon-view" size="mini" @click="showView(row)" />
-          <common-button type="success" icon="el-icon-edit" size="mini" :disabled="row.auditStatusEnum === auditTypeEnum.PASS.V" @click="showDetail(row)" />
-          <common-button type="warning" icon="el-icon-s-check" size="mini" :disabled="row.auditStatusEnum === auditTypeEnum.PASS.V" @click="showCheck(row)" />
-          <common-button type="danger" icon="el-icon-delete" size="mini" :disabled="row.auditStatusEnum === auditTypeEnum.PASS.V" @click="delItem(row)" />
+          <common-button type="primary" icon="el-icon-view" size="mini" @click="showView(row)" v-permission="crud.permission.get" />
+          <common-button type="success" icon="el-icon-edit" size="mini" :disabled="row.auditStatusEnum === auditTypeEnum.PASS.V" @click="showDetail(row)" v-permission="crud.permission.edit" />
+          <common-button type="warning" icon="el-icon-s-check" size="mini" :disabled="row.auditStatusEnum === auditTypeEnum.PASS.V" @click="showCheck(row)" v-permission="crud.permission.check" />
+          <common-button type="danger" icon="el-icon-delete" size="mini" :disabled="row.auditStatusEnum === auditTypeEnum.PASS.V" @click="delItem(row)" v-permission="crud.permission.del" />
         </template>
       </el-table-column>
     </common-table>
@@ -44,6 +44,7 @@ import viewDetail from './module/view-detail.vue'
 import { auditTypeEnum } from '@enum-ms/contract'
 import { ElMessage } from 'element-plus'
 import detail from './module/detail.vue'
+import { scrapSellPM as permission } from '@/page-permission/wms'
 
 const dataFormat = ref([
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
@@ -54,7 +55,8 @@ const dataFormat = ref([
 const { crud } = useCRUD({
   title: '废料出售',
   crudApi: { ...crudApi },
-  sort: []
+  sort: [],
+  permission: { ...permission }
 })
 
 const checkVisible = ref(false)

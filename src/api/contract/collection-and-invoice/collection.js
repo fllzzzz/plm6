@@ -9,6 +9,15 @@ export function get(params) {
   })
 }
 
+export function getCollectionList(params) {
+  return request({
+    module: 'contract',
+    url: 'contract/collection/listPage',
+    method: 'get',
+    params
+  })
+}
+
 // export function add(data) {
 //   return request({
 //     module: 'contract',

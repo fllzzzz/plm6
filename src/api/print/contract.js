@@ -22,7 +22,7 @@ export function contractLedger(params) {
 export function collectionLedger(params) {
   return request({
     module: 'contract',
-    url: 'contract/collection/print',
+    url: 'contract/collection/listPage/print',
     method: 'get',
     params
   })
@@ -47,7 +47,7 @@ export function collectionProject(params) {
 export function invoiceLedger(params) {
   return request({
     module: 'contract',
-    url: 'contract/invoice/print',
+    url: 'contract/invoice/listPage/print',
     method: 'get',
     params
   })

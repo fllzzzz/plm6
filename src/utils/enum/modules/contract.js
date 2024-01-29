@@ -83,7 +83,8 @@ constantize(standardPartPriceSearchEnum)
 // 业务类型
 const businessTypeEnum = {
   MACHINING: { L: '加工承揽', K: 'MACHINING', V: 1 },
-  INSTALLATION: { L: '项目承包', K: 'INSTALLATION', V: 2 }
+  INSTALLATION: { L: '项目承包', K: 'INSTALLATION', V: 2 },
+  SCRAPSELLER: { L: '废料出售', K: 'INSTALLATION', V: 9 }
 }
 constantize(businessTypeEnum)
 

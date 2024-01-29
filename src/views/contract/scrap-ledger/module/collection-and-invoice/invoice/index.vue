@@ -218,7 +218,7 @@ import { parseTime } from '@/utils/date'
 import { toThousand, digitUppercase } from '@data-type/number'
 import { validate } from '@compos/form/use-table-validate'
 import { isNotBlank } from '@data-type/index'
-import { contractLedgerPM } from '@/page-permission/contract'
+import { scrapLedgerPM } from '@/page-permission/contract'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import pagination from '@crud/Pagination'
@@ -226,7 +226,7 @@ import mForm from './form'
 
 const { decimalPrecision } = useDecimalPrecision()
 
-const permission = contractLedgerPM.invoice
+const permission = scrapLedgerPM.invoice
 
 const optShow = {
   add: true,

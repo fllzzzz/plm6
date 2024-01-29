@@ -242,14 +242,14 @@ import { paymentFineModeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'
 import { digitUppercase, toThousand } from '@/utils/data-type/number'
 import { validate } from '@compos/form/use-table-validate'
-import { contractLedgerPM } from '@/page-permission/contract'
+import { scrapLedgerPM } from '@/page-permission/contract'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
 import { isNotBlank } from '@data-type/index'
 
 import pagination from '@crud/Pagination'
 import mForm from './form'
 
-const permission = contractLedgerPM.collection
+const permission = scrapLedgerPM.collection
 
 const { decimalPrecision } = useDecimalPrecision()
 

@@ -11,6 +11,7 @@
           show-tip
           @click="submit"
           :disabled="submitDisabled"
+          v-permission="permission.scrapPriceEdit"
         >
           保存
         </common-tip-button>
@@ -27,7 +28,7 @@
   </el-card>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, inject } from 'vue'
 import { scrapPriceTypeEnum } from '@enum-ms/wms'
 import { getScrapPriceConf, setScrapPriceConf } from '@/api/config/wms/base'
 import { ElNotification } from 'element-plus'
@@ -35,6 +36,7 @@ import { ElNotification } from 'element-plus'
 import useRefreshStore from '@/composables/store/use-refresh-store'
 
 const dataSource = ref(undefined)
+const permission = inject('permission')
 
 const enterType = ref(dataSource.value)
 

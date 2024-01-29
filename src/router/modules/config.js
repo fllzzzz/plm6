@@ -197,7 +197,7 @@ export default {
           path: 'scrap-config',
           hidden: false,
           component: '/config-manage/wms/scrap-config/index',
-          meta: { title: '废料配置', icon: 'project', noCache: true, permissions: ['configWmsInspectionRawMaterialPM'] }
+          meta: { title: '废料配置', icon: 'project', noCache: true }
         }
       ]
     },

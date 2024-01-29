@@ -621,7 +621,9 @@ export const configWmsBasicForPM = {
   basicReturnGet: ['config_wms_basicReturn:get'], // 查看 退库审核配置
   basicReturnEdit: ['config_wms_basicReturn:edit'], // 编辑 退库审核配置
   transferGet: ['config_wms_transfer:get'], // 查看 调拨审核配置
-  transferEdit: ['config_wms_transfer:edit'] // 编辑 调拨审核配置
+  transferEdit: ['config_wms_transfer:edit'], // 编辑 调拨审核配置
+  scrapPriceGet: ['config_wms_scrapPrice:get'], // 查看 废料价格配置
+  scrapPriceEdit: ['config_wms_scrapPrice:edit'] // 编辑 废料价格配置
 }
 
 // WMS-配置管理/仓库设置
@@ -643,6 +645,14 @@ export const configWmsInspectionRawMaterialPM = {
   get: ['config_wms_inspectionRawMaterial:get'], // 入库质检物料列表
   add: ['config_wms_inspectionRawMaterial:add'], // 添加入库质检物料
   del: ['config_wms_inspectionRawMaterial:del'] // 删除入库质检物料
+}
+
+// WMS-配置管理/废料配置
+export const configWmsScrapConfigPM = {
+  get: ['config_wms_scrapConfig:get'], // 废料配置列表
+  add: ['config_wms_scrapConfig:add'], // 添加废料配置
+  edit: ['config_wms_scrapConfig:edit'], // 修改废料配置
+  del: ['config_wms_scrapConfig:del'] // 删除废料配置
 }
 
 // --------------------------- WMS-配置管理 end ----------------------------

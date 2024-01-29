@@ -59,6 +59,8 @@
 <script setup>
 import { defineProps, ref, watch } from 'vue'
 import { getBuyList } from '@/api/contract/scrap-ledger'
+import { scrapLedgerPM as permission } from '@/page-permission/contract'
+import checkPermission from '@/utils/system/check-permission'
 import usePagination from '@compos/use-pagination'
 import collectionAndInvoice from './collection-and-invoice'
 import totalAmount from './total-amount.vue'
@@ -70,12 +72,16 @@ const props = defineProps({
     type: Number,
     default: 1
   },
-  date: {
-    type: Array,
-    default: () => []
-  },
   scrapType: {
     type: Number,
+    default: undefined
+  },
+  startDate: {
+    type: String,
+    default: undefined
+  },
+  endDate: {
+    type: String,
     default: undefined
   }
 })
@@ -97,7 +103,7 @@ watch(
 )
 
 watch(
-  () => props.date,
+  () => [props.startDate, props.endDate],
   () => {
     fetchList()
   }
@@ -111,14 +117,15 @@ watch(
 )
 
 async function fetchList() {
+  if (!checkPermission(permission.get)) return
   tableData.value = []
   try {
     console.log(props.date)
     console.log(props.queryId)
     const { content, totalElements } = await getBuyList({
       ...queryPage,
-      startDate: props.date[0],
-      endDate: props.date[1],
+      startDate: props.startDate,
+      endDate: props.endDate,
       wasteClassificationId: props.scrapType
     })
     console.log(content)

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="head-container">
-      <common-button icon="el-icon-plus" type="success" @click="addScrap">新增</common-button>
+      <common-button icon="el-icon-plus" type="success" @click="addScrap" v-permission="permission.add">新增</common-button>
     </div>
     <common-table :data="tableData">
       <el-table-column label="序号" align="center" width="80" type="index" />
@@ -9,8 +9,8 @@
       <el-table-column label="单位" align="center" prop="measureUnit"></el-table-column>
       <el-table-column label="操作" align="center">
         <template #default="{row}">
-          <common-button type="primary" @click="editScrap(row)">修改</common-button>
-          <common-button type="danger" @click="delScrap(row)">删除</common-button>
+          <common-button v-permission="permission.edit" type="primary" @click="editScrap(row)">修改</common-button>
+          <common-button v-permission="permission.del" type="danger" @click="delScrap(row)">删除</common-button>
         </template>
       </el-table-column>
     </common-table>
@@ -29,9 +29,11 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { getScrapConfig, delScrapType } from '@/api/config/wms/scrap-config'
+import { configWmsScrapConfigPM as permission } from '@/page-permission/config'
 import detaile from './module/detaile.vue'
 import { ElMessage } from 'element-plus'
 import usePagination from '@compos/use-pagination'
+import checkPermission from '@/utils/system/check-permission'
 
 const detaileVisible = ref(false)
 const rowData = ref({})
@@ -44,6 +46,7 @@ onMounted(() => {
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchData })
 
 async function fetchData() {
+  if (!checkPermission(permission.get)) return
   tableData.value = []
   try {
     const { content, totalElements } = await getScrapConfig({ ...queryPage })

@@ -1,7 +1,7 @@
 <template>
   <common-drawer v-model="visible" :before-close="handleClose" size="100%" title="合同配置" ref="drawerRef">
     <template #titleRight>
-      <common-button type="success" size="mini" @click="addList">新增</common-button>
+      <common-button type="success" size="mini" @click="addList" v-permission="permission.add">新增</common-button>
     </template>
     <template #content>
       <common-table :data="tableData" :data-format="dataFormat" :max-height="maxHeight">
@@ -27,8 +27,8 @@
               <common-button type="danger" @click="row.isEdit = false">取消</common-button>
             </div>
             <div v-else>
-              <common-button icon="el-icon-edit" type="primary" @click="row.isEdit = true" />
-              <common-button icon="el-icon-delete" type="danger" @click="delRow(row)" />
+              <common-button icon="el-icon-edit" type="primary" @click="row.isEdit = true" v-permission="permission.edit" />
+              <common-button icon="el-icon-delete" type="danger" @click="delRow(row)" v-permission="permission.del" />
             </div>
           </template>
         </el-table-column>
@@ -50,6 +50,8 @@
 import { defineProps, defineEmits, ref } from 'vue'
 import { getScrapContractList, editScrapContractList, delScrapContractList } from '@/api/contract/scrap-ledger'
 import { ElMessage } from 'element-plus'
+import { scrapLedgerPM } from '@/page-permission/contract'
+import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import addContract from './add-contract.vue'
 import useVisible from '@compos/use-visible'
@@ -61,6 +63,7 @@ const props = defineProps({
     default: false
   }
 })
+const permission = scrapLedgerPM.config
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -74,6 +77,7 @@ const tableData = ref([])
 const drawerRef = ref()
 
 async function fetchData() {
+  if (!checkPermission(permission.get)) return
   tableData.value = []
   try {
     const { content, totalElements } = await getScrapContractList({ ...queryPage })

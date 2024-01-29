@@ -1,7 +1,7 @@
 <template>
-  <common-drawer v-model="visible" :before-close="handleClose" size="60%" title="废料出售单详情">
+  <common-drawer v-model="visible" :before-close="handleClose" size="70%" title="废料出售单详情">
     <template #titleRight>
-      <export-button :fn="downloadScrap" :params="props.rowData.id">下载</export-button>
+      <export-button :fn="downloadScrap" :params="props.rowData.id" v-permission="permission.download">下载</export-button>
     </template>
     <template #content>
       <el-descriptions :column="2" border style="margin-bottom: 20px;">
@@ -25,17 +25,17 @@
               <span>{{ row.measureUnit }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="数量" align="center" width="80">
+          <el-table-column label="数量" align="center" width="100">
             <template #default="{ row }">
               <span>{{ row.saleMete }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="单价" align="center" width="100">
+          <el-table-column label="单价" align="center" width="125">
             <template #default="{ row }">
               <span>{{ row.price }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="金额" align="center" width="100">
+          <el-table-column label="金额" align="center" width="125">
             <template #default="{ row }">
               <span>{{ row.amount }}</span>
             </template>
@@ -48,12 +48,12 @@
         </common-table>
       </div>
       <div style="margin-top: 20px; display: flex; align-items: center;">
-        <span style="font-size: 16px; font-weight: bold;">审核备注：</span>
-        <el-input style="width: 750px;" type="textarea" maxlength="200" :disabled="editBoolean" v-model="checkRemark" />
-      </div>
-      <div style="margin-top: 20px; display: flex; align-items: center;">
         <span style="font-size: 16px; font-weight: bold;">创建备注：</span>
         <el-input style="width: 750px;" type="textarea" maxlength="200" :disabled="editBoolean" v-model="creatRemark" />
+      </div>
+      <div style="margin-top: 20px; display: flex; align-items: center;">
+        <span style="font-size: 16px; font-weight: bold;">审核备注：</span>
+        <el-input style="width: 750px;" type="textarea" maxlength="200" :disabled="editBoolean" v-model="checkRemark" />
       </div>
     </template>
   </common-drawer>
@@ -63,6 +63,7 @@ import { defineProps, defineEmits, ref } from 'vue'
 import useVisible from '@compos/use-visible'
 import ExportButton from '@comp-common/export-button/index.vue'
 import { downloadScrap } from '@/api/wms/scrap-sell'
+import { scrapSellPM as permission } from '@/page-permission/wms'
 
 const props = defineProps({
   modelValue: {
@@ -97,11 +98,15 @@ const editBoolean = ref(true)
 
 async function fetchData() {
   tableData.value = []
-  console.log(props.rowData)
   form.value = props.rowData
   creatRemark.value = props.rowData.creatorRemark
   checkRemark.value = props.rowData.auditorRemark
-  tableData.value = props.rowData.wasteSaleDetailList
+  console.log(props.rowData.wasteSaleDetailList)
+  props.rowData.wasteSaleDetailList.forEach(v => {
+    if (v?.id) {
+      tableData.value.push(v)
+    }
+  })
 }
 
 </script>

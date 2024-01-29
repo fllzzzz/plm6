@@ -10,15 +10,16 @@
           @change="dataChange"
         />
         <el-date-picker
+          v-model="queryDate"
           type="daterange"
-          range-separator="-"
-          start-placeholder="开始时间"
-          end-placeholder="结束时间"
+          range-separator=":"
+          size="small"
           class="filter-item"
           value-format="x"
-          v-model="date"
-          @change="dateChange"
-          clearable
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          style="width:240px"
+          @change="handelDateChange"
         />
         <common-select
           placeholder="请选择类型"
@@ -34,8 +35,8 @@
     </div>
     <div style="display: flex; justify-content: space-between;">
       <el-tag size="medium">累计出售金额：{{ totalAmount }}元</el-tag>
-      <print-table v-if="wayValue !== 1" api-key="scrapDate" :params="{startDate: date[0],endDate: date[1], wasteClassificationId: scrapType }" />
-      <print-table v-else api-key="scrapPurchaser" :params="{startDate: date[0],endDate: date[1], wasteClassificationId: scrapType }" />
+      <print-table v-if="wayValue !== 1" api-key="scrapDate" :params="{startDate: startDate,endDate: endDate, wasteClassificationId: scrapType }"  v-permission="permission.print" />
+      <print-table v-else api-key="scrapPurchaser" :params="{startDate: startDate,endDate: endDate, wasteClassificationId: scrapType }" v-permission="permission.print" />
     </div>
     <contractDrawer v-model="showScrapContract" />
   </div>
@@ -43,6 +44,7 @@
 <script setup>
 import { ref, defineEmits } from 'vue'
 import { getScrapTypeList, getTotalAmount } from '@/api/contract/scrap-ledger'
+import { scrapLedgerPM as permission } from '@/page-permission/contract'
 import contractDrawer from '../contract/scrap-contract.vue'
 import moment from 'moment'
 
@@ -63,9 +65,9 @@ const wayValue = ref(1)
 const scrapTypeList = ref([])
 const showScrapContract = ref(false)
 const totalAmount = ref()
-const date = ref([moment().startOf('month').valueOf(), moment().valueOf()])
-// const startDate = ref(moment().startOf('month').valueOf())
-// const endDate = ref(moment().valueOf())
+const queryDate = ref([moment().startOf('month').valueOf(), moment().valueOf()])
+const startDate = ref(moment().startOf('month').valueOf())
+const endDate = ref(moment().valueOf())
 const scrapType = ref()
 
 fetchScrapType()
@@ -95,11 +97,21 @@ async function dataChange(v) {
   emit('wayChange', wayValue.value)
 }
 
-async function dateChange(v) {
-  emit('dateChange', v)
+function handelDateChange(v) {
+  if (v && v.length > 1) {
+    startDate.value = v[0]
+    endDate.value = v[1]
+  } else {
+    startDate.value = undefined
+    endDate.value = undefined
+    queryDate.value = []
+  }
+  queryDate.value = v
+  emit('dateChange', startDate.value, endDate.value)
 }
 
-async function typeChange(v) {
+function typeChange(v) {
+  console.log(v)
   emit('typeChange', v)
 }
 </script>

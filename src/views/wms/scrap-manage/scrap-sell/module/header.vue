@@ -23,13 +23,13 @@
     </div>
     <div style="display: flex; justify-content: space-between;">
       <div>
-        <common-button icon="el-icon-plus" type="success" class="filter-item" size="mini" @click="creatScrap">创建</common-button>
+        <common-button icon="el-icon-plus" type="success" class="filter-item" size="mini" @click="creatScrap" v-permission="crud.permission.add">创建</common-button>
         <el-input style="width: 200px;" class="filter-item" placeholder="购买方搜索" v-model="query.purchaser"  />
         <el-input style="width: 200px;" class="filter-item" placeholder="创建人搜索" v-model="query.createUserName" />
         <el-input style="width: 200px;" class="filter-item" placeholder="审核人搜索" v-model="query.auditUserName" />
         <rrOperation />
       </div>
-      <print-table class="filter-item" api-key="wmsScrapSell" />
+      <print-table class="filter-item" api-key="wmsScrapSell" v-permission="crud.permission.print" />
     </div>
     <createDetaile v-model="creatDetail" :typeList="scrapTypeList" @success="success" />
   </div>

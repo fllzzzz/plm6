@@ -67,6 +67,36 @@ export const contractLedgerPM = {
   }
 }
 
+// 合同管理/废料台账
+export const scrapLedgerPM = {
+  get: ['contract_scrap_ledger:get'], // 列表查看
+  detail: ['contract_scrap_ledger:detail'], // 累计出售额列表
+  print: ['contract_scrap_ledger:print'], // 打印
+  detailPrint: ['contract_scrap_ledger:detailPrint'], // 详情打印
+  config: {
+    get: ['contract_scrap_ledger_config:get'], // 合同配置列表
+    add: ['contract_scrap_ledger_config:add'], // 合同配置新增
+    edit: ['contract_scrap_ledger_config:edit'], // 合同配置修改
+    del: ['contract_scrap_ledger_config:del'] // 合同配置删除
+  },
+  collection: {
+    get: ['contract_scrap_ledger_collection:get'], // 收款列表
+    add: ['contract_scrap_ledger_collection:add'], // 收款添加
+    edit: ['contract_scrap_ledger_collection:edit'], // 收款修改
+    del: ['contract_scrap_ledger_collection:del'], // 收款删除
+    audit: ['contract_scrap_ledger_collection:audit'], // 收款审核
+    print: ['contract_scrap_ledger_collection:print'] // 打印下载
+  },
+  invoice: {
+    get: ['contract_scrap_ledger_invoice:get'], // 开票列表
+    add: ['contract_scrap_ledger_invoice:add'], // 开票添加
+    edit: ['contract_scrap_ledger_invoice:edit'], // 开票修改
+    del: ['contract_scrap_ledger_invoice:del'], // 开票删除
+    audit: ['contract_scrap_ledger_invoice:audit'], // 开票审核
+    print: ['contract_scrap_ledger_invoice:print'] // 打印下载
+  }
+}
+
 // 合同管理/收款台账
 export const collectionLedgerPM = {
   collection: {

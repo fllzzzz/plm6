@@ -1,5 +1,5 @@
 <template>
-  <common-drawer v-model="visible" :before-close="handleClose" size="60%" :title="props.title">
+  <common-drawer v-model="visible" :before-close="handleClose" size="70%" :title="props.title">
     <template #titleRight>
       <common-button type="primary" size="mini" @click="verify">确认</common-button>
     </template>
@@ -11,14 +11,16 @@
         <el-form-item label="购买单位：" style="margin-right: 50px">
           <common-select
             class="input-underline"
+            style="width: 250px;"
             placeholder="请填写购买单位"
             v-model="form.contractWasteId"
+            filterable
             :options="buyOptions"
             @change="buyChange"
           />
         </el-form-item>
         <el-form-item label="出售单位：" style="margin-right: 50px">
-          <common-select class="input-underline" placeholder="请填写出售单位" v-model="form.branchCompanyId" :options="sellOptions" />
+          <common-select class="input-underline" style="width: 250px;" placeholder="请填写出售单位" v-model="form.branchCompanyId" :options="sellOptions" />
         </el-form-item>
         <el-form-item label="合同号：" style="margin-right: 50px">
           <el-input class="input-underline" placeholder="请填写合同号" v-model="form.contractNumber" :disabled="true" />
@@ -48,19 +50,34 @@
               <span>{{ row.measureUnit }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="数量" align="center" width="80">
+          <el-table-column label="数量" align="center" width="100">
             <template #default="{ row }">
-              <el-input-number v-model="row.saleMete" :controls="false" />
+              <el-input-number v-model="row.saleMete" :controls="false" @blur="seleMeteBlur(row)" />
             </template>
           </el-table-column>
-          <el-table-column label="单价" align="center" width="100">
+          <el-table-column label="单价" align="center" width="125">
             <template #default="{ row }">
-              <el-input-number v-model="row.price" :controls="false" :disabled="priceType !== 1" />
+              <el-input-number
+                v-model="row.price"
+                :controls="false"
+                :step="0.01"
+                :max="9999999.99"
+                :precision="2"
+                @blur="priceBlur(row)"
+                :disabled="priceType !== 1"
+              />
             </template>
           </el-table-column>
-          <el-table-column label="金额" align="center" width="100">
+          <el-table-column label="金额" align="center" width="125">
             <template #default="{ row }">
-              <el-input-number v-model="row.amount" :controls="false" :disabled="priceType !== 1" />
+              <el-input-number
+                v-model="row.amount"
+                :controls="false"
+                :step="0.01"
+                :max="9999999.99"
+                :precision="2"
+                :disabled="priceType !== 1"
+              />
             </template>
           </el-table-column>
           <el-table-column label="备注" align="center">
@@ -130,19 +147,24 @@ const priceType = ref()
 const scrapTypeList = ref([])
 
 async function fetchData() {
+  try {
+    const { content } = await getScrapTypeList()
+    console.log(content)
+    scrapTypeList.value = content
+  } catch (error) {
+    console.log(error)
+  }
   if (props.title === '创建废料出售') {
     tableData.value = []
     form.value = ref(JSON.parse(JSON.stringify(defaultForm)))
   } else {
-    try {
-      const { content } = await getScrapTypeList()
-      console.log(content)
-      scrapTypeList.value = content
-    } catch (error) {
-      console.log(error)
-    }
     console.log(props.rowData)
-    tableData.value = props.rowData.wasteSaleDetailList
+    tableData.value = []
+    props.rowData.wasteSaleDetailList.forEach(v => {
+      if (v?.id) {
+        tableData.value.push(v)
+      }
+    })
     nextTick(() => {
       form.value.branchCompanyId = props.rowData.branchCompanyId
       form.value.contractWasteId = props.rowData.contractWasteId
@@ -193,6 +215,7 @@ function addColumn() {
     price: undefined,
     remark: undefined,
     saleMete: undefined,
+    id: undefined,
     measureUnit: undefined,
     wasteClassificationId: undefined
   })
@@ -215,11 +238,21 @@ function buyChange(val) {
 
 // 修改类型展示单位
 function typeChange(row) {
-  props.typeList.forEach(v => {
+  scrapTypeList.value.forEach((v) => {
     if (v.id === row.wasteClassificationId) {
       row.measureUnit = v.measureUnit
     }
   })
+}
+
+function priceBlur(row) {
+  // rowWatch(row)
+  row.amount = row.saleMete * row.price
+}
+
+function seleMeteBlur(row) {
+  // rowWatch(row)
+  row.amount = row.saleMete * row.price
 }
 
 // 行监听计金额
@@ -232,7 +265,11 @@ function rowWatch(row) {
 async function verify() {
   const _list = []
   form.value.wasteSaleDetailList = []
-  tableData.value.forEach(v => {
+  if (tableData.value.length === 0) {
+    ElMessage({ message: '列表信息不能为空', type: 'error' })
+    throw new Error('列表信息不能为空')
+  }
+  tableData.value.forEach((v) => {
     form.value.wasteSaleDetailList.push(v)
   })
   _list.push(form.value)

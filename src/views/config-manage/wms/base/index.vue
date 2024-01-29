@@ -25,7 +25,7 @@
         <!-- 调拨审核 -->
         <transfer v-if="checkPermission(permission.transferGet)" class="card" />
         <!-- 废料价格录入配置 -->
-        <scrap-price-entry class="card" />
+        <scrap-price-entry v-if="checkPermission(permission.scrapPriceGet)" class="card" />
       </el-col>
     </el-row>
   </div>
