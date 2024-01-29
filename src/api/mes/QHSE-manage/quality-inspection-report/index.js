@@ -45,6 +45,16 @@ export function getProcess(params) {
   })
 }
 
+export function downloadDetaile(params) {
+  return request({
+    module: 'mes',
+    url: `report/inspection/summary/details/print`,
+    method: 'get',
+    responseType: 'blob',
+    params
+  })
+}
+
 export default {
   get
 }

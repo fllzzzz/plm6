@@ -191,6 +191,15 @@ async function handleUnitPrice({ header, table = [], footer, qrCode }) {
     } else {
       row.unitPrice = undefined
       row.amountExcludingVat = undefined
+function collectionLedger({ header, table = [], footer, qrCode }) {
+  const _table = table.map(row => {
+    if (row.type === 2) {
+      row.projectOrName = row.paymentUnit
+      row.seller = row.collectionUnit
+      row.businessType = 9
+    } else {
+      row.projectOrName = row.project.name
+      row.seller = row.collectionUnit
     }
     return row
   })
@@ -233,5 +242,6 @@ export default {
   handleExpenseRate,
   handleDepreciationRate,
   handleUnitPrice,
-  handleFortuneReport
+  handleFortuneReport,
+  collectionLedger
 }

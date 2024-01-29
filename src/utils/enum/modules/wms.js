@@ -251,6 +251,12 @@ const outboundDestinationTypeEnum = {
 }
 constantize(outboundDestinationTypeEnum)
 
+const scrapPriceTypeEnum = {
+  CREATE_FILL: { L: '创建填写', K: 'CREATE_FILL', V: 1 },
+  EXAMINE_FILL: { L: '审核填写', K: 'EXAMINE_FILL', V: 2 }
+}
+constantize(scrapPriceTypeEnum)
+
 export {
   receiptTypeEnum, // 单据类型
   returnStatusEnum,
@@ -282,7 +288,8 @@ export {
   materialWeightingWayEnum,
   materialLabelPrintTypeEnum,
   outboundDestinationTypeEnum,
-  returnAuditEnum
+  returnAuditEnum,
+  scrapPriceTypeEnum
 }
 
 export default {
@@ -316,5 +323,6 @@ export default {
   materialWeightingWayEnum,
   materialLabelPrintTypeEnum,
   outboundDestinationTypeEnum,
-  returnAuditEnum
+  returnAuditEnum,
+  scrapPriceTypeEnum
 }

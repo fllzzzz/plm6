@@ -22,7 +22,17 @@ export function contractLedger(params) {
 export function collectionLedger(params) {
   return request({
     module: 'contract',
-    url: 'contract/collection/print',
+    url: 'contract/collection/listPage/print',
+    method: 'get',
+    params
+  })
+}
+
+// 项目台账/收款记录
+export function collectionProject(params) {
+  return request({
+    module: 'contract',
+    url: 'contract/collection/project/print',
     method: 'get',
     params
   })
@@ -37,7 +47,17 @@ export function collectionLedger(params) {
 export function invoiceLedger(params) {
   return request({
     module: 'contract',
-    url: 'contract/invoice/print',
+    url: 'contract/invoice/listPage/print',
+    method: 'get',
+    params
+  })
+}
+
+// 收款台账开票记录
+export function invoiceProject(params) {
+  return request({
+    module: 'contract',
+    url: 'contract/invoice/project/print',
     method: 'get',
     params
   })
@@ -531,11 +551,58 @@ export function contractBoxPrice(params) {
   })
 }
 
+// 废料台账-开票
+export function scrapInvoice(params) {
+  return request({
+    url: '/api/contract/invoice/waste/print',
+    method: 'get',
+    params
+  })
+}
+
+// 废料台账-收款
+export function scrapCollection(params) {
+  return request({
+    url: '/api/contract/collection/waste/print',
+    method: 'get',
+    params
+  })
+}
+
+// 废料台账-日期列表
+export function scrapDate(params) {
+  return request({
+    url: '/api/contract/contractWaste/saleDetail/print',
+    method: 'get',
+    params
+  })
+}
+
+// 废料台账-购买方列表
+export function scrapPurchaser(params) {
+  return request({
+    url: '/api/contract/contractWaste/summary/ledger/print',
+    method: 'get',
+    params
+  })
+}
+
+// 废料台账-累计出售额详情
+export function totalScrapDetaile(params) {
+  return request({
+    url: '/api/contract/contractWaste/saleAmount/print',
+    method: 'get',
+    params
+  })
+}
+
 export default {
   contractLedger, // 合同台账（合同登记表）
   collectionLedger, // 收款记录
+  collectionProject, // 项目台账收款记录
   invoiceLedger, // 开票记录
   exportTaxRebate, // 出口退税
+  invoiceProject, // 项目台账开票记录
   arrearsList, // 欠款清单
   myProject, // 我的项目
   projectList, // 项目列表
@@ -583,5 +650,10 @@ export default {
   waterElectricFee, // 水电费
   depreciationFee, // 折旧费
   fortuneReportList, // 业财报表
-  contractBoxPrice // 分段制品计价表
+  contractBoxPrice, // 分段制品计价表
+  scrapInvoice, // 废料开票记录
+  totalScrapDetaile, // 废料台账累计出售额详情
+  scrapCollection, // 废料收款记录
+  scrapPurchaser, // 废料按购买方查
+  scrapDate // 废料按日期查
 }

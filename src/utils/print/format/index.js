@@ -16,6 +16,7 @@ const supplierPayableSummary = contract.handleSupplierPaymentRate
 const logisticsPaymentLedger = contract.handleSupplierPaymentRate
 const supplierPaymentLedger = contract.handleSupplierPaymentOrder
 const saleOrderTracking = contract.handleRate
+const collectionLedger = contract.collectionLedger
 
 const waterRecord = contract.handleTimeHorizon
 const electricRecord = contract.handleTimeHorizon
@@ -104,6 +105,7 @@ export default {
   fortuneReportList,
   waterRecord,
   expenseReimburseSummary,
+  collectionLedger, // 收款台账收款列表
 
   mesAssembleNestingOrder,
 
