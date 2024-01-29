@@ -179,3 +179,20 @@ export function setTransferBasicConf(data) {
     data
   })
 }
+
+// 获取废料价格录入配置
+export function getScrapPriceConf() {
+  return request({
+    url: 'api/config/getWastePriceEntryType',
+    method: 'get'
+  })
+}
+
+// 保存废料价格录入配置
+export function setScrapPriceConf(params) {
+  return request({
+    url: 'api/config/setWastePriceEntryType',
+    method: 'put',
+    params
+  })
+}

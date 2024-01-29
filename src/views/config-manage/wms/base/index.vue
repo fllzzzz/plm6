@@ -24,6 +24,8 @@
         <basic-return v-if="checkPermission(permission.basicReturnGet)" class="card" />
         <!-- 调拨审核 -->
         <transfer v-if="checkPermission(permission.transferGet)" class="card" />
+        <!-- 废料价格录入配置 -->
+        <scrap-price-entry v-if="checkPermission(permission.scrapPriceGet)" class="card" />
       </el-col>
     </el-row>
   </div>
@@ -43,6 +45,7 @@ import PartyABorrowReturn from './module/party-a-borrow-return.vue'
 import MaterialWeighting from './module/material-weighting.vue'
 import basicReturn from './module/basic-return.vue'
 import transfer from './module/transfer'
+import scrapPriceEntry from './module/scrap-price-entry-config.vue'
 
 provide('permission', permission)
 </script>

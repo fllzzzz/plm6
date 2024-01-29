@@ -19,7 +19,7 @@
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
     <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" :show-overflow-tooltip="true" label="业务类型" align="center">
       <template v-slot="scope">
-        <span>{{ scope.row.businessType?businessTypeEnum.VL[scope.row.businessType]:'-'}}</span>
+        <span>{{ scope.row.businessType?businessTypeEnum.VL[scope.row.businessType]:'废料出售'}}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('relationDept.name')" key="relationDept.name" prop="relationDept.name" :show-overflow-tooltip="true" label="所属部门" align="center">
@@ -32,12 +32,13 @@
         <span>{{ scope.row.customerUnit || '-' }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('project')" key="project.serialNumber" prop="project" :show-overflow-tooltip="true" label="所属项目" min-width="150">
+    <el-table-column v-if="columns.visible('project')" key="project.serialNumber" prop="project" :show-overflow-tooltip="true" label="所属项目/购买方" min-width="150">
       <template v-slot="scope">
-        <span>{{ projectNameFormatter(scope.row.project) }}</span>
+        <span v-if="scope.row.type === 1">{{ projectNameFormatter(scope.row.project) }}</span>
+        <span v-else>{{ scope.row.paymentUnit }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('collectionUnit')" key="collectionUnit" prop="collectionUnit" :show-overflow-tooltip="true" label="签约主体" align="center">
+    <el-table-column v-if="columns.visible('collectionUnit')" key="collectionUnit" prop="collectionUnit" :show-overflow-tooltip="true" label="签约主体/出售方" align="center">
       <template v-slot="scope">
         <div>{{ scope.row.collectionUnit }}</div>
       </template>
@@ -69,7 +70,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/contract/collection-and-invoice/collection'
+import crudApi, { getCollectionList } from '@/api/contract/collection-and-invoice/collection'
 import { ref } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -79,15 +80,12 @@ import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { projectNameFormatter } from '@/utils/project'
 import { collectionLedgerPM } from '@/page-permission/contract'
-import useDecimalPrecision from '@compos/store/use-decimal-precision'
 import useDict from '@compos/store/use-dict'
-
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 
 const { decimalPrecision } = useDecimalPrecision()
-const dict = useDict(['payment_reason'])
-
 const permission = collectionLedgerPM.collection
 
 const optShow = {
@@ -98,13 +96,14 @@ const optShow = {
 }
 
 const tableRef = ref()
+const dict = useDict(['payment_reason'])
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '收款台账',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi },
+    crudApi: { ...crudApi, get: getCollectionList },
     invisibleColumns: ['contractAmount'],
     hasPagination: true
   },

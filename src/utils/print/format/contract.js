@@ -194,6 +194,25 @@ async function handleUnitPrice({ header, table = [], footer, qrCode }) {
       row.unitPrice = undefined
       row.amountExcludingVat = undefined
     }
+  })
+  return {
+    header,
+    table: _table,
+    qrCode,
+    footer
+  }
+}
+
+function collectionLedger({ header, table = [], footer, qrCode }) {
+  const _table = table.map(row => {
+    if (row.type === 2) {
+      row.projectOrName = row.paymentUnit
+      row.seller = row.collectionUnit
+      row.businessType = 9
+    } else {
+      row.projectOrName = row.project.name
+      row.seller = row.collectionUnit
+    }
     return row
   })
   return {
@@ -329,5 +348,6 @@ export default {
   handleContractAuxiliaryMaterial,
   handleProjectWarehouseRecord,
   handleContractAuxiliaryMaterialShipmentTracking,
-  handleSearchTime
+  handleSearchTime,
+  collectionLedger
 }

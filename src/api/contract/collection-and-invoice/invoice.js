@@ -3,6 +3,15 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'contract',
+    url: 'contract/invoice/project',
+    method: 'get',
+    params
+  })
+}
+
+export function getInvoiceList(params) {
+  return request({
+    module: 'contract',
     url: 'contract/invoice/listPage',
     method: 'get',
     params
@@ -21,7 +30,7 @@ export function get(params) {
 export function add(data) {
   return request({
     module: 'contract',
-    url: 'contract/invoice/saveList',
+    url: 'contract/invoice/project',
     method: 'post',
     params: { projectId: data.projectId },
     data: data.list
@@ -31,25 +40,26 @@ export function add(data) {
 export function edit(data) {
   return request({
     module: 'contract',
-    url: 'contract/invoice/edit',
+    url: 'contract/invoice/project',
     method: 'post',
     data
   })
 }
 
 // 审核
-export function editStatus(id, status) {
+export function editStatus(data) {
   return request({
     module: 'contract',
-    url: `contract/invoice/audit/invoiceId/${id}/status/${status}`,
-    method: 'put'
+    url: `contract/invoice/audit/project`,
+    method: 'put',
+    data
   })
 }
 
 export function del(id) {
   return request({
     module: 'contract',
-    url: `contract/invoice/deleteById/${id}`,
+    url: `contract/invoice/deleteById/${id}/project`,
     method: 'delete'
   })
 }

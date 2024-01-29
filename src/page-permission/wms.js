@@ -185,6 +185,18 @@ export const steelScrapPM = {
   get: ['wms_steel_scrap:get']
 }
 
+// 废料管理/废料出售
+export const scrapSellPM = {
+  get: ['wms_scrap_sell:get'], // 废料出售列表
+  add: ['wms_scrap_sell:add'], // 新增废料出售
+  edit: ['wms_scrap_sell:edit'], // 修改废料出售
+  del: ['wms_scrap_sell:del'], // 删除废料出售
+  // detail: ['wms_scrap_sell:detail'], // 详情废料出售
+  check: ['wms_scrap_sell:check'], // 审核废料出售
+  print: ['wms_scrap_sell:print'], // 打印废料出售
+  download: ['wms_scrap_sell:download'] // 下载废料出售
+}
+
 // --------------------------- 废料模块 end --------------------------------
 
 // ########################################################################

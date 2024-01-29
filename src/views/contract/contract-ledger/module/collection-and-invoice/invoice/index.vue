@@ -413,7 +413,7 @@ function taxMoney(row) {
 
 async function passConfirm(row) {
   try {
-    await editStatus(row.id, auditTypeEnum.PASS.V)
+    await editStatus({ id: row.id, auditStatus: auditTypeEnum.PASS.V })
     crud.notify(`审核成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
     crud.toQuery()
     emit('success')

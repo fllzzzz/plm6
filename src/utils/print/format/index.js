@@ -21,6 +21,7 @@ const logisticsPaymentLedger = contract.handleLoadingWeight
 const productLogisticsPaymentLedger = contract.handleActualWeight
 const purchaseMaterialInboundRecord = wms.dataFormat // 供应链-原材料入库记录·
 const purchaseInboundRecord = wms.dataFormat // 供应链-原材料物流入库记录·
+const collectionLedger = contract.collectionLedger
 
 const waterRecord = contract.handleTimeHorizon
 const electricRecord = contract.handleTimeHorizon
@@ -119,6 +120,7 @@ export default {
   scmSupplierPaymentLedger,
   purchaseMaterialInboundRecord,
   purchaseInboundRecord,
+  collectionLedger, // 收款台账收款列表
 
   mesAssembleNestingOrder,
 

@@ -198,6 +198,13 @@ export default {
           hidden: false,
           component: '/config-manage/wms/inspection-raw-material/index',
           meta: { title: '入库质检物料', icon: 'project', noCache: true, permissions: ['configWmsInspectionRawMaterialPM'] }
+        },
+        {
+          name: 'ScrapConfig',
+          path: 'scrap-config',
+          hidden: false,
+          component: '/config-manage/wms/scrap-config/index',
+          meta: { title: '废料配置', icon: 'project', noCache: true }
         }
       ]
     },

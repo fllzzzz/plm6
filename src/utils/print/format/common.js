@@ -39,8 +39,16 @@ function handleTaxRate({ header, table = [], footer, qrCode }) {
     row.taxRate = row.taxRate || 0
     if (row.boolReturn) {
       row.totalPrice = row.totalPrice * -1
+      if (row.type === 2) {
+        row.projectOrName = row.paymentUnit
+        row.seller = row.collectionUnit
+        row.businessType = 9
+      } else {
+        row.projectOrName = row.project.name
+        row.seller = row.collectionUnit
+      }
+      return row
     }
-    return row
   })
   return {
     header,
