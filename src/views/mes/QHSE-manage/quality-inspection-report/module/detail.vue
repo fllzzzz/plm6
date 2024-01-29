@@ -3,40 +3,45 @@
     <template #titleRight> </template>
     <template #content>
       <div class="head-container">
-        <el-input
-          v-model="detailQuery.projectName"
-          placeholder="输入项目搜索"
-          class="filter-item"
-          style="width: 200px"
-          size="small"
-          clearable
-          @keyup.enter="fetchList"
-        />
-        <el-input
-          v-model="detailQuery.serialNumber"
-          placeholder="输入编号搜索"
-          class="filter-item"
-          style="width: 200px"
-          size="small"
-          clearable
-          @keyup.enter="fetchList"
-        />
-        <common-select
-          v-model="detailQuery.processId"
-          :options="processList"
-          type="other"
-          :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
-          size="small"
-          clearable
-          placeholder="选择工序"
-          class="filter-item"
-          style="width: 200px"
-          @change="fetchList"
-        />
-        <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="fetchList">搜索</common-button>
-        <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
-          重置
-        </common-button>
+        <div style="display: flex; justify-content: space-between;">
+          <div>
+            <el-input
+              v-model="detailQuery.projectName"
+              placeholder="输入项目搜索"
+              class="filter-item"
+              style="width: 200px"
+              size="small"
+              clearable
+              @keyup.enter="fetchList"
+            />
+            <el-input
+              v-model="detailQuery.serialNumber"
+              placeholder="输入编号搜索"
+              class="filter-item"
+              style="width: 200px"
+              size="small"
+              clearable
+              @keyup.enter="fetchList"
+            />
+            <common-select
+              v-model="detailQuery.processId"
+              :options="processList"
+              type="other"
+              :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+              size="small"
+              clearable
+              placeholder="选择工序"
+              class="filter-item"
+              style="width: 200px"
+              @change="fetchList"
+            />
+            <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="fetchList">搜索</common-button>
+            <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
+              重置
+            </common-button>
+          </div>
+          <export-button :fn="downloadDetaile" class="filter-item" :params="{...query, ...detailQuery, userId: props.info?.userId,}">下载</export-button>
+        </div>
       </div>
       <common-table v-loading="tableLoading" :data="list" :max-height="maxHeight - 155" row-key="rowId" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
@@ -88,13 +93,14 @@
 </template>
 
 <script setup>
-import { detail, getProcess } from '@/api/mes/QHSE-manage/quality-inspection-report'
+import { detail, getProcess, downloadDetaile } from '@/api/mes/QHSE-manage/quality-inspection-report'
 import { defineProps, defineEmits, ref, watch, inject } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
+import ExportButton from '@comp-common/export-button/index.vue'
 // import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
 
 const drawerRef = ref()
