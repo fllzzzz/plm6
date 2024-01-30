@@ -22,6 +22,15 @@
         <el-table-column label="审核人" align="center" prop="auditUserName"></el-table-column>
         <el-table-column label="审核日期" align="center" prop="auditTime"></el-table-column>
       </common-table>
+       <!-- 分页组件 -->
+      <el-pagination
+        :total="total"
+        :current-page="queryPage.pageNumber"
+        :page-size="queryPage.pageSize"
+        layout="total, prev, pager, next, sizes"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </template>
   </common-drawer>
 </template>
@@ -31,6 +40,7 @@ import { totalAmountList } from '@/api/contract/scrap-ledger'
 import { scrapLedgerPM as permission } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
 import useVisible from '@compos/use-visible'
+import usePagination from '@compos/use-pagination'
 
 const props = defineProps({
   modelValue: {
@@ -46,6 +56,7 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const { visible, handleClose } = useVisible({ props, emit, showHook: fetchData })
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchData })
 
 const dataFormat = ref([
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
@@ -58,11 +69,13 @@ const tableData = ref([])
 async function fetchData() {
   if (!checkPermission(permission.detail)) return
   try {
-    const { content } = await totalAmountList({
+    const { content, totalElements } = await totalAmountList({
+      ...queryPage,
       branchCompanyId: props.currentRow.branchCompanyId,
       contractWasteId: props.currentRow.contractWasteId
     })
     console.log(content)
+    setTotalPage(totalElements)
     tableData.value = content
   } catch (error) {
     console.log(error)

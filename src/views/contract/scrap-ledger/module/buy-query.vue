@@ -52,7 +52,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-    <collectionAndInvoice v-model="drawerVisible" :tabName="tabName" :currentRow="currentRow" />
+    <collectionAndInvoice v-model="drawerVisible" :tabName="tabName" :currentRow="currentRow" @success="checkSuccess" />
     <totalAmount v-model="amountDetaile" :currentRow="currentRow" />
   </div>
 </template>
@@ -130,8 +130,8 @@ async function fetchList() {
     })
     console.log(content)
     content.forEach((v) => {
-      v.collectionRate = v.collectionRate * 100 + '%'
-      v.invoiceRate = v.invoiceRate * 100 + '%'
+      v.collectionRate = (v.collectionRate * 100).toFixed(2) + '%'
+      v.invoiceRate = (v.invoiceRate * 100).toFixed(2) + '%'
       tableData.value.push(v)
     })
     setTotalPage(totalElements)
@@ -149,6 +149,10 @@ async function openDetaile(row, name) {
 async function openTotalDetaile(row) {
   amountDetaile.value = true
   currentRow.value = row
+}
+
+async function checkSuccess() {
+  fetchList()
 }
 </script>
 

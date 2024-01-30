@@ -134,10 +134,25 @@ function checkUnitFormat({ header, table = [], footer, qrCode }) {
   }
 }
 
+function scrapPurchaser({ header, table = [], footer, qrCode }) {
+  const _table = table.map(row => {
+    row.collectionRate = (row.collectionRate * 100).toFixed(2) + '%'
+    row.invoiceRate = (row.invoiceRate * 100).toFixed(2) + '%'
+    return row
+  })
+  return {
+    header,
+    table: _table,
+    footer,
+    qrCode
+  }
+}
+
 export default {
   preparesCustomSummary,
   checkUnitFormat,
   dataFormat,
   supplementDataFormat,
-  transferDataFormat
+  transferDataFormat,
+  scrapPurchaser
 }
