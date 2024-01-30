@@ -6,7 +6,7 @@ import scm from './supply-chain'
 import enclosure from './enclosure'
 
 const invoiceLedger = common.handleTaxRate
-const invoiceRecord = common.handleTaxRate
+const invoiceRecord = contract.invoiceRecord
 const projectHappenedDetail = common.handleTaxRate
 
 const myProject = contract.durationCalculation
@@ -85,6 +85,7 @@ const auxiliaryMaterialList = wms.dataFormat // 业财报表辅材费清单
 const conMainMaterialList = wms.dataFormat // 合同管理/业财报表主材费
 const mesOutBoundStatisticsList = wms.dataFormat // 任务跟踪/在制品出库记录详情
 const mesBackBoundStatisticsList = wms.dataFormat // 任务跟踪/在制品退库记录详情
+const scrapPurchaser = wms.scrapPurchaser
 
 // 围护MES
 const enclosureTaskTrackingDetail = enclosure.handleProductionStatus // 围护生产跟踪详情
@@ -158,6 +159,7 @@ export default {
   wmsRmRejectReceipt, // 退货单
   wmsRmSupplementReceipt, // 调整记录
   wmsRmTransferReceipt, // 调拨单
+  scrapPurchaser, // 废料出售
 
   auxiliaryMaterialList, // 业财报表/辅材费清单
   // gasRecord, // 合同管理/费用录入/气体统计

@@ -18,7 +18,7 @@
           value-format="x"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          style="width:240px"
+          style="width: 240px"
           @change="handelDateChange"
         />
         <common-select
@@ -33,10 +33,20 @@
       </div>
       <common-button type="success" size="mini" class="filter-item" @click="scrapContract">合同配置</common-button>
     </div>
-    <div style="display: flex; justify-content: space-between;">
+    <div style="display: flex; justify-content: space-between">
       <el-tag size="medium">累计出售金额：{{ totalAmount }}元</el-tag>
-      <print-table v-if="wayValue !== 1" api-key="scrapDate" :params="{startDate: startDate,endDate: endDate, wasteClassificationId: scrapType }"  v-permission="permission.print" />
-      <print-table v-else api-key="scrapPurchaser" :params="{startDate: startDate,endDate: endDate, wasteClassificationId: scrapType }" v-permission="permission.print" />
+      <print-table
+        v-if="wayValue !== 1"
+        api-key="scrapDate"
+        :params="{ startDate: startDate, endDate: endDate, wasteClassificationId: scrapType }"
+        v-permission="permission.print"
+      />
+      <print-table
+        v-else
+        api-key="scrapPurchaser"
+        :params="{ startDate: startDate, endDate: endDate, wasteClassificationId: scrapType }"
+        v-permission="permission.print"
+      />
     </div>
     <contractDrawer v-model="showScrapContract" />
   </div>
@@ -81,7 +91,7 @@ async function fetchScrapType() {
     console.log(error)
   }
   try {
-    const res = await getTotalAmount()
+    const res = await getTotalAmount({ startDate: startDate.value, endDate: endDate.value, wasteClassificationId: scrapType.value })
     totalAmount.value = res
   } catch (error) {
     console.log(error)
@@ -107,11 +117,14 @@ function handelDateChange(v) {
     queryDate.value = []
   }
   queryDate.value = v
+  fetchScrapType()
   emit('dateChange', startDate.value, endDate.value)
 }
 
 function typeChange(v) {
   console.log(v)
+  scrapType.value = v
+  fetchScrapType()
   emit('typeChange', v)
 }
 </script>

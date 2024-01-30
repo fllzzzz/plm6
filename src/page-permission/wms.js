@@ -194,7 +194,7 @@ export const scrapSellPM = {
   // detail: ['wms_scrap_sell:detail'], // 详情废料出售
   check: ['wms_scrap_sell:check'], // 审核废料出售
   print: ['wms_scrap_sell:print'], // 打印废料出售
-  download: ['wms_scrap_sell:download'] // 下载废料出售
+  download: ['wms_scrap_sell:downLoad'] // 下载废料出售
 }
 
 // --------------------------- 废料模块 end --------------------------------
