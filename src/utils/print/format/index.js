@@ -6,7 +6,7 @@ import scm from './supply-chain'
 import enclosure from './enclosure'
 
 const invoiceLedger = common.handleTaxRate
-const invoiceRecord = common.handleTaxRate
+const invoiceRecord = contract.invoiceRecord
 const projectHappenedDetail = common.handleTaxRate
 
 const myProject = contract.durationCalculation
