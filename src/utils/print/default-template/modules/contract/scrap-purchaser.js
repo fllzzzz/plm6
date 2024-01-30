@@ -206,9 +206,9 @@ const scrapPurchaser = {
       { show: true, key: 'branchCompanyName', title: '出售单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.COMPANY_NAME.K },
       { show: false, key: 'totalAmount', title: '累计出售金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.AMOUNT.K },
       { show: true, key: 'collectionAmount', title: '累计收款', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.AMOUNT.K },
-      { show: true, key: 'collectionRate', title: '收款率', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.RATE.K },
+      { show: true, key: 'collectionRate', title: '收款率', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.OTHER.K },
       { show: true, key: 'invoiceAmount', title: '累计开票', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.AMOUNT.K },
-      { show: true, key: 'invoiceRate', title: '开票率', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.RATE.K }
+      { show: true, key: 'invoiceRate', title: '开票率', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.OTHER.K }
     ]
   }
 }

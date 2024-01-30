@@ -31,7 +31,7 @@ import { onMounted, ref } from 'vue'
 import { getScrapConfig, delScrapType } from '@/api/config/wms/scrap-config'
 import { configWmsScrapConfigPM as permission } from '@/page-permission/config'
 import detaile from './module/detaile.vue'
-import { ElMessage } from 'element-plus'
+// import { ElMessage } from 'element-plus'
 import usePagination from '@compos/use-pagination'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -74,11 +74,10 @@ const success = () => {
 
 const delScrap = async (row) => {
   const _delList = []
-  ElMessage({ message: '删除成功', type: 'success' })
   _delList.push(row.id)
   try {
     await delScrapType(_delList)
-
+    // ElMessage({ message: '删除成功', type: 'success' })
     fetchData()
   } catch (error) {
     console.log(error)
