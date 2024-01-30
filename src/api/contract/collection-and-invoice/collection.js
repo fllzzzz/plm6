@@ -41,7 +41,7 @@ export function edit(data) {
   return request({
     module: 'contract',
     url: 'contract/collection/project',
-    method: 'post',
+    method: 'put',
     data
   })
 }
