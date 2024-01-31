@@ -166,6 +166,13 @@
         min-width="120"
       >
         <template v-slot="scope">
+          <!-- 是否显示角标 -->
+          <table-cell-tag
+            v-if="scope.row.boolUnallocatedPrice"
+            name="价格未配置"
+            color="#a66502"
+            :offset="15"
+          />
           <span>{{ scope.row.shipAmount }}</span>
         </template>
       </el-table-column>
