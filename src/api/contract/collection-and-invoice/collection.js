@@ -3,6 +3,15 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'contract',
+    url: 'contract/collection/project',
+    method: 'get',
+    params
+  })
+}
+
+export function getCollectionList(params) {
+  return request({
+    module: 'contract',
     url: 'contract/collection/listPage',
     method: 'get',
     params
@@ -21,7 +30,7 @@ export function get(params) {
 export function add(data) {
   return request({
     module: 'contract',
-    url: 'contract/collection/saveList',
+    url: 'contract/collection/project',
     method: 'post',
     params: { projectId: data.projectId },
     data: data.list
@@ -31,8 +40,8 @@ export function add(data) {
 export function edit(data) {
   return request({
     module: 'contract',
-    url: 'contract/collection/edit',
-    method: 'post',
+    url: 'contract/collection/project',
+    method: 'put',
     data
   })
 }
@@ -40,7 +49,7 @@ export function edit(data) {
 export function del(id) {
   return request({
     module: 'contract',
-    url: `contract/collection/deleteById/${id}`,
+    url: `contract/collection/deleteById/${id}/project`,
     method: 'delete'
   })
 }
@@ -55,11 +64,12 @@ export function contractCollectionInfo(params) {
   })
 }
 
-export function editStatus(id, status) {
+export function editStatus(data) {
   return request({
     module: 'contract',
-    url: `contract/collection/audit/collectionId/${id}/status/${status}`,
-    method: 'put'
+    url: `contract/collection/audit/project`,
+    method: 'put',
+    data
   })
 }
 

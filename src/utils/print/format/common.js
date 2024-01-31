@@ -37,6 +37,14 @@ function filter({ header, table = [], footer, qrCode }) {
 function handleTaxRate({ header, table = [], footer, qrCode }) {
   const _table = table.map(row => {
     row.taxRate = row.taxRate || 0
+    // if (row.type === 2) {
+    //   row.projectOrName = row.paymentUnit
+    //   row.seller = row.collectionUnit
+    //   row.businessType = 9
+    // } else {
+    //   row.projectOrName = row.project.name
+    //   row.seller = row.collectionUnit
+    // }
     return row
   })
   return {

@@ -19,15 +19,16 @@
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
     <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" :show-overflow-tooltip="true" label="业务类型" align="center">
       <template v-slot="scope">
-        <span>{{ scope.row.businessType?businessTypeEnum.VL[scope.row.businessType]:'-'}}</span>
+        <span>{{ scope.row.businessType?businessTypeEnum.VL[scope.row.businessType]:'废料出售'}}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('project')" key="project.serialNumber" prop="project" :show-overflow-tooltip="true" label="所属项目" min-width="150">
+    <el-table-column v-if="columns.visible('project')" key="project.serialNumber" prop="project" :show-overflow-tooltip="true" label="所属项目/购买方" min-width="150">
       <template v-slot="scope">
-        <span>{{ projectNameFormatter(scope.row.project) }}</span>
+        <span v-if="scope.row.type === 1">{{ projectNameFormatter(scope.row.project) }}</span>
+        <span v-else>{{ scope.row.collectionUnit }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceUnit')" key="invoiceUnit" prop="invoiceUnit" :show-overflow-tooltip="true" label="签约主体" align="center">
+    <el-table-column v-if="columns.visible('invoiceUnit')" key="invoiceUnit" prop="invoiceUnit" :show-overflow-tooltip="true" label="签约主体/出售方" align="center">
       <template v-slot="scope">
         <div>{{ scope.row.invoiceUnit }}</div>
       </template>
@@ -65,7 +66,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/contract/collection-and-invoice/invoice'
+import crudApi, { getInvoiceList } from '@/api/contract/collection-and-invoice/invoice'
 import { ref } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -99,7 +100,7 @@ const { crud, columns, CRUD } = useCRUD(
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi },
+    crudApi: { ...crudApi, get: getInvoiceList },
     invisibleColumns: ['contractAmount'],
     hasPagination: true
   },

@@ -287,6 +287,13 @@ export default {
           hidden: false,
           component: '/wms/scrap-manage/steel/index',
           meta: { title: '钢材列表', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSScrapSell',
+          path: 'scrap-sell',
+          hidden: false,
+          component: '/wms/scrap-manage/scrap-sell/index',
+          meta: { title: '废料出售', icon: 'project', noCache: true }
         }
       ]
     },

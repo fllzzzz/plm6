@@ -52,6 +52,13 @@ export default {
           meta: { title: '项目台账', icon: 'contract2', noCache: true }
         },
         {
+          name: 'ScrapLedger',
+          path: 'scrap-ledger',
+          hidden: false,
+          component: '/contract/scrap-ledger/index',
+          meta: { title: '废料台账', icon: 'contract2', noCache: true }
+        },
+        {
           name: 'CollectionLedger',
           path: 'collection-ledger',
           hidden: false,
