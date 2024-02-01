@@ -23,6 +23,7 @@ const contractBoxPrice = contract.contractBoxPrice
 const contractStructurePrice = contract.structurePrice
 const contractEnclosurePrice = contract.enclosurePrice
 const contractAuxiliaryMaterialPrice = contract.auxiliaryMaterialPrice
+const contractAuxiliaryMaterialPriceEnclosure = contract.auxiliaryMaterialPrice
 const contractMachinePartPrice = contract.machinePartPrice
 const machinePartDetail = contract.machinePartDetail
 const projectCollectionDetail = contract.collectionDetail
@@ -379,6 +380,7 @@ export default {
   contractStructurePrice, // 结构计价表
   contractEnclosurePrice, // 围护计价表
   contractAuxiliaryMaterialPrice, // 配套件计价表
+  contractAuxiliaryMaterialPriceEnclosure, // 围护配套件计价表
   contractMachinePartPrice, // 散发制品计价表
   machinePartDetail, // 散发制品详情
   projectCollectionDetail, // 项目收款详情
