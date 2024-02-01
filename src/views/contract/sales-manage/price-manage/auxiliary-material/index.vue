@@ -74,6 +74,11 @@
           </span>
         </template>
       </el-table-column>
+      <el-table-column v-if="columns.visible('remark')" :show-overflow-tooltip="true" prop="remark" label="备注" align="center">
+        <template #default="{ row }">
+          <span>{{ row.remark || '-' }}</span>
+        </template>
+      </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />

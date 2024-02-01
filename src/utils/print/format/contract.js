@@ -278,6 +278,8 @@ function handleContractAuxiliaryMaterial({ header, table = [], footer, qrCode })
     if (row.boolReturn) {
       row.totalPrice = row.totalPrice * -1
       return row
+    } else {
+      return row
     }
   })
   return {
