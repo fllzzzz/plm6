@@ -270,12 +270,24 @@ const showAmount = computed(() => checkPermission(permission.showAmount) && (amo
 
 const basicClass = computed(() => (crud.query ? crud.query.basicClass : undefined))
 
+function convertParentheses(str) {
+  return str.replace(/[\(\)]/g, function (match) {
+    if (match === '(') {
+      return '（' // 左括号转换为中文左括号
+    } else {
+      return '）' // 右括号转换为中文右括号
+    }
+  })
+}
+
 // 处理刷新
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   await setSpecInfoToList(data.content)
   data.content = await numFmtByBasicClass(data.content)
   data.content.forEach((row) => {
     if (row.specification && row.specMerge.indexOf(row.specification) > -1) {
+      row.specification = convertParentheses(row.specification)
+      row.specMerge = convertParentheses(row.specMerge)
       row.specMerge = row.specMerge.replace(new RegExp(`\\${row.specification}`, 'g'), '')
     }
     if (!row.inboundReceipt) row.inboundReceipt = {}

@@ -51,7 +51,7 @@
         </span>
         <print-table
           v-permission="crud.permission.print"
-          api-key="contractAuxiliaryMaterialPrice"
+          :api-key="relationType===standardPartPriceSearchEnum.STRUCTURE.V?'contractAuxiliaryMaterialPrice':'contractAuxiliaryMaterialPriceEnclosure'"
           :params="{ ...query }"
           size="mini"
           type="warning"

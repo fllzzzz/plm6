@@ -2,12 +2,12 @@ import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
 // 配套件计价表
-const contractAuxiliaryMaterialPrice = {
+const contractAuxiliaryMaterialPriceEnclosure = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'contractAuxiliaryMaterialPrice', // 表格类型 KEY
-  name: '构件配套件计价表（平台）', // 表格名称
+  type: 'contractAuxiliaryMaterialPriceEnclosure', // 表格类型 KEY
+  name: '围护配套件计价表（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -104,8 +104,7 @@ const contractAuxiliaryMaterialPrice = {
      */
     fields: [ // 字段内容
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V, lineBreak: false }},
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'monomer.name', title: '单体：', width: 110, type: typeEnum.MONOMER_NAME.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'area.name', title: '区域', width: 80, type: typeEnum.OTHER.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'enclosurePlan.name', title: '批次：', width: 190, type: typeEnum.OTHER.K },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'date', title: '统计日期：', width: 110, type: typeEnum.OTHER.K },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 40, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 40, type: typeEnum.USER_NAME.K }
@@ -214,5 +213,5 @@ const contractAuxiliaryMaterialPrice = {
 }
 
 export default {
-  contractAuxiliaryMaterialPrice //  配套件计价表
+  contractAuxiliaryMaterialPriceEnclosure //  围护配套件计价表
 }
