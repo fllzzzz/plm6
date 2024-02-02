@@ -76,12 +76,30 @@
         min-width="130"
         align="right"
       />
+       <el-table-column
+        v-if="columns.visible('unitPrice')"
+        show-overflow-tooltip
+        key="unitPrice"
+        prop="unitPrice"
+        label="采购单价（含税）"
+        min-width="130"
+        align="right"
+      />
       <el-table-column
         v-if="columns.visible('amountExcludingVAT')"
         show-overflow-tooltip
         key="amountExcludingVAT"
         prop="amountExcludingVAT"
         label="金额（不含税）"
+        min-width="130"
+        align="right"
+      />
+      <el-table-column
+        v-if="columns.visible('amount')"
+        show-overflow-tooltip
+        key="amount"
+        prop="amount"
+        label="金额（含税）"
         min-width="130"
         align="right"
       />
@@ -124,7 +142,8 @@ const tableRef = ref()
 // 表格列数据格式转换
 const columnsDataFormat = computed(() => {
   return [
-    ['amountExcludingVAT', ['to-thousand', DP.YUAN]]
+    ['amountExcludingVAT', ['to-thousand', DP.YUAN]],
+    ['amount', ['to-thousand', DP.YUAN]]
   ]
 })
 
