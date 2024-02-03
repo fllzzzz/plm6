@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--工具栏-->
-    <mHeader ref="headerRef" v-bind="$attrs" @checkSubmit="checkModifyData" :showAble="showAble" :submitList="submitList" @showVisible="showVisible" />
+    <mHeader ref="headerRef" v-bind="$attrs" @checkSubmit="checkModifyData" :showAble="showAble" :rowIds="rowIds" :submitList="submitList" @showVisible="showVisible" />
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -106,6 +106,7 @@ const emit = defineEmits(['showLog'])
 const tableRef = ref()
 const headerRef = ref()
 const showAble = ref(false)
+const rowIds = ref([])
 const submitList = ref([])
 
 const { crud, columns } = useCRUD(
@@ -145,8 +146,12 @@ function selectable(row) {
 }
 
 function selectionChange(val) {
+  rowIds.value = []
   crud.selectionChangeHandler(val)
   crud.selections.sort(function (a, b) { return a.orderIndex - b.orderIndex })
+  val.forEach(v => {
+    rowIds.value.push(v.id)
+  })
 }
 
 const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })

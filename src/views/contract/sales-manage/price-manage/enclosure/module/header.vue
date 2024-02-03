@@ -34,7 +34,7 @@
         <print-table
           v-permission="crud.permission.print"
           api-key="contractEnclosurePrice"
-          :params="{ projectId: projectId, enclosurePlanId: query.enclosurePlanId }"
+          :params="{ projectId: projectId, enclosurePlanId: query.enclosurePlanId, ids: props.rowIds }"
           size="mini"
           type="warning"
           class="filter-item"
@@ -103,6 +103,10 @@ const props = defineProps({
     default: false
   },
   submitList: {
+    type: Array,
+    default: () => []
+  },
+  rowIds: {
     type: Array,
     default: () => []
   }
