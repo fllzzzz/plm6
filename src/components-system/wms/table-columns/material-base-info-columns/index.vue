@@ -130,6 +130,7 @@
     :columns="columns"
     :basic-class="basicClass"
     :spec-merge="specMerge"
+    :spec-only="specOnly"
     :fixed="fixed"
     :sortable="sortable"
   />
@@ -198,6 +199,11 @@ const emit = defineEmits(['refresh', 'unfreeze-success'])
 const props = defineProps({
   specMerge: {
     // 规格合并,规格与 厚宽长颜色等合并为一个字段
+    type: Boolean,
+    default: false
+  },
+  specOnly: {
+    // 规格是否单独显示
     type: Boolean,
     default: false
   },
