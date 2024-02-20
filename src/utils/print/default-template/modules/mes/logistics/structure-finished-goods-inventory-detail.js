@@ -218,6 +218,7 @@ const structureFinishedGoodsInventoryDetail = ({ tableName, type }) => {
         },
         { show: true, key: 'monomer.name', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.STRUCTURE_NAME.K },
         { show: true, key: 'area.name', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.STRUCTURE_NAME.K },
+        { show: true, key: 'workshopName', title: '部门', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.STRUCTURE_NAME.K },
         { show: true, key: 'typeName', title: '类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.OTHER.K },
         { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.SERIAL_NUMBER.K },
         { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.SPECIFICATION.K },

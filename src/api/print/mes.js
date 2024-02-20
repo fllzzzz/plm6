@@ -1165,6 +1165,15 @@ export function structureFinishedGoodsInventoryDetail(params) {
   })
 }
 
+// 制成品货物价值详情
+export function structureTotalPriceDetail(params) {
+  return request({
+    url: `api/mes/building/warehouse/print/finish-product/artifact`,
+    method: 'get',
+    params
+  })
+}
+
 // 围护制成品入发存详情
 export function enclosureProductSendReceiveStorageDetail(params) {
   return request({
@@ -1354,6 +1363,7 @@ export default {
   mesAuxMatDetail, // 配套件详情
   bridgeAuxMatDetail, // 桥梁配套件
   enclosureAuxMatDetail, // 围护配套件详情
+  structureTotalPriceDetail, // 结构库存价值
 
   // 工厂报表-车间报表
   factoryWorkshopReport, // 车间报表详情

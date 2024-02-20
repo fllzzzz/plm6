@@ -235,6 +235,7 @@ const productSendReceiveStorageDetail = mes.productSendReceiveStorageDetail
 const boxProductSendReceiveStorageDetail = mes.boxProductSendReceiveStorageDetail
 const structureFinishedStartDetail = mes.structureFinishedGoodsInventoryDetail
 const structureFinishedEndtDetail = mes.structureFinishedGoodsInventoryDetail
+const structureTotalPriceDetail = mes.structureTotalPriceDetail
 const structureFinishedInDetail = mes.structureFinishedGoodsInventoryDetail
 const structureFinishedOutDetail = mes.structureFinishedGoodsInventoryDetail
 const enclosureProductSendReceiveStorageDetail = mes.enclosureProductSendReceiveStorageDetail
@@ -590,6 +591,7 @@ export default {
   structureFinishedEndtDetail, // 结构制品期末库存详情(总)
   structureFinishedInDetail, // 结构制品入库库存详情(总)
   structureFinishedOutDetail, // 结构制品出库库存详情(总)
+  structureTotalPriceDetail, // 货物价值详情
   enclosureProductSendReceiveStorageDetail, // 发运管理围护制成品入发存详情
   mesBeginningInventoryDetail, // 期初库存
   mesEndInventoryDetail, // 期末库存

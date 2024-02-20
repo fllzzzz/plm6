@@ -1,15 +1,15 @@
 <template>
   <common-drawer
-    @close="handleClose"
+    :before-close="handleClose"
     v-model="showDrawer"
     size="90%"
     :title="
-      props.inventoryType === 1 ? '期初库存量' : props.inventoryType === 2 ? '入库量' : props.inventoryType === 3 ? '出库量' : '期末库存量'
+      props.inventoryType === 1 ? '期初库存量' : props.inventoryType === 2 ? '入库量' : props.inventoryType === 3 ? '出库量' :  props.inventoryType === 4 ? '期末库存量' : '库存价值'
     "
   >
     <template #titleRight>
       <print-table
-        :api-key="props.inventoryType === 1 ? 'structureFinishedStartDetail' : props.inventoryType === 2 ? 'structureFinishedInDetail' : props.inventoryType === 3 ? 'structureFinishedOutDetail' : 'structureFinishedEndtDetail'"
+        :api-key="props.inventoryType === 1 ? 'structureFinishedStartDetail' : props.inventoryType === 2 ? 'structureFinishedInDetail' : props.inventoryType === 3 ? 'structureFinishedOutDetail' :  props.inventoryType === 4 ? 'structureFinishedEndtDetail' : 'structureTotalPriceDetail'"
         v-permission="permission.detailPrint"
         :params="{
           ...queryList,
@@ -65,10 +65,11 @@
             <template #default="{row}">
               <table-cell-tag v-if="row.boolAllPartSendDirectly && row.boolShowSign" name="檩条直发" color="#f56c6c" />
               <table-cell-tag v-if="!row.boolAllPartSendDirectly && row.boolShowSign" name="直发件" />
-              <span>{{ row.monomer.name }}</span>
+              <span>{{ row.monomer?.name }}</span>
             </template>
           </el-table-column>
           <el-table-column label="区域" align="center" min-width="100" prop="area.name" />
+          <el-table-column label="部门" align="center" min-width="100" prop="workshopName" />
           <el-table-column label="编号" align="center" min-width="100" prop="serialNumber" />
           <el-table-column label="规格" align="center" min-width="100" prop="specification" />
           <el-table-column label="长度(mm)" align="center" min-width="80" prop="length" />
@@ -78,6 +79,7 @@
           <el-table-column label="单毛重(kg)" align="center" min-width="80" prop="grossWeight" />
           <el-table-column label="总净重(kg)" align="center" min-width="80" prop="totalNetWeight" />
           <el-table-column label="总毛重(kg)" align="center" min-width="80" prop="totalGrossWeight" />
+          <el-table-column v-if="props.inventoryType === 5" label="价值(元)" align="center" min-width="80" prop="totalPrice" />
         </common-table>
         <!-- 分页 -->
         <el-pagination
@@ -113,6 +115,9 @@ const props = defineProps({
   },
   inventoryType: {
     type: Number
+  },
+  workshopId: {
+    type: Number
   }
 })
 
@@ -131,7 +136,8 @@ const dataFormat = ref([
   ['netWeight', ['to-fixed', DP.COM_WT__KG]],
   ['grossWeight', ['to-fixed', DP.COM_WT__KG]],
   ['totalNetWeight', ['to-fixed', DP.COM_WT__KG]],
-  ['totalGrossWeight', ['to-fixed', DP.COM_WT__KG]]
+  ['totalGrossWeight', ['to-fixed', DP.COM_WT__KG]],
+  ['totalPrice', ['to-fixed', DP.YUAN]]
 ])
 
 const list = ref([])
@@ -148,6 +154,7 @@ const queryList = computed(() => {
     projectId: props.query.projectId,
     productType: props.query.productType,
     dateTime: props.query.dateTime,
+    workshopId: props.workshopId,
     type: props.inventoryType
   }
 })

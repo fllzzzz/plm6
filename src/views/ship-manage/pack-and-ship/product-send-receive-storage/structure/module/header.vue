@@ -40,7 +40,7 @@
       />
 
       <el-row v-loading="summaryLoading" v-if="checkPermission(crud.permission.get)" :gutter="10" class="panel-group">
-        <el-col :span="6" class="card-panel-col" style="cursor: pointer;" @click="inventoryDetails(1)">
+        <el-col :span="5" class="card-panel-col" style="cursor: pointer;" @click="inventoryDetails(1)">
           <Panel
             name="期初库存(kg)"
             text-color="#626262"
@@ -51,7 +51,7 @@
             :precision="DP.COM_WT__KG"
           />
         </el-col>
-        <el-col :span="6" class="card-panel-col" style="cursor: pointer;" @click="inventoryDetails(2)">
+        <el-col :span="5" class="card-panel-col" style="cursor: pointer;" @click="inventoryDetails(2)">
           <Panel
             name="入库量(kg)"
             text-color="#626262"
@@ -60,7 +60,7 @@
             :precision="DP.COM_WT__KG"
           />
         </el-col>
-        <el-col :span="6" class="card-panel-col" style="cursor: pointer;" @click="inventoryDetails(3)">
+        <el-col :span="5" class="card-panel-col" style="cursor: pointer;" @click="inventoryDetails(3)">
           <Panel
             name="出库量(kg)"
             text-color="#626262"
@@ -71,13 +71,22 @@
             :precision="DP.COM_WT__KG"
           />
         </el-col>
-        <el-col :span="6" class="card-panel-col" style="cursor: pointer;" @click="inventoryDetails(4)">
+        <el-col :span="5" class="card-panel-col" style="cursor: pointer;" @click="inventoryDetails(4)">
           <Panel
             name="期末库存(kg)"
             text-color="#626262"
             num-color="#1890ff"
             :end-val="query.weightStatus === weightTypeEnum.NET.V ? totalAmount.stockNetWeight || 0 : totalAmount.stockGrossWeight || 0"
             :precision="DP.COM_WT__KG"
+          />
+        </el-col>
+        <el-col :span="4" class="card-panel-col" style="cursor: pointer;" @click="inventoryDetails(5)">
+          <Panel
+            name="库存价值(元)"
+            text-color="#626262"
+            num-color="#1890ff"
+            :end-val="query.weightStatus === weightTypeEnum.NET.V ? totalAmount.totalPrice || 0 : 0"
+            :precision="DP.YUAN"
           />
         </el-col>
       </el-row>
@@ -93,7 +102,7 @@
         />
       </template>
     </crudOperation>
-    <detail-drawer v-model:showDetailDrawer="showDetailDrawer" :query="crud.query" :inventoryType="inventoryType"  />
+    <detail-drawer v-model:showDetailDrawer="showDetailDrawer" :query="crud.query" :workshopId="query.workshopId" :inventoryType="inventoryType"  />
   </div>
 </template>
 
