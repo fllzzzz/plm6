@@ -30,7 +30,8 @@
         reject-detail-viewable
         show-classification
         classify-name-alias="名称"
-        spec-merge
+        :spec-merge="false"
+        spec-only
         sortable
         fixed="left"
       >
@@ -250,7 +251,8 @@ const { CRUD, crud, columns } = useCRUD(
       'invoiceType',
       'taxRate',
       'inboundReceipt.purchaseOrder',
-      'warehouse'
+      'warehouse',
+      'inboundReceipt.purchaseOrder'
     ],
     permission: { ...permission },
     optShow: { ...optShow },

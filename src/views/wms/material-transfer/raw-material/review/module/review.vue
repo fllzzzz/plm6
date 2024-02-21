@@ -103,6 +103,7 @@ import { deepClone } from '@/utils/data-type'
 import { partyAMatTransferEnum, transferTypeEnum } from '@/utils/enum/modules/wms'
 import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 import { materialColumns } from '@/utils/columns-format/wms'
+import { isNotBlank } from '@data-type/index'
 import { DP } from '@/settings/config'
 
 import { regExtra } from '@/composables/use-crud'
@@ -207,7 +208,7 @@ const showPriceSet = computed(() =>
 
 const validateInvoiceType = (rule, value, callback) => {
   if (form.value.invoiceType || form.value.invoiceType === 0) {
-    if (form.value.invoiceType === invoiceTypeEnum.SPECIAL.V && !form.value.taxRate) {
+    if (form.value.invoiceType === invoiceTypeEnum.SPECIAL.V && !isNotBlank(form.value.taxRate)) {
       callback(new Error('请选择税率'))
       return
     } else {

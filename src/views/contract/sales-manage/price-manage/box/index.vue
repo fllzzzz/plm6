@@ -128,6 +128,7 @@ const detailInfo = ref({})
 const tableRef = ref()
 const headerRef = ref()
 const showAble = ref(false)
+// const rowIds = ref([])
 const dataFormat = ref([
   ['unitPrice', ['to-thousand-ck', 'YUAN']]
 ])

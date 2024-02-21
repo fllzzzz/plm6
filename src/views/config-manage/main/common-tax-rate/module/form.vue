@@ -54,6 +54,8 @@ import { ref, nextTick } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
 
+import { isNotBlank } from '@data-type/index'
+
 const defaultForm = {
   name: '',
   taxRateList: []
@@ -99,7 +101,7 @@ function handleInputConfirm() {
     ElMessage.warning('当前税率已存在')
     return
   }
-  if (inputValue.value) {
+  if (isNotBlank(inputValue.value)) {
     form.taxRateList.push(inputValue.value)
   }
   init()

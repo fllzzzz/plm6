@@ -56,7 +56,12 @@
         min-width="160"
         label="入库单号"
         align="left"
-      />
+      >
+        <template #default="{ row: { sourceRow: row } }">
+          <table-cell-tag :show="row.printStatus" name="已打印" color="#67c23a" :offset="10" />
+          <span>{{row.serialNumber}}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('licensePlate')"
         key="licensePlate"

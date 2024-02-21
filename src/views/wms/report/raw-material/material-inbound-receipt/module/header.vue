@@ -130,6 +130,8 @@
           type="warning"
           class="filter-item"
           @success="crud.selectAllChange"
+          @downloadSuccess="printSuccess"
+          @print-success="printSuccess"
         />
       </template>
     </crudOperation>
@@ -137,6 +139,7 @@
 </template>
 
 <script setup>
+import { receiptPrintRecord } from '@/api/wms/report/raw-material/inbound'
 import { inject, ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { PICKER_OPTIONS_SHORTCUTS, STEEL_ENUM } from '@/settings/config'
@@ -183,4 +186,9 @@ onMounted(() => {
     query.basicClass = route.params.basicClass
   }
 })
+
+async function printSuccess(params) {
+  await receiptPrintRecord(params)
+  crud.toQuery()
+}
 </script>

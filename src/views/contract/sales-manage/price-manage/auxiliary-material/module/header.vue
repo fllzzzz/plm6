@@ -52,7 +52,7 @@
         <print-table
           v-permission="crud.permission.print"
           :api-key="relationType===standardPartPriceSearchEnum.STRUCTURE.V?'contractAuxiliaryMaterialPrice':'contractAuxiliaryMaterialPriceEnclosure'"
-          :params="{ ...query }"
+          :params="{ ...query, ids: props.rowIds }"
           size="mini"
           type="warning"
           class="filter-item"
@@ -121,6 +121,10 @@ const props = defineProps({
     default: false
   },
   submitList: {
+    type: Array,
+    default: () => []
+  },
+  rowIds: {
     type: Array,
     default: () => []
   }
