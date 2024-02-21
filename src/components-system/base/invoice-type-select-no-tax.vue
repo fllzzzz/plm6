@@ -16,8 +16,9 @@
       <common-select
         v-model="copyTaxRate"
         :options="taxRateOption"
-        :disabled="props.disabled"
-        :data-structure="{ key: 'value', label: 'value', value: 'value' }"
+        :disabled="props.disabled || copyChecked"
+        :loading="!loaded"
+        :data-structure="{ key: 'id', label: 'label', value: 'value' }"
         allow-create
         style="width: 80px"
         :clearable="props.clearable"
@@ -32,9 +33,15 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, watchEffect } from 'vue'
+// 未根据物料种类设置常用税率
+import { defineProps, defineEmits, ref, computed, watchEffect } from 'vue'
+import EO from '@enum'
 import { invoiceTypeEnum } from '@enum-ms/finance'
+import { supplierClassEnum } from '@enum-ms/supplier'
 import { isBlank } from '@/utils/data-type'
+
+import useTaxRate from '@compos/store/use-tax-rate'
+import { uniqueArr } from '@/utils/data-type/array'
 
 const emit = defineEmits(['update:invoiceType', 'update:taxRate', 'update:checked', 'change'])
 
@@ -52,9 +59,8 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  taxRateOption: {
-    type: Array,
-    default: () => []
+  classification: {
+    type: Number
   },
   unshowOptions: {
     type: Array,
@@ -77,6 +83,24 @@ const props = defineProps({
 const copyInvoiceType = ref()
 const copyTaxRate = ref()
 const copyChecked = ref()
+const { loaded, taxRateKV } = useTaxRate()
+
+// 税率列表
+const taxRateOption = computed(() => {
+  const bitArr = EO.getBits(supplierClassEnum, props.classification, 'V')
+  const res = []
+  bitArr.forEach((bit) => {
+    res.push.apply(res, taxRateKV.value[bit])
+  })
+  const opt = uniqueArr(res)
+  // if (opt[0] && !copyTaxRate.value) handleTaxRateChange(opt[0])
+  return opt.map((v) => {
+    return {
+      value: v,
+      label: `${v}`
+    }
+  })
+})
 
 watchEffect(() => {
   copyInvoiceType.value = props.invoiceType

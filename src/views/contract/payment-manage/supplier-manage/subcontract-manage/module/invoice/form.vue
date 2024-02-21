@@ -36,6 +36,8 @@
               <invoice-type-select
                 v-model:invoiceType="form.invoiceType"
                 v-model:taxRate="form.taxRate"
+                v-model:checked="form.checked"
+                showChecked
                 style="width: 280px"
                 :taxRateOption="taxRateOption"
               />
@@ -168,6 +170,7 @@ import { DP } from '@/settings/config'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { supplierTypeEnum } from '@/utils/enum/modules/supplier'
 import { isNotBlank } from '@/utils/data-type'
+import { invoiceTypeEnum } from '@enum-ms/finance'
 
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import branchCompanySelect from '@comp-base/branch-company-select.vue'
@@ -187,6 +190,7 @@ const defaultForm = {
   receiveInvoiceDate: undefined,
   remark: undefined,
   supplierId: undefined,
+  checked: false,
   taxRate: undefined,
   createInvoiceDate: undefined,
   invoiceContent: undefined
@@ -215,14 +219,32 @@ CRUD.HOOK.afterToAdd = () => {
 }
 
 // 金额校验
-const validateMoney = (value, row) => {
-  if (!isNotBlank(value)) return false
-  return true
+const validateMoney = (rule, value, callback) => {
+  if (!isNotBlank(value)) {
+    callback(new Error('金额必填'))
+  } else {
+    callback()
+  }
+}
+
+const validateInvoiceType = (rule, value, callback) => {
+  if (!isNotBlank(value)) {
+    callback(new Error('请选择发票及税率'))
+  } else {
+    if (value !== invoiceTypeEnum.RECEIPT.V && !form.checked) {
+      if (!isNotBlank(form.taxRate)) {
+        callback(new Error('请选择税率'))
+      }
+      callback()
+    }
+    callback()
+  }
+  callback()
 }
 
 const rules = {
   branchCompanyId: [{ required: true, message: '请选择购买方', trigger: 'change' }],
-  invoiceType: [{ required: true, message: '请选择发票及税率', trigger: 'change' }],
+  invoiceType: [{ validator: validateInvoiceType, message: '请选择发票及税率', trigger: 'change' }],
   actualInvoiceUnitId: [{ required: true, message: '请选择实际开票单位', trigger: 'change' }],
   paymentDate: [{ required: true, message: '请选择申请日期', trigger: 'change' }],
   invoiceAmount: [{ required: true, validator: validateMoney, trigger: 'change' }],
@@ -234,6 +256,7 @@ CRUD.HOOK.beforeSubmit = () => {
   crud.form.attachmentIds = crud.form.files ? crud.form.files.map((v) => v.id) : (crud.form.attachments ? crud.form.attachments.map((v) => v.id) : undefined)
   crud.form.supplierId = props.detailInfo.supplierId
   crud.form.projectId = props.detailInfo.projectId
+  crud.form.boolIncludeTax = !crud.form.checked
 }
 
 </script>

@@ -37,7 +37,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="发票及税率" prop="invoiceTypeEnum">
-              <span>{{invoiceTypeEnum.VL[currentRow.invoiceType]}}【{{currentRow.taxRate}}%】</span>
+              <span>{{invoiceTypeEnum.VL[currentRow.invoiceType]}}【{{currentRow.invoiceType !== invoiceTypeEnum.RECEIPT.V?(currentRow.checked?'免税':(currentRow.taxRate)+'%'):''}}】</span>
             </el-form-item>
           </el-col>
           <el-col :span="12">

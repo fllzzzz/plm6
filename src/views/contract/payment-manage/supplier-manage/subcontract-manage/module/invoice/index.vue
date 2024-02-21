@@ -46,7 +46,8 @@
       </el-table-column>
       <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="80">
         <template v-slot="scope">
-          <div v-if="scope.row.invoiceType !== invoiceTypeEnum.RECEIPT.V">{{ scope.row.taxRate? scope.row.taxRate+'%': '' }}</div>
+          <div v-if="scope.row.invoiceType !== invoiceTypeEnum.RECEIPT.V">{{ scope.row.checked && scope.row.invoiceType?'免税':(isNotBlank(scope.row.taxRate)? scope.row.taxRate+'%': '-') }}</div>
+          <div v-else>-</div>
         </template>
       </el-table-column>
       <el-table-column prop="amountExcludingTax" label="不含税" align="center" min-width="120" show-overflow-tooltip>
@@ -109,6 +110,7 @@
 import crudApi from '@/api/contract/supplier-manage/jd-subcontract-invoice'
 import { ref, defineProps, watch, defineEmits } from 'vue'
 
+import { isNotBlank } from '@/utils/data-type'
 import { tableSummary } from '@/utils/el-extra'
 import checkPermission from '@/utils/system/check-permission'
 import { auditTypeEnum } from '@enum-ms/contract'
@@ -208,6 +210,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
   data.data.content.map(v => {
     v.amountExcludingTax = v.taxRate ? (v.invoiceAmount / (1 + v.taxRate / 100)).toFixed(2) : v.invoiceAmount
     v.tax = (v.invoiceAmount - v.amountExcludingTax).toFixed(2)
+    v.checked = !v.boolIncludeTax
   })
 }
 
