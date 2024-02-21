@@ -110,7 +110,7 @@
               <span style="line-height:40px;">%</span>
             </div>
           </div>
-          <div v-else>{{ scope.row.checked && scope.row.invoiceType?'免税':(scope.row.taxRate? scope.row.taxRate+'%': '-') }}</div>
+          <div v-else>{{ scope.row.checked && scope.row.invoiceType?'免税':(isNotBlank(scope.row.taxRate)? scope.row.taxRate+'%': '-') }}</div>
         </template>
       </el-table-column>
       <!-- <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="80">

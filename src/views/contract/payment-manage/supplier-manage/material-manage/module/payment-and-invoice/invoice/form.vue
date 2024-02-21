@@ -97,7 +97,7 @@
                   <span style="line-height:40px;">%</span>
                 </div>
               </div>
-              <div v-else>{{ scope.row.taxRate? scope.row.taxRate+'%': '-' }}</div>
+              <div v-else>{{ isNotBlank(scope.row.taxRate)? scope.row.taxRate+'%': '-' }}</div>
               <!-- <div>{{ scope.row.taxRate && scope.row.invoiceType !== invoiceTypeEnum.RECEIPT.V? scope.row.taxRate+'%': '' }}</div> -->
             </template>
           </el-table-column>
