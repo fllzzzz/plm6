@@ -26,7 +26,7 @@
         </template>
       </el-table-column>
       <el-table-column key="applyAmount1" prop="applyAmount1" label="付款金额" align="center" min-width="170" class="money-column">
-        <el-table-column key="applyAmount" prop="applyAmount" label="金额" align="center" min-width="85">
+        <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="center" min-width="85">
           <template v-slot="scope">
             <div>{{ isNotBlank(scope.row.applyAmount) ? toThousand(scope.row.applyAmount,decimalPrecision.contract): '-' }}</div>
           </template>
@@ -36,6 +36,11 @@
             <div>{{scope.row.applyAmount?digitUppercase(scope.row.applyAmount):''}}</div>
           </template>
         </el-table-column>
+      </el-table-column>
+      <el-table-column key="actuallyPaymentAmount" prop="actuallyPaymentAmount" label="实际付款额" align="center" min-width="85">
+        <template v-slot="scope">
+          <div>{{ isNotBlank(scope.row.actuallyPaymentAmount)? toThousand(scope.row.actuallyPaymentAmount,decimalPrecision.contract): scope.row.actuallyPaymentAmount }}</div>
+        </template>
       </el-table-column>
       <el-table-column key="paymentReasonId" prop="paymentReasonId" label="付款事由" align="center" :show-overflow-tooltip="true">
         <template v-slot="scope">
