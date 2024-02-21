@@ -125,16 +125,17 @@ function handleInvoiceTypeChange(val) {
 }
 
 function handleTaxRateChange(val) {
-  var reg = /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,5}$/
-  if (!reg.test(val) || isBlank(val)) val = undefined
+  // var reg = /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,5}$/
+  // if (!reg.test(val) || isBlank(val)) val = undefined
+  if (isBlank(val)) val = undefined
   emit('update:taxRate', val)
   emit('change', {})
 }
 
 function selectBlur(e) {
-  if (!e.target.value) return
-  var reg = /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,5}$/
-  if (!reg.test(e.target.value.trim())) return
+  // if (!e.target.value) return
+  // var reg = /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,5}$/
+  // if (!reg.test(e.target.value.trim())) return
   copyTaxRate.value = e.target.value || copyTaxRate.value
   handleTaxRateChange(copyTaxRate.value)
   // emit('blur', e.target.value.trim())

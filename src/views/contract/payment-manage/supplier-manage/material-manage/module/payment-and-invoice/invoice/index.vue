@@ -86,11 +86,38 @@
           <div>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="80">
+      <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="150">
+        <template v-slot="scope">
+          <div v-if="scope.row.invoiceType !== invoiceTypeEnum.RECEIPT.V && scope.row.isModify">
+            <div style="display:flex;">
+              <div style="padding-right:5px;">
+                <el-checkbox v-model="scope.row.checked" label="免税" size="large" @change="checkChange(scope.row)" />
+              </div>
+              <el-input-number
+                v-model="scope.row.taxRate"
+                :step="1"
+                :min="0"
+                :max="100"
+                :precision="0"
+                :controls="false"
+                controls-position="right"
+                class="input-underline"
+                style="width: 100px; text-align: center"
+                placeholder="0-100"
+                :disabled="scope.row.checked"
+                @change="taxMoney(scope.row)"
+              />
+              <span style="line-height:40px;">%</span>
+            </div>
+          </div>
+          <div v-else>{{ scope.row.checked && scope.row.invoiceType?'免税':(scope.row.taxRate? scope.row.taxRate+'%': '-') }}</div>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="80">
         <template v-slot="scope">
           <div v-if="scope.row.invoiceType !== invoiceTypeEnum.RECEIPT.V">{{ scope.row.taxRate? scope.row.taxRate+'%': '' }}</div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column key="branchCompanyId" prop="branchCompanyId" label="购方单位" align="center" min-width="120" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <div>{{ scope.row.branchCompanyName }}</div>
@@ -246,7 +273,7 @@ const { crud, CRUD } = useCRUD(
 )
 
 const validateTaxRate = (value, row) => {
-  if (row.invoiceType !== invoiceTypeEnum.RECEIPT.V) return !!value
+  if (row.invoiceType !== invoiceTypeEnum.RECEIPT.V && !row.checked) return isNotBlank(value)
   return true
 }
 
@@ -322,7 +349,14 @@ function moneyChange(row) {
   taxMoney(row)
 }
 
+function checkChange(row) {
+  row.boolIncludeTax = !row.checked
+  row.taxRate = row.checked ? 0 : row.originRate
+  taxMoney(row)
+}
+
 function taxMoney(row) {
+  row.tax = 0
   if (isNotBlank(row.invoiceAmount) && row.taxRate) {
     row.tax = row.invoiceAmount * row.taxRate / 100
   }
@@ -447,6 +481,8 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
         dataIndex: v.dataIndex
       })
     }
+    v.checked = !v.boolIncludeTax
+    v.originRate = v.taxRate
   })
 }
 

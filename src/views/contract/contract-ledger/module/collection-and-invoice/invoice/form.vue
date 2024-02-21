@@ -72,22 +72,29 @@
               <div>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '-' }}</div>
             </template>
           </el-table-column>
-          <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="80">
+          <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="130">
             <template v-slot="scope">
               <div v-if="scope.row.invoiceType !== invoiceTypeEnum.RECEIPT.V && currentRow.isTax !== isTaxContractEnum.NO.V && scope.row.isModify">
-                <el-input-number
-                  v-model="scope.row.taxRate"
-                  :step="1"
-                  :min="0"
-                  :max="100"
-                  :precision="0"
-                  :controls="false"
-                  controls-position="right"
-                  class="input-underline"
-                  style="width: 60px; text-align: center"
-                  placeholder="0-100"
-                  @change="taxMoney(scope.row)"
-                />%
+                <div style="display:flex;">
+                  <div style="padding-right:5px;">
+                    <el-checkbox v-model="scope.row.checked" label="免税" size="large" @change="checkChange(scope.row)" />
+                  </div>
+                  <el-input-number
+                    v-model="scope.row.taxRate"
+                    :step="1"
+                    :min="0"
+                    :max="100"
+                    :precision="0"
+                    :controls="false"
+                    controls-position="right"
+                    class="input-underline"
+                    style="width: 80px; text-align: center"
+                    placeholder="0-100"
+                    :disabled="scope.row.checked"
+                    @change="taxMoney(scope.row)"
+                  />
+                  <span style="line-height:40px;">%</span>
+                </div>
               </div>
               <div v-else>{{ scope.row.taxRate? scope.row.taxRate+'%': '-' }}</div>
             </template>
@@ -215,7 +222,7 @@ const { maxHeight } = useMaxHeight({
 })
 
 const validateTaxRate = (value, row) => {
-  if (row.invoiceType !== invoiceTypeEnum.RECEIPT.V && props.currentRow.isTax !== isTaxContractEnum.NO.V) return !!value
+  if (row.invoiceType !== invoiceTypeEnum.RECEIPT.V && props.currentRow.isTax !== isTaxContractEnum.NO.V && !row.checked) return isNotBlank(value)
   return true
 }
 
@@ -252,6 +259,7 @@ function addRow() {
     invoiceType: props.currentRow.invoiceType,
     invoiceNo: undefined,
     taxRate: props.currentRow.taxRate ? props.currentRow.taxRate * 100 : undefined,
+    checked: false,
     tax: undefined,
     invoiceUnit: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyName : undefined,
     invoiceUnitId: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyId : undefined,
@@ -260,6 +268,12 @@ function addRow() {
     dataIndex: form.list.length + 1,
     isModify: true
   })
+}
+
+function checkChange(row) {
+  row.boolIncludeTax = !row.checked
+  row.taxRate = row.checked ? 0 : (props.currentRow.taxRate ? props.currentRow.taxRate * 100 : undefined)
+  taxMoney(row)
 }
 
 function moneyChange(row) {
@@ -289,14 +303,17 @@ function moneyChange(row) {
 }
 
 function taxMoney(row) {
+  row.tax = 0
+  let noTaxAmount = row.invoiceAmount
   if (isNotBlank(row.invoiceAmount) && row.taxRate) {
     row.tax = row.invoiceAmount * row.taxRate / 100
-    row.noTaxAmount = (row.invoiceAmount / (1 + row.taxRate / 100)).toFixed(decimalPrecision.value.contract)
+    noTaxAmount = (row.invoiceAmount / (1 + row.taxRate / 100)).toFixed(decimalPrecision.value.contract)
   } else {
     if (row.invoiceType === invoiceTypeEnum.RECEIPT.V) {
-      row.noTaxAmount = row.invoiceAmount
+      noTaxAmount = row.invoiceAmount
     }
   }
+  row.noTaxAmount = noTaxAmount
 }
 // function checkInvoiceNo(row) {
 //   const val = invoiceNoArr.value.find(v => v.dataIndex === row.dataIndex)

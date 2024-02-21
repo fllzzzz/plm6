@@ -26,9 +26,9 @@
         </template>
       </el-table-column>
       <el-table-column key="applyAmount1" prop="applyAmount1" label="付款金额" align="center" min-width="170" class="money-column">
-        <el-table-column key="applyAmount" prop="applyAmount" label="金额" align="center" min-width="85">
+        <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="center" min-width="85">
           <template v-slot="scope">
-            <div>{{ scope.row.applyAmount && scope.row.applyAmount>0? toThousand(scope.row.applyAmount,decimalPrecision.contract): scope.row.applyAmount }}</div>
+            <div>{{ isNotBlank(scope.row.applyAmount)? toThousand(scope.row.applyAmount,decimalPrecision.contract): scope.row.applyAmount }}</div>
           </template>
         </el-table-column>
         <el-table-column key="applyAmount2" prop="applyAmount2" label="大写" align="center" min-width="85">
@@ -36,6 +36,11 @@
             <div>{{scope.row.applyAmount?digitUppercase(scope.row.applyAmount):''}}</div>
           </template>
         </el-table-column>
+      </el-table-column>
+      <el-table-column key="actuallyPaymentAmount" prop="actuallyPaymentAmount" label="实际付款额" align="center" min-width="85">
+        <template v-slot="scope">
+          <div>{{ isNotBlank(scope.row.actuallyPaymentAmount)? toThousand(scope.row.actuallyPaymentAmount,decimalPrecision.contract): scope.row.actuallyPaymentAmount }}</div>
+        </template>
       </el-table-column>
       <el-table-column key="paymentReasonId" prop="paymentReasonId" label="付款事由" align="center" :show-overflow-tooltip="true">
         <template v-slot="scope">
@@ -100,6 +105,7 @@
 import crudApi from '@/api/contract/supplier-manage/pay-invoice/pay'
 import { ref, defineProps, watch } from 'vue'
 
+import { isNotBlank } from '@data-type/index'
 import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
