@@ -100,7 +100,7 @@
               <span style="line-height:40px;">%</span>
             </div>
           </div>
-          <div v-else>{{ scope.row.checked?'免税':(scope.row.taxRate? scope.row.taxRate+'%': '') }}</div>
+          <div v-else>{{ scope.row.checked?'免税':(isNotBlank(scope.row.taxRate)? scope.row.taxRate+'%': '') }}</div>
         </template>
       </el-table-column>
       <el-table-column key="noTaxAmount" prop="noTaxAmount" label="不含税金额" align="center" width="85" show-overflow-tooltip>
