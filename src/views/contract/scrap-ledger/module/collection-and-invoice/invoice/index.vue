@@ -76,24 +76,31 @@
           <div>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '-' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="70">
+      <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="130">
         <template v-slot="scope">
-          <div v-if="scope.row.invoiceType !== invoiceTypeEnum.RECEIPT.V && currentRow.isTax !== isTaxContractEnum.NO.V && scope.row.isModify">
-            <el-input-number
-              v-model="scope.row.taxRate"
-              :step="1"
-              :min="0"
-              :max="100"
-              :precision="0"
-              :controls="false"
-              controls-position="right"
-              class="input-underline"
-              style="width: 50px; text-align: center"
-              placeholder="0-100"
-              @change="taxMoney(scope.row)"
-            />%
+          <div v-if="scope.row.invoiceType !== invoiceTypeEnum.RECEIPT.V && scope.row.isModify">
+            <div style="display:flex;">
+              <div style="padding-right:5px;">
+                <el-checkbox v-model="scope.row.checked" label="免税" size="large" @change="checkChange(scope.row)" />
+              </div>
+              <el-input-number
+                v-model="scope.row.taxRate"
+                :step="1"
+                :min="0"
+                :max="100"
+                :precision="0"
+                :controls="false"
+                controls-position="right"
+                class="input-underline"
+                style="width: 80px; text-align: center"
+                placeholder="0-100"
+                :disabled="scope.row.checked"
+                @change="taxMoney(scope.row)"
+              />
+              <span style="line-height:40px;">%</span>
+            </div>
           </div>
-          <div v-else>{{ scope.row.taxRate? scope.row.taxRate+'%': '' }}</div>
+          <div v-else>{{ scope.row.checked && scope.row.invoiceType?'免税':(isNotBlank(scope.row.taxRate)? scope.row.taxRate+'%': '-') }}</div>
         </template>
       </el-table-column>
       <el-table-column key="noTaxAmount" prop="noTaxAmount" label="不含税金额" align="center" width="70">
@@ -212,7 +219,7 @@ import checkPermission from '@/utils/system/check-permission'
 import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import { isTaxContractEnum, auditTypeEnum } from '@enum-ms/contract'
+import { auditTypeEnum } from '@enum-ms/contract'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'
 import { toThousand, digitUppercase } from '@data-type/number'
@@ -272,10 +279,15 @@ const { crud, CRUD } = useCRUD(
   tableRef
 )
 
+const validateTaxRate = (value, row) => {
+  if (row.invoiceType !== invoiceTypeEnum.RECEIPT.V && !row.checked) return isNotBlank(value)
+  return true
+}
+
 const tableRules = {
   invoiceDate: [{ required: true, message: '请选择开票日期', trigger: 'change' }],
   invoiceAmount: [{ required: true, message: '请选择开票额', trigger: 'change', type: 'number' }],
-  taxRate: [{ required: true, message: '请输入税率', trigger: 'blur' }],
+  taxRate: [{ validator: validateTaxRate, message: '请输入税率', trigger: 'blur' }],
   invoiceType: [{ required: true, message: '请选择发票类型', trigger: 'change' }],
   invoiceNo: [{ required: true, message: '请输入发票号', trigger: 'blur' }],
   collectionUnit: [{ required: true, message: '请输入收票单位', trigger: 'blur' }]
@@ -292,7 +304,7 @@ const otherRules = {
 function wrongCellMask({ row, column }) {
   if (!row) return
   let rules = {}
-  if (row.invoiceType !== invoiceTypeEnum.RECEIPT.V && props.currentRow.isTax !== isTaxContractEnum.NO.V) {
+  if (row.invoiceType !== invoiceTypeEnum.RECEIPT.V) {
     rules = tableRules
   } else {
     rules = otherRules
@@ -379,15 +391,24 @@ function moneyChange(row) {
   taxMoney(row)
 }
 
+function checkChange(row) {
+  row.boolIncludeTax = !row.checked
+  row.taxRate = row.checked ? 0 : row.originRate
+  taxMoney(row)
+}
+
 function taxMoney(row) {
+  row.tax = 0
+  let noTaxAmount = row.invoiceAmount
   if (isNotBlank(row.invoiceAmount) && row.taxRate) {
     row.tax = row.invoiceAmount * row.taxRate / 100
-    row.noTaxAmount = (row.invoiceAmount / (1 + row.taxRate / 100)).toFixed(decimalPrecision.value.contract)
+    noTaxAmount = (row.invoiceAmount / (1 + row.taxRate / 100)).toFixed(decimalPrecision.value.contract)
   } else {
     if (row.invoiceType === invoiceTypeEnum.RECEIPT.V) {
-      row.noTaxAmount = row.invoiceAmount
+      noTaxAmount = row.invoiceAmount
     }
   }
+  row.noTaxAmount = noTaxAmount
 }
 // function checkInvoiceNo(row) {
 //   if (row.invoiceNo) {
@@ -453,7 +474,7 @@ async function rowSubmit(row) {
     return
   }
   let rules = {}
-  if (row.invoiceType !== invoiceTypeEnum.RECEIPT.V && props.currentRow.isTax !== isTaxContractEnum.NO.V) {
+  if (row.invoiceType !== invoiceTypeEnum.RECEIPT.V) {
     rules = tableRules
   } else {
     rules = otherRules
@@ -513,7 +534,9 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
         dataIndex: v.dataIndex
       })
     }
+    v.checked = !v.boolIncludeTax
     v.noTaxAmount = v.invoiceType !== invoiceTypeEnum.RECEIPT.V ? (v.invoiceAmount / (1 + v.taxRate / 100)).toFixed(decimalPrecision.value.contract) : v.invoiceAmount
+    v.originRate = v.taxRate
   })
 }
 </script>

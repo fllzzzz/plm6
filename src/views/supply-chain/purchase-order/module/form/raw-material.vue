@@ -384,12 +384,13 @@ const { maxHeight, heightStyle } = useMaxHeight(
 // ------------------------- rules start -----------------------------------
 const validateInvoiceType = (rule, value, callback) => {
   if (form.invoiceType || form.invoiceType === 0) {
-    if (form.invoiceType === invoiceTypeEnum.SPECIAL.V && !form.taxRate) {
-      callback(new Error('请选择税率'))
-      return
-    } else {
-      callback()
-    }
+    callback()
+    // if (form.invoiceType === invoiceTypeEnum.SPECIAL.V && isBlank(form.taxRate)) {
+    //   callback(new Error('请选择税率'))
+    //   return
+    // } else {
+    //   callback()
+    // }
   } else {
     callback(new Error('请选择发票及税率'))
     return
