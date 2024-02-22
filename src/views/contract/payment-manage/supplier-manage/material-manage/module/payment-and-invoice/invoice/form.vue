@@ -243,6 +243,7 @@ function addRow() {
     invoiceType: props.currentRow.invoiceType,
     invoiceSerialNumber: undefined,
     checked: false,
+    boolIncludeTax: true,
     taxRate: props.currentRow.taxRate,
     branchCompanyId: props.currentRow.branchCompanyId,
     branchCompanyName: props.currentRow.branchCompanyName,

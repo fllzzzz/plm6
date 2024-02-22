@@ -260,6 +260,7 @@ function addRow() {
     invoiceNo: undefined,
     taxRate: props.currentRow.taxRate ? props.currentRow.taxRate * 100 : undefined,
     checked: false,
+    boolIncludeTax: true,
     tax: undefined,
     invoiceUnit: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyName : undefined,
     invoiceUnitId: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyId : undefined,
