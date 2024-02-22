@@ -262,6 +262,7 @@ function addRow() {
     invoiceDate: undefined,
     // invoiceType: props.currentRow.invoiceType,
     checked: false,
+    boolIncludeTax: true,
     invoiceType: undefined,
     invoiceNo: undefined,
     taxRate: props.currentRow.taxRate ? props.currentRow.taxRate * 100 : undefined,
