@@ -27,7 +27,12 @@
         <el-table-column key="invoiceDate" prop="invoiceDate" label="开票日期" show-overflow-tooltip align="center" />
         <el-table-column key="invoiceAmount" prop="invoiceAmount" label="开票金额" show-overflow-tooltip align="right" />
         <el-table-column key="invoiceType" prop="invoiceType" label="发票类型" show-overflow-tooltip align="center" />
-        <el-table-column key="taxRate" prop="taxRate" label="税率" show-overflow-tooltip align="center" />
+        <el-table-column key="taxRate" prop="taxRate" label="税率" show-overflow-tooltip align="center">
+          <template #default="{ row: { sourceRow: row } }">
+            <div v-if="row.invoiceType !== invoiceTypeEnum.RECEIPT.V">{{ !row.boolIncludeTax && isNotBlank(row.boolIncludeTax) && row.invoiceType?'免税':(isNotBlank(row.taxRate)? row.taxRate+'%': '-') }}</div>
+            <div v-else>-</div>
+          </template>
+        </el-table-column>
         <el-table-column key="invoiceUnit" prop="invoiceUnit" label="开票单位" show-overflow-tooltip align="center" />
         <el-table-column key="collectionUnit" prop="collectionUnit" label="收票单位" show-overflow-tooltip align="center" />
         <el-table-column key="invoiceNo" prop="invoiceNo" label="发票编号" show-overflow-tooltip align="center" />
@@ -40,6 +45,7 @@
 import { getInvoiceList } from '@/api/contract/fortune-report/fortune-report'
 import { ref, defineEmits, defineProps, watch, inject } from 'vue'
 
+import { isNotBlank } from '@/utils/data-type'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -80,7 +86,7 @@ watch(
 // 列格式转换
 const columnsDataFormat = [
   ['invoiceAmount', 'to-thousand'],
-  ['taxRate', ['suffix', '%']],
+  // ['taxRate', ['suffix', '%']],
   ['invoiceDate', ['parse-time', '{y}-{m}-{d}']],
   ['invoiceType', ['parse-enum', invoiceTypeEnum]]
 ]

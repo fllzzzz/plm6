@@ -6,7 +6,7 @@
     v-model="visible"
     title="收票申请详情"
     :wrapper-closable="false"
-    size="40%"
+    size="60%"
   >
     <template #titleAfter>
       <el-tag v-if="currentRow.auditStatus" size="medium" :type="currentRow.auditStatus===auditTypeEnum.REJECT.V?'info':(currentRow.auditStatus===auditTypeEnum.PASS.V?'success':'warning')">

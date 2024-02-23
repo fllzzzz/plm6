@@ -81,8 +81,9 @@
         </el-table-column>
         <el-table-column prop="invoiceType" label="发票类型" align="center" width="110" show-overflow-tooltip />
         <el-table-column prop="taxRate" label="税率" align="center" width="70" show-overflow-tooltip>
-          <template #default="{ row }">
-            <span>{{ row.taxRate }}<span v-if="row.taxRate!=='-'">%</span></span>
+          <template #default="{ row: { sourceRow: row } }">
+            <div v-if="row.invoiceType !== invoiceTypeEnum.RECEIPT.V">{{ row.checked && row.invoiceType?'免税':(isNotBlank(row.taxRate)? row.taxRate+'%': '-') }}</div>
+            <div v-else>-</div>
           </template>
         </el-table-column>
          <el-table-column prop="amountExcludingTax" label="不含税" align="center" min-width="120" show-overflow-tooltip>
@@ -121,6 +122,7 @@
 import { invoiceRecord } from '@/api/supply-chain/purchase-reconciliation-manage/jd-payment-ledger'
 import { ref, defineEmits, defineProps, watch, computed } from 'vue'
 
+import { isNotBlank } from '@/utils/data-type'
 import { auditTypeEnum } from '@enum-ms/contract'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { digitUppercase, getDP, toThousand } from '@/utils/data-type/number'
@@ -254,6 +256,7 @@ async function fetchList() {
     content.map(v => {
       v.amountExcludingTax = v.taxRate ? (v.invoiceAmount / (1 + v.taxRate / 100)).toFixed(2) : v.invoiceAmount
       v.tax = (v.invoiceAmount - v.amountExcludingTax).toFixed(2)
+      v.checked = !v.boolIncludeTax
     })
     _list = content
     setTotalPage(totalElements)

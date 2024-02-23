@@ -16,7 +16,7 @@
       <common-select
         v-model="copyTaxRate"
         :options="taxRateOption"
-        :disabled="props.disabled"
+        :disabled="props.disabled || copyChecked"
         :data-structure="{ key: 'value', label: 'value', value: 'value' }"
         allow-create
         style="width: 80px"
