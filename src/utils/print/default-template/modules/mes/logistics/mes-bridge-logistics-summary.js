@@ -210,6 +210,7 @@ const mesBridgeLogisticsSummary = {
       { show: true, key: 'priceType', title: '运输单价单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'logisticsPriceTypeEnum', key: 'unit', bit: true }},
       { show: true, key: 'totalPrice', title: '运输费(元)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
       { show: true, key: 'licensePlate', title: '车牌号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.LICENSE_PLATE.K },
+      { show: false, key: 'actualUserName', title: '发货人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K },
       { show: false, key: 'driverName', title: '司机名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K },
       { show: true, key: 'driverPhone', title: '司机电话', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 25, type: typeEnum.PHONE.K },
       { show: true, key: 'auditTime', title: '承运日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' }
