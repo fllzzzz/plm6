@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--工具栏-->
-    <mHeader ref="headerRef" v-bind="$attrs" @checkSubmit="checkModifyData" :showAble="showAble" :submitList="submitList" @showVisible="showVisible" />
+    <mHeader ref="headerRef" v-bind="$attrs" @checkSubmit="checkModifyData" :showAble="showAble" :rowIds="rowIds" :submitList="submitList" @showVisible="showVisible" />
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -202,6 +202,7 @@ const tableRef = ref()
 const headerRef = ref()
 const showAble = ref(false)
 const submitList = ref([])
+const rowIds = ref([])
 const { crud, columns } = useCRUD(
   {
     title: '围护价格',
@@ -242,8 +243,12 @@ function showVisible() {
 }
 
 function selectionChange(val) {
+  rowIds.value = []
   crud.selectionChangeHandler(val)
   crud.selections.sort(function (a, b) { return a.orderIndex - b.orderIndex })
+  val.forEach(v => {
+    rowIds.value.push(v.id)
+  })
 }
 
 async function checkModifyData(val) {

@@ -12,6 +12,15 @@ export function getReceiptList(params) {
   })
 }
 
+// 入库单表-入库单下载打印回调
+export function receiptPrintRecord(id) {
+  return request({
+    module: 'wms',
+    url: `inbound/receipt/${id}/printState`,
+    method: 'get'
+  })
+}
+
 /**
  * 入库单详情（含退货记录）
  */

@@ -248,6 +248,7 @@ async function download() {
         params = [props.params]
       }
       for (const p of params) {
+        const pParams = p
         printLoading.text = `正在加载数据：${config.value.name}`
         const { header, footer, table, qrCode } = (await fetch(p)) || {}
         printLoading.text = `正在导出：${config.value.name}`
@@ -262,7 +263,7 @@ async function download() {
           throw new Error('导出失败')
         } else {
           emit('success')
-          emit('download-success')
+          emit('download-success', pParams)
         }
       }
     } catch (error) {
@@ -297,6 +298,7 @@ async function print(printMode) {
         params = [params[0]]
       }
       for (const p of params) {
+        const pParams = p
         printLoading.setText(`正在加载数据：${config.value.name}`)
         const { header, footer, table, qrCode } = (await fetch(p)) || {}
         printLoading.setText(`正在打印：${config.value.name}`)
@@ -313,7 +315,7 @@ async function print(printMode) {
         } else {
           if (printMode !== printModeEnum.PREVIEW.V) {
             emit('success')
-            emit('print-success')
+            emit('print-success', pParams)
           }
         }
       }

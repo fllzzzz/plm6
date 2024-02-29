@@ -234,11 +234,13 @@ function handleProjectChange() {
 function handleWorkshopChange() {
   fetchSummary()
   fetchChart()
+  crud.toQuery()
 }
 
 function handleProductionLineChange() {
   fetchSummary()
   fetchChart()
+  crud.toQuery()
 }
 
 function handleYearChange() {
