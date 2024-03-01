@@ -210,8 +210,15 @@ const projectCollectionRecord = {
       { show: true, key: 'collectionDepositBank', title: '收款开户行', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.BANK.K },
       { show: true, key: 'paymentUnit', title: '付款单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.COMPANY_NAME.K },
       { show: false, key: 'writtenByName', title: '办理人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K },
-      { show: false, key: 'auditorName', title: '审核人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K }
+      { show: false, key: 'auditorName', title: '审核人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K },
+      { show: true, key: 'collectionBankAccount', title: '银行卡号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.BANK_ACCOUNT.K },
+      { show: true, key: 'noteMark', title: '备注', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.BLANK.K }
     ]
+
+    /* 
+      <el-table-column key="collectionBankAccount" prop="collectionBankAccount" label="银行卡号" show-overflow-tooltip align="center" />
+      <el-table-column key="noteMark" prop="noteMark" label="备注" show-overflow-tooltip align="center" />
+    */
   }
 }
 

@@ -35,6 +35,8 @@
         <el-table-column key="collectionUnit" prop="collectionUnit" label="收款单位" show-overflow-tooltip align="center" />
         <el-table-column key="collectionDepositBank" prop="collectionDepositBank" label="收款银行" show-overflow-tooltip align="center" />
         <el-table-column key="paymentUnit" prop="paymentUnit" label="付款单位" show-overflow-tooltip align="center" />
+        <el-table-column key="collectionBankAccount" prop="collectionBankAccount" label="银行卡号" show-overflow-tooltip align="center" />
+        <el-table-column key="noteMark" prop="noteMark" label="备注" show-overflow-tooltip align="center" />
       </common-table>
     </template>
   </common-drawer>
